@@ -1,0 +1,91 @@
+// Capa de carteles colgados delante de los arcos del interior.
+// Se sitúa justo encima del interior (z-index 1) y por debajo de la fachada
+// (z-index 4), de modo que los carteles permanecen ocultos mientras la fachada
+// aún cubre la escena.
+
+.aisle-signs {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  // La capa no intercepta el ratón; solo lo hacen los carteles en sí.
+  pointer-events: none;
+
+  &__sign {
+    position: absolute;
+    left: calc(var(--sign-left) * 100%);
+    top: calc(var(--sign-top) * 100%);
+    width: calc(var(--sign-width) * 100%);
+    pointer-events: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    // El cartel pivota desde la argolla de la cadena, en el centro de su borde
+    // superior, igual que un cartel colgado de verdad.
+    transform-origin: 50% 0%;
+    transition: filter var(--duration-fast) ease-out;
+  }
+
+  &__sign img {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+  }
+
+  // Balanceo en hover: keyframes CSS, no GSAP. GSAP se reserva para las
+  // transiciones de entrada/salida; los estados hover van en CSS.
+  //
+  // El balanceo se amortigua y para, como un cartel de verdad al que le das un
+  // toque. Además de quedar mejor, deja el cartel quieto para poder pulsarlo:
+  // oscilando sin parar es un blanco móvil.
+  &__sign:hover,
+  &__sign:focus-visible {
+    filter: brightness(1.09);
+    animation: aisle-sign-sway 1.2s ease-out 1;
+  }
+
+  &__sign:focus-visible {
+    outline: 2px solid var(--color-brass-glow);
+    outline-offset: 4px;
+  }
+}
+
+@keyframes aisle-sign-sway {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  15% {
+    transform: rotate(2.1deg);
+  }
+
+  35% {
+    transform: rotate(-1.4deg);
+  }
+
+  55% {
+    transform: rotate(0.8deg);
+  }
+
+  75% {
+    transform: rotate(-0.4deg);
+  }
+
+  90% {
+    transform: rotate(0.15deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+// Sin balanceo si el sistema pide movimiento reducido: el cartel sigue
+// respondiendo al ratón, pero solo con el cambio de luz.
+@media (prefers-reduced-motion: reduce) {
+  .aisle-signs__sign:hover,
+  .aisle-signs__sign:focus-visible {
+    animation: none;
+  }
+}

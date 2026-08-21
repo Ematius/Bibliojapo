@@ -75,6 +75,9 @@
     z-index: 4;
     transform-style: preserve-3d;
     will-change: transform, opacity, filter;
+    // Cubre todo el escenario y sigue en el DOM aunque acabe con opacidad 0,
+    // así que sin esto interceptaría los clics de los carteles que hay debajo.
+    pointer-events: none;
   }
 
   &__doors {
@@ -291,6 +294,22 @@
       outline: 2px solid var(--color-brass-glow);
       outline-offset: 4px;
     }
+  }
+
+  // Ilustración del pasillo durante el barrido lateral. Entra desde la izquierda
+  // por encima de todo y solo entonces se cambia de ruta, así el salto no se ve.
+  &__sweep {
+    // Fixed y no absolute: vive colgado del body, para que soltar el pin de la
+    // sección no lo arrastre justo cuando está tapando la pantalla.
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
   }
 
   &__loading {

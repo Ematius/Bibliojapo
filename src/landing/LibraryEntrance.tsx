@@ -1,7 +1,11 @@
-import { useRef, type CSSProperties } from 'react'
-import { ASSETS, PORTAL, DOORS_3D } from './libraryEntranceConfig'
-import { useVh } from './useVh'
+import { useEffect, useRef, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
+import { ASSETS, PORTAL, DOORS_3D, LIBRARY_ANIMATION_CONFIG } from './libraryEntranceConfig'
+import { useVh } from '../shared/useVh'
 import { useLibraryEntranceAnimation } from './useLibraryEntranceAnimation'
+import { useAisleSweep } from './useAisleSweep'
+import { hasEnteredLibrary } from './enteredLibrary'
+import { AisleSigns } from './AisleSigns'
 import './LibraryEntrance.scss'
 
 // Estilo con custom properties CSS (--variable) además de las propiedades
@@ -34,6 +38,7 @@ export function LibraryEntrance() {
   useVh()
 
   const sectionRef = useRef<HTMLElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
   const facadeGroupRef = useRef<HTMLDivElement>(null)
   const interiorRef = useRef<HTMLImageElement>(null)
   const exteriorRef = useRef<HTMLImageElement>(null)
@@ -67,10 +72,21 @@ export function LibraryEntrance() {
     enterButtonRef,
   })
 
+  const { sweepRef, sweepToAisle } = useAisleSweep(stageRef)
+
+  // Al volver de un pasillo la entrada aparece ya abierta: saltamos al final del
+  // scroll fijado en vez de repetir toda la animación de las puertas.
+  useEffect(() => {
+    if (!isReady || !hasEnteredLibrary()) return
+    window.scrollTo(0, window.innerHeight * LIBRARY_ANIMATION_CONFIG.scroll.viewportHeights)
+  }, [isReady])
+
   return (
     <section className="library-entrance" ref={sectionRef} data-ready={isReady}>
-      <div className="library-entrance__stage" style={stageStyle}>
+      <div className="library-entrance__stage" style={stageStyle} ref={stageRef}>
         <img className="library-entrance__interior" ref={interiorRef} src={ASSETS.interior} alt="" draggable="false" />
+
+        <AisleSigns onSelect={sweepToAisle} />
 
         <canvas className="library-entrance__particles library-entrance__particles--back" ref={particlesBackRef} />
 
@@ -125,6 +141,20 @@ export function LibraryEntrance() {
           aria-label="Entrar en la biblioteca"
         />
       </div>
+
+      {/* Fuera de la sección, colgado del body: la sección se fija y se suelta
+          durante el barrido, y el pin la desplaza. Aquí el barrido queda pegado
+          a la ventana y no se entera de nada de eso. */}
+      {createPortal(
+        <img
+          className="library-entrance__sweep"
+          ref={sweepRef}
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />,
+        document.body,
+      )}
 
       {!isReady && <div className="library-entrance__loading" aria-hidden="true" />}
     </section>

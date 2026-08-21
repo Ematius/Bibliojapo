@@ -91,7 +91,7 @@ export const LIBRARY_ANIMATION_CONFIG = {
   push: {
     facadeMaxScale: 3.4,
     facadeMaxBlurPx: 2.5,
-    facadeMinOpacity: 0.85,
+    facadeMinOpacity: 0,
     interiorFromScale: 0.98,
     interiorToScale: 1,
   },
