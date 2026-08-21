@@ -1,0 +1,57 @@
+:root {
+  /* Piedra — estructura de la biblioteca */
+  --color-stone: #c8b89a;
+  --color-stone-dark: #a8956f;
+  --color-stone-deep: #7a6a52;
+
+  /* Madera — puertas, estanterías, marcos */
+  --color-wood: #8b5e3c;
+  --color-wood-dark: #5c3a1e;
+  --color-wood-deep: #3a2210;
+
+  /* Latón y luz — linternas, herrajes, acentos */
+  --color-brass: #d4a843;
+  --color-brass-glow: #f0c96a;
+  --color-amber: #e8932a;
+
+  /* Papel — páginas, fondo de contenido */
+  --color-cream: #f5edd8;
+  --color-parchment: #e8d9b8;
+
+  /* Vegetación — hiedra decorativa */
+  --color-ivy: #6b8c5a;
+  --color-ivy-dark: #4a6340;
+
+  /* Texto */
+  --color-ink: #2c1f0e;
+  --color-ink-soft: rgba(44, 31, 14, 0.6);
+
+  /* Fondo general — lo que hay fuera/detrás de la biblioteca */
+  --color-bg: #1a1208;
+
+  /* Tonos por sección de aprendizaje */
+  --color-hiragana: #c4956a;
+  --color-hiragana-deep: #9a6a42;
+  --color-katakana: #8a9e6b;
+  --color-katakana-deep: #627041;
+  --color-kanji: #b8845a;
+  --color-kanji-deep: #8a5c38;
+  --color-vocab: #c4a84a;
+  --color-vocab-deep: #9a7e2e;
+
+  /* Tipografía */
+  --font-display: 'Shippori Mincho', serif;
+  --font-roman: 'Cinzel', serif;
+  --font-body: 'Zen Kaku Gothic New', system-ui, sans-serif;
+
+  /* Movimiento */
+  --ease-book: cubic-bezier(0.36, 0.02, 0.16, 1);
+  --duration-flip: 520ms;
+  --duration-door: 1700ms;
+  --duration-fast: 280ms;
+  --duration-slow: 900ms;
+
+  /* Layout */
+  --vh: 1vh; /* sobrescrito en runtime por el hook useVh */
+  --panel-width: min(20rem, 86vw);
+}

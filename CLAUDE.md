@@ -84,7 +84,7 @@ Cada unidad de trabajo debe ser **la cosa más pequeña posible que tenga sentid
 React 18     — UI
 Vite 5       — build tool
 SCSS (Sass)  — estilos, sin CSS-in-JS
-GSAP 3       — animaciones (puertas, vuelo al estante, zoom)
+GSAP 3       — todas las animaciones de entrada/salida/transición (obligatorio)
 page-flip    — física de paso de páginas estilo manga
 ```
 
@@ -163,6 +163,39 @@ Todos los valores visuales viven en `_root.scss` como custom properties de CSS.
 --vh:            /* establecido por el hook useVh — nunca usar 100vh directamente */
 --panel-width:   min(20rem, 86vw);
 ```
+
+---
+
+## Organización de archivos
+
+La estructura de carpetas sigue el principio de **agrupación por dominio** (feature folders),
+no por tipo de archivo. Cada carpeta representa un conjunto funcional completo.
+
+### Regla principal
+Todo lo que pertenece a la misma funcionalidad va en la misma carpeta,
+independientemente de si es un componente, un estilo, un hook o una utilidad.
+
+```
+src/
+  landing/          ← todo lo de la landing: componentes, estilos, hooks, animaciones
+  aisle/            ← todo lo del pasillo
+  reading/          ← todo lo del lector de tomos
+  shared/           ← lo único que va fuera: componentes/hooks usados en más de un dominio
+  styles/           ← excepción justificada: tokens globales, reset, tipografía base
+```
+
+### Cuándo crear una carpeta nueva
+Solo cuando empieza una funcionalidad nueva. No antes.
+Nunca crear carpetas vacías "por si acaso".
+
+### Cuándo mover algo a `shared/`
+Solo cuando el mismo componente o hook se necesita en dos dominios distintos.
+Hasta ese momento, vive en el dominio donde nació.
+
+### Lo que nunca se hace
+- Carpetas por tipo (`components/`, `hooks/`, `utils/`) a nivel global.
+- Archivos de estilos en una carpeta separada del componente al que pertenecen.
+- Mover un archivo a `shared/` "por si acaso lo reutilizo luego".
 
 ---
 

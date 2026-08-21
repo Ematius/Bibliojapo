@@ -1,0 +1,320 @@
+.library-entrance {
+  position: relative;
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  background: var(--color-bg);
+
+  &__stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    aspect-ratio: 1672 / 941;
+    width: max(100vw, calc(var(--vh, 1vh) * 100 * 1672 / 941));
+    transform: translate(-50%, -50%);
+    perspective: 1500px;
+    perspective-origin: 50% 50%;
+    overflow: hidden;
+  }
+
+  &__interior,
+  &__exterior {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &__interior {
+    z-index: 1;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  &__glow {
+    position: absolute;
+    z-index: 2;
+    left: calc(var(--portal-left) * 100%);
+    top: calc(var(--portal-top) * 100%);
+    width: calc(var(--portal-width) * 100%);
+    height: calc(var(--portal-height) * 100%);
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      ellipse at 50% 40%,
+      rgba(255, 232, 188, 0.9) 0%,
+      rgba(233, 183, 110, 0.55) 45%,
+      rgba(244, 225, 183, 0) 75%
+    );
+    filter: blur(6px);
+    will-change: opacity;
+  }
+
+  &__particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    &--back {
+      z-index: 3;
+    }
+
+    &--front {
+      z-index: 7;
+    }
+  }
+
+  &__facade-group {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
+  }
+
+  &__doors {
+    position: absolute;
+    // Ligeramente más grandes que el hueco (--portal-bleed) para que las hojas
+    // se solapen un poco con el marco en vez de dejar un filamento de separación
+    // por el que se cuele la luz/el interior.
+    left: calc((var(--portal-left) - var(--portal-bleed)) * 100%);
+    top: calc((var(--portal-top) - var(--portal-bleed)) * 100%);
+    width: calc((var(--portal-width) + var(--portal-bleed) * 2) * 100%);
+    height: calc((var(--portal-height) + var(--portal-bleed) * 2) * 100%);
+    transform-style: preserve-3d;
+    pointer-events: none;
+  }
+
+  &__door {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    // 50% + un pequeño extra que invade hacia el centro (--door-center-overlap),
+    // para que ambas hojas se solapen un poco en la costura en vez de dejar un
+    // filamento por el que se cuele el interior. Solo mueve el borde interior:
+    // el de la bisagra queda fijo por el left/right:0 de cada variante.
+    width: calc(50% + var(--door-center-overlap) * 100%);
+    transform-style: preserve-3d;
+    will-change: transform;
+
+    // Grosor real en px, calculado una vez al cargar/resize (ver
+    // useLibraryEntranceAnimation.ts) — el fallback en 0 evita romper los
+    // cálculos de los cantos antes de la primera medición.
+    --door-depth: 0px;
+
+    &--left {
+      left: 0;
+      transform-origin: left center;
+    }
+
+    &--right {
+      right: 0;
+      transform-origin: right center;
+    }
+  }
+
+  // Cuerpo 3D de la hoja: cara frontal + trasera (mismo PNG) separadas por
+  // --door-depth, más 4 cantos de madera que conectan ambas caras.
+  .door3d__face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    will-change: transform;
+
+    img {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    // La cara frontal se queda exactamente donde estaba la puerta plana (sin
+    // transform) — no debe sobresalir hacia el espectador. Todo el grosor se
+    // añade hacia atrás, hacia el interior.
+    &--back {
+      transform: rotateY(180deg) translateZ(var(--door-depth));
+      filter: brightness(var(--door-back-brightness, 0.6)) saturate(var(--door-back-saturation, 0.75));
+    }
+  }
+
+  // La hoja invade un poco hacia el centro (--door-center-overlap) para que no
+  // quede un filamento de separación en la costura. Para que esa invasión no se
+  // vea como un corte duro de una hoja tapando a la otra (cualquiera que quede
+  // por delante), la cara frontal se desvanece justo en ese pequeño sobrante,
+  // dejando siempre su mitad natural totalmente opaca — así hay una única
+  // costura degradada en vez de un escalón visible.
+  &__door--left .door3d__face--front img {
+    mask-image: linear-gradient(to right, black calc(var(--door-seam-fade-start) * 1%), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black calc(var(--door-seam-fade-start) * 1%), transparent 100%);
+  }
+
+  &__door--right .door3d__face--front img {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black calc(100% - var(--door-seam-fade-start) * 1%),
+      black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black calc(100% - var(--door-seam-fade-start) * 1%),
+      black 100%
+    );
+  }
+
+  // Canto de madera: gradiente CSS que simula sombra propia (más oscuro cerca
+  // de la cara frontal) y un ligero tinte cálido en el lado interior.
+  .door3d__edge {
+    position: absolute;
+    pointer-events: none;
+    will-change: transform;
+    background: linear-gradient(
+      to right,
+      rgba(30, 18, 11, 0.55) 0%,
+      rgba(94, 56, 33, 0.15) 45%,
+      rgba(133, 81, 46, 0.05) 65%,
+      rgba(45, 27, 16, 0.5) 100%
+    );
+
+    &--inner {
+      background: linear-gradient(
+        to right,
+        rgba(45, 27, 16, 0.5) 0%,
+        rgba(94, 56, 33, 0.1) 40%,
+        rgba(133, 81, 46, 0.05) 60%,
+        rgba(233, 183, 110, 0.35) 100%
+      );
+    }
+
+    // Cantos laterales (bisagra / interior): tira vertical de ancho = profundidad,
+    // pegada al borde correspondiente de la hoja y girada 90° sobre ESE borde
+    // (transform-origin), de modo que arranca en el plano frontal (z=0, donde
+    // está la cara visible) y se hunde hacia atrás hasta --door-depth. Nunca
+    // sobresale hacia delante.
+    &--a,
+    &--b {
+      top: 0;
+      width: var(--door-depth);
+      height: 100%;
+    }
+
+    &--a {
+      right: 100%;
+      transform-origin: right center;
+      transform: rotateY(-90deg);
+    }
+
+    &--b {
+      left: 100%;
+      transform-origin: left center;
+      transform: rotateY(90deg);
+    }
+
+    // Cantos superior/inferior: misma lógica en el eje Y.
+    &--top,
+    &--bottom {
+      left: 0;
+      width: 100%;
+      height: var(--door-depth);
+    }
+
+    &--top {
+      bottom: 100%;
+      transform-origin: bottom center;
+      transform: rotateX(90deg);
+    }
+
+    &--bottom {
+      top: 100%;
+      transform-origin: top center;
+      transform: rotateX(-90deg);
+    }
+  }
+
+  &__door-shade {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    backface-visibility: hidden;
+    // Ligeramente por delante de la cara frontal (que ahora vive en z=0) para
+    // que la sombra de apertura no quede "enterrada" dentro del grosor.
+    transform: translateZ(1px);
+  }
+
+  &__door--left .library-entrance__door-shade {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0));
+  }
+
+  &__door--right .library-entrance__door-shade {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0));
+  }
+
+  &__spill {
+    position: absolute;
+    z-index: 6;
+    left: calc(var(--portal-left) * 100%);
+    top: calc(var(--portal-top) * 100%);
+    width: calc(var(--portal-width) * 100%);
+    height: calc(var(--portal-height) * 100%);
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(255, 232, 188, 0.5) 0%, rgba(255, 232, 188, 0) 60%),
+      linear-gradient(to bottom, rgba(233, 183, 110, 0) 0%, rgba(233, 183, 110, 0.35) 100%);
+    will-change: opacity;
+  }
+
+  &__enter {
+    position: absolute;
+    z-index: 8;
+    left: calc(var(--portal-left) * 100%);
+    top: calc(var(--portal-top) * 100%);
+    width: calc(var(--portal-width) * 100%);
+    height: calc(var(--portal-height) * 100%);
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass-glow);
+      outline-offset: 4px;
+    }
+  }
+
+  &__loading {
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    background: var(--color-bg);
+    animation: library-entrance-loading-pulse 1.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__loading {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+}
+
+@keyframes library-entrance-loading-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
