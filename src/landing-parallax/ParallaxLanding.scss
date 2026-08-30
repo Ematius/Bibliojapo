@@ -1,0 +1,141 @@
+.parallax-landing {
+  /* Punto de la imagen que queda centrado cuando hay que recortar en vertical.
+     Las capas de fondo son 16:9, así que en una pantalla apaisada encajan casi
+     sin recorte; esto solo entra en juego en formatos más altos, donde por
+     debajo del 50% se gana cielo y por encima se gana primer plano de flores. */
+  --scene-focus-y: 55%;
+
+  position: relative;
+  width: 100%;
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+
+  /* Ninguna de las cuatro ilustraciones cubre el encuadre entero por sí sola:
+     todas tienen zonas transparentes. El degradado de cielo tapa lo que quede
+     al descubierto, sobre todo al recortar en pantallas muy apaisadas. */
+  background: linear-gradient(180deg, var(--color-sky) 0%, var(--color-sky-low) 100%);
+}
+
+.parallax-landing__scene {
+  position: absolute;
+  inset: 0;
+}
+
+.parallax-landing__layer {
+  /* Cuánto se ensancha la capa respecto a la pantalla para dar margen a la
+     deriva lateral. Por defecto ninguno: ensanchar saca contenido fuera del
+     encuadre, así que solo lo reciben las capas que de verdad lo necesitan. */
+  --layer-overscan: 1;
+
+  position: absolute;
+  top: 0;
+
+  /* Ensanchado simétrico: con 1.08 la capa sobresale un 4% por cada lado. El
+     ancho tiene que ir explícito — una imagen posicionada en absoluto con
+     `width: auto` no se estira entre left y right, se queda en su tamaño
+     intrínseco y deja la pantalla a medio cubrir. Se posiciona con left y width
+     en vez de con un transform porque GSAP anima el transform de estas capas. */
+  left: calc((1 - var(--layer-overscan)) * 50%);
+  width: calc(100% * var(--layer-overscan));
+  height: 100%;
+
+  /* Las capas de fondo comparten tamaño y proporción, así que recortarlas con el
+     mismo encuadre mantiene la composición alineada entre ellas. */
+  object-fit: cover;
+  object-position: center var(--scene-focus-y);
+
+  user-select: none;
+}
+
+/* El primer plano de flores es lo más cercano y lo que más recorrido necesita.
+   Es una franja homogénea de lado a lado, así que puede permitirse el margen más
+   ancho de todas las capas sin que se note lo que pierde por los bordes. */
+.parallax-landing__layer--foreground {
+  --layer-overscan: 1.1;
+
+  will-change: transform;
+}
+
+/* El valle es el plano más lejano y apenas se desplaza, así que le basta con un
+   margen mínimo. Pero no puede ser cero: un fondo completamente clavado hace que
+   el ojo lo tome como marco fijo y lea el resto como objetos moviéndose solos,
+   en vez de como una cámara desplazándose. */
+.parallax-landing__layer--valley {
+  --layer-overscan: 1.02;
+
+  will-change: transform;
+}
+
+/* La biblioteca lleva el mismo margen que el prado porque recorre exactamente lo
+   mismo: va apoyada en esa ladera y las dos capas se mueven solidarias. Su
+   ilustración deja aire suficiente a ambos lados como para permitírselo. */
+.parallax-landing__layer--library {
+  --layer-overscan: 1.08;
+
+  will-change: transform;
+}
+
+/* El prado sí es homogéneo de lado a lado, así que perder un 4% por cada borde
+   no se nota y a cambio permite un recorrido bastante más amplio: es la capa
+   más cercana y la que más profundidad aporta. */
+.parallax-landing__layer--meadow {
+  --layer-overscan: 1.08;
+
+  will-change: transform;
+}
+
+.parallax-landing__drops {
+  position: absolute;
+  inset: 0;
+
+  /* Recorta la copia de gotas que en cada momento está fuera de la pantalla. */
+  overflow: hidden;
+}
+
+.parallax-landing__drops-track {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+
+  /* Dos copias apiladas: el doble de alto que la pantalla. La de abajo empieza
+     fuera del encuadre y entra a medida que la pista sube. */
+  height: 200%;
+  will-change: transform;
+}
+
+.parallax-landing__drops-tile {
+  /* Tamaño de las gotas. Es un factor sobre el lado corto de la pantalla: bajarlo
+     las hace más pequeñas. */
+  --drops-size: 0.7;
+
+  /* Posición horizontal de las gotas: 0% las pega al borde izquierdo, 50% las
+     centra. Van a la izquierda, al lado contrario de la biblioteca, para no
+     taparla y para equilibrar el peso visual de la escena. */
+  --drops-x: 6%;
+
+  display: block;
+  width: 100%;
+
+  /* Cada copia ocupa exactamente una pantalla, que es lo que hace que subir la
+     pista un 50% deje la segunda copia justo donde estaba la primera. */
+  height: 50%;
+
+  /* `contain` y no `cover`: cubriendo, la ilustración se recorta por arriba y por
+     abajo, y hay gotas pegadas al borde superior que quedaban partidas por la
+     mitad. Conteniéndola entra entera y además se escala por el lado corto, que
+     en una pantalla apaisada ya las deja bastante más pequeñas. */
+  object-fit: contain;
+  object-position: var(--drops-x) center;
+
+  /* Reduce el dibujo sin tocar el layout de la pista, así el empalme del bucle
+     sigue cuadrando. No colisiona con GSAP, que anima el transform de la pista
+     y no el de las copias. */
+  scale: var(--drops-size);
+
+  /* El escalado se ancla en el mismo punto donde se ha colocado la ilustración.
+     Con el origen por defecto —el centro— reducirla la arrastraría otra vez
+     hacia el medio de la pantalla y desharía el desplazamiento. */
+  transform-origin: var(--drops-x) center;
+
+  user-select: none;
+}
