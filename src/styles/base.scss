@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  /* La app mezcla pantallas claras (el valle de la landing) y oscuras (el
+     interior de la biblioteca), y cada una pinta su propio fondo. Declarando
+     las dos, los controles nativos y el fondo por defecto siguen al sistema en
+     vez de quedarse siempre en oscuro. */
+  color-scheme: light dark;
+
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  /* --vh y no svh/vh: es el hook useVh el que decide cuándo cambia el alto, y
+     solo lo hace al cambiar el ancho. Ver src/shared/useVh.ts. */
+  min-height: calc(var(--vh) * 100);
+}

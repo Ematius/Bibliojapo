@@ -1,0 +1,22 @@
+// Pasillo de la biblioteca, el mismo para las cuatro secciones. De momento solo
+// la ilustración de fondo y la barra — los tomos de la estantería llegan más
+// adelante.
+
+.library-aisle {
+  position: relative;
+  width: 100%;
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  background: var(--color-bg);
+
+  &__scene {
+    display: block;
+    width: 100%;
+    height: 100%;
+    // La ilustración llena la pantalla recortando por donde sobre, igual que el
+    // interior de la entrada.
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+  }
+}

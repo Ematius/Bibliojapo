@@ -33,6 +33,13 @@
   --color-sky: #2f86d8;
   --color-sky-low: #b9dcf4;
 
+  /* Interfaz flotante — lo que se apoya encima de una escena ilustrada */
+  --color-glass: rgba(255, 255, 255, 0.72);
+  --color-glass-edge: rgba(255, 255, 255, 0.55);
+  --color-nav-ink: #12100c; /* negro cálido del logotipo y la llamada a la acción */
+  --color-on-nav-ink: #ffffff;
+  --shadow-float: 0 0.5rem 1.5rem rgba(26, 18, 8, 0.18);
+
   /* Tonos por sección de aprendizaje */
   --color-hiragana: #c4956a;
   --color-hiragana-deep: #9a6a42;
@@ -58,4 +65,9 @@
   /* Layout */
   --vh: 1vh; /* sobrescrito en runtime por el hook useVh */
   --panel-width: min(20rem, 86vw);
+
+  /* Radios */
+  --radius-float: 1.25rem; /* contenedores flotantes: barras, tarjetas */
+  --radius-badge: 0.75rem; /* distintivos cuadrados pequeños */
+  --radius-pill: 999px;
 }
