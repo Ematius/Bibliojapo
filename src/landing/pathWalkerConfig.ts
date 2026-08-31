@@ -39,7 +39,7 @@ export const PATH_WALK_IMAGE = '/images/silueta-caminando.png'
 // perspectiva crece con la distancia a esa línea, y la razón entre ambas
 // (0.30 y 0.135) es la que fija que la figura llegue arriba a menos de la mitad.
 export const PATH_WALK = {
-  from: { x: 0.429, y: 0.88, height: 0.155 },
+  from: { x: 0.429, y: 0.88, height: 0.250 },
   to: { x: 0.655, y: 0.715, height: 0.075 },
 }
 
