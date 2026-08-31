@@ -7,12 +7,12 @@ export const ASSETS = {
   // La fachada son tres ilustraciones superpuestas, de atrás hacia delante:
   // el cielo al fondo, la biblioteca recortada sobre él y el cartel delante.
   // Las tres comparten el lienzo de 1672 × 941, así que se apilan sin ajustes.
-  sky: `${ASSET_BASE}/cielo-exterior.png`,
-  library: `${ASSET_BASE}/biblioteca.png`,
-  sign: `${ASSET_BASE}/cartel.png`,
-  interior: `${ASSET_BASE}/Interior.png`,
-  doorLeft: `${ASSET_BASE}/puerta-izquierda.png`,
-  doorRight: `${ASSET_BASE}/puerta-derecha.png`,
+  sky: `${ASSET_BASE}/cielo-exterior.webp`,
+  library: `${ASSET_BASE}/biblioteca.webp`,
+  sign: `${ASSET_BASE}/cartel.webp`,
+  interior: `${ASSET_BASE}/Interior.webp`,
+  doorLeft: `${ASSET_BASE}/puerta-izquierda.webp`,
+  doorRight: `${ASSET_BASE}/puerta-derecha.webp`,
 }
 
 // Dimensiones de referencia: las comparten las tres capas de fachada y el interior.
@@ -34,7 +34,7 @@ const STAGE = {
 //   width  ancho de las DOS hojas juntas. Cada una ocupa la mitad.
 //   height alto de las hojas.
 //
-// Medido sobre biblioteca.png (1672 × 941): el HUECO INTERIOR del arco va de
+// Medido sobre biblioteca.webp (1672 × 941): el HUECO INTERIOR del arco va de
 // 0.473 a 0.527 en horizontal y de 0.6235 a 0.768 en vertical. Los valores de
 // abajo son ese hueco menos el `bleed`, de modo que las hojas con su margen lo
 // cubren exactamente. Si cambias la ilustración, hay que medir otra vez.

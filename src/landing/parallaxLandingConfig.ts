@@ -1,18 +1,18 @@
 // Capas de fondo de la escena, ordenadas de la más profunda a la más cercana.
 // El orden del array es también el orden de apilado en el DOM.
 export const SCENE_LAYERS = [
-  { id: 'valley', src: '/images/Landing2/1.png' },
-  { id: 'library', src: '/images/Landing2/2.png' },
-  { id: 'meadow', src: '/images/Landing2/3.png' },
+  { id: 'valley', src: '/images/Landing2/1.webp' },
+  { id: 'library', src: '/images/Landing2/2.webp' },
+  { id: 'meadow', src: '/images/Landing2/3.webp' },
 ] as const
 
 // Las gotas van aparte del resto de capas porque su marcado es distinto: se
 // duplican para poder encadenar el ascenso en bucle.
-export const DROPS_LAYER_SRC = '/images/Landing2/4.png'
+export const DROPS_LAYER_SRC = '/images/Landing2/4.webp'
 
 // Franja de flores en primer plano. Va la última de todas, incluso por delante
 // de las gotas, así que tampoco entra en el array de capas de fondo.
-export const FOREGROUND_LAYER_SRC = '/images/Landing2/5.png'
+export const FOREGROUND_LAYER_SRC = '/images/Landing2/5.webp'
 
 // Barrido lateral de cámara.
 //

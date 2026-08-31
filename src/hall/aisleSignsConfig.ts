@@ -5,7 +5,7 @@
 //
 // ── Cómo colocar un cartel a mano ──────────────────────────────────────────
 //
-// Sistema de coordenadas: fracciones [0, 1] del stage (Interior.png, 1672 × 941),
+// Sistema de coordenadas: fracciones [0, 1] del stage (Interior.webp, 1672 × 941),
 // las mismas referencias que PORTAL. El origen es la esquina superior izquierda
 // de la imagen, no del navegador.
 //   0.01 horizontal ≈ 17 px de la imagen
@@ -76,7 +76,7 @@ export const AISLE_SIGNS_INTRO = {
 export const AISLE_SIGNS: AisleSign[] = [
   {
     aisleId: 'hiragana',
-    asset: `${AISLE_SIGN_BASE}/catel-hiragana.png`,
+    asset: `${AISLE_SIGN_BASE}/catel-hiragana.webp`,
     left: 0.07,
     top: 0.19,
     width: 0.09,

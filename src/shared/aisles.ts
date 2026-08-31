@@ -19,7 +19,7 @@ export interface Aisle {
 }
 
 export const AISLES = [
-  { id: 'hiragana', label: 'Hiragana', scene: '/images/hallways/pasillo-hiragana.png' },
+  { id: 'hiragana', label: 'Hiragana', scene: '/images/hallways/pasillo-hiragana.webp' },
 ] as const satisfies readonly Aisle[]
 
 // La ruta se deriva del id en lugar de escribirse en cada entrada: así no puede
