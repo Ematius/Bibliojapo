@@ -69,7 +69,7 @@
   // GSAP: así no hay dos fuentes peleando por la misma propiedad.
   &:hover &__figure,
   &:focus-visible &__figure {
-    background-color: #ffffff;
+    background-color: var(--color-highlight);
   }
 
   &:focus-visible {

@@ -42,7 +42,7 @@
   &__sign:hover,
   &__sign:focus-visible {
     filter: brightness(1.09);
-    animation: aisle-sign-sway 1.2s ease-out 1;
+    animation: aisle-sign-sway var(--duration-sign-sway) ease-out 1;
   }
 
   &__sign:focus-visible {

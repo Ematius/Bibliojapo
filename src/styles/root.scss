@@ -14,6 +14,27 @@
   --color-brass-glow: #f0c96a;
   --color-amber: #e8932a;
 
+  /* Luz cálida de lámpara: el resplandor que sale del interior de la
+     biblioteca. Describe la luz del edificio, no un detalle de una pantalla
+     concreta, así que sirve para cualquier sitio donde haya que iluminar algo
+     desde dentro; hoy la usa la apertura de puertas y mañana valdrá para las
+     linternas de un pasillo.
+
+     Van como tripletas RGB y no como color cerrado porque cada degradado las
+     pinta con una opacidad distinta —de 0 a 0.9 según el tramo—, y un token
+     por cada alfa serían seis nombres para un solo tono. Se escriben así:
+       rgba(var(--rgb-lamplight), 0.9)
+     El tono de borde solo se usa con alfa 0: existe para que el degradado se
+     apague hacia un crema y no hacia un gris. */
+  --rgb-lamplight: 255, 232, 188;
+  --rgb-lamplight-mid: 233, 183, 110;
+  --rgb-lamplight-edge: 244, 225, 183;
+
+  /* Realce al pasar el puntero por encima de un elemento claro apoyado sobre
+     una ilustración. Blanco puro a propósito: cualquier tono de la paleta se
+     confundiría con el fondo pintado. */
+  --color-highlight: #ffffff;
+
   /* Papel — páginas, fondo de contenido */
   --color-cream: #f5edd8;
   --color-parchment: #e8d9b8;
@@ -61,6 +82,9 @@
   --duration-door: 1700ms;
   --duration-fast: 280ms;
   --duration-slow: 900ms;
+  /* Latido de las pantallas de espera. Lento a propósito: una espera que
+     parpadea deprisa se lee como una alarma. */
+  --duration-pulse: 1600ms;
 
   /* Layout */
   --vh: 1vh; /* sobrescrito en runtime por el hook useVh */
@@ -70,4 +94,22 @@
   --radius-float: 1.25rem; /* contenedores flotantes: barras, tarjetas */
   --radius-badge: 0.75rem; /* distintivos cuadrados pequeños */
   --radius-pill: 999px;
+
+  /* ── De una sola pantalla ────────────────────────────────────────────────
+     Lo de abajo describe un detalle concreto de una pantalla, no una decisión
+     de la identidad visual. Vive aquí igualmente para que no queden números
+     sueltos por los SCSS, pero se anota de dónde es: si esa pantalla
+     desaparece, el token se va con ella.
+
+     Si alguno acaba usándose en un segundo sitio, súbelo al bloque temático
+     que le toque y quítalo de aquí — que se quede en esta lista sería decir
+     que es exclusivo cuando ya no lo es. */
+
+  /* Entrada (src/entrance) — sombra del bisel en el canto de cada hoja de
+     puerta, la que las despega entre sí al abrirse. */
+  --color-door-shade: rgba(0, 0, 0, 0.18);
+
+  /* Vestíbulo (src/hall) — balanceo del cartel al pasar el puntero. Una sola
+     pasada que se amortigua: oscilando sin parar sería un blanco móvil. */
+  --duration-sign-sway: 1200ms;
 }
