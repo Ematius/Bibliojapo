@@ -1,0 +1,130 @@
+// Barra de navegación de la app: vestíbulo, pasillos y lo que venga dentro.
+// La portada del valle no la lleva.
+
+.site-nav {
+  // Separación respecto a las esquinas de la pantalla. Un solo valor para que
+  // el aire de arriba y el de la izquierda sean siempre el mismo.
+  --nav-inset: 1.5rem;
+
+  position: absolute;
+  top: var(--nav-inset);
+  left: var(--nav-inset);
+  // La escena va antes en el DOM, pero sus capas están posicionadas en absoluto:
+  // sin apilado explícito la barra quedaría a merced de ese orden.
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  // Asimétrico a propósito: el distintivo del logotipo y el botón ya traen su
+  // propio cuerpo, así que por los lados basta con el aire que deja el padding
+  // vertical. Solo la izquierda pide un poco más para que el kanji no quede
+  // pegado al borde.
+  padding: 0.5rem 0.5rem 0.5rem 0.625rem;
+  border: 1px solid var(--color-glass-edge);
+  border-radius: var(--radius-float);
+  background: var(--color-glass);
+  // La escena de debajo es muy contrastada —cielo, montaña, flores— y el texto
+  // en negro se perdería sobre ella. El desenfoque la aplana lo justo para que
+  // la barra tenga sobre qué apoyarse sin taparla del todo.
+  backdrop-filter: blur(0.75rem);
+  box-shadow: var(--shadow-float);
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // Cuadrado: el kanji necesita la misma caja a lo alto que a lo ancho para
+    // quedar centrado de verdad.
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-badge);
+    background: var(--color-nav-ink);
+    color: var(--color-on-nav-ink);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    // Un kanji no tiene ascendentes ni descendentes que compensar; con el
+    // interlineado normal la caja de línea lo desplaza dentro del distintivo.
+    line-height: 1;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+  }
+
+  &__link {
+    color: var(--color-nav-ink);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  &__link:hover {
+    opacity: 0.6;
+  }
+
+  // Sección todavía sin pantalla. Se atenúa apenas lo justo para que no invite
+  // a pulsarla, sin llegar a leerse como texto desactivado.
+  &__link--pending {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &__link--pending:hover {
+    opacity: 0.55;
+  }
+
+  &__cta {
+    padding: 0.6875rem 1.375rem;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-nav-ink);
+    color: var(--color-on-nav-ink);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  &__cta:hover {
+    opacity: 0.85;
+  }
+
+  // El foco se marca sobre el fondo claro de la barra, no sobre la escena, así
+  // que el contorno va en la tinta oscura y no en el latón que usan las
+  // pantallas de dentro de la biblioteca.
+  &__logo:focus-visible,
+  &__link:focus-visible,
+  &__cta:focus-visible {
+    outline: 2px solid var(--color-nav-ink);
+    outline-offset: 3px;
+  }
+}
+
+// Por debajo de este ancho no caben las cuatro secciones más el botón sin que
+// la barra se coma la pantalla entera. Se dejan el logotipo y la llamada a la
+// acción; el menú desplegable para móvil queda pendiente.
+@media (max-width: 48rem) {
+  .site-nav {
+    --nav-inset: 1rem;
+  }
+
+  .site-nav__links {
+    display: none;
+  }
+}

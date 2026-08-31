@@ -1,0 +1,47 @@
+// Vestíbulo de la biblioteca. El encuadre reproduce exactamente el del stage de
+// la entrada (misma proporción, mismo centrado, mismo recorte) para que llegar
+// aquí desde la puerta no se note como un cambio de pantalla.
+
+.library-hall {
+  position: relative;
+  width: 100%;
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  background: var(--color-bg);
+
+  &__stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    // Mismo cálculo que el stage de la entrada: la escena cubre la ventana
+    // manteniendo la proporción de la ilustración, recortando por donde sobre.
+    aspect-ratio: 1672 / 941;
+    width: max(100vw, calc(var(--vh) * 100 * 1672 / 941));
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+  }
+
+  &__interior {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  // Ilustración del pasillo elegido, que entra deslizándose antes de cambiar de
+  // ruta. Fija a la ventana y por encima de todo, incluida la barra.
+  &__sweep {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+}

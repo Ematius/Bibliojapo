@@ -12,18 +12,46 @@
     aspect-ratio: 1672 / 941;
     width: max(100vw, calc(var(--vh, 1vh) * 100 * 1672 / 941));
     transform: translate(-50%, -50%);
-    perspective: 1500px;
-    perspective-origin: 50% 50%;
     overflow: hidden;
   }
 
   &__interior,
-  &__exterior {
+  &__building {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     display: block;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  // Cielo: la única capa de la fachada con movimiento. Va ensanchada respecto
+  // al stage para tener margen por el que derivar; el ancho tiene que ir
+  // explícito porque una imagen en posición absoluta no se estira sola entre
+  // left y right, se queda en su tamaño intrínseco.
+  &__sky {
+    position: absolute;
+    top: 0;
+    left: calc((1 - var(--sky-overscan)) * 50%);
+    display: block;
+    width: calc(100% * var(--sky-overscan));
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  // Cartel de bienvenida, en primer plano. Solo se le da el ancho: el alto sale
+  // de la proporción de la ilustración, que es la del stage.
+  &__sign {
+    position: absolute;
+    left: calc(var(--sign-left) * 100%);
+    top: calc(var(--sign-top) * 100%);
+    display: block;
+    width: calc(var(--sign-width) * 100%);
+    height: auto;
     user-select: none;
     pointer-events: none;
   }
@@ -89,6 +117,19 @@
     top: calc((var(--portal-top) - var(--portal-bleed)) * 100%);
     width: calc((var(--portal-width) + var(--portal-bleed) * 2) * 100%);
     height: calc((var(--portal-height) + var(--portal-bleed) * 2) * 100%);
+
+    // La perspectiva vive aquí y no en el stage por dos razones. La primera es
+    // que el punto de fuga queda en el centro de las propias puertas, que es
+    // desde donde se mira una entrada. La segunda es que así la distancia del
+    // ojo se expresa en múltiplos del ancho de las hojas
+    // (--door-perspective-ratio) en vez de en píxeles fijos: al cambiar el
+    // tamaño del PORTAL, el escorzo se mantiene igual de marcado. Con un valor
+    // en px, unas puertas pequeñas quedan casi sin escorzo y la apertura deja
+    // de leerse como hacia dentro.
+    perspective: calc(
+      (var(--portal-width) + var(--portal-bleed) * 2) * 100vw * var(--door-perspective-ratio)
+    );
+    perspective-origin: 50% 50%;
     transform-style: preserve-3d;
     pointer-events: none;
   }
@@ -105,11 +146,6 @@
     transform-style: preserve-3d;
     will-change: transform;
 
-    // Grosor real en px, calculado una vez al cargar/resize (ver
-    // useLibraryEntranceAnimation.ts) — el fallback en 0 evita romper los
-    // cálculos de los cantos antes de la primera medición.
-    --door-depth: 0px;
-
     &--left {
       left: 0;
       transform-origin: left center;
@@ -121,8 +157,8 @@
     }
   }
 
-  // Cuerpo 3D de la hoja: cara frontal + trasera (mismo PNG) separadas por
-  // --door-depth, más 4 cantos de madera que conectan ambas caras.
+  // Las dos caras de la hoja, con el mismo PNG: la frontal tallada y el dorso,
+  // oscurecido. La hoja no tiene grosor — es una lámina sin canto.
   .door3d__face {
     position: absolute;
     inset: 0;
@@ -138,11 +174,10 @@
       pointer-events: none;
     }
 
-    // La cara frontal se queda exactamente donde estaba la puerta plana (sin
-    // transform) — no debe sobresalir hacia el espectador. Todo el grosor se
-    // añade hacia atrás, hacia el interior.
+    // El dorso: el mismo PNG dado la vuelta sobre el mismo plano. Se ve cuando
+    // la hoja pasa de los 90° al abrirse hacia dentro.
     &--back {
-      transform: rotateY(180deg) translateZ(var(--door-depth));
+      transform: rotateY(180deg);
       filter: brightness(var(--door-back-brightness, 0.6)) saturate(var(--door-back-saturation, 0.75));
     }
   }
@@ -173,83 +208,14 @@
     );
   }
 
-  // Canto de madera: gradiente CSS que simula sombra propia (más oscuro cerca
-  // de la cara frontal) y un ligero tinte cálido en el lado interior.
-  .door3d__edge {
-    position: absolute;
-    pointer-events: none;
-    will-change: transform;
-    background: linear-gradient(
-      to right,
-      rgba(30, 18, 11, 0.55) 0%,
-      rgba(94, 56, 33, 0.15) 45%,
-      rgba(133, 81, 46, 0.05) 65%,
-      rgba(45, 27, 16, 0.5) 100%
-    );
-
-    &--inner {
-      background: linear-gradient(
-        to right,
-        rgba(45, 27, 16, 0.5) 0%,
-        rgba(94, 56, 33, 0.1) 40%,
-        rgba(133, 81, 46, 0.05) 60%,
-        rgba(233, 183, 110, 0.35) 100%
-      );
-    }
-
-    // Cantos laterales (bisagra / interior): tira vertical de ancho = profundidad,
-    // pegada al borde correspondiente de la hoja y girada 90° sobre ESE borde
-    // (transform-origin), de modo que arranca en el plano frontal (z=0, donde
-    // está la cara visible) y se hunde hacia atrás hasta --door-depth. Nunca
-    // sobresale hacia delante.
-    &--a,
-    &--b {
-      top: 0;
-      width: var(--door-depth);
-      height: 100%;
-    }
-
-    &--a {
-      right: 100%;
-      transform-origin: right center;
-      transform: rotateY(-90deg);
-    }
-
-    &--b {
-      left: 100%;
-      transform-origin: left center;
-      transform: rotateY(90deg);
-    }
-
-    // Cantos superior/inferior: misma lógica en el eje Y.
-    &--top,
-    &--bottom {
-      left: 0;
-      width: 100%;
-      height: var(--door-depth);
-    }
-
-    &--top {
-      bottom: 100%;
-      transform-origin: bottom center;
-      transform: rotateX(90deg);
-    }
-
-    &--bottom {
-      top: 100%;
-      transform-origin: top center;
-      transform: rotateX(-90deg);
-    }
-  }
-
   &__door-shade {
     position: absolute;
     inset: 0;
     opacity: 0;
     pointer-events: none;
     backface-visibility: hidden;
-    // Ligeramente por delante de la cara frontal (que ahora vive en z=0) para
-    // que la sombra de apertura no quede "enterrada" dentro del grosor.
+    // Un pelo por delante de la cara frontal: las dos ocupan el mismo plano y
+    // sin esta separación el navegador puede pintar una sobre otra a saltos.
     transform: translateZ(1px);
   }
 

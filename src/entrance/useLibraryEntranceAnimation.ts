@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
-import { LIBRARY_ANIMATION_CONFIG as config } from './libraryEntranceConfig'
+import { LIBRARY_ANIMATION_CONFIG as config, getEntranceScrollLength } from './libraryEntranceConfig'
 import { fitDoorImageToContainer } from './getOpaqueBounds'
 import { LibraryParticles } from './LibraryParticles'
 
@@ -12,7 +12,9 @@ export interface LibraryEntranceRefs {
   sectionRef: RefObject<HTMLElement | null>
   facadeGroupRef: RefObject<HTMLDivElement | null>
   interiorRef: RefObject<HTMLImageElement | null>
-  exteriorRef: RefObject<HTMLImageElement | null>
+  skyRef: RefObject<HTMLImageElement | null>
+  buildingRef: RefObject<HTMLImageElement | null>
+  signRef: RefObject<HTMLImageElement | null>
   doorLeftRef: RefObject<HTMLDivElement | null>
   doorRightRef: RefObject<HTMLDivElement | null>
   doorLeftImgRef: RefObject<HTMLImageElement | null>
@@ -35,15 +37,6 @@ function waitForImage(imgEl: HTMLImageElement | null): Promise<void> {
   })
 }
 
-// Mide la hoja ya ajustada (fitDoorImageToContainer) y expone su grosor real
-// como custom property CSS, para que los cantos 3D (.door3d__edge) puedan
-// posicionarse con matemáticas exactas. Se recalcula solo al cargar y en
-// resize, nunca por frame.
-function applyDoorGeometryVars(containerEl: HTMLElement, depthRatio: number): void {
-  const rect = containerEl.getBoundingClientRect()
-  containerEl.style.setProperty('--door-depth', `${rect.width * depthRatio}px`)
-}
-
 function waitForNextFrames(count = 2): Promise<void> {
   return new Promise((resolve) => {
     const step = (remaining: number) => {
@@ -54,21 +47,40 @@ function waitForNextFrames(count = 2): Promise<void> {
   })
 }
 
-export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
+// `onEnterComplete` se dispara una sola vez, cuando la secuencia llega al final
+// y el usuario ya está dentro. La puerta es un umbral, no un destino: quien la
+// cruza sigue camino, y es quien llama a este hook el que decide a dónde.
+export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterComplete: () => void) {
   const [isReady, setIsReady] = useState(false)
   const enterActionRef = useRef<() => void>(() => {})
   const readyRef = useRef(false)
+
+  // En un ref para que el efecto no dependa de la identidad de la función: si
+  // dependiera, cada render con una lambda nueva desmontaría y volvería a montar
+  // toda la animación.
+  const onEnterCompleteRef = useRef(onEnterComplete)
+  onEnterCompleteRef.current = onEnterComplete
+  const hasEnteredRef = useRef(false)
 
   const handleEnterClick = useCallback(() => {
     if (!readyRef.current) return
     enterActionRef.current()
   }, [])
 
-  useEffect(() => {
+  // Tiene que ser un efecto de layout, no un useEffect normal: al fijar la
+  // sección, ScrollTrigger la envuelve en un .pin-spacer y deja de ser hija del
+  // nodo que React registró. Si React la desmonta en ese estado, su removeChild
+  // falla y el árbol se queda a medias — la puerta se queda pintada y la ruta
+  // nueva no llega a montarse. Los cleanups de useEffect corren después de
+  // quitar los nodos, así que el revert llegaría tarde; los de useLayoutEffect
+  // corren antes, que es justo lo que hace falta para deshacer el pin a tiempo.
+  useLayoutEffect(() => {
     const {
       sectionRef,
       interiorRef,
-      exteriorRef,
+      skyRef,
+      buildingRef,
+      signRef,
       facadeGroupRef,
       doorLeftRef,
       doorRightRef,
@@ -87,12 +99,15 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
 
     let particles: LibraryParticles | null = null
     let ctx: ReturnType<typeof gsap.context> | null = null
+    let doorResizeObserver: ResizeObserver | null = null
     let cancelled = false
 
     async function setup() {
       await Promise.all([
         waitForImage(interiorRef.current),
-        waitForImage(exteriorRef.current),
+        waitForImage(skyRef.current),
+        waitForImage(buildingRef.current),
+        waitForImage(signRef.current),
         waitForImage(doorLeftImgRef.current),
         waitForImage(doorRightImgRef.current),
       ])
@@ -113,8 +128,22 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
 
       fitDoorImageToContainer(doorLeftImgEl, doorLeftEl)
       fitDoorImageToContainer(doorRightImgEl, doorRightEl)
-      applyDoorGeometryVars(doorLeftEl, config.doors3D.depthRatio)
-      applyDoorGeometryVars(doorRightEl, config.doors3D.depthRatio)
+
+      // El ajuste de arriba escribe medidas en píxeles sobre la <img>, así que
+      // hay que rehacerlo cada vez que su contenedor cambia de tamaño. Se
+      // observa el contenedor y no la ventana: así también se recalcula al
+      // cambiar las medidas del PORTAL en caliente, que con un listener de
+      // resize no se veía hasta recargar la página entera.
+      //
+      // Se empieza a observar aquí y no antes porque el ResizeObserver entrega
+      // una primera medición nada más observar: hacerlo con las imágenes sin
+      // cargar mediría una silueta todavía sin dimensiones.
+      doorResizeObserver = new ResizeObserver(() => {
+        fitDoorImageToContainer(doorLeftImgEl, doorLeftEl)
+        fitDoorImageToContainer(doorRightImgEl, doorRightEl)
+      })
+      doorResizeObserver.observe(doorLeftEl)
+      doorResizeObserver.observe(doorRightEl)
 
       particles = new LibraryParticles({
         backCanvas,
@@ -142,6 +171,23 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
           return
         }
 
+        // Deriva del cielo. Va suelta y no dentro de la timeline de las puertas:
+        // tiene que seguir viva con la entrada cerrada y abierta por igual, y su
+        // ritmo no depende de por dónde vaya el scroll. El contexto de GSAP se
+        // encarga de revertirla al desmontar, como al resto.
+        const sky = config.facade.sky
+        gsap.fromTo(
+          skyRef.current,
+          { xPercent: -sky.amplitudePercent / 2 },
+          {
+            xPercent: sky.amplitudePercent / 2,
+            duration: sky.durationSeconds,
+            ease: sky.ease,
+            repeat: -1,
+            yoyo: true,
+          },
+        )
+
         const [closedStart, closedEnd] = config.phases.closed
         const [openingStart, openingEnd] = config.phases.opening
         const [openStart, openEnd] = config.phases.open
@@ -151,10 +197,19 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
         const syncParticles = () => particles?.setGlobalOpacity(particlesProxy.value)
 
         const tl = gsap.timeline({
+          // Con scrub la timeline persigue al scroll, así que este onComplete
+          // salta cuando el recorrido llega de verdad al final, no cuando el
+          // scroll toca el límite. El guard evita que se repita si el usuario
+          // sube y vuelve a bajar antes de que la ruta cambie.
+          onComplete: () => {
+            if (hasEnteredRef.current) return
+            hasEnteredRef.current = true
+            onEnterCompleteRef.current()
+          },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
-            end: () => `+=${window.innerHeight * config.scroll.viewportHeights}`,
+            end: () => `+=${getEntranceScrollLength()}`,
             pin: true,
             scrub: 1,
             anticipatePin: 1,
@@ -226,23 +281,9 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs) {
 
     setup()
 
-    const handleWindowResize = () => {
-      const doorLeftEl = doorLeftRef.current
-      const doorRightEl = doorRightRef.current
-      const doorLeftImgEl = doorLeftImgRef.current
-      const doorRightImgEl = doorRightImgRef.current
-      if (!doorLeftEl || !doorRightEl || !doorLeftImgEl || !doorRightImgEl) return
-
-      fitDoorImageToContainer(doorLeftImgEl, doorLeftEl)
-      fitDoorImageToContainer(doorRightImgEl, doorRightEl)
-      applyDoorGeometryVars(doorLeftEl, config.doors3D.depthRatio)
-      applyDoorGeometryVars(doorRightEl, config.doors3D.depthRatio)
-    }
-    window.addEventListener('resize', handleWindowResize)
-
     return () => {
       cancelled = true
-      window.removeEventListener('resize', handleWindowResize)
+      doorResizeObserver?.disconnect()
       ctx?.revert()
       particles?.destroy()
       readyRef.current = false

@@ -198,7 +198,9 @@ export class LibraryParticles {
     this.rafId = requestAnimationFrame(this.tick)
   }
 
-  stop(): void {
+  // Privado: nadie para el bucle sin destruir el sistema entero. Si algún día
+  // hiciera falta pausarlo sin soltar los canvas, se hace público.
+  private stop(): void {
     if (this.rafId !== null) {
       cancelAnimationFrame(this.rafId)
       this.rafId = null

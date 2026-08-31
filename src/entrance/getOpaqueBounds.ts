@@ -2,7 +2,7 @@
 // para poder rotar/posicionar la puerta respecto a su silueta visible y no respecto
 // al lienzo transparente completo del archivo.
 
-export interface OpaqueBounds {
+interface OpaqueBounds {
   x: number
   y: number
   width: number
@@ -12,7 +12,7 @@ export interface OpaqueBounds {
 const boundsCache = new WeakMap<HTMLImageElement, OpaqueBounds>()
 const ALPHA_THRESHOLD = 10
 
-export function getOpaqueBounds(image: HTMLImageElement, fallback: OpaqueBounds | null = null): OpaqueBounds {
+function getOpaqueBounds(image: HTMLImageElement): OpaqueBounds {
   const cached = boundsCache.get(image)
   if (cached) return cached
 
@@ -52,9 +52,9 @@ export function getOpaqueBounds(image: HTMLImageElement, fallback: OpaqueBounds 
   if (maxX === -1) {
     console.warn(
       `[getOpaqueBounds] "${image.currentSrc || image.src}" no tiene transparencia real detectable. ` +
-        'Usando fallback manual (o el PNG completo si no se proporcionó ninguno).',
+        'Se usa el PNG completo.',
     )
-    bounds = fallback ?? { x: 0, y: 0, width, height }
+    bounds = { x: 0, y: 0, width, height }
   } else {
     bounds = {
       x: minX,
@@ -79,12 +79,8 @@ export function getOpaqueBounds(image: HTMLImageElement, fallback: OpaqueBounds 
 
 // Calcula cómo escalar y desplazar la imagen de la puerta para que su bounding box
 // opaco encaje exactamente en el contenedor (el contenedor es el que define el pivote real).
-export function fitDoorImageToContainer(
-  imgEl: HTMLImageElement,
-  containerEl: HTMLElement,
-  fallback: OpaqueBounds | null = null,
-): OpaqueBounds {
-  const bounds = getOpaqueBounds(imgEl, fallback)
+export function fitDoorImageToContainer(imgEl: HTMLImageElement, containerEl: HTMLElement): void {
+  const bounds = getOpaqueBounds(imgEl)
   const containerRect = containerEl.getBoundingClientRect()
 
   const scaleX = containerRect.width / bounds.width
@@ -94,6 +90,4 @@ export function fitDoorImageToContainer(
   imgEl.style.height = `${imgEl.naturalHeight * scaleY}px`
   imgEl.style.left = `${-bounds.x * scaleX}px`
   imgEl.style.top = `${-bounds.y * scaleY}px`
-
-  return bounds
 }
