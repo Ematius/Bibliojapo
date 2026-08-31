@@ -199,6 +199,73 @@ Hasta ese momento, vive en el dominio donde nació.
 
 ---
 
+## Contenido del curso
+
+Qué se enseña, en qué orden, con qué vocabulario y qué frases vive en su propio
+documento, que se carga entero en cada sesión:
+
+@docs/estructura-aprendizaje.md
+
+Ese archivo es la referencia del contenido y va a cambiar a menudo. CLAUDE.md no:
+aquí solo están las reglas que se derivan de él.
+
+### Reglas
+
+- **El contenido es dato, nunca código.** Kana, vocabulario, frases y gramática
+  viven en archivos de datos, no incrustados en componentes ni escritos a mano
+  dentro del JSX. Debe poder cambiarse el temario sin tocar un componente.
+- **Las cuatro capas no se mezclan:** contenido → currículo (bloques) →
+  ejercicios → progreso del usuario. Un ejercicio no define contenido, y un
+  bloque no define ejercicios.
+- **Un bloque guarda referencias, no copias.** Si una palabra aparece en dos
+  bloques es la misma entrada referenciada dos veces, nunca duplicada.
+- **Nada se marca como nuevo dos veces.** Lo ya aprendido cuenta como conocido
+  al calcular qué desbloquea el bloque siguiente.
+- **Nunca inventar contenido japonés.** Kana, lecturas, significados y frases
+  salen del documento. Si falta algo, se pregunta — no se rellena a ojo.
+- **Idioma del contenido:** el japonés en japonés, las traducciones en español.
+  No es una excepción a la regla de idioma de la UI: es dato, no interfaz.
+
+### Contenido y ejercicios van separados
+
+El contenido cambia con cada pasillo. Los ejercicios NO: «reconocer el carácter»,
+«escribir la lectura» o «completar la frase» son el mismo ejercicio tanto en
+hiragana como en katakana o kanji. Por eso viven en sitios distintos.
+
+```text
+src/
+  content/            ← el temario, un subdirectorio por pasillo
+    types.ts          ← Kana, Word, Sentence, Grammar, Block (comunes a todos)
+    hiragana/
+      kana.ts
+      vocabulary.ts
+      sentences.ts
+      grammar.ts
+      blocks.ts
+    katakana/         ← más adelante, los mismos archivos
+    kanji/            ← más adelante
+  exercises/          ← cada tipo de ejercicio, escrito UNA sola vez
+```
+
+- **Un ejercicio nunca sabe de qué pasillo es.** Recibe el contenido por
+  parámetro y funciona igual con cualquiera. Si un ejercicio menciona «hiragana»
+  en su código, está mal escrito: hay que sacarlo al contenido.
+- **Añadir katakana debe ser añadir datos, no ejercicios.** El día que exista
+  `content/katakana/`, no debería hacer falta escribir ni un ejercicio nuevo.
+- **`types.ts` es común a todos los pasillos.** Un kana es un kana lo escriba
+  quien lo escriba. El kanji necesitará campos de más (lecturas on/kun); se
+  añaden extendiendo el tipo, no duplicándolo.
+- **Los datos van en `.ts`, no en `.json`.** TypeScript comprueba las referencias
+  cruzadas —que ninguna frase apunte a una palabra inexistente, que ningún bloque
+  referencie un kana que no está— y con un temario que es todo referencias eso es
+  lo que impide que se desincronice. El día que haya base de datos, `types.ts`
+  pasa a ser el esquema de las tablas y el volcado sale de un script; el JSON se
+  genera con un `JSON.stringify` si hace falta.
+- **Ninguna de las dos carpetas existe todavía.** No crearlas hasta que haya algo
+  que meter dentro.
+
+---
+
 ## Principios de animación
 
 - Todas las animaciones de entrada/salida usan **timelines de GSAP**,
