@@ -29,8 +29,8 @@ const stageStyle: StyleWithVars = {
 // La cara trasera reutiliza el mismo PNG que la frontal, oscurecido y
 // desaturado para simular el dorso sin talla de una hoja de puerta real.
 const doorBackFaceStyle: StyleWithVars = {
-  '--door-back-brightness': 0.6,
-  '--door-back-saturation': 0.75,
+  '--door-back-brightness': config.doors3D.backBrightness,
+  '--door-back-saturation': config.doors3D.backSaturation,
 }
 
 export function LibraryEntrance() {

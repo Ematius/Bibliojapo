@@ -97,6 +97,11 @@ const DOORS_3D = {
   // suave en vez de un corte duro de una hoja tapando a la otra. No tocar a mano
   // — si ajustas centerOverlap, este valor se recalcula solo.
   seamFadeStart: (0.5 / (0.5 + centerOverlap)) * 100,
+  // El dorso de cada hoja reutiliza el mismo PNG que la cara tallada, apagado y
+  // desaturado para que se lea como la trasera lisa de una puerta de verdad.
+  // Cuanto más bajos, más marcada la diferencia entre las dos caras.
+  backBrightness: 0.6,
+  backSaturation: 0.75,
 }
 
 // Distancia total de scroll-jacking en píxeles.
