@@ -1,0 +1,79 @@
+// La caminante del sendero. Único elemento pulsable del valle: la portada se
+// mira, y el único gesto posible es seguir el camino.
+
+.path-walker {
+  // Progreso del paseo: 0 al pie del sendero, 1 junto a la escalinata. Lo
+  // escribe GSAP fotograma a fotograma; todo lo demás se deduce de él.
+  --walk: 0;
+  // Desplazamiento vertical de la zancada, en px a tamaño natural.
+  --walk-bob: 0;
+
+  position: absolute;
+  // left y top fijan el punto de partida. El resto del recorrido no toca estas
+  // dos propiedades sino el transform: mover left/top en cada frame obligaría a
+  // recalcular la disposición de la página, mientras que un transform se
+  // resuelve en la composición.
+  left: calc(var(--walk-from-x) * 100%);
+  top: calc(var(--walk-from-y) * 100%);
+  z-index: 1;
+
+  // El lienzo del PNG es cuadrado, así que el botón también: así la máscara
+  // encaja sin deformar. La figura ocupa algo más de la mitad de ese ancho y el
+  // sobrante queda como área de pulsación, que viene bien cuando la perspectiva
+  // la ha encogido.
+  width: calc(var(--walk-height) * var(--vh) * 100);
+  height: calc(var(--walk-height) * var(--vh) * 100);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  // El origen en la base es lo que clava los pies en el suelo: al escalar, la
+  // figura mengua hacia sus propios pies en vez de hacia su centro, que la
+  // levantaría del camino.
+  transform-origin: 50% 100%;
+  // Se lee de derecha a izquierda. El bamboleo va el primero, dentro de la
+  // escala, para que se encoja junto con la figura al alejarse; después la
+  // perspectiva; luego el avance por el sendero; y por último el anclaje, que
+  // centra el lienzo sobre el punto y apoya su base en él.
+  transform:
+    translate(-50%, -100%)
+    translate(
+      calc(var(--walk) * var(--walk-dx) * 100vw),
+      calc(var(--walk) * var(--walk-dy) * var(--vh) * 100)
+    )
+    scale(calc(1 + var(--walk) * (var(--walk-scale) - 1)))
+    translateY(calc(var(--walk-bob) * 1px));
+  will-change: transform;
+
+  &__figure {
+    display: block;
+    width: 100%;
+    height: 100%;
+    // El dibujo es trazo negro sobre fondo transparente. Usado como máscara,
+    // recorta este color de relleno y deja la figura teñida: el tono sale
+    // exacto del token, sin la aproximación de una cadena de filtros.
+    background-color: var(--color-cream);
+    mask-image: var(--walk-image);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-image: var(--walk-image);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  // El puntero actúa sobre el color y no sobre la opacidad, que es lo que anima
+  // GSAP: así no hay dos fuentes peleando por la misma propiedad.
+  &:hover &__figure,
+  &:focus-visible &__figure {
+    background-color: #ffffff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 6px;
+  }
+}
