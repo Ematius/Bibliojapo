@@ -76,7 +76,7 @@ export const AISLE_SIGNS_INTRO = {
 export const AISLE_SIGNS: AisleSign[] = [
   {
     aisleId: 'hiragana',
-    asset: `${AISLE_SIGN_BASE}/catel-hiragana.webp`,
+    asset: `${AISLE_SIGN_BASE}/cartel-hiragana.webp`,
     left: 0.07,
     top: 0.19,
     width: 0.09,
