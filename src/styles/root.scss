@@ -39,6 +39,18 @@
   --color-cream: #f5edd8;
   --color-parchment: #e8d9b8;
 
+  /* Papel del tomo abierto. Los dos valores están MEDIDOS sobre la ilustración
+     del libro (libro-abierto-100.png), no elegidos a ojo: es lo que hace que la
+     hoja que se pasa y la hoja pintada sean del mismo papel y no se vea la
+     costura entre las dos.
+       page       la cresta, en el centro de la página, donde más luz da
+       page-fold  el borde, donde el papel se hunde hacia la encuadernación
+     La sombra tira a ámbar y no a gris a propósito: es papel viejo bajo una
+     lámpara cálida, y oscurecerlo con negro lo apaga. */
+  --color-page: #fcf7e5;
+  --color-page-fold: #f0d8b1;
+  --rgb-page-fold: 240, 216, 177;
+
   /* Vegetación — hiedra decorativa */
   --color-ivy: #6b8c5a;
   --color-ivy-dark: #4a6340;
@@ -49,6 +61,9 @@
 
   /* Fondo general — lo que hay fuera/detrás de la biblioteca */
   --color-bg: #1a1208;
+  /* El mismo fondo en componentes, para poder velar una escena sin que el velo
+     tire a gris: oscurecer con negro apaga la luz cálida de la biblioteca. */
+  --rgb-bg: 26, 18, 8;
 
   /* Cielo — fondo bajo las capas de la landing */
   --color-sky: #2f86d8;

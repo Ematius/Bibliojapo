@@ -1,0 +1,20 @@
+// El velo que se pone entre el pasillo y el tomo cuando alguien lo coge.
+//
+// Hace dos cosas a la vez, y por eso es una sola pieza y no dos: separa el libro
+// del fondo para que se lea como lo que importa en ese momento, y es la zona que
+// se pulsa para devolverlo a la balda. Sin él, «pulsar fuera» sería un gesto
+// invisible que hay que descubrir por casualidad; con él, el sitio donde pulsar
+// está a la vista.
+
+.volume-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: none;
+  // El velo tira al fondo cálido de la biblioteca y no a negro: oscurecer con
+  // negro apaga la luz de las lámparas y el pasillo se vuelve gris.
+  background: rgba(var(--rgb-bg), 0.55);
+  // El cursor dice lo que hace sin necesidad de un botón de cerrar a la vista.
+  cursor: pointer;
+}

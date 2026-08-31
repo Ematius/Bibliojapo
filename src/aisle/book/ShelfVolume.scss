@@ -1,0 +1,154 @@
+// Un tomo de la estantería, montado con volumen real.
+//
+// El truco entero está en que el lomo y la tapa son dos planos perpendiculares
+// en el espacio, no un dibujo del libro. Por eso el giro se puede animar en
+// cualquier ángulo y sigue leyéndose como un objeto.
+
+.shelf-volume {
+  position: absolute;
+  // left y top marcan el centro del LOMO y la balda sobre la que se apoya. El
+  // ancla es el lomo y no el conjunto porque es la parte que toca la madera: la
+  // tapa se abre hacia atrás desde ahí, igual que en un estante de verdad.
+  left: calc(var(--volume-x) * 100%);
+  top: calc(var(--volume-base-y) * 100%);
+  // El alto de base es el del tomo ADELANTADO, no el que tiene en la balda, y
+  // en el estante se encoge con una escala menor que 1.
+  //
+  // Va al revés de lo natural a propósito. El navegador rasteriza una caja con
+  // transformación 3D al tamaño que tiene antes de escalarla: naciendo pequeña
+  // y agrandándose seis veces, el tomo llegaba al lector hecho un mosaico. Al
+  // revés se dibuja una vez a tamaño grande y encogerlo no le quita nitidez.
+  height: calc(var(--volume-focus-height) * 100%);
+  // El botón mide lo que el lomo. La tapa asoma fuera de esa caja al girar, de
+  // ahí que no haya overflow recortando nada.
+  aspect-ratio: var(--spine-ratio);
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  // Por encima del velo (2) y por debajo del libro abierto (4), que es el orden
+  // en que se tapan: el velo apaga el pasillo, el tomo se destaca sobre él, y el
+  // libro pintado acaba tapando al tomo.
+  z-index: 3;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brass-glow);
+    outline-offset: 6px;
+  }
+
+  // La caja que gira. La perspectiva va aquí dentro, en el propio transform, y
+  // no como propiedad heredada de un ancestro: así el tomo puede escalarse y
+  // desplazarse sin que la fuga se deforme con él.
+  &__box {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    // Punto de partida antes de que GSAP tome el control. Coincide con
+    // `restDeg` de shelfConfig.ts, y es el estado definitivo cuando el sistema
+    // pide movimiento reducido y la animación no llega a arrancar.
+    transform: perspective(1600px) rotateY(-10deg);
+  }
+
+  &__face {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    // Cada cara se ve solo por fuera. Ahora que el tomo es una caja cerrada de
+    // cuatro caras, ninguna debería enseñar su revés: son el interior del
+    // libro. Sin esto, con el canto de frente se veía el reverso del lomo por
+    // detrás, colándose por los márgenes transparentes del render y pareciendo
+    // dos aletas doradas a los lados del bloque de hojas.
+    backface-visibility: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      user-select: none;
+    }
+
+    // La tapa pintada de tres cuartos, encima de la plana.
+    //
+    // El selector va compuesto a propósito: tiene que ganar en especificidad a
+    // la regla `img` de justo arriba, que si no le impondría el ancho de la cara
+    // y le recortaría precisamente el bloque de hojas, que es lo único que la
+    // hace distinta.
+    //
+    // Se ancla por la DERECHA porque ese borde es el mismo en las dos imágenes
+    // —la arista del lomo— y lo que sobra por la izquierda es el canto. Así las
+    // dos tapas quedan superpuestas al píxel y el fundido no desplaza nada.
+    img.shelf-volume__turned {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc(var(--cover-turned-ratio) / var(--cover-ratio) * 100%);
+      opacity: 0;
+    }
+  }
+
+  // El lomo ocupa la caja entera: es la cara que da al pasillo.
+  &__face--spine {
+    left: 0;
+    width: 100%;
+  }
+
+  // Las dos tapas cuelgan una de cada arista del lomo y se hunden hacia el fondo
+  // del estante. Su ancho sale de las dos proporciones: la caja mide el grosor
+  // del libro, y una tapa es tantas veces más ancha como lo sea su proporción
+  // frente a la del lomo. Así la geometría la fijan los renders y no un número
+  // puesto a ojo.
+  &__face--back,
+  &__face--cover {
+    width: calc(var(--cover-ratio) / var(--spine-ratio) * 100%);
+  }
+
+  // La contra, articulada en la arista DERECHA. Es la que asoma con el tomo de
+  // tres cuartos en la balda, y la única que se ve mientras el libro está
+  // colocado.
+  &__face--back {
+    left: 100%;
+    transform-origin: left center;
+    transform: rotateY(90deg);
+  }
+
+  // La portada, articulada en la arista IZQUIERDA, mirando al fondo del estante.
+  // Solo aparece cuando el tomo se gira hacia el lector, y entonces el lomo le
+  // queda a la derecha, que es como se sostiene un tomo japonés.
+  //
+  // Lleva preserve-3d porque el canto cuelga de ella: es la forma de colocarlo a
+  // la profundidad correcta sin recurrir a un translateZ, que necesitaría una
+  // medida en píxeles y aquí todo va en proporciones.
+  &__face--cover {
+    right: 100%;
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+    transform-style: preserve-3d;
+  }
+
+  // El canto, colgado de la arista libre de la portada y girado otro cuarto de
+  // vuelta: acaba paralelo al lomo y al fondo de todo, que es justo donde está
+  // el filo de las hojas. Con él la caja queda cerrada por sus cuatro lados.
+  //
+  // Su ancho es el grosor del libro, esta vez medido contra la tapa porque es de
+  // ella de quien cuelga.
+  &__face--edge {
+    right: 100%;
+    width: calc(var(--spine-ratio) / var(--cover-ratio) * 100%);
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+
+    // El render del canto viene con mucho aire alrededor: el libro ocupa solo
+    // el 36,8% del ancho del lienzo (377 px de 1024) y el 96,3% del alto, bien
+    // centrado. Los otros renders vienen recortados a la silueta, así que sin
+    // esto el bloque de hojas salía tres veces más estrecho que el grosor real
+    // del tomo, con el pasillo asomando por los huecos.
+    //
+    // Se corrige aquí y no recortando el archivo para no tocar una imagen con
+    // la que todavía estás probando. Si cambias el render con otro encuadre,
+    // estos dos números son los que hay que volver a medir.
+    img {
+      transform: scale(2.716, 1.038);
+    }
+  }
+}

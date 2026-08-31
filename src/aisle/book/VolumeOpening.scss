@@ -1,0 +1,32 @@
+// El libro abriéndose, centrado sobre el pasillo.
+//
+// Sin drop-shadow: los fotogramas ya traen su sombra pintada, y añadir un filtro
+// encima obligaría a repintar la zona entera en cada frame del fundido.
+
+.volume-opening {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+
+  // Los cuatro apilados en el mismo hueco. `contain` en vez de estirar: los tres
+  // primeros vienen en un lienzo algo más estrecho, y respetando su proporción
+  // el libro se ve angosto al empezar y se ensancha al abrirse, que es lo que
+  // hace de verdad. Anclados abajo para que la encuadernación no flote.
+  &__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    user-select: none;
+  }
+
+  // El hueco de las hojas dentro del libro pintado. Las medidas llegan en línea
+  // desde la config, que es donde están tomadas sobre el archivo.
+  &__paper {
+    position: absolute;
+  }
+}

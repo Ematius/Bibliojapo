@@ -9,14 +9,28 @@
   overflow: hidden;
   background: var(--color-bg);
 
+  // Mismo encuadre que el stage del vestíbulo: la escena cubre la ventana
+  // manteniendo la proporción de la ilustración y recortando por donde sobre.
+  // Es lo que permite colocar los tomos en fracciones de la IMAGEN y no de la
+  // ventana, de modo que se queden sobre su balda en cualquier pantalla.
+  &__stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    aspect-ratio: 1672 / 941;
+    width: max(100vw, calc(var(--vh) * 100 * 1672 / 941));
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+  }
+
   &__scene {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
-    // La ilustración llena la pantalla recortando por donde sobre, igual que el
-    // interior de la entrada.
-    object-fit: cover;
     user-select: none;
     pointer-events: none;
   }
+
 }

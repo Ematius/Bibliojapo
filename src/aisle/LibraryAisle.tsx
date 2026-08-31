@@ -1,6 +1,8 @@
 import { Navigate, useParams } from 'react-router-dom'
 import { findAisle } from '../shared/aisles'
 import { SiteNav } from '../shared/SiteNav'
+import { ShelfVolume } from './book/ShelfVolume'
+import { SHELF_VOLUMES } from './book/shelfConfig'
 import './LibraryAisle.scss'
 
 // Pasillo de la biblioteca: la estantería de una sección.
@@ -20,7 +22,17 @@ export function LibraryAisle() {
 
   return (
     <section className="library-aisle">
-      <img className="library-aisle__scene" src={aisle.scene} alt="" draggable="false" />
+      {/* Los tomos van dentro del stage y no sueltos en la pantalla: el stage
+          conserva la proporción de la ilustración, así que un tomo colocado
+          sobre una balda sigue sobre esa balda en cualquier monitor. Referido a
+          la ventana se despegaría de la madera en cuanto la escena se recortara. */}
+      <div className="library-aisle__stage">
+        <img className="library-aisle__scene" src={aisle.scene} alt="" draggable="false" />
+
+        {SHELF_VOLUMES.map((volume) => (
+          <ShelfVolume key={volume.id} volume={volume} />
+        ))}
+      </div>
 
       {/* La vuelta al vestíbulo la da «Pasillos» en la barra: un botón propio de
           «volver» sería una segunda salida diciendo lo mismo. */}
