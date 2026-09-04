@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { OPENING, OPENING_FRAMES, type OpenBookLayout } from './openingConfig'
+import { prefersReducedMotion } from '../../../shared/prefersReducedMotion'
 import './VolumeOpening.scss'
 
 interface VolumeOpeningProps {
@@ -23,10 +24,11 @@ interface VolumeOpeningProps {
 
 // El tomo abriéndose.
 //
-// Los cuatro fotogramas van apilados y se encienden por orden. Como cada uno se
-// pinta encima del anterior, basta con subirle la opacidad para que tape al que
-// venía: no hay que apagar ninguno, y en cada momento hay como mucho dos capas
-// mezclándose, que es lo que hace que la apertura se lea continua y no a saltos.
+// Los cuatro fotogramas van apilados y se encienden por orden: cada uno entra
+// con fundido sobre el anterior, que sigue debajo hasta que el nuevo está entero
+// y entonces se apaga. En cada momento hay como mucho dos capas mezclándose, que
+// es lo que hace que la apertura se lea continua y no a saltos, y ninguna se
+// queda encendida asomando por detrás de la siguiente.
 //
 // El primero también entra con fundido, y no encendido de golpe: por debajo está
 // todavía el tomo en 3D con la portada de cara, así que ese primer fundido es el
@@ -63,7 +65,7 @@ export function VolumeOpening({
     // quedarían enteras flotando mientras el libro se pliega debajo.
     gsap.set([...frames, paper], { opacity: 0 })
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (prefersReducedMotion()) {
       gsap.set([frames[frames.length - 1], paper], { opacity: 1 })
       onOpenedRef.current()
       return
@@ -79,6 +81,22 @@ export function VolumeOpening({
 
     frames.forEach((frame, i) => {
       timeline.to(frame, { opacity: 1, ...paso })
+
+      // Y el anterior se apaga, de golpe, en cuanto este ya está entero.
+      //
+      // Antes se quedaban todos encendidos, apilados: cada uno tapaba al que
+      // venía y no hacía falta apagar ninguno. Pero un fotograma no tapa al
+      // anterior por ser más grande, sino allí donde tiene dibujo — y las
+      // siluetas no son la misma: en los primeros las tapas están más
+      // levantadas y sus esquinas se salen del contorno del último. Esas puntas
+      // asomaban por detrás del libro ya abierto, y con ellas se veía el pico de
+      // un segundo libro.
+      //
+      // Se apaga sin fundido y sólo cuando el de encima está al 100%: durante el
+      // cruce el de abajo sigue opaco, que es lo que evita que se transparente
+      // el pasillo por medio de la apertura.
+      if (i > 0) timeline.set(frames[i - 1], { opacity: 0 })
+
       // `'<'` lo pega al arranque del tramo anterior, así que el papel y el
       // último fotograma van a la vez en los dos sentidos.
       if (i === frames.length - 1) timeline.to(paper, { opacity: 1, ...paso }, '<')

@@ -1,11 +1,17 @@
-// Recuerda si el usuario ya ha hecho el recorrido de entrada —valle, puerta,
-// vestíbulo— para no obligarle a repetirlo en cada visita. A partir de la
-// segunda vez se entra directamente frente a la puerta.
+// Registra que el usuario ha hecho el recorrido de entrada —valle, puerta,
+// vestíbulo—. Persiste en localStorage, así que sobrevive a cerrar el navegador.
 //
-// Persiste en localStorage, así que sobrevive a cerrar el navegador. La única
-// forma de volver a ver el valle es «Inicio» en la barra, que lleva su propia
-// marca de navegación en lugar de borrar esto: quien quiere revisitar la
-// portada no está pidiendo repetir el onboarding entero la próxima vez.
+// ── OJO: HOY NADIE LEE ESTA MARCA ──────────────────────────────────────────
+// Se escribió para saltarse el valle a partir de la segunda visita, y esa
+// decisión se dio marcha atrás: `LandingRoute` manda siempre a la portada, y
+// quien quiera ir directo a la puerta entra por /entrada.
+//
+// Así que ahora mismo esto solo apunta el dato. Se deja porque el día que se
+// retome el salto, los visitantes que ya hayan entrado lo tendrán apuntado; el
+// lector que falta es un `isJourneyDone()` en `LandingRoute`. Si se decide que
+// el valle no se salta nunca, este archivo entero y su llamada en
+// `LibraryEntrance` se pueden borrar.
+// ───────────────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = 'bof:journey-done'
 

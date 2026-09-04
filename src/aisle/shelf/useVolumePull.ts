@@ -8,6 +8,7 @@ import {
   VOLUME_TURN as turn,
   type ShelfVolume,
 } from './shelfConfig'
+import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 
 // Las cuatro poses del tomo, en orden. Cada una es un punto de reposo donde el
 // gesto puede pararse, y entre las cuatro se ven las cuatro caras del libro: en
@@ -136,7 +137,7 @@ export function useVolumePull({
     // hasta donde ya está sería un tirón al cargar la pantalla. Lo mismo con
     // «reducir movimiento», donde el cambio de pose es instantáneo.
     const jump =
-      isFirstRender.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      isFirstRender.current || prefersReducedMotion()
     isFirstRender.current = false
 
     // Con el libro abierto el tomo en 3D sobra: lo que se ve entonces es el

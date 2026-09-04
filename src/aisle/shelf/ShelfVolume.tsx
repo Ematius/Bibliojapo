@@ -12,6 +12,7 @@ import { useVolumePull, type VolumeStage } from './useVolumePull'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
 import { VolumeReader } from '../book/reader/VolumeReader'
 import { VolumeScrim } from './VolumeScrim'
+import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 import './ShelfVolume.scss'
 
 interface ShelfVolumeProps {
@@ -115,7 +116,7 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
     //
     // Con «reducir movimiento» las poses son instantáneas, así que cualquier
     // espera dejaría el tomo plantado en una pose que solo existe de paso.
-    const wait = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const wait = prefersReducedMotion()
       ? 0
       : Math.max(0, VOLUME_PULL.durationSeconds - VOLUME_PULL.relayOverlapSeconds)
 

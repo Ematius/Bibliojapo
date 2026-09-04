@@ -2,6 +2,8 @@
 // la entrada (misma proporción, mismo centrado, mismo recorte) para que llegar
 // aquí desde la puerta no se note como un cambio de pantalla.
 
+@use '../styles/stage' as *;
+
 .library-hall {
   position: relative;
   width: 100%;
@@ -9,16 +11,10 @@
   overflow: hidden;
   background: var(--color-bg);
 
+  // El mismo encuadre que la entrada y el pasillo, y por eso llegar aquí desde
+  // la puerta no se lee como un cambio de pantalla. Ver `styles/_stage.scss`.
   &__stage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    // Mismo cálculo que el stage de la entrada: la escena cubre la ventana
-    // manteniendo la proporción de la ilustración, recortando por donde sobre.
-    aspect-ratio: 1672 / 941;
-    width: max(100vw, calc(var(--vh) * 100 * 1672 / 941));
-    transform: translate(-50%, -50%);
-    overflow: hidden;
+    @include scene-stage;
   }
 
   &__interior {

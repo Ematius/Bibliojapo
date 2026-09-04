@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { VOLUME_SCRIM } from './shelfConfig'
+import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 import './VolumeScrim.scss'
 
 interface VolumeScrimProps {
@@ -26,7 +27,7 @@ export function VolumeScrim({ shown, onDismiss }: VolumeScrimProps) {
     // El primer render coloca sin animar: el velo nace apagado y animarlo hasta
     // donde ya está sería un parpadeo al cargar la pantalla.
     const jump =
-      isFirstRender.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      isFirstRender.current || prefersReducedMotion()
     isFirstRender.current = false
 
     // `autoAlpha` y no `opacity`: apagado del todo también deja de recibir

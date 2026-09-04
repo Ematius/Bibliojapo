@@ -1,6 +1,7 @@
 import { useLayoutEffect, type RefObject } from 'react'
 import gsap from 'gsap'
 import { AISLE_SIGNS_INTRO as intro } from './aisleSignsConfig'
+import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 
 // Caída de los carteles al entrar en el vestíbulo.
 //
@@ -17,7 +18,7 @@ export function useAisleSignsIntro(groupRef: RefObject<HTMLElement | null>): voi
     if (!group) return
 
     // Con «reducir movimiento» los carteles ya están colgados y quietos.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (prefersReducedMotion()) return
 
     const ctx = gsap.context(() => {
       const signs = gsap.utils.toArray<HTMLElement>('.aisle-signs__sign')

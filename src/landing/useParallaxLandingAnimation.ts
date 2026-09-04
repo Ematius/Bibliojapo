@@ -1,6 +1,7 @@
 import { useLayoutEffect, type RefObject } from 'react'
 import gsap from 'gsap'
 import { CAMERA_PAN, DROPS_RISE } from './parallaxLandingConfig'
+import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 
 // Movimiento continuo de la escena de capas.
 //
@@ -17,7 +18,7 @@ export function useParallaxLandingAnimation(sceneRef: RefObject<HTMLDivElement |
     // Con "reducir movimiento" activo la escena se queda quieta. No hay nada que
     // deshacer: CSS ya deja cada capa compuesta en su sitio, la animación solo
     // añade el desplazamiento.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (prefersReducedMotion()) return
 
     // El contexto acota los selectores a esta escena y permite revertir todos los
     // tweens de golpe al desmontar, sin guardar una referencia por animación.

@@ -1,6 +1,7 @@
 import { useLayoutEffect, type RefObject } from 'react'
 import gsap from 'gsap'
 import { NAV_INTRO as intro } from './siteNavConfig'
+import { prefersReducedMotion } from './prefersReducedMotion'
 
 // Despliegue de la barra al entrar en una pantalla.
 //
@@ -14,7 +15,7 @@ export function useSiteNavIntro(navRef: RefObject<HTMLElement | null>): void {
     if (!nav) return
 
     // Con «reducir movimiento» la barra aparece ya montada, sin despliegue.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (prefersReducedMotion()) return
 
     const ctx = gsap.context(() => {
       gsap.fromTo(

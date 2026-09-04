@@ -1,6 +1,7 @@
 import { useLayoutEffect, type RefObject } from 'react'
 import gsap from 'gsap'
 import { PATH_WALK_LOOP as loop } from './pathWalkerConfig'
+import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 
 // Paseo en bucle de la figura por el sendero, hacia la biblioteca.
 //
@@ -18,7 +19,7 @@ export function usePathWalkerLoop(groupRef: RefObject<HTMLElement | null>): void
     // sigue viendo y se puede pulsar, pero no camina. El CSS ya la deja ahí
     // —`--walk` vale 0 y la opacidad es la de por defecto—, así que basta con no
     // arrancar nada.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (prefersReducedMotion()) return
 
     const ctx = gsap.context(() => {
       // Se oculta antes del primer pintado, no después: hacerlo dentro de la

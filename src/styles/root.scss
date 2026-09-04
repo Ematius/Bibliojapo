@@ -46,7 +46,11 @@
        page       la cresta, en el centro de la página, donde más luz da
        page-fold  el borde, donde el papel se hunde hacia la encuadernación
      La sombra tira a ámbar y no a gris a propósito: es papel viejo bajo una
-     lámpara cálida, y oscurecerlo con negro lo apaga. */
+     lámpara cálida, y oscurecerlo con negro lo apaga.
+     SI SE CAMBIA EL RENDER hay que volver a medirlos, y de paso volver a
+     recortar papel-tomo: un dibujo nuevo del papel deja estos dos valores
+     desfasados, y una hoja del lector más clara que la pintada delata la costura
+     entre las dos. */
   --color-page: #fcf7e5;
   --color-page-fold: #f0d8b1;
   --rgb-page-fold: 240, 216, 177;
@@ -88,6 +92,10 @@
 
   /* Tipografía */
   --font-display: 'Shippori Mincho', serif;
+  // Reservada para el logotipo, que todavía no existe. NO se está descargando:
+  // index.html solo pide las dos familias que algún componente usa. Al aplicarla
+  // por primera vez hay que volver a añadir Cinzel allí, o saldrá la serif del
+  // sistema.
   --font-roman: 'Cinzel', serif;
   --font-body: 'Zen Kaku Gothic New', system-ui, sans-serif;
 

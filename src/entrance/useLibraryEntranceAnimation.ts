@@ -5,6 +5,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { LIBRARY_ANIMATION_CONFIG as config, getEntranceScrollLength } from './libraryEntranceConfig'
 import { fitDoorImageToContainer } from './getOpaqueBounds'
 import { LibraryParticles } from './LibraryParticles'
+import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
@@ -95,7 +96,9 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       enterButtonRef,
     } = refs
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Se pregunta una vez y se guarda: la entrada monta su animación en varios
+    // tramos y todos tienen que decidir lo mismo.
+    const wantsStillness = prefersReducedMotion()
 
     let particles: LibraryParticles | null = null
     let ctx: ReturnType<typeof gsap.context> | null = null
@@ -156,7 +159,7 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       setIsReady(true)
 
       ctx = gsap.context(() => {
-        if (prefersReducedMotion) {
+        if (wantsStillness) {
           particles?.setGlobalOpacity(0.15)
 
           enterActionRef.current = () => {

@@ -2,6 +2,8 @@
 // la ilustración de fondo y la barra — los tomos de la estantería llegan más
 // adelante.
 
+@use '../styles/stage' as *;
+
 .library-aisle {
   position: relative;
   width: 100%;
@@ -9,18 +11,11 @@
   overflow: hidden;
   background: var(--color-bg);
 
-  // Mismo encuadre que el stage del vestíbulo: la escena cubre la ventana
-  // manteniendo la proporción de la ilustración y recortando por donde sobre.
-  // Es lo que permite colocar los tomos en fracciones de la IMAGEN y no de la
-  // ventana, de modo que se queden sobre su balda en cualquier pantalla.
+  // Mismo encuadre que el vestíbulo y la entrada. Es lo que permite colocar los
+  // tomos en fracciones de la IMAGEN y no de la ventana, de modo que se queden
+  // sobre su balda en cualquier pantalla. Ver `styles/_stage.scss`.
   &__stage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    aspect-ratio: 1672 / 941;
-    width: max(100vw, calc(var(--vh) * 100 * 1672 / 941));
-    transform: translate(-50%, -50%);
-    overflow: hidden;
+    @include scene-stage;
   }
 
   &__scene {

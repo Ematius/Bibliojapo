@@ -1,0 +1,35 @@
+// El encuadre de una escena pintada: la ilustración cubriendo la ventana sin
+// deformarse.
+//
+// ── QUÉ HACE ───────────────────────────────────────────────────────────────
+// La caja conserva la proporción del dibujo y se hace tan grande como haga
+// falta para que no quede hueco por ningún lado: en pantallas más anchas que la
+// ilustración sobra por arriba y abajo, y en las más estrechas por los lados.
+// Lo que sobra se recorta desde el centro, así que el punto de interés del
+// dibujo se queda donde está.
+//
+// Es también el sistema de coordenadas de todo lo que se coloca ENCIMA de la
+// escena —un tomo en su balda, un cartel colgado— porque esas medidas van en
+// fracciones del dibujo, no de la ventana. Ver `shelfConfig.ts`.
+//
+// ── POR QUÉ ES UN MIXIN Y NO UNA CLASE ─────────────────────────────────────
+// El bloque estaba escrito tres veces —entrada, vestíbulo y pasillo— con los
+// mismos siete valores, y una de las tres había derivado: usaba `var(--vh, 1vh)`
+// mientras las otras dos usaban `var(--vh)`. Tres copias es la señal de que hay
+// una pieza común.
+//
+// Sale el aspecto, no la colocación: cada pantalla sigue teniendo su propia
+// clase BEM —`.library-hall__stage`, `.library-aisle__stage`— y esto solo dice
+// cómo se encuadra. Así ninguna hereda el nombre de otra.
+//
+// El fallback de `--vh` se queda: `useVh` lo escribe en el primer efecto, y sin
+// él el primer fotograma de la primera carga se calcularía con la variable vacía.
+@mixin scene-stage($width: 1672, $height: 941) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: #{$width} / #{$height};
+  width: max(100vw, calc(var(--vh, 1vh) * 100 * #{$width} / #{$height}));
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}

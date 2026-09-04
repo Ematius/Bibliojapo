@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { KANA_STROKE as pass } from './kanaStrokeConfig'
+import { prefersReducedMotion } from '../../../shared/prefersReducedMotion'
 
 gsap.registerPlugin(DrawSVGPlugin)
 
@@ -53,7 +54,7 @@ export function mountKanaStroke(root: HTMLElement): (() => void) | null {
   // Con «reducir movimiento» no hay nada que disparar. El CSS deja el trazo
   // dibujado sobre la ilustración y esconde el botón, así que la asociación se ve
   // igual: entera, y quieta.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null
+  if (prefersReducedMotion()) return null
 
   // El punto de partida: los trazos sin nada dibujado todavía. `opacity` los
   // enciende, porque hasta aquí el CSS los tenía apagados — es lo que evita que
