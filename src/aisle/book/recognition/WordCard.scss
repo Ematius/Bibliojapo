@@ -1,0 +1,62 @@
+// La palabra con el kana estudiado destacado.
+//
+// Misma estructura que la tarjeta del kana —lo grande arriba, la traducción
+// debajo y mucho aire alrededor—, porque es la misma idea a otra escala: allí se
+// presenta un carácter y aquí una palabra.
+
+.word-card {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+
+  &__word {
+    margin: 0;
+    // Zen Kaku Gothic New, la misma con la que se ha aprendido a trazar el kana.
+    // Con la fuente de cabeceras la あ traería remates que su trazo no tiene, y
+    // reconocerla sería reconocer otra letra.
+    font-family: var(--font-body);
+    // Atado al lado corto de la hoja: una palabra ocupa a lo ancho mucho más que
+    // un carácter suelto, así que parte de un tamaño bastante menor que el de la
+    // tarjeta del kana para que quepan tres o cuatro sin salirse.
+    font-size: clamp(1.6rem, 22cqmin, 5rem);
+    font-weight: 500;
+    line-height: 1.15;
+    // La palabra japonesa se lee seguida, pero un pelo de aire entre kana ayuda a
+    // verlos como piezas —que es justo lo que enseña esta hoja—.
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  // Un kana de la palabra que todavía no se ha estudiado. Se ve, pero en segundo
+  // plano: está para que la palabra sea una palabra, no para leerlo.
+  &__unit {
+    color: var(--color-ink);
+    opacity: 0.34;
+  }
+
+  // El que sí se conoce. En tinta plena, que es lo que lo separa del resto sin
+  // necesidad de subrayarlo ni marcarlo con nada añadido.
+  &__unit--known {
+    opacity: 1;
+  }
+
+  &__meaning {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 6cqmin, 1.4rem);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // El botón que suena. Cómo se ve lo pone `BookButton.scss`; aquí solo dónde va.
+  &__listen {
+    margin-top: 3cqh;
+  }
+}

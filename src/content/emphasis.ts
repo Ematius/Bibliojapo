@@ -1,0 +1,28 @@
+// Lo resaltado dentro de un texto del temario.
+//
+// En el contenido se marca rodeándolo con dos asteriscos:
+//
+//   'mientras **A**rturo pide el poder de la **A**mistad'
+//
+// La marca es del CONTENIDO, no del diseño: dice «esto es el sonido del kana»,
+// no «esto va en negrita». Cómo se acaba viendo lo decide la hoja, y por eso se
+// puede cambiar el aspecto de los 46 kana tocando una regla de CSS.
+//
+// Se eligió una marca dentro del texto, y no partir la frase en trozos, porque el
+// temario se escribe a mano: una frase con asteriscos se lee y se corrige de un
+// vistazo, y una lista de fragmentos no.
+export interface TextPart {
+  text: string
+  emphasized: boolean
+}
+
+export function splitEmphasis(text: string): TextPart[] {
+  // Al partir por una expresión con grupo, lo capturado queda intercalado en las
+  // posiciones impares: fuera, dentro, fuera, dentro… Así se sabe qué va marcado
+  // sin recorrer el texto a mano.
+  return text
+    .split(/\*\*(.+?)\*\*/g)
+    .map((chunk, index) => ({ text: chunk, emphasized: index % 2 === 1 }))
+    // Dos marcas seguidas, o una al principio, dejan trozos vacíos por medio.
+    .filter((part) => part.text !== '')
+}

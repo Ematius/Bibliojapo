@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
 import type { StyleWithVars } from '../../shared/styleWithVars'
 import {
   VOLUME_FACES,
@@ -6,10 +7,10 @@ import {
   VOLUME_SHAPE,
   type ShelfVolume as ShelfVolumeData,
 } from './shelfConfig'
-import { openBookLayout, type OpenBookLayout } from './openingConfig'
+import { openBookLayout, type OpenBookLayout } from '../book/opening/openingConfig'
 import { useVolumePull, type VolumeStage } from './useVolumePull'
-import { VolumeOpening } from './VolumeOpening'
-import { VolumeReader } from './VolumeReader'
+import { VolumeOpening } from '../book/opening/VolumeOpening'
+import { VolumeReader } from '../book/reader/VolumeReader'
 import { VolumeScrim } from './VolumeScrim'
 import './ShelfVolume.scss'
 
@@ -17,9 +18,9 @@ interface ShelfVolumeProps {
   volume: ShelfVolumeData
 }
 
-// Cada pulsación adelanta una pose. El recorrido es de ida: se coge el tomo, se
-// le da la vuelta, y de ahí se abre. Para volver está Escape, que es el gesto
-// que ya espera cualquiera para salir de algo que ocupa la pantalla.
+// La pose que sigue a cada una. El recorrido es de ida: se coge el tomo, se le
+// da la vuelta, y de ahí se abre. Para volver está Escape, que es el gesto que ya
+// espera cualquiera para salir de algo que ocupa la pantalla.
 const NEXT_STAGE: Record<VolumeStage, VolumeStage> = {
   shelf: 'spine',
   spine: 'cover',
@@ -31,13 +32,25 @@ const NEXT_STAGE: Record<VolumeStage, VolumeStage> = {
   closing: 'closing',
 }
 
+// Las poses que no esperan a nadie.
+//
+// Las cuatro poses del recorrido siguen ahí, pero se recorren de dos en dos: una
+// pulsación deja el tomo con la portada de cara y la siguiente lo abre. Estas dos
+// son las que quedan a mitad de cada par, así que en cuanto su giro termina
+// encadenan con el siguiente por su cuenta.
+//
+// Cuatro paradas para llegar a un libro cansaban; cuatro giros, no. Lo que se
+// quitó de en medio son las pulsaciones, no el movimiento.
+const RELAY_STAGES = new Set<VolumeStage>(['spine', 'edge'])
+
 // Un tomo de la estantería, montado como un objeto con volumen y no como una
 // estampa.
 //
 // El lomo y la tapa son dos planos perpendiculares que forman la esquina del
-// libro. En la balda el conjunto está girado de tres cuartos; al pulsarlo gira
-// hasta dejar el lomo de frente mientras se adelanta, y otra pulsación lo lleva
-// hasta enseñar la portada. La tapa no hay que esconderla en ningún momento: al
+// libro. En la balda el conjunto está girado de tres cuartos; al pulsarlo se
+// adelanta girando hasta poner el lomo de frente y sigue solo hasta enseñar la
+// portada, y otra pulsación lo pone de canto y lo abre — dos pulsaciones, cuatro
+// giros. La tapa no hay que esconderla en ningún momento: al
 // girar se pone de perfil ella sola, que es justo lo que hace un libro de
 // verdad.
 export function ShelfVolume({ volume }: ShelfVolumeProps) {
@@ -83,6 +96,35 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
     else goTo('shelf')
   }, [stage, opened, goTo])
 
+  // El segundo giro de cada par, que sale solo.
+  //
+  // Se programa al llegar a la pose de paso y se cancela con ella: el efecto se
+  // limpia en cada cambio de pose, así que pulsar a media animación adelanta el
+  // giro y de camino desactiva el relevo que estaba pendiente. Ese es justo el
+  // comportamiento de antes —pulsar salta a la pose siguiente—, que aquí sigue
+  // valiendo sin tocar nada.
+  //
+  // El temporizador es de GSAP y no del navegador a propósito: corre en el mismo
+  // reloj que el giro que está esperando, así que si el reloj se para —pestaña en
+  // segundo plano— el relevo se para con él en vez de dispararse a destiempo.
+  useEffect(() => {
+    if (!RELAY_STAGES.has(stage)) return
+
+    // El relevo no espera al giro entero: entra mientras remata, o entre los dos
+    // se colaba una pausa. Ver `relayOverlapSeconds`.
+    //
+    // Con «reducir movimiento» las poses son instantáneas, así que cualquier
+    // espera dejaría el tomo plantado en una pose que solo existe de paso.
+    const wait = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 0
+      : Math.max(0, VOLUME_PULL.durationSeconds - VOLUME_PULL.relayOverlapSeconds)
+
+    const relay = gsap.delayedCall(wait, () => goTo(NEXT_STAGE[stage]))
+    return () => {
+      relay.kill()
+    }
+  }, [stage, goTo])
+
   // Escape devuelve el tomo a su balda desde cualquier pose. Solo se escucha
   // mientras está fuera del estante, para no dejar un listener global puesto por
   // una pantalla que no lo necesita.
@@ -106,10 +148,13 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
     '--spine-ratio': VOLUME_SHAPE.spineRatio,
   }
 
+  // Lo que promete el botón es dónde acaba la pulsación, no el giro que arranca:
+  // desde la portada, pulsar ya no gira el tomo y se queda ahí — lo abre, porque
+  // el giro de canto viene encadenado detrás.
   const label = {
     shelf: `Coger ${volume.label}`,
     spine: `Ver la portada de ${volume.label}`,
-    cover: `Girar ${volume.label}`,
+    cover: `Abrir ${volume.label}`,
     edge: `Abrir ${volume.label}`,
     open: `Cerrar ${volume.label}`,
     closing: `Cerrando ${volume.label}`,

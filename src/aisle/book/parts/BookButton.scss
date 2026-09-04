@@ -1,0 +1,44 @@
+// El aspecto de todos los botones del libro, en un solo sitio.
+//
+// Discreto a propósito: lo que se mira en una hoja es el contenido de estudio, y
+// esto es solo la manera de pedirle algo. Con la tinta y el latón del tomo, no con
+// los colores de un control de aplicación.
+//
+// Aquí NO hay colocación —ni márgenes, ni alineación, ni tamaño de caja—. Dónde va
+// cada botón lo dice la hoja que lo pone, con su propia clase: el de la tarjeta se
+// separa mucho de lo de arriba y el de la pauta nada, y eso es asunto de cada
+// página. Metiendo aquí un margen, todas las hojas heredarían la colocación de la
+// primera que se escribió.
+
+.book-button {
+  flex: none;
+  padding: 0.35em 1.4em;
+  border: 1px solid var(--color-brass);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  // Atado al ancho de la hoja, como todo lo demás del libro: la página se mide en
+  // píxeles calculados desde el libro pintado, no desde la ventana.
+  font-size: clamp(0.55rem, 4cqw, 0.95rem);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+
+  &:hover {
+    background: rgba(var(--rgb-page-fold), 0.55);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+
+  // Mientras la acción está en marcha —el trazo dibujándose, el kana sonando— el
+  // botón sigue ahí para que la hoja no dé un salto al quitarlo y volver a
+  // ponerlo, pero apagado.
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}

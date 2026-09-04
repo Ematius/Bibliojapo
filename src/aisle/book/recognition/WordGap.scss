@@ -1,0 +1,102 @@
+// La palabra con el hueco que hay que rellenar en romaji.
+//
+// El hueco tiene que leerse como parte de la palabra, no como un formulario: el
+// campo va sin caja, sin fondo y con la misma letra que el resto, y lo único que
+// lo distingue es la línea de debajo — la raya de un ejercicio de papel.
+
+.word-gap {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+
+  // La palabra en romaji, con el hueco dentro.
+  &__reading {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 18cqmin, 4rem);
+    line-height: 1.15;
+    // Las letras de una transcripción se leen sueltas, no como una palabra
+    // española. Es lo mismo que hace el romaji de la tarjeta del kana.
+    letter-spacing: 0.1em;
+  }
+
+  &__letter {
+    color: var(--color-ink);
+  }
+
+  // El hueco.
+  //
+  // Hereda tamaño y familia del renglón, así que lo escrito cae exactamente sobre
+  // la línea del resto de la palabra en vez de flotar dentro de una caja.
+  &__input {
+    // El ancho NO sale del contenido: un campo que crece al teclear movería la
+    // palabra entera de sitio justo mientras se está escribiendo. Fijo, y del
+    // tamaño de la letra que se espera.
+    width: 1.6ch;
+    padding: 0;
+    border: none;
+    // La raya de un ejercicio de papel: lo único que marca que ahí falta algo.
+    border-bottom: 2px solid var(--color-ink-soft);
+    border-radius: 0;
+    background: transparent;
+    color: var(--color-ink);
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: center;
+
+    &:focus-visible {
+      outline: none;
+      border-bottom-color: var(--color-brass);
+    }
+  }
+
+  // Acertado. La hiedra es el único verde de la paleta y sobre el papel crema se
+  // lee sin desentonar; el latón, que sería lo primero que uno pensaría, queda
+  // casi del mismo tono que la hoja y no se distinguiría.
+  &__input--right {
+    border-bottom-color: var(--color-ivy-dark);
+    color: var(--color-ivy-dark);
+  }
+
+  // Fallado. No se pinta de rojo, y no es un olvido: la paleta del libro no tiene
+  // color de error, y meter uno nuevo por esto sería colar en la biblioteca un
+  // tono que no es suyo. La raya se marca en tinta plena y lo que explica el fallo
+  // es el aviso de debajo, que además es lo único que puede decir POR QUÉ.
+  //
+  // No se borra lo escrito ni se bloquea nada: se marca y se sigue probando, que
+  // es lo que hace alguien aprendiendo.
+  &__input--wrong {
+    border-bottom-color: var(--color-ink);
+  }
+
+  &__meaning {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 6cqmin, 1.4rem);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // El aviso de acierto o fallo. Reserva su hueco para que la palabra no dé un
+  // salto cada vez que se escribe una letra.
+  &__result {
+    flex: none;
+    margin: 0;
+    min-height: 1.5em;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.58rem, 4.2cqw, 0.95rem);
+    text-align: center;
+    text-wrap: pretty;
+  }
+}

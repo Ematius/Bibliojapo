@@ -58,6 +58,7 @@ Cada unidad de trabajo debe ser **la cosa más pequeña posible que tenga sentid
 1. Describir en una frase qué se va a hacer exactamente.
 2. Listar los archivos que se van a tocar.
 3. Esperar confirmación si hay cualquier duda.
+4. Si se notifica que es una pregunta se responde y no se empieza la tarea, hasta confirmación.
 
 ### Después de cada tarea
 
@@ -175,14 +176,38 @@ no por tipo de archivo. Cada carpeta representa un conjunto funcional completo.
 Todo lo que pertenece a la misma funcionalidad va en la misma carpeta,
 independientemente de si es un componente, un estilo, un hook o una utilidad.
 
-```
+Estructura real a día de hoy. Si se mueve algo de sitio, se actualiza aquí: este
+documento se carga entero en cada sesión, y un árbol que no coincide con el
+proyecto engaña más que no tenerlo.
+
+```text
 src/
-  landing/          ← todo lo de la landing: componentes, estilos, hooks, animaciones
-  aisle/            ← todo lo del pasillo
-  reading/          ← todo lo del lector de tomos
-  shared/           ← lo único que va fuera: componentes/hooks usados en más de un dominio
+  landing/          ← la entrada: fachada, puertas, animación de acceso
+  entrance/         ← el zaguán
+  hall/             ← el vestíbulo, desde donde se eligen los pasillos
+  aisle/            ← el pasillo y todo lo que pasa dentro
+    shelf/          ← el tomo en la balda, cómo se saca y el velo que lo aísla
+    book/           ← el tomo, una carpeta por lo que hace cada pieza
+      opening/      ← el libro abriéndose
+      reader/       ← las hojas que se pasan
+      parts/        ← lo que comparten varias hojas: botón, texto, sonido
+      mnemonic/     ← la ilustración con el kana trazándose encima
+      presentation/ ← la tarjeta: forma, lectura y sonido
+      writing/      ← la pauta, la pizarra y la corrección de trazos
+      recognition/  ← la palabra y el hueco de romaji
+  content/          ← el temario: kana, vocabulario, frases. Dato, no código
+  shared/           ← lo único que va fuera: usado en más de un dominio
   styles/           ← excepción justificada: tokens globales, reset, tipografía base
 ```
+
+Las carpetas de `book/` llevan el nombre de **lo que hacen**, no el número del
+ejercicio que las usa: el ejercicio 4 —reconocimiento inverso— entrará en
+`recognition/`, no en una carpeta nueva. Ver «Reutilización — la regla de tres».
+
+**Pendiente:** los ejercicios viven hoy dentro de `aisle/book/`, no en
+`src/exercises/` como pide la sección «Contenido del curso». El movimiento se hará
+cuando exista un segundo pasillo, que es cuando se puede comprobar de verdad si
+son independientes del contenido.
 
 ### Cuándo crear una carpeta nueva
 Solo cuando empieza una funcionalidad nueva. No antes.
@@ -192,10 +217,69 @@ Nunca crear carpetas vacías "por si acaso".
 Solo cuando el mismo componente o hook se necesita en dos dominios distintos.
 Hasta ese momento, vive en el dominio donde nació.
 
+### Cuándo subdividir un dominio
+
+Una carpeta de dominio con más de ~8 archivos se subdivide por sub-dominio, con
+nombres que digan **qué hace** cada parte, nunca `exercise1`, `paso2` ni tipos de
+archivo. Si dos sub-dominios necesitan lo mismo, sale a `parts/` dentro del
+dominio — no se importan entre hermanos.
+
+**Por qué el nombre nunca lleva número:** el orden es del temario, no del código.
+Numerando las carpetas, insertar un ejercicio entre el 2 y el 3 obliga a renombrar
+carpetas y todos sus imports, y `exercise7/` no dice qué hay dentro. Además las
+piezas se comparten: el ejercicio 4 reutiliza casi todo lo del 3, y con carpetas
+numeradas acabarían importándose entre ellas — que es peor que tenerlo todo junto,
+porque parece que están separadas y no lo están.
+
 ### Lo que nunca se hace
 - Carpetas por tipo (`components/`, `hooks/`, `utils/`) a nivel global.
 - Archivos de estilos en una carpeta separada del componente al que pertenecen.
 - Mover un archivo a `shared/` "por si acaso lo reutilizo luego".
+
+---
+
+## Reutilización — la regla de tres
+
+**A la tercera repetición, se unifica.** No a la segunda, y no antes.
+
+Esto tiene nombre. El principio general es **DRY** (*Don't Repeat Yourself*). La
+regla concreta del umbral es la **regla de tres** (*Rule of Three*), de Martin
+Fowler: «la primera vez lo escribes; la segunda te aguantas y duplicas; la
+tercera, refactorizas». El refactor se llama **extraer componente** (*Extract
+Component*), y la pieza que sale —un botón, un campo, una etiqueta— es lo que el
+*Atomic Design* llama un **átomo**.
+
+### Por qué a la tercera y no a la segunda
+
+Dos cosas parecidas a menudo dejan de parecerse. Unificarlas demasiado pronto
+obliga a llenar la pieza común de excepciones, y acaba costando más leerla que
+las dos copias. A la tercera ya no es casualidad: es un patrón.
+
+### Cómo se hace
+
+1. Sale **el aspecto o el comportamiento común, nunca la colocación.**
+   Una pieza compartida dice cómo se ve; dónde va lo dice quien la usa, con su
+   propia clase. Metiendo el margen dentro, todos heredan el del primero.
+2. La pieza nueva **vive en el dominio donde nació**, igual que todo lo demás.
+   A `shared/` solo se mueve cuando la pide un segundo dominio.
+3. Se hace **en su propio paso**, nunca a la vez que se añade funcionalidad.
+   Primero se unifica lo que ya hay, sin que cambie nada de lo que se ve; después
+   se usa la pieza nueva para lo siguiente.
+4. Al terminar **no puede quedar ninguna copia.** Si se unifica la tercera y las
+   otras dos se quedan como estaban, el problema ha empeorado: ahora hay dos
+   sitios donde mirar y ninguno manda.
+
+### Aplica a todo, no solo a componentes
+
+Un bloque de SCSS repetido, una función de utilidad copiada, un tipo escrito dos
+veces, el mismo `useEffect` en tres pantallas. La regla es la misma.
+
+### Ejemplo en el proyecto
+
+`BookButton` (`src/aisle/book/parts/`). El mismo botón de latón estaba escrito cuatro
+veces —animar el trazo, escuchar el kana, borrar la pizarra, escuchar la palabra—
+y cambiar su aspecto obligaba a tocar cuatro archivos y acordarse de los cuatro.
+Ahora el aspecto vive en `BookButton.scss` y cada hoja solo dice dónde va el suyo.
 
 ---
 
@@ -266,6 +350,28 @@ src/
 
 ---
 
+## Ejercicios
+
+Catálogo de tipos de ejercicio: qué existe y para qué sirve cada uno. Cada fila
+es un ejercicio de `src/exercises/`, escrito una sola vez y válido para cualquier
+pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale de
+`docs/estructura-aprendizaje.md`.
+
+| # | Ejercicio | Qué aparece | Qué hace el usuario | Objetivo |
+| -: | --- | --- | --- | --- |
+| 1 | 🧠 **Mnemotecnia** | Dibujo mnemotécnico + **そ** + `so` | Observa la asociación visual | Crear recuerdo inicial |
+| 2 | 👁️ **Introducción** | **そ** + `so` + audio | Ve y escucha el hiragana | Asociar forma + sonido |
+| 3 | 🔎 **Reconocimiento** | **そ** + varias opciones: `so`, `ki`, `a`… | Elige `so` | Hiragana → sonido |
+| 4 | 🔄 **Reconocimiento inverso** | `so` + varios hiraganas | Elige **そ** | Sonido → hiragana |
+| 5 | 🧩 **Parejas** | Hiraganas y sus lecturas | Une **そ ↔ so** junto a hiraganas ya aprendidos | Consolidar asociaciones |
+| 6 | 🔊 **Reconocimiento auditivo** | Se escucha **「so」** + 6 tarjetas de hiragana | Elige **そ** | Sonido → forma, sin romaji |
+| 7 | 🖼️ **Primera palabra real** | Imagen + palabra, por ejemplo **そら** + audio | Observa que **そ** forma parte de una palabra | Introducir el hiragana en contexto |
+| 8 | 🧱 **Completar palabra visual** | 🖼️ cielo + **◯ら** | Entre 6 tarjetas elige **そ** | Aplicarlo dentro de una palabra |
+| 9 | 🎧 **Completar palabra por audio** | 🖼️ cielo + audio **「そら」**, pero **sin hiragana ni romaji** | Entre 6 tarjetas elige **そ** | Reconocimiento auditivo contextual |
+| 10 | ✅ **Repaso final** | Mezcla de 3–5 pruebas anteriores | Responde sin introducción | Comprobar retención |
+
+---
+
 ## Principios de animación
 
 - Todas las animaciones de entrada/salida usan **timelines de GSAP**,
@@ -303,3 +409,84 @@ src/
 - **Listener de resize sin filtro de ancho** actualiza `--vh` cuando el navegador
   móvil muestra/oculta la barra de URL, lo que interrumpe StPageFlip mid-gesture.
   Siempre comparar `window.innerWidth` antes y después antes de actualizar.
+
+
+## Ejercicios de aprendizaje
+
+| Fase               | Nº | Ejercicio                                    |
+| ------------------ | -: | -------------------------------------------- |
+| **Aprender**       |  1 | Mnemotecnia                                  |
+|                    |  2 | Hiragana + romaji + audio                    |
+| **Reconocer**      |  3 | Hiragana → romaji                            |
+|                    |  4 | Romaji → hiragana                            |
+|                    |  5 | Parejas                                      |
+| **Escuchar**       |  6 | Audio → hiragana                             |
+| **Contextualizar** |  7 | Presentar palabra real + imagen              |
+|                    |  8 | Completar palabra viendo hiragana            |
+| **Recordar**       |  9 | Completar palabra usando solo imagen + audio |
+| **Consolidar**     | 10 | Repaso mixto                                 |
+
+
+## Estructura del aprendizaje — los bloques
+
+### Bloques completos de la fase hiragana
+
+Fase hiragana base (B1–B9)
+Bloque	Kana	Acum.	% base (46)	Palabras	Acum.	% N5
+B1	6	|6	|13,0%|	13|	13	|1,6%
+B2	6	12	26,1%	25	38	4,8%
+B3	6	18	39,1%	25	63	7,9%
+B4	7	25	54,3%	31	94	11,8%
+B5	6	31	67,4%	31	125	15,6%
+B6	4	35	76,1%	30	155	19,4%
+B7	4	39	84,8%	30	185	23,1%
+B8	4	43	93,5%	24	209	26,1%
+B9	3	46	100%	19	228	28,5%
+
+Fase derivada (B10–B12)
+Bloque	Formas nuevas	Acum.	% silabario (110)	Palabras	Acum.	% N5
+B10	25 (dakuten)	71	64,5%	61	289	36,1%
+B11	6 (ぱ行 + っ)	77	70,0%	8	297	37,1%
+B12	33 (yōon)	110	100%	7	304	38,0%
+
+#### Orden de aprendizaje del hiragana
+
+| # | Caracteres | Nuevas | Acum. |
+|---|---|---:|---:|
+| B1 | あ い う え お は (6) | 13 | 13 |
+| B2 | け か し と き こ (6) | 25 | 38 |
+| B3 | ひ ふ へ ほ る た (6) | 25 | 63 |
+| B4 | く さ す せ そ ち +を (7) | 31 | 94 |
+| B5 | つ て ら り れ ろ (6) | 31 | 125 |
+| B6 | ぬ ま わ ん (4) | 30 | 155 |
+| B7 | ね な や の (4) | 30 | 185 |
+| B8 | に み む め (4) | 24 | 209 |
+| B9 | も ゆ よ (3) | 19 | 228 |
+| B10 | dakuten が ざ だ ば | 61 | 289 |
+| B11 | ぱ + っ + vocal larga | 8 | 297 |
+| B12 | yōon きゃ しゃ ちゃ… | 7 | 304 |
+
+#### Frases desbloqueadas al final del bloque B1
+
+| Frase | Español |
+|---|---|
+| いえはあおい | La casa es azul |
+| いえはいい | La casa es buena |
+| いえはおおい | Hay muchas casas |
+| えはあおい | El cuadro es azul |
+| えはいい | El cuadro es bueno |
+| えはおおい | Hay muchos cuadros |
+| うえはあおい | Lo de arriba es azul |
+| うえはいい | Lo de arriba está bien |
+| あおはいい | El azul es bonito |
+| あおはおおい | Hay mucho azul |
+| はははいい | Mi madre es buena |
+| はははあう | Mi madre se encuentra (con alguien) |
+| はははいう | Mi madre dice |
+| ははいい | El diente está bien |
+| ははおおい | Hay muchos dientes |
+| はい / いいえ | Sí / No |
+
+#### Nmemotecnica de cada hiragana
+
+A - Nos imaginamos a nuestro amigo Arturo de la mesa redonda, pero en version japonesa, obviamente no podria este levantar la espada con facilidad, debera pedir el poder de sus Amigos, asi que mientras Arturo pide el poder de la Amistad y desgasnita gritando AAAAAAAAAAAAAAAA

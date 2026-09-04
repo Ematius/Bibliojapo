@@ -1,0 +1,253 @@
+// Las hojas que se pasan, dentro del libro pintado.
+//
+// El lector ya no flota en medio de la pantalla: llena el hueco de papel del
+// fotograma abierto, así que las tapas, la encuadernación y el canto los pone la
+// imagen y aquí solo queda el papel. Es lo que evita que una hoja acabe encima
+// del canto o que las tapas asomen por debajo del bloque.
+//
+// Sin drop-shadow en el contenedor: la librería dibuja sus propias sombras al
+// pasar la hoja, y añadir un filtro encima obliga a repintar toda la zona en
+// cada frame del giro.
+
+.volume-reader {
+  position: absolute;
+  inset: 0;
+
+  &__mount,
+  &__book {
+    width: 100%;
+    height: 100%;
+  }
+
+  // La plantilla de páginas que page-flip clona.
+  //
+  // Se esconde así y no con `hidden` a propósito. Cada hoja lleva dentro un SVG
+  // con la silueta del kana, que el trazo pide por su nombre para recortarse.
+  // `hidden` es `display: none`, y una definición que vive en un subárbol que no
+  // se construye no llega a recortar nada: la copia pedía un recorte inexistente
+  // y el trazo se pintaba a pelo, como un tubo.
+  //
+  // Con tamaño cero y desbordamiento oculto desaparece de la vista igual, pero
+  // sigue existiendo para el navegador, que es lo que la silueta necesita.
+  &__template {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__page {
+    overflow: hidden;
+  }
+
+  // Hoja en blanco a la espera de contenido.
+  //
+  // ── De dónde sale la curva ─────────────────────────────────────────────────
+  // page-flip dibuja planos rectos: en modo HTML la hoja es un rectángulo con un
+  // pliegue duro, y no hay ajuste que la arquee. Pero una hoja curvada no se
+  // reconoce por su silueta sino por cómo le cae la luz, y eso sí se pinta.
+  //
+  // El perfil está copiado de la propia ilustración del libro, midiendo el papel
+  // pintado de lado a lado: cresta clara en el centro y caída cálida en el 14%
+  // de cada borde, más pronunciada en el último tramo. Reproducirlo aquí hace
+  // que la hoja de arriba se hunda hacia la encuadernación igual que la de
+  // abajo, y las dos se leen como el mismo papel curvado.
+  //
+  // Los dos bordes se sombrean, no solo el interior: la librería no dice de qué
+  // lado del libro ha caído cada hoja. El que toca la encuadernación se lee como
+  // el papel hundiéndose, y el de fuera como el canto del bloque.
+  &__paper {
+    width: 100%;
+    height: 100%;
+
+    // ── Por qué la hoja es un contenedor de consulta ──────────────────────────
+    // page-flip dimensiona cada página en PÍXELES, calculados desde el hueco de
+    // papel del libro pintado. Así que la hoja no mide lo que mide la ventana:
+    // encoge y crece con el libro, y una media query no se entera de eso porque
+    // lo que ha cambiado no es la ventana.
+    //
+    // Declarándola contenedor, todo lo que lleva dentro se mide contra la propia
+    // hoja con unidades `cq*`: los márgenes, la letra y la ilustración guardan
+    // la misma proporción tanto si el libro ocupa la pantalla entera como si va
+    // encajado en un móvil. Es lo que evita tener que reajustar el contenido a
+    // mano en cada tamaño.
+    container-type: size;
+    container-name: page;
+
+    // El papel es claro SIEMPRE: es una hoja pintada, no una superficie que siga
+    // al tema del sistema. Sin esta línea el texto hereda el color por defecto
+    // del navegador, que con el `color-scheme: light dark` de base.scss sale
+    // blanco en un sistema en modo oscuro — y blanco sobre crema no se lee.
+    color: var(--color-ink);
+
+    // El folio se queda abajo y el contenido ocupa lo que sobra.
+    display: flex;
+    flex-direction: column;
+
+    // Márgenes de página proporcionales a la hoja, no absolutos: en rem, el
+    // mismo margen que respira en escritorio se comía la página en pantallas
+    // pequeñas.
+    padding: 2cqh 1cqw;
+
+    // Los bordes se desvanecen en lugar de cortarse en seco.
+    //
+    // La hoja del lector es un rectángulo recto y la pintada tiene el borde
+    // curvo, así que donde se tocan aparecía una línea horizontal clarísima que
+    // era justo lo que hacía ver el papel plano. Difuminando los últimos píxeles
+    // la de arriba se funde con la de abajo y la curva que se ve es la pintada.
+    //
+    // Arriba y abajo se difumina más que a los lados: es donde la curva del
+    // dibujo se aparta más de la línea recta.
+    // El negro de aquí NO es un color: en una máscara marca lo que se ve entero,
+    // igual que `transparent` marca lo que se oculta. Por eso no sale de un
+    // token — si un día cambia la paleta, esto tiene que seguir siendo negro.
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 4%, #000 96%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 2%, #000 98%, transparent 100%);
+    // Con dos máscaras hay que multiplicarlas. Sin esto se suman, y sumar dos
+    // desvanecidos deja el borde opaco, que es lo contrario de lo que se busca.
+    mask-composite: intersect;
+    background:
+      linear-gradient(
+        to right,
+        rgba(var(--rgb-page-fold), 0.9) 0%,
+        rgba(var(--rgb-page-fold), 0.42) 5%,
+        rgba(var(--rgb-page-fold), 0.12) 11%,
+        transparent 18%
+      ),
+      linear-gradient(
+        to left,
+        rgba(var(--rgb-page-fold), 0.9) 0%,
+        rgba(var(--rgb-page-fold), 0.42) 5%,
+        rgba(var(--rgb-page-fold), 0.12) 11%,
+        transparent 18%
+      ),
+      // La fibra del papel, recortada de la propia ilustración del libro: es el
+      // trozo más plano de la página derecha, elegido midiendo el brillo por
+      // zonas para que no traiga ninguna sombra pintada. Así el grano de la hoja
+      // que se pasa es literalmente el mismo que el de la hoja dibujada.
+      //
+      // Se estira en vez de repetirse: la fibra no tiene motivo que cuadre, y
+      // repitiéndola aparecerían costuras rectas donde no las hay en el papel.
+      //
+      // Si algún día cambia libro-abierto-100.webp hay que volver a recortarlo, o
+      // las dos capas dejarán de ser el mismo papel.
+      url('/images/hallways/libro/papel-tomo.webp') center / 100% 100% no-repeat,
+      var(--color-page);
+  }
+
+  // Lo que se estudia en la hoja: encabezado, ilustración y texto.
+  //
+  // `min-height: 0` no es decorativo. Sin él, un hijo flexible se niega a
+  // encoger por debajo de su tamaño natural, así que una ilustración grande
+  // empujaría la caja y se saldría de la página en vez de achicarse.
+  &__content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 10cqh;
+  }
+
+  &__title {
+    flex: none;
+    margin: 0;
+    font-family: var(--font-display);
+    // La letra sigue al ancho de la hoja, pero con tope por los dos lados: sin
+    // el `clamp` se vuelve ilegible en un libro pequeño y desproporcionada en
+    // uno a pantalla completa.
+    font-size: clamp(0.7rem, 6.5cqw, 1.5rem);
+    font-weight: 600;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // Un encabezado con lo que titula, pegados.
+  //
+  // Existe por el espaciado: la caja de contenido separa sus bloques con un hueco
+  // generoso, y aplicado también entre el encabezado y su lista los desligaba —el
+  // título quedaba flotando igual de lejos de su contenido que del bloque
+  // anterior. Metiéndolos en una sección, ese hueco grande separa secciones y
+  // aquí dentro manda uno mucho más corto.
+  &__section {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2cqh;
+  }
+
+  // Encabezado de una sección dentro de la hoja. Manda menos que el título de la
+  // página: no dice de qué va la hoja, solo separa dos bloques que se leen por
+  // separado —la historia del kana y el recorrido para escribirlo—.
+  &__subtitle {
+    // La caja de contenido centra a sus hijos para que la ilustración quede en
+    // medio. El texto, en cambio, tiene que ocupar la hoja de lado a lado.
+    align-self: stretch;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(0.62rem, 4.6cqw, 1.05rem);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  // Los pasos del trazado, uno por línea y numerados por la propia lista.
+  //
+  // Interlineado más corto que el del texto corrido: cada paso es una unidad que
+  // se lee de un vistazo mientras se dibuja, no un párrafo que se lee seguido, y
+  // lo que tiene que separarse es un paso del siguiente, no una línea de la de
+  // abajo.
+  &__steps {
+    margin: 0;
+    padding-left: 1.6em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    font-size: clamp(0.6rem, 4.4cqw, 1rem);
+    line-height: 1.45;
+    text-wrap: pretty;
+
+    // El número es la referencia al trazo que se está dibujando al lado, así que
+    // se lee como dato y no como adorno de lista. Va en el elemento, que es de
+    // quien es la marca — no de la lista.
+    li::marker {
+      color: var(--color-ink-soft);
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+  }
+
+  &__body {
+    align-self: stretch;
+    margin: 0;
+    font-size: clamp(0.65rem, 5cqw, 1.1rem);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+
+  &__folio {
+    flex: none;
+    display: block;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.55rem, 3.5cqw, 0.9rem);
+    text-align: center;
+  }
+}
+
+// Lo que el temario marca dentro de un texto: el sonido del kana asomando entre
+// las palabras de la historia.
+//
+// El tamaño sube poco —un 8%—, y es a propósito: lo justo para que la letra salte
+// al leer, no tanto como para descuadrar el renglón. Si sube más, la línea que la
+// contiene se separa de las demás y el párrafo deja de leerse parejo.
+//
+// Va fuera del bloque del lector porque el texto del temario no es solo suyo: el
+// día que un ejercicio pinte la misma frase, se resaltará igual sin copiar nada.
+.content-text__mark {
+  font-weight: 700;
+  font-size: 1.08em;
+}

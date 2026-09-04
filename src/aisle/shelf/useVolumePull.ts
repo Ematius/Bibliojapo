@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type RefObject } from 'react'
 import gsap from 'gsap'
-import { OPENING, OPENING_FRAMES } from './openingConfig'
+import { OPENING, OPENING_FRAMES } from '../book/opening/openingConfig'
 import {
   COVER_TURN_ART as coverArt,
   VOLUME_PULL as pull,

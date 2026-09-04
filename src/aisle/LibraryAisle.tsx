@@ -1,8 +1,8 @@
 import { Navigate, useParams } from 'react-router-dom'
 import { findAisle } from '../shared/aisles'
 import { SiteNav } from '../shared/SiteNav'
-import { ShelfVolume } from './book/ShelfVolume'
-import { SHELF_VOLUMES } from './book/shelfConfig'
+import { ShelfVolume } from './shelf/ShelfVolume'
+import { SHELF_VOLUMES } from './shelf/shelfConfig'
 import './LibraryAisle.scss'
 
 // Pasillo de la biblioteca: la estantería de una sección.

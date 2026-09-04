@@ -161,6 +161,22 @@ export const VOLUME_PULL = {
   // Sale del estante con decisión y frena al llegar, como algo que alguien
   // acerca a propósito y no como algo que cae.
   ease: 'power3.inOut',
+  // Cuánto se adelanta el segundo giro de un par al primero.
+  //
+  // Cada pulsación encadena dos giros, y esperar a que el primero acabe del todo
+  // dejaba una pausa en medio. La culpa la tiene el `ease`: `power3.inOut` frena
+  // tantísimo al final que el último cuarto de segundo casi no se mueve nada, así
+  // que el giro PARECE terminado bastante antes de estarlo, y esa diferencia se
+  // lee como una espera.
+  //
+  // Con esto el segundo giro entra mientras el primero remata: como GSAP arranca
+  // desde donde esté el tomo en ese momento, no hay salto — el movimiento se
+  // encadena en vez de reiniciarse.
+  //
+  // Es el número que hay que subir si la continuación sigue pareciendo lenta.
+  // Pasado el medio segundo empieza a comerse la pose intermedia: el tomo dejaría
+  // de llegar a poner el lomo de frente antes de seguir girando.
+  relayOverlapSeconds: 0.35,
   focusX: 0.5,
   focusY: 0.52,
   focusHeight: 0.66,

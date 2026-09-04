@@ -1,0 +1,568 @@
+<title>Trazador de Kana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+
+<style>
+  /* Los tokens salen de la paleta de BOF: papel, tinta, madera y latón. La
+     herramienta tiene que parecerse a la hoja del libro donde va a acabar
+     el trazo. */
+  :root {
+    --paper: #fcf7e5;
+    --paper-edge: #f0d8b1;
+    --ink: #2c1f0e;
+    --ink-soft: rgba(44, 31, 14, 0.58);
+    --ink-faint: rgba(44, 31, 14, 0.13);
+    --ground: #efe6cf;
+    --panel: #f7f0dd;
+    --line: rgba(90, 68, 36, 0.22);
+    --brass: #a8801f;
+    --brass-soft: rgba(212, 168, 67, 0.18);
+
+    /* Un color por trazo. Es color funcional: sirve para distinguirlos, no
+       para decorar. */
+    --s1: #b8563f;
+    --s2: #5f7f4c;
+    --s3: #46688c;
+
+    --font-display: 'Shippori Mincho', Georgia, serif;
+    --font-ui: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    --font-data: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #1a1208;
+      --panel: #241708;
+      --line: rgba(200, 184, 154, 0.2);
+      --ink: #ece0c6;
+      --ink-soft: rgba(236, 224, 198, 0.6);
+      --ink-faint: rgba(236, 224, 198, 0.14);
+      --brass: #d4a843;
+      --brass-soft: rgba(212, 168, 67, 0.16);
+      --s1: #d97a62;
+      --s2: #8fb377;
+      --s3: #7aa3c9;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #1a1208;
+    --panel: #241708;
+    --line: rgba(200, 184, 154, 0.2);
+    --ink: #ece0c6;
+    --ink-soft: rgba(236, 224, 198, 0.6);
+    --ink-faint: rgba(236, 224, 198, 0.14);
+    --brass: #d4a843;
+    --brass-soft: rgba(212, 168, 67, 0.16);
+    --s1: #d97a62;
+    --s2: #8fb377;
+    --s3: #7aa3c9;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1.75rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .sub {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    max-width: 58ch;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* ── El papel ─────────────────────────────────────────────────────────── */
+  .sheet {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.75rem;
+    position: relative;
+  }
+
+  svg.canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  svg.canvas.is-dragging { cursor: grabbing; }
+
+  .glyph-fill { fill: rgba(44, 31, 14, 0.16); }
+  .grid-line { stroke: rgba(44, 31, 14, 0.14); stroke-width: 1; }
+  .grid-mid { stroke: rgba(44, 31, 14, 0.3); stroke-width: 1.5; stroke-dasharray: 8 8; }
+
+  /* El color de cada trazo llega como `style` y no como atributo: una variable
+     CSS solo se resuelve en una propiedad de estilo, nunca en un atributo. */
+  .brush { fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.32; }
+  .spine { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  .knot { stroke-width: 3; cursor: grab; }
+  .knot:hover { stroke-width: 5; }
+  .knot.is-first { stroke-width: 5; }
+
+  /* ── Panel ────────────────────────────────────────────────────────────── */
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .block {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 1rem 1.1rem 1.15rem;
+  }
+
+  .block > h2 {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-ui);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--ink-soft);
+  }
+
+  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  button {
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+
+  button:hover { background: var(--brass-soft); }
+  button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+  button[disabled] { opacity: 0.4; cursor: not-allowed; }
+  button[disabled]:hover { background: transparent; }
+
+  button.primary {
+    border-color: var(--brass);
+    background: var(--brass-soft);
+    font-weight: 700;
+  }
+
+  /* La plantilla en uso: es un dato, no un control. */
+  .plate {
+    margin: 0;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--brass);
+    border-radius: 2px;
+    background: var(--brass-soft);
+    font-family: var(--font-data);
+    font-size: 0.78rem;
+  }
+
+  /* Lista de trazos: el estado se lee por forma y color, no solo por número. */
+  .strokes { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .stroke-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .stroke-row:hover { background: var(--brass-soft); }
+  .stroke-row.is-active { border-color: var(--brass); background: var(--brass-soft); }
+
+  .chip {
+    width: 1.6rem;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: var(--chip);
+  }
+
+  .count {
+    font-family: var(--font-data);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .field { display: flex; align-items: center; gap: 0.7rem; font-size: 0.85rem; }
+  .field input[type="range"] { flex: 1; accent-color: var(--brass); }
+  .field output { font-family: var(--font-data); font-variant-numeric: tabular-nums; min-width: 3ch; }
+
+  label.check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+  label.check input { accent-color: var(--brass); }
+
+  pre {
+    margin: 0;
+    padding: 0.85rem;
+    background: var(--ground);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: var(--font-data);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    max-height: 15rem;
+  }
+
+  .hint {
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  kbd {
+    font-family: var(--font-data);
+    font-size: 0.75rem;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    padding: 0.05em 0.35em;
+  }
+
+  .steps { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--ink-soft); }
+  .steps li { margin-bottom: 0.3rem; }
+  .steps strong { color: var(--ink); font-weight: 700; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0ms !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Trazador de Kana</h1>
+    <p class="sub">Pon los puntos por el centro de cada trazo. La silueta la pone la fuente; tú solo marcas el camino del pincel.</p>
+  </header>
+
+  <div class="cols">
+    <div class="sheet">
+      <svg class="canvas" id="canvas" aria-label="Lienzo de trazado del kana"></svg>
+    </div>
+
+    <div class="panel">
+      <div class="block">
+        <h2>Plantilla del contorno</h2>
+        <p class="plate">Zen Kaku Gothic New · あ · lienzo 743 × 857</p>
+        <p class="hint">Es la plantilla del proyecto. Se quedó sola a propósito: teniendo varias, es fácil trazar sobre la equivocada y que luego los puntos no encajen con la silueta que lleva el libro.</p>
+      </div>
+
+      <div class="block">
+        <h2>Trazos de あ</h2>
+        <div class="strokes" id="strokeList"></div>
+        <div class="row" style="margin-top: 0.75rem">
+          <button id="undo">Deshacer punto</button>
+          <button id="clearStroke">Vaciar trazo</button>
+          <button id="clearAll">Vaciar todo</button>
+        </div>
+        <p class="hint">Clic en el papel para añadir un punto. Arrastra un punto para moverlo. <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> cambian de trazo, <kbd>Ctrl</kbd>+<kbd>Z</kbd> deshace.</p>
+      </div>
+
+      <div class="block">
+        <h2>Vista</h2>
+        <div class="field">
+          <span>Pincel</span>
+          <input type="range" id="brush" min="40" max="320" step="10" value="180">
+          <output id="brushOut">180</output>
+        </div>
+        <div class="row" style="margin-top: 0.6rem">
+          <label class="check"><input type="checkbox" id="grid" checked> Rejilla</label>
+          <label class="check"><input type="checkbox" id="clip" checked> Recortar con la silueta</label>
+        </div>
+        <div class="row" style="margin-top: 0.75rem">
+          <button class="primary" id="play">Reproducir el trazado</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Para pegar en kana.ts</h2>
+        <pre id="out">Aún no hay ningún punto.</pre>
+        <div class="row" style="margin-top: 0.75rem">
+          <button id="copy">Copiar</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Orden y sentido</h2>
+        <ol class="steps">
+          <li><strong>Trazo 1</strong> — la barra de arriba, de izquierda a derecha.</li>
+          <li><strong>Trazo 2</strong> — la vertical, de arriba abajo.</li>
+          <li><strong>Trazo 3</strong> — el bucle, empezando arriba a la derecha.</li>
+        </ol>
+        <p class="hint">El sentido importa: la animación recorre cada camino desde su primer punto —marcado con un anillo— hasta el último.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GLYPHS = {"zenkaku":{"W":743,"H":857,"d":"M424,857Q421,845 413,828Q405,811 394,801Q527,780 603,715Q678,649 678,557Q678,487 636,444Q593,400 521,383Q482,459 437,524Q391,588 343,638Q349,662 357,685Q364,707 372,727Q359,730 341,738Q322,746 313,752Q307,737 302,721Q296,705 291,688Q230,740 173,765Q116,790 72,783Q57,780 40,770Q23,760 12,738Q0,716 0,679Q0,607 33,543Q66,479 124,429Q182,378 255,350Q255,276 261,207Q193,212 133,214Q73,216 35,215L28,154Q67,158 131,157Q194,155 266,149Q271,107 276,69Q281,31 288,0L350,12Q343,40 338,74Q332,107 327,144Q404,136 475,124Q545,112 591,97L601,155Q551,170 476,182Q401,193 321,201Q318,232 317,265Q315,298 314,331Q365,319 419,319Q453,319 486,322Q494,303 503,284Q511,264 518,244L575,262Q568,280 561,298Q553,316 545,333Q633,355 688,412Q743,468 743,558Q743,673 658,751Q572,828 424,857ZM154,709Q180,698 211,676Q242,654 276,623Q266,573 262,519Q257,464 255,408Q199,433 155,474Q111,514 86,565Q61,615 61,671Q61,702 74,714Q87,725 108,723Q129,720 154,709ZM329,568Q364,528 398,480Q431,431 461,374Q451,373 441,373Q430,372 419,372Q365,372 314,387Q316,433 319,479Q322,524 329,568Z"}};
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const STROKE_VARS = ['--s1', '--s2', '--s3'];
+
+const state = {
+  font: 'zenkaku',
+  strokes: [[], [], []],
+  active: 0,
+  brush: 180,
+  grid: true,
+  clip: true,
+  dragging: null,
+};
+
+const canvas = document.getElementById('canvas');
+const out = document.getElementById('out');
+const strokeList = document.getElementById('strokeList');
+
+const glyph = () => GLYPHS[state.font];
+const el = (name, attrs) => {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
+};
+
+// El camino de un trazo: una polilínea simple. La silueta pone la forma, así que
+// no hacen falta curvas — con ir por el medio basta.
+function pathOf(points) {
+  if (!points.length) return '';
+  return 'M' + points.map((p) => `${p[0]},${p[1]}`).join('L');
+}
+
+function render() {
+  const g = glyph();
+  canvas.setAttribute('viewBox', `0 0 ${g.W} ${g.H}`);
+  canvas.replaceChildren();
+
+  const defs = el('defs', {});
+  const clip = el('clipPath', { id: 'silhouette' });
+  clip.appendChild(el('path', { d: g.d }));
+  defs.appendChild(clip);
+  canvas.appendChild(defs);
+
+  if (state.grid) {
+    const grid = el('g', {});
+    for (let i = 1; i < 4; i++) {
+      grid.appendChild(el('line', { class: 'grid-line', x1: (g.W / 4) * i, y1: 0, x2: (g.W / 4) * i, y2: g.H }));
+      grid.appendChild(el('line', { class: 'grid-line', x1: 0, y1: (g.H / 4) * i, x2: g.W, y2: (g.H / 4) * i }));
+    }
+    grid.appendChild(el('line', { class: 'grid-mid', x1: g.W / 2, y1: 0, x2: g.W / 2, y2: g.H }));
+    grid.appendChild(el('line', { class: 'grid-mid', x1: 0, y1: g.H / 2, x2: g.W, y2: g.H / 2 }));
+    canvas.appendChild(grid);
+  }
+
+  // La silueta del kana, de guía.
+  canvas.appendChild(el('path', { class: 'glyph-fill', d: g.d }));
+
+  // El pincel: la línea central engordada y recortada por la silueta. Es
+  // exactamente lo que se verá animado en el libro.
+  const brushLayer = el('g', state.clip ? { 'clip-path': 'url(#silhouette)' } : {});
+  state.strokes.forEach((pts, i) => {
+    if (pts.length < 2) return;
+    brushLayer.appendChild(el('path', {
+      class: 'brush', d: pathOf(pts), 'stroke-width': state.brush,
+      style: `stroke: var(${STROKE_VARS[i]})`,
+    }));
+  });
+  canvas.appendChild(brushLayer);
+
+  // La línea central en sí, y sus puntos.
+  state.strokes.forEach((pts, i) => {
+    const dim = i === state.active ? 1 : 0.45;
+    if (pts.length > 1) {
+      canvas.appendChild(el('path', {
+        class: 'spine', d: pathOf(pts),
+        style: `stroke: var(${STROKE_VARS[i]}); opacity: ${dim}`,
+      }));
+    }
+    pts.forEach((p, k) => {
+      // El primer punto va hueco: es de donde arranca la animación, y hay que
+      // poder distinguirlo de un vistazo.
+      const fill = k === 0 ? 'var(--paper)' : `var(${STROKE_VARS[i]})`;
+      canvas.appendChild(el('circle', {
+        class: 'knot' + (k === 0 ? ' is-first' : ''),
+        cx: p[0], cy: p[1], r: k === 0 ? 13 : 10,
+        style: `fill: ${fill}; stroke: var(${STROKE_VARS[i]}); opacity: ${dim}`,
+        'data-stroke': i, 'data-index': k,
+      }));
+    });
+  });
+
+  renderList();
+  renderOut();
+}
+
+function renderList() {
+  strokeList.replaceChildren();
+  state.strokes.forEach((pts, i) => {
+    const row = document.createElement('button');
+    row.className = 'stroke-row' + (i === state.active ? ' is-active' : '');
+    row.type = 'button';
+    row.setAttribute('aria-pressed', String(i === state.active));
+    row.innerHTML =
+      `<span class="chip" style="--chip: var(${STROKE_VARS[i]})"></span>` +
+      `<span>Trazo ${i + 1}</span>` +
+      `<span class="count">${pts.length} pts</span>`;
+    row.addEventListener('click', () => { state.active = i; render(); });
+    strokeList.appendChild(row);
+  });
+}
+
+function renderOut() {
+  const g = glyph();
+  const done = state.strokes.filter((s) => s.length > 1);
+  if (!done.length) { out.textContent = 'Aún no hay ningún punto.'; return; }
+  const lines = state.strokes.map((s) => (s.length > 1 ? `      '${pathOf(s)}',` : '      // trazo sin puntos'));
+  out.textContent = `    strokes: [\n${lines.join('\n')}\n    ],\n    strokeViewBox: '0 0 ${g.W} ${g.H}',`;
+}
+
+// Coordenadas del puntero pasadas al sistema del SVG.
+function toLocal(evt) {
+  const pt = canvas.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  const local = pt.matrixTransform(canvas.getScreenCTM().inverse());
+  return [Math.round(local.x), Math.round(local.y)];
+}
+
+canvas.addEventListener('pointerdown', (evt) => {
+  const knot = evt.target.closest('.knot');
+  if (knot) {
+    state.dragging = { stroke: +knot.dataset.stroke, index: +knot.dataset.index };
+    state.active = state.dragging.stroke;
+    canvas.classList.add('is-dragging');
+    canvas.setPointerCapture(evt.pointerId);
+    render();
+    return;
+  }
+  state.strokes[state.active].push(toLocal(evt));
+  render();
+});
+
+canvas.addEventListener('pointermove', (evt) => {
+  if (!state.dragging) return;
+  state.strokes[state.dragging.stroke][state.dragging.index] = toLocal(evt);
+  render();
+});
+
+canvas.addEventListener('pointerup', (evt) => {
+  if (!state.dragging) return;
+  state.dragging = null;
+  canvas.classList.remove('is-dragging');
+  canvas.releasePointerCapture(evt.pointerId);
+});
+
+document.getElementById('undo').addEventListener('click', () => {
+  state.strokes[state.active].pop(); render();
+});
+document.getElementById('clearStroke').addEventListener('click', () => {
+  state.strokes[state.active] = []; render();
+});
+document.getElementById('clearAll').addEventListener('click', () => {
+  state.strokes = [[], [], []]; render();
+});
+
+const brushInput = document.getElementById('brush');
+const brushOut = document.getElementById('brushOut');
+brushInput.addEventListener('input', () => {
+  state.brush = +brushInput.value;
+  brushOut.textContent = brushInput.value;
+  render();
+});
+
+document.getElementById('grid').addEventListener('change', (e) => { state.grid = e.target.checked; render(); });
+document.getElementById('clip').addEventListener('change', (e) => { state.clip = e.target.checked; render(); });
+
+document.getElementById('copy').addEventListener('click', async (evt) => {
+  try {
+    await navigator.clipboard.writeText(out.textContent);
+    evt.target.textContent = 'Copiado';
+    setTimeout(() => { evt.target.textContent = 'Copiar'; }, 1400);
+  } catch {
+    evt.target.textContent = 'Selecciona y copia a mano';
+  }
+});
+
+// Reproduce el trazado tal y como se verá en el libro: los tres trazos
+// encadenados, cada uno descubriéndose de su primer punto al último.
+document.getElementById('play').addEventListener('click', () => {
+  render();
+  const spines = [...canvas.querySelectorAll('.brush')];
+  if (!spines.length) return;
+  canvas.querySelectorAll('.spine, .knot').forEach((n) => { n.style.opacity = '0.12'; });
+
+  let delay = 0;
+  spines.forEach((node) => {
+    const len = node.getTotalLength();
+    node.style.opacity = '0.9';
+    node.style.strokeDasharray = `${len} ${len}`;
+    node.style.strokeDashoffset = len;
+    node.animate(
+      [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+      { duration: 900, delay, fill: 'forwards', easing: 'ease-in-out' },
+    );
+    delay += 750;
+  });
+});
+
+// Atajos: cambiar de trazo y deshacer sin soltar el ratón del papel.
+document.addEventListener('keydown', (evt) => {
+  if (evt.target.matches('input, textarea')) return;
+  if (['1', '2', '3'].includes(evt.key)) { state.active = +evt.key - 1; render(); }
+  if (evt.key.toLowerCase() === 'z' && (evt.ctrlKey || evt.metaKey)) {
+    evt.preventDefault(); state.strokes[state.active].pop(); render();
+  }
+});
+
+render();
+</script>

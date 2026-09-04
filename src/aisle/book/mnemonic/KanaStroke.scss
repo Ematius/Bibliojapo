@@ -1,0 +1,101 @@
+// La ilustración mnemotécnica con el kana dibujándose encima.
+//
+// Sin drop-shadow en ninguna capa: GSAP anima estos elementos en bucle, y un
+// filtro obliga a repintar la zona entera en cada frame.
+
+.kana-stroke {
+  width: 100%;
+
+  // Se queda con el alto que sobre en la hoja y se encoge si hace falta: sin el
+  // `min-height: 0` la ilustración se negaría a bajar de su tamaño natural y se
+  // saldría de la página.
+  flex: 1;
+  min-height: 0;
+
+  // El dibujo arriba y el botón debajo, con el dibujo quedándose lo que sobra.
+  display: flex;
+  flex-direction: column;
+  gap: 2cqh;
+
+  // La caja donde el kana se superpone al dibujo. Es la que se encoge; el botón
+  // mantiene su tamaño.
+  &__figure {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  // La ilustración y el trazo ocupan la MISMA caja: es lo que hace que el kana
+  // caiga siempre sobre la pose, se agrande el libro o se encoja.
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__glyph {
+    position: absolute;
+    // Los cuatro números vienen del contenido, uno por ilustración.
+    top: var(--fit-top);
+    right: var(--fit-right);
+    bottom: var(--fit-bottom);
+    left: var(--fit-left);
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__path {
+    fill: none;
+    stroke: var(--color-brass-glow);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    // El grosor del pincel, en unidades del lienzo del glifo (unos 743 de ancho).
+    // No es lo que se ve: el recorte por la silueta se queda solo con la parte
+    // que cae dentro de la letra, y es ese recorte el que le da al trazo su forma.
+    //
+    // Este número va emparejado con el número de puntos de cada trazo, y los dos
+    // se compensan. Un pincel gordo cubre la letra con pocos puntos, pero asoma
+    // por los trazos vecinos allí donde dos pasan cerca —en あ, el bucle rozando
+    // la vertical—. Uno fino no puede invadir nada, a cambio de exigir un camino
+    // bien pegado al centro de la forma, que es de dónde salen los 39 puntos del
+    // tercer trazo.
+    //
+    // Al subirlo hay que comprobar dos cosas: que no queden calvas sin pintar, y
+    // que ningún trazo pinte encima de otro.
+    stroke-width: 70;
+    // Nada de `non-scaling-stroke` aquí: la brocha tiene que escalar EXACTAMENTE
+    // igual que la silueta que la recorta, o dejarían de encajar.
+
+    // El trazo nace apagado y lo enciende la animación en su primer fotograma,
+    // ya recortado a cero. Es lo que evita ver el kana entero durante el
+    // fotograma que va entre pintar la hoja y arrancar GSAP.
+    //
+    // El recorte ya no se prepara aquí: de las líneas discontinuas se encarga
+    // DrawSVGPlugin, y lo que se escribiera en el CSS lo sobrescribiría igual.
+    opacity: 0;
+  }
+
+  // El botón que escribe el kana. Cómo se ve lo pone `BookButton.scss`; aquí solo
+  // dónde va, que es lo único que cambia de una hoja a otra.
+  //
+  // La ilustración ocupa la hoja de lado a lado, así que el botón se centra
+  // debajo en vez de estirarse con ella.
+  &__play {
+    align-self: center;
+  }
+
+  // Sin animación no hay nada que disparar: se enseña la asociación ya hecha, con
+  // el kana dibujado sobre la ilustración. Es la misma información, quieta —así
+  // que el trazo se enciende aquí y el botón sobra.
+  @media (prefers-reduced-motion: reduce) {
+    &__path {
+      opacity: 1;
+    }
+
+    &__play {
+      display: none;
+    }
+  }
+}
