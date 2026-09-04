@@ -4,14 +4,46 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Las tres familias que declara src/styles/root.scss: Shippori Mincho
-         (japonés y cabeceras), Cinzel (logotipo) y Zen Kaku Gothic New (texto). -->
+    <!-- Las dos familias que se usan de verdad: Shippori Mincho (cabeceras) y
+         Zen Kaku Gothic New (texto y japonés).
+
+         Cinzel NO se pide, aunque `--font-roman` la siga declarando: está
+         reservada para el logotipo, que todavía no existe, y ningún componente la
+         aplica. El día que se use el logotipo hay que volver a añadirla aquí, o se
+         verá con la serif del sistema.
+
+         Los pesos son exactamente los que aparecen en el CSS. Cada peso de una
+         familia japonesa son cientos de reglas @font-face —Google trocea los
+         miles de glifos por rangos de Unicode— así que pedir uno de más cuesta
+         mucho más que en una fuente latina. Antes se pedía el 500 de Shippori,
+         que no usaba nadie.
+
+         ── Por qué NO bloquea el render ─────────────────────────────────────
+         Este archivo tardaba 2,2 segundos en llegar y hasta entonces no se
+         pintaba NADA. Con `media="print"` el navegador lo descarga pero no lo
+         considera necesario para dibujar, y al terminar `onload` lo pasa a `all`
+         y la tipografía entra.
+
+         Se puede hacer porque la portada no tiene una sola letra: es una escena
+         de ilustraciones. Nadie ve el cambio de fuente, y para cuando hay texto
+         en pantalla la familia lleva rato cargada. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Shippori+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <!-- Sin JavaScript no hay `onload` que valga, así que la hoja se pide de la
+         forma de siempre. Aquí sí bloquea, que es lo correcto: es la única manera
+         de que el texto salga con su letra. -->
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <meta
       name="description"
       content="Biblioteca Oficial de Frikis: aprende japonés recorriendo los pasillos de una biblioteca de manga."
