@@ -2,6 +2,18 @@
   box-sizing: border-box;
 }
 
+html {
+  /* El hueco de la barra de scroll existe siempre, haya barra o no.
+     Sin esto, la entrada se lleva un scroll horizontal de la nada: es la única
+     pantalla con barra vertical de verdad —se la crea el .pin-spacer que GSAP
+     inserta al fijar la sección—, y `100vw` mide el viewport CON barra mientras
+     que el ancho disponible ya no la incluye. Esos ~15 px de diferencia son los
+     que se salen.
+     De regalo, quita el salto lateral al pasar de una ruta que scrollea a una
+     que no. */
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   margin: 0;
