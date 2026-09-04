@@ -80,11 +80,47 @@
     will-change: transform;
   }
 
+  // La capa que solo lleva la zona pulsable de la puerta.
+  //
+  // Comparte clases con la ilustración de la biblioteca —`__layer` y
+  // `__layer--library`— y de ahí saca su caja y su barrido de cámara. Aquí solo
+  // se corrige lo que un div no puede heredar de una imagen.
+  //
+  // `pointer-events: none` es lo importante: sin él esta capa cubriría la escena
+  // entera y se tragaría cualquier pulsación, incluida la de la caminante. Solo
+  // la zona de la puerta vuelve a activarlos, para sí misma.
+  &__door-layer {
+    pointer-events: none;
+  }
+
+  // Dónde se coloca el cartel de bienvenida. Cómo se ve lo dice él, en
+  // `WelcomeSign.scss`.
+  //
+  // Tamaño en vw y no en vh: la imagen es más alta que ancha, así que fijar el
+  // ancho es lo que evita que en una pantalla baja y apaisada se dispare de
+  // alto y tape media escena.
+  &__welcome-sign {
+    position: absolute;
+    top: 5rem;
+    left: 1.5rem;
+    width: min(50rem, 50vw);
+    z-index: 0;
+  }
+
   &__drops {
     position: absolute;
     inset: 0;
     // Recorta la copia de gotas que en cada momento está fuera de la pantalla.
     overflow: hidden;
+    // Por encima del cartel de bienvenida (z-index: 0): sin esto quedarían
+    // debajo, ya que en el DOM la escena —que las contiene— va antes que el
+    // cartel.
+    z-index: 1;
+    // Y obligatorio en cuanto sube: esta capa cubre la pantalla entera, así que
+    // por delante de todo se tragaría cualquier pulsación —la del cartel, la de
+    // la puerta y la de la caminante—. Las gotas son decoración pura y no
+    // necesitan recibir ninguna.
+    pointer-events: none;
   }
 
   &__drops-track {

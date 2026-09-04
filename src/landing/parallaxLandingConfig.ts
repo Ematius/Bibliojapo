@@ -6,6 +6,36 @@ export const SCENE_LAYERS = [
   { id: 'meadow', src: '/images/Landing2/3.webp' },
 ] as const
 
+// ── AQUÍ SE COLOCA LA PUERTA ───────────────────────────────────────────────
+// La zona de la biblioteca que se puede pulsar para entrar, en fracciones
+// [0, 1] de la capa `library`.
+//
+//   x, y            centro de la zona. 0.5 es el centro de la capa.
+//   width, height   cuánto abarca. Va en fracción, así que crece con la escena.
+//
+// Los cuatro números salen de mirar la ilustración: la puerta de madera está
+// bajo el pórtico dorado, hacia dos tercios del ancho. La zona es MÁS GRANDE que
+// la puerta pintada a propósito — abarca también el pórtico y el arranque de la
+// escalinata, que es donde la gente apunta cuando quiere entrar en una casa.
+// Ajustada al hueco exacto de la puerta serían unos 70 píxeles de ancho en una
+// pantalla normal, y menos aún en un móvil.
+//
+// Cuadra con el final del sendero: `PATH_WALK.to` deja a la caminante en
+// x = 0.655, justo al pie de esa escalinata.
+//
+// Si al pulsar no responde donde debe, estos cuatro valores son los que hay que
+// tocar. Con `SHOW_DOOR_ZONE` se ve dónde cae.
+export const DOOR_ZONE = {
+  x: 0.692,
+  y: 0.637,
+  width: 0.075,
+  height: 0.185,
+} as const
+
+// Pinta la zona de la puerta para poder ajustarla. Dejar en `false`: es una
+// ayuda de taller, no algo que deba verse en la portada.
+export const SHOW_DOOR_ZONE = false
+
 // Las gotas van aparte del resto de capas porque su marcado es distinto: se
 // duplican para poder encadenar el ascenso en bucle.
 export const DROPS_LAYER_SRC = '/images/Landing2/4.webp'
@@ -13,6 +43,10 @@ export const DROPS_LAYER_SRC = '/images/Landing2/4.webp'
 // Franja de flores en primer plano. Va la última de todas, incluso por delante
 // de las gotas, así que tampoco entra en el array de capas de fondo.
 export const FOREGROUND_LAYER_SRC = '/images/Landing2/5.webp'
+
+// Cartel de bienvenida, arriba a la izquierda. No participa del barrido de
+// cámara: va referido a la ventana, igual que la caminante.
+export const WELCOME_SIGN_SRC = '/images/Landing2/presentacion-landing.webp'
 
 // Barrido lateral de cámara.
 //

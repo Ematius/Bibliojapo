@@ -204,9 +204,9 @@ export const LIBRARY_ANIMATION_CONFIG = {
     // Al guardar, el dev server recarga solo — no hace falta reiniciar nada.
     // ───────────────────────────────────────────────────────────────────────
     sign: {
-      left: 0.19,
-      top: 0.75,
-      width: 0.19,
+      left: 0.15,
+      top: 0.68,
+      width: 0.25,
     },
   },
 
