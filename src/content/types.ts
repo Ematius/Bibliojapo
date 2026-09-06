@@ -39,6 +39,40 @@ export interface Word {
   units: WordUnit[]
   // Qué significa, en español.
   meaning: string
+  // Cómo se enseña la palabra SIN escribirla ni traducirla.
+  //
+  // Hay ejercicios que dan la palabra por su significado y piden la escritura. Si
+  // ese significado apareciera en español, la respuesta se leería en vez de
+  // recordarse: hace falta enseñar la cosa, no su nombre.
+  //
+  // Hay dos formas, y una palabra usa la que le corresponda: un color para las
+  // palabras que SON un color, y un dibujo para todas las demás, porque いえ o はは
+  // no se dibujan con un círculo. La clave es que sean campos del CONTENIDO y no
+  // del ejercicio: el ejercicio pide «la representación de esta palabra» y la
+  // palabra dice cuál tiene, así que un ejercicio nuevo no multiplica el material
+  // y una palabra nueva no obliga a tocar ningún ejercicio.
+  //
+  // El color va en hexadecimal y no en un token de la paleta, y es la excepción
+  // que confirma la regla: no es una decisión de diseño que se pueda revisar, es
+  // el significado de la palabra. El día que あおい deje de verse azul, la palabra
+  // habrá dejado de ser reconocible.
+  swatch?: string
+  // El dibujo, para el vocabulario que no es un color. Ruta desde `public/`.
+  //
+  // Una imagen por PALABRA, nunca por ejercicio. Es la diferencia entre 228
+  // dibujos y 228 × 7: los siete ejercicios que enseñan vocabulario piden todos lo
+  // mismo, así que se ilustra la palabra una vez y sirve para los siete.
+  //
+  // Va limpia, sin la palabra escrita ni su lectura encima: aportar eso es
+  // justamente lo que se le pide a quien estudia.
+  image?: string
+  // Qué se ve en el dibujo, para quien no pueda verlo.
+  //
+  // Cuidado con lo que se escribe aquí, porque es la respuesta dicha en voz alta.
+  // Para いえ vale «una casa», que es lo que se ve; «ie» no, que sería regalar la
+  // lectura que se está pidiendo.
+  imageAlt?: string
+
   // Cómo suena la palabra entera: ruta desde `public/`.
   //
   // Opcional a propósito. Una palabra sin grabar sigue sirviendo para leerla y
@@ -56,6 +90,102 @@ export function wordText(word: Word): string {
 // Cómo se lee: aoi
 export function wordReading(word: Word): string {
   return word.units.map((unit) => unit.romaji).join('')
+}
+
+// Una regla gramatical, introducida solo cuando una frase la necesita —nunca
+// como bloque aparte—. Ver «Gramática Just-In-Time» en
+// docs/estructura-aprendizaje.md.
+//
+// El caso que la obliga a existir: は se aprende como kana suelto y suena «ha»,
+// pero de partícula —entre el tema de la frase y lo que se dice de él— suena
+// «wa». Es el MISMO carácter con un uso distinto, no una palabra nueva, así que
+// no cabe en `Word` ni en `Kana`: necesita su propia entrada.
+export interface Grammar {
+  id: string
+  // El kana que la porta.
+  character: string
+  // Cómo suena en este uso, que puede no ser su lectura habitual.
+  romaji: string
+  // La explicación, en español y para quien aprende — no para quien programa.
+  explanation: string
+}
+
+// Una frase del temario, hecha de palabras ya conocidas más, como mucho, una
+// regla gramatical.
+//
+// El texto va literal —igual que `WordUnit.kana`— y no reconstruido a partir de
+// las palabras: entre ellas puede haber una partícula que no es vocabulario, y
+// obligar a la frase a recomponerse pieza a pieza no aportaría nada que esta
+// sesión vaya a usar. `wordIds` está para lo que sí hace falta ya: saber qué
+// vocabulario reutiliza, y así poder calcular qué frases se entienden según lo
+// aprendido.
+export interface Sentence {
+  id: string
+  // La frase completa, en kana: いえはあおい.
+  text: string
+  // Su significado en español.
+  meaning: string
+  // Las palabras del vocabulario que aparecen, por su id en `vocabulary.ts`. No
+  // cubren necesariamente toda la frase —una partícula no es una palabra—, pero
+  // sí todo lo que sí lo es.
+  wordIds: string[]
+  // La gramática que hace falta para leerla, si hace falta alguna.
+  grammarId?: string
+}
+
+// Un bloque del temario: qué se aprende junto y en qué orden.
+//
+// Guarda REFERENCIAS, nunca copias — ver «10. Principio de reutilización» en
+// docs/estructura-aprendizaje.md. Si una palabra aparece en dos bloques es la
+// misma entrada citada dos veces, nunca una palabra duplicada.
+//
+// `lessons` puede nombrar un kana que todavía no tenga su ficha completa en
+// `kana.ts` —trazos, ilustración, mnemotecnia—: el bloque describe el plan del
+// temario, y ese plan puede ir por delante de cuánto se ha trazado a mano. El
+// tomo monta solo las lecciones cuyo kana y cuya palabra existen ya, así que un
+// kana a medias no deja páginas en blanco: todavía no aparece.
+// Un kana del bloque y con qué palabra se enseña.
+//
+// El emparejamiento es del TEMARIO, no del kana: あ se presenta con あおい e い
+// con いえ porque son las palabras que hacen falta para las frases del final del
+// bloque, no por nada propio de esos dos caracteres. Por eso vive aquí y no en
+// `Kana`, que es común a todos los pasillos — un kana es un kana lo enseñe quien
+// lo enseñe.
+//
+// Es también el orden de estudio dentro del bloque: el libro monta las planas de
+// cada lección seguidas, en este orden.
+export interface Lesson {
+  kanaId: string
+  // Con qué palabra se presenta.
+  //
+  // Opcional porque el plan del bloque va por delante de lo que está decidido: un
+  // kana puede estar listado aquí —y hasta trazado en `kana.ts`— antes de haberse
+  // elegido con qué palabra se enseña. Sin palabra no genera páginas todavía, así
+  // que el tomo crece según se va cerrando el temario en vez de romperse.
+  wordId?: string
+}
+
+export interface Block {
+  id: string
+  // Cómo se presenta el tomo en su primera hoja.
+  //
+  // Es lo ÚNICO que hay que escribir a mano de esa hoja. Todo lo demás que
+  // aparece en ella —qué kana trae, cuántas palabras, cuántas frases— sale de los
+  // campos de abajo, así que no puede contradecir al contenido: el día que se
+  // añada una frase al bloque, la portada la cuenta sola.
+  title: string
+  // Una línea sobre qué tiene de particular este bloque. Va debajo del título, y
+  // se dirige a quien estudia, no a quien programa.
+  summary: string
+  // Los kana que se aprenden EN este bloque, no los acumulados de los
+  // anteriores, cada uno con su palabra.
+  lessons: Lesson[]
+  // El vocabulario que desbloquea. Incluye tanto el nuevo como el que ya se
+  // conocía y se reutiliza aquí — comparar con el bloque anterior es lo que
+  // distingue uno de otro, no un campo aparte.
+  wordIds: string[]
+  // Las frases que desbloquea.
+  sentenceIds: string[]
 }
 
 export interface Kana {

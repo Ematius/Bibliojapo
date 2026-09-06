@@ -61,6 +61,87 @@ export const HIRAGANA: Kana[] = [
     // debe.
     strokeFit: { top: 12, right: 12, bottom: 8, left: 15 },
   },
+  {
+    id: 'i',
+    character: 'い',
+    romaji: 'i',
+    audio: '/audio/hiragana/b1/i.wav',
+    mnemonic:
+      'En Japón son tan meticulosos que lo ven todo con lupa. Por eso, si miras ' +
+      'con lupa un **i**mperdible, es el hiragana **い** sin problema alguno.',
+    // Los dos trazos, contados sobre el imperdible: el cuerpo a la izquierda y la
+    // aguja suelta a la derecha.
+    strokeOrder: [
+      'Desde lo alto del cuerpo del imperdible, bajando por toda su curva hasta ' +
+        'el cierre, y girando con él hacia la derecha.',
+      'La aguja, de la punta de arriba al extremo de abajo.',
+    ],
+
+    image: '/images/hiragana/hiragana-i.png',
+    imageAlt:
+      'Un imperdible abierto visto a través de una lupa: el cuerpo curvado a la ' +
+      'izquierda y la aguja suelta a la derecha',
+
+    // Mismo origen que la silueta de あ: el glifo de Zen Kaku Gothic New.
+    outline:
+      'M266,535Q243,549 218,553Q192,557 168,544Q143,531 121,494Q93,447 71,386Q48,325 32,259Q16,192 8,126Q0,59 1,0L65,1Q63,71 75,153Q87,235 111,312Q135,389 168,446Q187,477 207,481Q226,484 244,471Q270,453 299,422Q328,390 341,364Q348,377 360,393Q371,409 381,418Q369,437 349,460Q329,483 308,503Q286,523 266,535ZM676,360Q667,334 648,294Q628,254 604,210Q579,166 554,127Q528,87 508,63L561,30Q582,56 609,97Q635,137 662,183Q688,228 709,269Q729,309 739,335Q723,338 705,345Q687,352 676,360Z',
+
+    // Dos trazos, no tres: い se escribe con dos, así que aquí solo hay dos. La
+    // lista de `strokeOrder` mide lo mismo, que es lo que tienen que cumplir las
+    // dos siempre.
+    strokes: [
+      'M29,1L57,227L90,361L137,461L161,501L191,519L230,520L265,496L301,462L360,396',
+      'M536,46L612,167L704,342',
+    ],
+    strokeViewBox: '0 0 739 557',
+    // Medido sobre el dibujo: el imperdible ocupa de un 22 % a un 79 % del ancho,
+    // y el trazo queda centrado sobre él.
+    //
+    // El encaje no puede ser perfecto y no es un fallo: el imperdible del dibujo
+    // es más alargado que い, que es un kana ancho y bajo (739 × 557). Como el SVG
+    // entra con `meet` y sin deformarse, ajusta por el ancho y se centra en
+    // vertical, así que los trazos no llegan ni a lo más alto del cuerpo ni a la
+    // punta de la aguja. Estos son los cuatro números a mover si cae torcido.
+    strokeFit: { top: 18, right: 21, bottom: 15, left: 22 },
+  },
+  {
+    id: 'u',
+    character: 'う',
+    romaji: 'u',
+    audio: '/audio/hiragana/b1/u.wav',
+    mnemonic:
+      'Sabrás que en Japón la industria de las **u**ñas es muy artística, por eso ' +
+      'había que hacerle un hiragana, y ahí está la **う**: sencillamente es una ' +
+      '**u**ña vista de lado, y lo que sobresale es el final de la brocha antes de ' +
+      'pintar. Al ver este hiragana es inevitable pensar en **u**ña.',
+    // Los dos trazos, contados sobre el dibujo: primero la brocha, luego la uña.
+    strokeOrder: [
+      'El final de la brocha, el trazo corto que sobresale por arriba: de ' +
+        'izquierda a derecha.',
+      'La uña vista de lado: desde el nacimiento, siguiendo su curva hasta la punta.',
+    ],
+
+    image: '/images/hiragana/hiragana-u.png',
+    imageAlt:
+      'Una uña vista de lado, pintada de rojo, con el frasco y la brocha de ' +
+      'esmalte justo encima',
+
+    // Mismo origen que la silueta de あ e い: el glifo de Zen Kaku Gothic New.
+    outline:
+      'M245,888Q235,878 216,867Q197,855 183,851Q249,808 302,744Q355,680 387,603Q418,525 418,442Q418,377 385,347Q351,317 304,317Q262,317 213,329Q163,341 118,361Q72,381 40,404Q36,393 23,374Q10,355 0,346Q39,325 91,304Q143,283 199,269Q255,255 304,255Q353,255 394,277Q434,298 459,340Q483,381 483,442Q483,532 452,616Q420,700 367,770Q313,840 245,888ZM399,153Q380,148 345,137Q309,125 268,110Q227,95 192,80Q156,65 138,55L169,0Q185,9 218,23Q250,36 289,51Q328,65 364,77Q399,88 420,93L399,153Z',
+
+    // Dos trazos: el final de la brocha y la curva de la uña. Como en い, esta
+    // lista mide lo mismo que `strokeOrder`.
+    strokes: [
+      'M157,29L406,127',
+      'M23,370L322,274L443,365L410,666L218,865',
+    ],
+    strokeViewBox: '0 0 483 888',
+    // A ojo sobre el dibujo, y provisional: la brocha cae sobre la punta del
+    // pincel y la curva sobre la uña. Estos son los cuatro números a mover si el
+    // kana no cae donde debe.
+    strokeFit: { top: 17, right: 9, bottom: 33, left: 43 },
+  },
 ]
 
 // Acceso por id, que es como lo pide una página del tomo.
