@@ -43,18 +43,39 @@ gsap.registerPlugin(DrawSVGPlugin)
 // Por eso tampoco se repite sola: la pasada termina devolviendo la hoja a como
 // estaba, y el botón vuelve a quedar disponible para verla otra vez.
 //
-// Devuelve con qué desmontarlo todo —la timeline y el clic—, porque las dos cosas
-// quedarían colgando de nodos que page-flip destruye al cerrar el libro.
+// ── Una hoja, una timeline ─────────────────────────────────────────────────
+// El tomo trae una hoja mnemotécnica por kana, y lo que recibe esta función es el
+// libro ENTERO. Por eso recorre las hojas y monta cada una por separado, con su
+// timeline y su botón.
+//
+// Buscar la imagen y el botón sobre el libro entero parecía equivalente mientras
+// hubo un solo kana, y dejó de serlo en cuanto entró el segundo: se quedaba con
+// los del primero, así que los demás botones no hacían nada y la pasada mezclaba
+// los trazos de todos los kana a la vez. No daba error: simplemente no animaba.
+//
+// Devuelve con qué desmontarlo todo —las timelines y los clics—, porque quedarían
+// colgando de nodos que page-flip destruye al cerrar el libro.
 export function mountKanaStroke(root: HTMLElement): (() => void) | null {
-  const image = root.querySelector<HTMLElement>('.kana-stroke__image')
-  const play = root.querySelector<HTMLButtonElement>('.kana-stroke__play')
-  const paths = [...root.querySelectorAll<SVGPathElement>('.kana-stroke__path')]
-  if (!image || !play || paths.length === 0) return null
-
-  // Con «reducir movimiento» no hay nada que disparar. El CSS deja el trazo
-  // dibujado sobre la ilustración y esconde el botón, así que la asociación se ve
-  // igual: entera, y quieta.
+  // Con «reducir movimiento» no hay nada que disparar en ninguna hoja. El CSS
+  // deja el trazo dibujado sobre la ilustración y esconde el botón, así que la
+  // asociación se ve igual: entera, y quieta.
   if (prefersReducedMotion()) return null
+
+  const unmounts = [...root.querySelectorAll<HTMLElement>('.kana-stroke')]
+    .map(mountSheet)
+    .filter((unmount): unmount is () => void => unmount !== null)
+
+  if (unmounts.length === 0) return null
+
+  return () => unmounts.forEach((unmount) => unmount())
+}
+
+// El trazado de UNA hoja: su ilustración, sus trazos y el botón que los dispara.
+function mountSheet(sheet: HTMLElement): (() => void) | null {
+  const image = sheet.querySelector<HTMLElement>('.kana-stroke__image')
+  const play = sheet.querySelector<HTMLButtonElement>('.kana-stroke__play')
+  const paths = [...sheet.querySelectorAll<SVGPathElement>('.kana-stroke__path')]
+  if (!image || !play || paths.length === 0) return null
 
   // El punto de partida: los trazos sin nada dibujado todavía. `opacity` los
   // enciende, porque hasta aquí el CSS los tenía apagados — es lo que evita que
