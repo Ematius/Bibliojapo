@@ -1,37 +1,13 @@
 // Tomos colocados sobre la estantería del pasillo.
 // Todo valor artístico ajustable vive aquí — nunca hardcodeado en el componente.
 //
-// ── Cómo colocar un tomo a mano ────────────────────────────────────────────
-//
-// Sistema de coordenadas: fracciones [0, 1] del stage, que es la ilustración
-// del pasillo (1672 × 941). El origen es la esquina superior izquierda de la
-// IMAGEN, no del navegador: por eso las medidas siguen valiendo aunque la
-// ventana recorte la escena por los lados.
-//   0.01 horizontal ≈ 17 px de la imagen
-//   0.01 vertical   ≈  9 px de la imagen
-//
-//   x        centro del lomo. Es el centro y no el borde para que al cambiar
-//            de altura el tomo crezca hacia los lados por igual y no se
-//            desplace.
-//   baseY    la balda sobre la que se apoya, o sea el borde INFERIOR del tomo.
-//            Anclar por la base es lo que lo mantiene posado en la madera
-//            cuando se le cambia el alto.
-//   height   alto del tomo. El ancho NO se indica: sale solo de la proporción
-//            del archivo, que está recortado a la silueta del libro.
-//
-// Baldas de la estantería, medidas sobre la ilustración (la superficie donde
-// se apoyan los libros, no el hueco):
-//   balda 1 (arriba)   y ≈ 0.355
-//   balda 2            y ≈ 0.485
-//   balda 3            y ≈ 0.600
-//   balda 4 (abajo)    y ≈ 0.725
-//
-// Montantes verticales que dividen los huecos: x ≈ 0.475, 0.55, 0.635, 0.71.
-// Un tomo no debería quedar a caballo de ninguno de ellos.
-//
-// CUIDADO CON LOS BORDES: el stage se recorta por los lados en pantallas más
-// estrechas que 16:9, así que lo que quede fuera de 0.05 – 0.95 puede cortarse.
-// ───────────────────────────────────────────────────────────────────────────
+// Dónde se posa cada tomo NO se decide aquí: sale de la rejilla del mueble, en
+// `shelfGrid.ts`. Este archivo dice cómo ES un tomo —sus caras, su forma, cómo
+// gira y cómo se adelanta— y cuáles hay; la estantería dice dónde caben.
+
+import { placeVolumes, type VolumeEntry } from './shelfGrid'
+
+export type { ShelfVolume, VolumeEntry } from './shelfGrid'
 
 // Las dos caras del tomo, renderizadas de frente y con cámara ortográfica. No
 // son una ilustración del libro: son sus caras reales, que se montan en el
@@ -75,34 +51,20 @@ export const VOLUME_SHAPE = {
   coverTurnedRatio: 938 / 1358,
 }
 
-export interface ShelfVolume {
-  id: string
-  // Texto accesible, en español.
-  label: string
-  // Qué bloque del temario contiene, por su id en `content/hiragana/blocks.ts`.
-  //
-  // Un tomo ES un bloque: aquí se dice cuál, y de ahí sale todo lo que lleva
-  // dentro. Poner el segundo libro en la estantería es añadir una entrada más a
-  // esta lista con el bloque que le toque — no hace falta nada más.
-  blockId: string
-  x: number
-  baseY: number
-  height: number
-}
-
-// El primero de la colección. Se apoya en la balda de arriba, a la derecha de
-// los libros que ya vienen pintados en la ilustración, como si alguien acabara
-// de dejarlo ahí: la fila continúa en vez de empezar otra suelta.
-export const SHELF_VOLUMES: ShelfVolume[] = [
-  {
-    id: 'nibanme',
-    label: 'Tomo にばんめ',
-    blockId: 'b1',
-    x: 0.489,
-    baseY: 0.355,
-    height: 0.1,
-  },
+// La colección, EN ORDEN. Es lo único que hay que tocar para poner un tomo más
+// en la estantería: se añade su entrada al final y la rejilla lo coloca sola, en
+// el primer hueco libre. No hay coordenadas que medir ni que revisar después.
+//
+// El orden de esta lista ES el orden en la balda: se llena el vano izquierdo de
+// la balda de arriba, luego el derecho, y de ahí se baja. Reordenarla recoloca
+// la estantería entera.
+const VOLUME_ORDER: readonly VolumeEntry[] = [
+  { id: 'nibanme', label: 'Tomo にばんめ', blockId: 'b1' },
 ]
+
+// Los mismos tomos, ya posados en su balda. `placeVolumes` les añade el centro
+// del lomo, la balda y el alto a partir de la rejilla y del grosor del render.
+export const SHELF_VOLUMES = placeVolumes(VOLUME_ORDER, VOLUME_SHAPE.spineRatio)
 
 // Poses del tomo, en grados de giro sobre su eje vertical.
 //
