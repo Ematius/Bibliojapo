@@ -142,6 +142,45 @@ export const HIRAGANA: Kana[] = [
     // kana no cae donde debe.
     strokeFit: { top: 17, right: 9, bottom: 33, left: 43 },
   },
+  {
+    id: 'e',
+    character: 'え',
+    romaji: 'e',
+    audio: '/audio/hiragana/b1/e.wav',
+    mnemonic:
+      '**E**levado en el cielo se ve a un **E**squiador hacer zigzag y dejar una ' +
+      'silueta en la nieve que tiene la forma exacta del hiragana **え**. **E**levado ' +
+      'en el cielo, el **E**squiador hace un zigzag dibujando el hiragana **え** en ' +
+      'la nieve.',
+    // Los dos trazos, contados sobre la ladera: el corte de arriba y la traza
+    // entera que baja hasta el esquiador.
+    strokeOrder: [
+      'El primer corte en la nieve, arriba del todo: corto y de izquierda a derecha.',
+      'La traza entera: cruza a la derecha, baja en diagonal hasta el borde ' +
+        'izquierdo, remonta y se cierra con la curva larga que llega al esquiador.',
+    ],
+
+    image: '/images/hiragana/hiragana-e.png',
+    imageAlt:
+      'Una ladera nevada vista desde arriba, con la traza en zigzag que ha dejado ' +
+      'un esquiador y él mismo bajando al final del recorrido',
+
+    // Mismo origen que las siluetas de あ, い y う: el glifo de Zen Kaku Gothic New.
+    outline:
+      'M53,829L0,789Q24,765 63,721Q102,676 149,621Q196,565 244,508Q291,450 332,399Q372,347 398,313Q361,320 315,327Q269,334 223,340Q177,346 139,351Q100,355 78,357L67,295Q89,295 126,292Q163,289 208,284Q253,279 300,272Q347,265 389,258Q431,250 461,242L507,284Q496,294 470,325Q444,355 411,396Q378,437 344,480Q355,475 375,478Q394,480 406,486Q433,500 446,529Q459,557 456,625Q454,690 463,720Q472,750 495,758Q517,766 553,766Q576,766 608,764Q640,761 673,757Q705,752 727,747Q724,758 723,780Q722,801 723,813Q677,820 628,825Q579,829 545,829Q490,829 456,814Q421,799 407,759Q393,719 397,645Q399,591 393,565Q386,539 363,529Q345,521 324,526Q302,530 282,555Q235,612 190,666Q145,720 109,763Q73,806 53,829ZM464,152Q445,147 410,135Q375,122 336,107Q297,92 264,78Q231,63 216,53L246,0Q259,8 290,22Q320,35 358,50Q395,64 430,76Q464,88 484,93L464,152Z',
+
+    // Dos trazos. El segundo es el largo del bloque: va y vuelve sobre sí mismo
+    // —derecha, diagonal abajo, remonte y curva final—, y por eso lleva nueve
+    // puntos donde a los demás les bastan tres.
+    strokes: [
+      'M233,27L471,124',
+      'M73,324L466,273L48,797L287,510L404,512L425,592L445,759L511,799L719,779',
+    ],
+    strokeViewBox: '0 0 727 829',
+    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
+    // que se hará al cerrar el contenido del tomo 1.
+    strokeFit: { top: 20, right: 12, bottom: 20, left: 5 },
+  },
 ]
 
 // Acceso por id, que es como lo pide una página del tomo.

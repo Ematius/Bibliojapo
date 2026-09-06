@@ -150,6 +150,13 @@ export const VOCABULARY: Word[] = [
       { kana: 'え', romaji: 'e' },
     ],
     meaning: 'no',
+    audio: '/audio/hiragana/b1/iie.wav',
+    // El gesto japonés de negar —los brazos cruzados en equis— dice «no» sin
+    // escribirlo y sin depender del español, que es justo lo que pide la hoja.
+    image: '/images/hiragana/imagesSupport/no-iie.png',
+    imageAlt:
+      'Un niño con los brazos cruzados en equis delante del pecho, negando con ' +
+      'cara de convencido, y una equis roja grande a su lado',
   },
 ]
 

@@ -18,15 +18,19 @@ export const BLOCKS: Block[] = [
     // del final del bloque. あ se enseña con あおい e い con いえ porque あおい y
     // いえ son dos de las palabras que arman «いえはあおい».
     //
-    // Las tres últimas todavía no tienen palabra elegida, y por eso el tomo monta
-    // hoy solo las tres primeras lecciones. Están listadas igualmente porque esto
+    // Las dos últimas todavía no tienen palabra elegida, y por eso el tomo monta
+    // hoy solo las cuatro primeras lecciones. Están listadas igualmente porque esto
     // es el PLAN del bloque: en cuanto se decide con qué palabra se enseña un kana,
     // se escribe aquí y su lección entra en el libro sin tocar nada más.
+    //
+    // え se enseña con いいえ y no con え —que también es palabra— porque una
+    // palabra de un solo kana deja sin sentido media lección: no se puede pedir
+    // que se encuentre el kana DENTRO de la palabra si la palabra es el kana.
     lessons: [
       { kanaId: 'a', wordId: 'aoi' },
       { kanaId: 'i', wordId: 'ie' },
       { kanaId: 'u', wordId: 'ue' },
-      { kanaId: 'e' },
+      { kanaId: 'e', wordId: 'iie' },
       { kanaId: 'o' },
       { kanaId: 'ha' },
     ],
