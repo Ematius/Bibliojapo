@@ -59,6 +59,14 @@
   --color-ivy: #6b8c5a;
   --color-ivy-dark: #4a6340;
 
+  /* Aviso de fallo, para cuando el ejercicio necesita algo más que la tinta
+     oscura de siempre —un arrastre a la casilla equivocada, un cristal que se
+     rompe—. No es un rojo de pantalla: tira a ladrillo, la misma familia cálida
+     que el resto de la paleta, así que sigue leyéndose como parte del libro y
+     no como una alerta de sistema pegada encima. */
+  --color-error: #a8432f;
+  --color-error-deep: #7a2f1f;
+
   /* Texto */
   --color-ink: #2c1f0e;
   --color-ink-soft: rgba(44, 31, 14, 0.6);
