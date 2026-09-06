@@ -4,7 +4,7 @@
 // se desvanece al llegar, para reaparecer abajo y volver a empezar. Sustituye a
 // los tres galones que había antes: la pose ya es de marcha, así que el gesto
 // de «sígueme» no hay que sugerirlo con símbolos.
-export const PATH_WALK_IMAGE = '/images/silueta-caminando.png'
+export const PATH_WALK_IMAGE = '/images/silueta-caminando.webp'
 
 // ── AQUÍ SE COLOCA EL RECORRIDO ────────────────────────────────────────────
 // Fracciones [0, 1] de la ventana. `x` e `y` marcan los PIES de la figura, no

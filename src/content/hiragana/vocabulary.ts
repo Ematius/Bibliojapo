@@ -81,7 +81,7 @@ export const VOCABULARY: Word[] = [
     // se puede pintar con un círculo. Las ilustraciones del vocabulario viven
     // aparte de las mnemotécnicas —estas son de la PALABRA, aquellas del kana— y
     // por eso están en su propia carpeta.
-    image: '/images/hiragana/imagesSupport/casa-ie.png',
+    image: '/images/hiragana/imagesSupport/casa-ie.webp',
     imageAlt:
       'Una casa de campo con tejado de teja roja y flores en las ventanas, en lo ' +
       'alto de una cuesta empedrada con el mar al fondo',
@@ -96,7 +96,7 @@ export const VOCABULARY: Word[] = [
     audio: '/audio/hiragana/b1/ue.wav',
     // No es un color, así que dibujo. El alt describe la escena —el salto, el
     // globo que sube, la flecha— sin soltar la lectura, igual que el de いえ.
-    image: '/images/hiragana/imagesSupport/arriba-ue.png',
+    image: '/images/hiragana/imagesSupport/arriba-ue.webp',
     imageAlt:
       'Un niño saltando con el brazo estirado hacia el cielo para alcanzar un ' +
       'globo azul que se le escapa, con una flecha roja que apunta hacia arriba',
@@ -153,7 +153,7 @@ export const VOCABULARY: Word[] = [
     audio: '/audio/hiragana/b1/iie.wav',
     // El gesto japonés de negar —los brazos cruzados en equis— dice «no» sin
     // escribirlo y sin depender del español, que es justo lo que pide la hoja.
-    image: '/images/hiragana/imagesSupport/no-iie.png',
+    image: '/images/hiragana/imagesSupport/no-iie.webp',
     imageAlt:
       'Un niño con los brazos cruzados en equis delante del pecho, negando con ' +
       'cara de convencido, y una equis roja grande a su lado',

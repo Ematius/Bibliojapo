@@ -37,7 +37,7 @@ export const HIRAGANA: Kana[] = [
         'el recorrido por muslos, cadera hasta hasta la otra suela.',
     ],
 
-    image: '/images/hiragana/hiragana-a.png',
+    image: '/images/hiragana/hiragana-a.webp',
     imageAlt:
       'Arturo, en versión japonesa, gritando mientras intenta levantar la ' + 'espada de la roca',
 
@@ -77,7 +77,7 @@ export const HIRAGANA: Kana[] = [
       'La aguja, de la punta de arriba al extremo de abajo.',
     ],
 
-    image: '/images/hiragana/hiragana-i.png',
+    image: '/images/hiragana/hiragana-i.webp',
     imageAlt:
       'Un imperdible abierto visto a través de una lupa: el cuerpo curvado a la ' +
       'izquierda y la aguja suelta a la derecha',
@@ -121,7 +121,7 @@ export const HIRAGANA: Kana[] = [
       'La uña vista de lado: desde el nacimiento, siguiendo su curva hasta la punta.',
     ],
 
-    image: '/images/hiragana/hiragana-u.png',
+    image: '/images/hiragana/hiragana-u.webp',
     imageAlt:
       'Una uña vista de lado, pintada de rojo, con el frasco y la brocha de ' +
       'esmalte justo encima',
@@ -160,7 +160,7 @@ export const HIRAGANA: Kana[] = [
         'izquierdo, remonta y se cierra con la curva larga que llega al esquiador.',
     ],
 
-    image: '/images/hiragana/hiragana-e.png',
+    image: '/images/hiragana/hiragana-e.webp',
     imageAlt:
       'Una ladera nevada vista desde arriba, con la traza en zigzag que ha dejado ' +
       'un esquiador y él mismo bajando al final del recorrido',
