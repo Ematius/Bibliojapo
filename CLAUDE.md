@@ -13,11 +13,63 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** Landing page — animación de entrada con imágenes reales
-(fachada exterior con puertas → apertura de puertas → interior de la biblioteca).
+**Fase actual:** el primer tomo. El recorrido está entero —landing, zaguán,
+vestíbulo, pasillo y estantería— y el tomo del bloque 1 se abre y se lee con sus
+diez ejercicios. Lo que falta es contenido, no código: los trazos, las
+ilustraciones, los audios y las mnemotecnias de los kana que quedan. Ver «Cómo se
+arma un tomo».
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
-**Backend:** Todavía no — se añadirá más adelante (probablemente Firebase o Supabase).
+**Backend:** Todavía no, y la decisión está sin tomar: o uno propio con Nest
+subido a la nube, o Firebase. Se decide en la fase 4 de aquí abajo, junto con la
+pasarela de pago.
+
+---
+
+## Hacia dónde va el proyecto
+
+El orden importa y **no se adelantan fases**: cada una depende de decisiones que
+todavía no están tomadas en la anterior.
+
+1. **Terminar el tomo 1.** Es contenido, no código: los trazos, las ilustraciones,
+   los audios y las mnemotecnias de los kana que faltan.
+2. **Responsive.**
+3. **La estantería.** Hoy el tomo se coloca a mano, con coordenadas puestas a ojo
+   en `shelfConfig.ts`. Con doce tomos hace falta algo diseñado — probablemente
+   una rejilla.
+4. **Progresión y cuentas.** Van juntas y arrastran las dos decisiones grandes:
+   backend y pasarela de pago. Hay un hueco técnico que resolver antes: hoy los
+   ejercicios **no avisan de nada al acertar** —escriben en el DOM y ahí acaba—,
+   así que no hay de dónde sacar el progreso.
+5. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
+   completar el contenido mientras ya se usa.
+
+### El modelo
+
+- El **tomo 1 es gratis y se hace sin cuenta**, entero.
+- Al terminarlo se da una **recompensa** —sin diseñar todavía— y con ella se
+  consiguen los tomos siguientes. **Ahí se exige cuenta**, y del tomo 2 en
+  adelante el contenido es de pago.
+- El **progreso va por cuenta**, no por dispositivo.
+
+De ahí salen tres reglas que afectan al código desde ya:
+
+**El contenido de pago no puede vivir en `content/`.** Todo lo que está ahí viaja
+dentro del bundle y se lee desde las herramientas del navegador. El bloque 1 puede
+quedarse donde está —es el gratuito y da igual que se lea—, pero del 2 en adelante
+habrá que servirlo. Al escribir el bloque 2, tenerlo presente en vez de meterlo sin
+pensar junto al 1. Juega a favor que solo `VolumeReader` lee datos del temario: los
+demás importan únicamente tipos.
+
+**El progreso del tomo 1 se hará SIN cuenta y tiene que sobrevivir al registro.**
+Guardarlo en local no es un apaño provisional: es la pieza que la cuenta absorbe al
+crearse. Y si alguien abandona el registro, no puede perder lo que ya hizo — la
+cuenta desbloquea lo siguiente, nunca da acceso a lo ya hecho.
+
+**Se lanza con el contenido a medias, a propósito.** Un tomo incompleto no es un
+estado de desarrollo que no vaya a ver nadie: lo va a ver gente de verdad. Por eso
+una lección solo entra en el libro cuando está entera —ver «Cómo se arma un tomo»—
+y por eso lo que falta tiene que leerse siempre como «todavía no», nunca como roto.
 
 ---
 
@@ -189,12 +241,15 @@ src/
     shelf/          ← el tomo en la balda, cómo se saca y el velo que lo aísla
     book/           ← el tomo, una carpeta por lo que hace cada pieza
       opening/      ← el libro abriéndose
-      reader/       ← las hojas que se pasan
-      parts/        ← lo que comparten varias hojas: botón, texto, sonido
+      reader/       ← las hojas que se pasan y de dónde salen
+      parts/        ← lo que comparten varias hojas: botón, texto, sonido, sorteos
+      intro/        ← la portada: qué bloque es y a dónde lleva
       mnemonic/     ← la ilustración con el kana trazándose encima
       presentation/ ← la tarjeta: forma, lectura y sonido
       writing/      ← la pauta, la pizarra y la corrección de trazos
-      recognition/  ← la palabra y el hueco de romaji
+      recognition/  ← la palabra y el hueco de rōmaji
+      matching/     ← emparejar arrastrando, y el enunciado sin palabras
+      drill/        ← dos preguntas en una hoja
   content/          ← el temario: kana, vocabulario, frases. Dato, no código
   shared/           ← lo único que va fuera: usado en más de un dominio
   styles/           ← excepción justificada: tokens globales, reset, tipografía base
@@ -319,13 +374,13 @@ hiragana como en katakana o kanji. Por eso viven en sitios distintos.
 ```text
 src/
   content/            ← el temario, un subdirectorio por pasillo
-    types.ts          ← Kana, Word, Sentence, Grammar, Block (comunes a todos)
+    types.ts          ← Kana, Word, Lesson, Sentence, Grammar, Block
     hiragana/
-      kana.ts
-      vocabulary.ts
+      kana.ts         ← la ficha de cada kana: trazos, mnemotecnia, audio
+      vocabulary.ts   ← las palabras, con su audio y su color o su dibujo
       sentences.ts
       grammar.ts
-      blocks.ts
+      blocks.ts       ← qué va junto en cada tomo, y en qué orden
     katakana/         ← más adelante, los mismos archivos
     kanji/            ← más adelante
   exercises/          ← cada tipo de ejercicio, escrito UNA sola vez
@@ -345,8 +400,80 @@ src/
   lo que impide que se desincronice. El día que haya base de datos, `types.ts`
   pasa a ser el esquema de las tablas y el volcado sale de un script; el JSON se
   genera con un `JSON.stringify` si hace falta.
-- **Ninguna de las dos carpetas existe todavía.** No crearlas hasta que haya algo
-  que meter dentro.
+
+**Dónde está cada cosa hoy:** `content/` ya existe, con el B1 entero dentro.
+`exercises/` todavía no — los ejercicios siguen en `aisle/book/`, y se moverán
+cuando haya un segundo pasillo con el que comprobar de verdad que son
+independientes del contenido.
+
+---
+
+## Cómo se arma un tomo
+
+**Un tomo ES un bloque del temario.** Lo único que distingue un libro de otro son
+sus datos: no hay ni una línea de código por libro.
+
+```text
+SHELF_VOLUMES      dónde se apoya el tomo en la balda, y qué bloque trae (blockId)
+      ↓
+VolumeReader       recibe ese blockId y busca el bloque en content/
+      ↓
+buildVolumePages   genera las páginas a partir de sus lecciones
+```
+
+### Las páginas se generan, nunca se escriben a mano
+
+`kanaSpreads(kanaId, wordId)` devuelve las ocho planas con las que se enseña un
+kana. `buildVolumePages` las encadena para todas las lecciones del bloque, pone la
+portada delante, el repaso al final y numera de corrido. Dos lecciones son 16
+páginas de estudio; seis son 48.
+
+**Nunca escribir una página suelta con su `kanaId` y su `wordId` puestos a mano.**
+Un ejercicio nuevo se añade a `kanaSpreads` y aparece en todos los tomos a la vez.
+
+### Una lección entra solo si está COMPLETA
+
+`VolumeReader` deja fuera la lección cuyo contenido no esté listo, y hacen falta
+las tres cosas:
+
+- la ficha del kana en `kana.ts` —mnemotecnia, trazos, ilustración, audio—;
+- el audio de su palabra;
+- la representación de esa palabra: `swatch` si es un color, `image` si no.
+
+Media lección son planas en blanco, y quien lee no distingue una página vacía de
+una rota. Así el tomo crece según se va cerrando el contenido, en vez de exigir el
+bloque entero para poder abrirse.
+
+### Qué hay que rellenar para un tomo nuevo
+
+1. `content/hiragana/blocks.ts` → una entrada de `Block`: `title`, `summary`,
+   `lessons` (cada kana con la palabra con la que se enseña), `wordIds`,
+   `sentenceIds`.
+2. `content/hiragana/kana.ts` → la ficha de cada kana nuevo. Los trazos y la
+   silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
+3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
+   `image`.
+4. `aisle/shelf/shelfConfig.ts` → una entrada en `SHELF_VOLUMES` con su `blockId`
+   y dónde se apoya.
+
+Nada más: ningún componente, ninguna página, ningún ejercicio.
+
+### La portada
+
+La primera plana sale entera del bloque: a la derecha su `title`, sus kana y sus
+cuentas; a la izquierda las frases que se leerán al terminarlo. De todo eso solo se
+escriben a mano `title` y `summary` — **las cuentas se derivan** de `wordIds` y
+`sentenceIds`, así que no pueden quedarse desfasadas cuando cambie el temario.
+
+### Los distractores
+
+Las tarjetas falsas de los ejercicios de elegir salen de los kana **ya estudiados**
+del bloque, hasta seis (`parts/pickCards.ts`). En la primera lección no hay nada
+anterior y salen solo los de la palabra; en la última se elige entre seis. La
+dificultad sube sola conforme avanza el tomo, sin configurar nada.
+
+Nunca meter como distractor un kana que todavía no se haya dado: descartar una
+tarjeta tiene que ser reconocerla, no adivinar.
 
 ---
 
@@ -422,8 +549,8 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 |                    |  5 | Parejas                                      |
 | **Escuchar**       |  6 | Audio → hiragana                             |
 | **Contextualizar** |  7 | Presentar palabra real + imagen              |
-|                    |  8 | Completar palabra viendo hiragana            |
-| **Recordar**       |  9 | Completar palabra usando solo imagen + audio |
+|                    |  8 | Completar viendo la imagen, es kana y roma   |
+| **Recordar**       |  9 | Completar con kana y roma usando  audio |
 | **Consolidar**     | 10 | Repaso mixto                                 |
 
 
@@ -481,7 +608,6 @@ B12	33 (yōon)	110	100%	7	304	38,0%
 | あおはいい | El azul es bonito |
 | あおはおおい | Hay mucho azul |
 | はははいい | Mi madre es buena |
-| はははあう | Mi madre se encuentra (con alguien) |
 | はははいう | Mi madre dice |
 | ははいい | El diente está bien |
 | ははおおい | Hay muchos dientes |
