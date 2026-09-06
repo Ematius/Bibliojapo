@@ -34,9 +34,13 @@ todavía no están tomadas en la anterior.
 1. **Terminar el tomo 1.** Es contenido, no código: los trazos, las ilustraciones,
    los audios y las mnemotecnias de los kana que faltan.
 2. **Responsive.**
-3. **La estantería.** Hoy el tomo se coloca a mano, con coordenadas puestas a ojo
-   en `shelfConfig.ts`. Con doce tomos hace falta algo diseñado — probablemente
-   una rejilla.
+3. **La estantería.** La colocación ya está resuelta: los tomos se posan solos
+   sobre la rejilla de `shelfGrid.ts` — ver «Cómo se arma un tomo». Lo que queda
+   es el encuadre: el stage encuadra hoy la ILUSTRACIÓN, y en pantallas estrechas
+   el recorte se come el mueble entero. Hay que encuadrar por la estantería, de
+   modo que siempre quepa y la ilustración haga de relleno. Es la pieza que
+   convierte el punto 2 en algo abordable, porque ningún ajuste de tomos arregla
+   un mueble que se sale de la pantalla.
 4. **Progresión y cuentas.** Van juntas y arrastran las dos decisiones grandes:
    backend y pasarela de pago. Hay un hueco técnico que resolver antes: hoy los
    ejercicios **no avisan de nada al acertar** —escriben en el DOM y ahí acaba—,
@@ -248,7 +252,8 @@ src/
   entrance/         ← el zaguán
   hall/             ← el vestíbulo, desde donde se eligen los pasillos
   aisle/            ← el pasillo y todo lo que pasa dentro
-    shelf/          ← el tomo en la balda, cómo se saca y el velo que lo aísla
+    shelf/          ← la rejilla del mueble, el tomo en la balda, cómo se saca
+                      y el velo que lo aísla
     book/           ← el tomo, una carpeta por lo que hace cada pieza
       opening/      ← el libro abriéndose
       reader/       ← las hojas que se pasan y de dónde salen
@@ -424,12 +429,26 @@ independientes del contenido.
 sus datos: no hay ni una línea de código por libro.
 
 ```text
-SHELF_VOLUMES      dónde se apoya el tomo en la balda, y qué bloque trae (blockId)
+VOLUME_ORDER       la colección en orden: qué tomos hay y qué bloque trae cada uno
+      ↓
+SHELF_GRID         el mueble medido: sus baldas y sus vanos
+      ↓
+placeVolumes       posa cada tomo en el primer hueco libre → SHELF_VOLUMES
       ↓
 VolumeReader       recibe ese blockId y busca el bloque en content/
       ↓
 buildVolumePages   genera las páginas a partir de sus lecciones
 ```
+
+### Dónde se posa un tomo tampoco se escribe a mano
+
+`shelfGrid.ts` tiene la estantería pintada medida una sola vez —cuatro baldas, dos
+vanos limpios en cada una— y `placeVolumes` reparte la colección por orden: llena
+un vano, pasa al siguiente, y al agotar los dos de una balda baja a la de abajo.
+
+De ahí salen el centro del lomo, la balda y el alto de cada tomo. **Ninguno de los
+tres se escribe**, igual que no se escribe una página suelta: si hiciera falta
+recolocar la estantería entera se tocan los números del mueble, no los tomos.
 
 ### Las páginas se generan, nunca se escriben a mano
 
@@ -463,10 +482,26 @@ bloque entero para poder abrirse.
    silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
 3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
    `image`.
-4. `aisle/shelf/shelfConfig.ts` → una entrada en `SHELF_VOLUMES` con su `blockId`
-   y dónde se apoya.
+4. `aisle/shelf/shelfConfig.ts` → una entrada en `VOLUME_ORDER` con su `blockId`.
+   Nada de coordenadas: la rejilla lo posa en el primer hueco libre, y el orden
+   de esa lista es el orden en la balda.
 
 Nada más: ningún componente, ninguna página, ningún ejercicio.
+
+### Las tapas y los lomos son de cada tomo — todavía no
+
+Va a haber **entre 12 y 16 tapas y lomos distintos**, uno por tomo. Aún no están
+dibujados ni está decidido el orden en que saldrán con su ilustración
+correspondiente, así que de momento todos los tomos comparten el mismo render.
+
+Eso tiene una consecuencia en el código que hay que resolver el día que lleguen:
+`VOLUME_FACES` es hoy **una constante única** en `shelfConfig.ts` —un lomo, una
+tapa, una contra, un canto para todos—, y las cuatro caras tendrán que pasar a ser
+un dato de cada tomo, junto a su `blockId` en `VOLUME_ORDER`. No cambia la regla
+de que no hay una línea de código por libro: cambia de sitio el dato, nada más.
+
+Hasta entonces, cuidado al juzgar la estantería llena: varios tomos seguidos se
+ven idénticos, y eso es contenido que falta, no un fallo de la rejilla.
 
 ### La portada
 
