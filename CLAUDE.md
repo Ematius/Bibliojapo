@@ -116,6 +116,16 @@ Cada unidad de trabajo debe ser **la cosa más pequeña posible que tenga sentid
 
 - Resumir qué se hizo y qué quedó pendiente para el siguiente paso.
 - No continuar con el siguiente paso sin que el usuario lo pida.
+- **Proponer commit y push, siempre.** Cada vez que se termina un trabajo, se
+  añade algo o se mejora algo de la app, preguntar si se commitea y se sube.
+
+  No es una formalidad: el usuario tiende a olvidarlo, y lo que se deja sin
+  commitear se acumula. Un árbol de mil líneas y treinta archivos ya no se puede
+  repartir en commits con sentido — los cambios de dos trabajos distintos acaban
+  en el mismo hunk y solo se separan con cirugía.
+
+  Proponerlo NO es hacerlo: la autorización sigue siendo suya, con las palabras
+  de «Reglas inamovibles».
 
 ---
 
@@ -513,7 +523,8 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 ## Flujo de Git
 
 - Rama única: `main`.
-- Claude Code hace commit solo cuando el usuario lo pide explícitamente.
+- Claude Code hace commit solo cuando el usuario lo pide explícitamente, pero
+  **tiene que proponerlo** al terminar cada trabajo — ver «Después de cada tarea».
 - Formato: `<tipo>: <descripción corta en inglés>`
   - `feat:` nueva funcionalidad
   - `fix:` corrección de bug
