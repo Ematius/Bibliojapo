@@ -1,0 +1,59 @@
+// Las dos preguntas del repaso, apiladas en una sola hoja.
+//
+// `KanaMatch` y `WordGap` están escritos para ocupar la hoja ENTERA: su letra y
+// sus huecos se miden en `cq*` contra el papel de la página. Aquí solo tienen
+// media hoja cada uno, y sin hacer nada más esa letra saldría pensada para el
+// doble del sitio que tiene.
+//
+// Por eso cada tarea es SU PROPIO contenedor de consulta —igual que la propia
+// página lo es para el libro entero, ver `VolumeReader.scss`—. Con
+// `container-type: size` puesto en `&__task`, los `cq*` de lo que hay dentro dejan
+// de mirar al papel y pasan a mirar a su mitad: la misma pieza vale para una hoja
+// entera o para media sin que ninguna de las dos sepa que existe la otra.
+
+.word-drill {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  // Poco aire entre las dos tareas: cada una ya respira por dentro —hereda el
+  // `gap` de `KanaMatch` y `WordGap`—, y demasiado aquí encima dejaría menos sitio
+  // del que hace falta para el contenido.
+  gap: 1.5cqh;
+}
+
+.word-drill__task {
+  flex: 1;
+  min-height: 0;
+  container-type: size;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1cqh;
+}
+
+// El título de cada tarea. Menor que el subtítulo de sección del resto del libro
+// —`volume-reader__subtitle`—: aquí no separa bloques de la página, separa dos
+// preguntas dentro de un espacio ya pequeño.
+.word-drill__label {
+  flex: none;
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-family: var(--font-display);
+  font-size: clamp(0.55rem, 8cqh, 0.85rem);
+  font-weight: 600;
+  text-align: center;
+}
+
+// La línea entre las dos tareas. Fina y apagada: separa, no decora.
+.word-drill__divider {
+  flex: none;
+  align-self: stretch;
+  margin: 0;
+  border: none;
+  border-top: 1px solid var(--color-ink-soft);
+  opacity: 0.35;
+}

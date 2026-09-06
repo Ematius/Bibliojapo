@@ -1,0 +1,64 @@
+// La palabra en romaji, con la lectura del kana estudiado destacada.
+//
+// Misma estructura y mismos tamaños que `WordCard`: son la misma palabra vista de
+// los dos lados, y si una hoja se compusiera distinto de la otra parecerían dos
+// ejercicios sin relación en vez de uno de ida y otro de vuelta.
+//
+// Lo único que cambia es la letra. La palabra japonesa va en la fuente del cuerpo
+// —la misma con la que se aprendió a trazar el kana— y su transcripción va en la
+// de cabeceras, igual que el romaji de la tarjeta: el alfabeto latino aquí no es
+// texto que se lea, es una anotación de cómo suena.
+
+.word-reading {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+
+  &__word {
+    margin: 0;
+    font-family: var(--font-display);
+    // Un pelo menor que la palabra en kana: el romaji ocupa más letras para decir
+    // lo mismo —tres kana son cuatro caracteres latinos en cuanto aparece un
+    // yōon— y con el mismo tamaño se saldría de la hoja.
+    font-size: clamp(1.4rem, 18cqmin, 4rem);
+    font-weight: 500;
+    line-height: 1.15;
+    // Las letras de una transcripción se leen sueltas, no como una palabra
+    // española. Mismo criterio que el hueco de romaji de la hoja anterior.
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  // La lectura de un kana que todavía no se ha estudiado: se ve, pero en segundo
+  // plano. Mismo valor que en `WordCard`, para que las dos hojas se lean con el
+  // mismo contraste.
+  &__unit {
+    color: var(--color-ink);
+    opacity: 0.34;
+  }
+
+  // La del kana que sí se conoce, en tinta plena.
+  &__unit--known {
+    opacity: 1;
+  }
+
+  &__meaning {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 6cqmin, 1.4rem);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // El botón que suena. Cómo se ve lo pone `BookButton.scss`; aquí solo dónde va.
+  &__listen {
+    margin-top: 3cqh;
+  }
+}

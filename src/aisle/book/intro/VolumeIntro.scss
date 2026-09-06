@@ -1,0 +1,149 @@
+// La plana con la que abre el tomo: a la derecha qué es, a la izquierda a dónde
+// lleva.
+//
+// Es la única del libro sin ejercicio, y tiene que notarse: aquí no hay nada que
+// hacer, solo que leer. Por eso el texto va alineado a la izquierda y no centrado
+// como en las hojas de estudio — se lee de corrido, no de un vistazo.
+
+.volume-intro {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  // Arranca arriba, no centrado. Centrada, la portada dejaba un palmo de papel en
+  // blanco por encima del título y se leía como un descuadre, no como aire.
+  justify-content: flex-start;
+  gap: 3cqh;
+
+  // El título del bloque. En la fuente de cabeceras porque esto es una portada y
+  // no material de estudio: aquí no hay ningún carácter que copiar, así que la
+  // mincho con sus remates no confunde a nadie.
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 8cqmin, 2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  // Los kana del bloque, en fila.
+  //
+  // En la fuente del cuerpo, igual que la tarjeta de presentación: es la misma
+  // con la que se traza, y enseñarlos aquí con remates sería enseñar una forma
+  // distinta de la que se va a aprender a dibujar.
+  &__kana {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 11cqmin, 2.6rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  // Cada kana va sobre su propia pastilla de papel: en fila y sin nada que los
+  // separe se leerían como una palabra, que es justo lo que no son.
+  &__kana-item {
+    padding: 0.12em 0.22em;
+    border-bottom: 2px solid var(--color-brass);
+  }
+
+  &__summary {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.6rem, 4.6cqmin, 1rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  // Las cuentas del tomo. Cuatro, en dos filas de dos: en columna ocuparían media
+  // hoja, y en una sola fila los rótulos quedan tan estrechos que se parten.
+  &__counts {
+    margin-top: auto;
+    margin-bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3cqh 4cqw;
+  }
+
+  &__count {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+
+    // El rótulo, arriba y en voz baja.
+    dt {
+      color: var(--color-ink-soft);
+      font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    // El número. Con cifras de ancho fijo, que es lo que mantiene las tres
+    // columnas alineadas cuando una pasa de un dígito a dos.
+    dd {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(0.85rem, 7cqmin, 1.7rem);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+  }
+}
+
+// Las frases que se leerán al terminar.
+//
+// Van apretadas a propósito: son quince y tienen que caber sin que la hoja pida
+// desplazarse, que en un libro de papel no tiene sentido. Se miran de arriba
+// abajo como un índice, no se leen una a una.
+.volume-goal {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  // Arriba y sin centrar, igual que la portada de al lado. Centrar una lista que
+  // no cabe la recorta por los DOS lados, y con quince frases eso deja fuera la
+  // primera y la última sin avisar.
+  justify-content: flex-start;
+  gap: 1.6cqh;
+
+  // Una frase por línea, con su traducción al lado. `baseline` y no `center`: los
+  // dos textos son de tamaños muy distintos, y alineados por el centro el español
+  // queda flotando respecto al japonés en vez de apoyado en el mismo renglón.
+  &__line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15em 0.7em;
+  }
+
+  // La frase en japonés. Es lo que todavía no se puede leer, así que va primero y
+  // con más peso: es la meta, no el pie de foto.
+  &__text {
+    font-family: var(--font-body);
+    font-size: clamp(0.55rem, 4.2cqmin, 0.95rem);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  // La traducción, detrás y en voz baja. Se lleva el espacio que sobre para que
+  // las frases queden alineadas por la izquierda aunque midan distinto.
+  &__meaning {
+    flex: 1;
+    min-width: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.42rem, 3cqmin, 0.72rem);
+    line-height: 1.35;
+  }
+}

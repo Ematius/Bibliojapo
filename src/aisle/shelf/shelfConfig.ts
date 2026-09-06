@@ -79,6 +79,12 @@ export interface ShelfVolume {
   id: string
   // Texto accesible, en español.
   label: string
+  // Qué bloque del temario contiene, por su id en `content/hiragana/blocks.ts`.
+  //
+  // Un tomo ES un bloque: aquí se dice cuál, y de ahí sale todo lo que lleva
+  // dentro. Poner el segundo libro en la estantería es añadir una entrada más a
+  // esta lista con el bloque que le toque — no hace falta nada más.
+  blockId: string
   x: number
   baseY: number
   height: number
@@ -91,6 +97,7 @@ export const SHELF_VOLUMES: ShelfVolume[] = [
   {
     id: 'nibanme',
     label: 'Tomo にばんめ',
+    blockId: 'b1',
     x: 0.489,
     baseY: 0.355,
     height: 0.1,

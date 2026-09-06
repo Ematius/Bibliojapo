@@ -87,6 +87,40 @@
     text-wrap: balance;
   }
 
+  // El dictado completo: TODOS los huecos vacíos a la vez, sin un solo kana de
+  // por medio que marque dónde acaba uno y empieza el siguiente. Ahí la raya de
+  // debajo no basta —los huecos se leían como una sola tira—, así que cada uno
+  // pasa a ser su propia casilla, separada de sus vecinas por el hueco entre
+  // ellas y no por una raya compartida.
+  &--dictation {
+    .word-gap__reading {
+      // El espacio ES la separación: sin él, dos casillas pegadas volverían a
+      // leerse como una sola.
+      gap: 0.5em;
+    }
+
+    .word-gap__input {
+      width: 1.8em;
+      padding: 0.15em 0;
+      border: 2px solid var(--color-ink-soft);
+      border-radius: 0.2em;
+      background: var(--color-page-fold);
+
+      &:focus-visible {
+        border-color: var(--color-brass);
+      }
+    }
+
+    .word-gap__input--right {
+      border-color: var(--color-ivy-dark);
+    }
+
+    .word-gap__input--wrong {
+      border-color: var(--color-error);
+      color: var(--color-error);
+    }
+  }
+
   // El aviso de acierto o fallo. Reserva su hueco para que la palabra no dé un
   // salto cada vez que se escribe una letra.
   &__result {

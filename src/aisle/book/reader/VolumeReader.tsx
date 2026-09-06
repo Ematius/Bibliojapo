@@ -1,12 +1,22 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { PageFlip } from 'page-flip'
-import { READER, READER_PAGES } from './readerConfig'
+import { READER, buildVolumePages } from './readerConfig'
 import { HIRAGANA_BY_ID } from '../../../content/hiragana/kana'
 import { VOCABULARY_BY_ID } from '../../../content/hiragana/vocabulary'
+import { BLOCKS_BY_ID, progressThrough } from '../../../content/hiragana/blocks'
+import { SENTENCES_BY_ID } from '../../../content/hiragana/sentences'
 import { ContentText } from '../parts/ContentText'
 import { WordCard } from '../recognition/WordCard'
 import { WordGap } from '../recognition/WordGap'
+import { WordReading } from '../recognition/WordReading'
+import { WordPick } from '../recognition/WordPick'
 import { mountWordAnswer } from '../recognition/wordAnswer'
+import { mountWordChoice } from '../recognition/wordChoice'
+import { KanaMatch } from '../matching/KanaMatch'
+import { WordPrompt } from '../matching/WordPrompt'
+import { mountKanaPairing } from '../matching/kanaPairing'
+import { WordDrill } from '../drill/WordDrill'
+import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { KanaStroke } from '../mnemonic/KanaStroke'
 import { KanaCard } from '../presentation/KanaCard'
 import { KanaTrace } from '../writing/KanaTrace'
@@ -16,6 +26,12 @@ import { mountKanaBoard } from '../writing/kanaBoard'
 import './VolumeReader.scss'
 
 interface VolumeReaderProps {
+  // Qué bloque del temario contiene este tomo, por su id en `content/`.
+  //
+  // Es lo único que distingue un libro de otro: de aquí salen sus lecciones, y de
+  // las lecciones todas sus páginas. Un segundo tomo es un segundo bloque en la
+  // estantería, sin una línea más de lector.
+  blockId: string
   // Medidas de UNA página, en píxeles. Salen del hueco de papel del libro
   // pintado, así que las hojas que se pasan caen justo sobre las dibujadas.
   pageWidth: number
@@ -55,9 +71,64 @@ interface VolumeReaderProps {
 // Por eso las páginas viven en una plantilla que React sí gobierna, y al
 // contenedor de la librería se le entregan copias: cada montaje parte de un
 // juego nuevo y el desmontaje puede arrasar con lo suyo sin tocar el original.
-export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
+export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderProps) {
   const templateRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
+
+  // El repaso se sortea UNA vez por tomo abierto, no en cada render: sin
+  // `useMemo` volvería a barajar en cualquier repintado ajeno —por ejemplo, el
+  // libro reaccionando a otra cosa— y las páginas cambiarían debajo de quien
+  // estuviera leyendo. Las dependencias vacías son a propósito: un libro nuevo
+  // es un componente nuevo, así que un repaso nuevo ya llega solo con el montaje.
+  const { pages: readerPages, pools } = useMemo(() => {
+    // Solo entran en el libro las lecciones que se pueden dar ENTERAS. El bloque
+    // nombra los seis kana del temario, pero el contenido se va escribiendo a
+    // mano y no todo llega a la vez, así que el tomo crece según se cierra en vez
+    // de exigir el bloque completo para poder abrirse.
+    //
+    // Se comprueban las tres cosas que las ocho planas necesitan, y no solo que
+    // el kana y la palabra existan:
+    //
+    //   · la ficha del kana, o no hay ni mnemotecnia ni trazos;
+    //   · el audio de la palabra, porque tres planas son de escuchar;
+    //   · su representación —color o dibujo—, porque el enunciado del ejercicio 7
+    //     es justamente eso y sin ella la hoja sale vacía.
+    //
+    // Con menos de eso la lección se queda fuera entera. Media lección son planas
+    // en blanco, que es peor que una lección de menos: quien lee no distingue una
+    // página vacía de una rota.
+    const lessons = (BLOCKS_BY_ID.get(blockId)?.lessons ?? []).flatMap((lesson) => {
+      const word = lesson.wordId ? VOCABULARY_BY_ID.get(lesson.wordId) : undefined
+      const ready =
+        word?.audio && (word.swatch || word.image) && HIRAGANA_BY_ID.has(lesson.kanaId)
+
+      return ready ? [{ kanaId: lesson.kanaId, wordId: word.id }] : []
+    })
+
+    // De dónde salen los distractores de cada lección: los kana de esa lección y
+    // los de todas las anteriores, nunca uno que aún no se haya dado. Descartar
+    // una tarjeta tiene que ser reconocerla, y no se reconoce lo que no se ha
+    // visto.
+    //
+    // Como el tomo va en orden, la dificultad sube sola: en la primera lección no
+    // hay nada anterior y las tarjetas son solo las de la palabra; en la última se
+    // elige entre todo el bloque. `pickCards` corta en seis.
+    const pools = new Map<string, string[]>()
+    lessons.forEach((lesson, index) => {
+      pools.set(
+        lesson.kanaId,
+        lessons
+          .slice(0, index + 1)
+          .flatMap((seen) => HIRAGANA_BY_ID.get(seen.kanaId)?.character ?? []),
+      )
+    })
+
+    return { pages: buildVolumePages(lessons), pools }
+  }, [blockId])
+
+  // El bloque entero, para la portada. No va en el `useMemo` porque no hay nada
+  // que calcular: es una búsqueda en un mapa.
+  const block = BLOCKS_BY_ID.get(blockId)
 
   useEffect(() => {
     const template = templateRef.current
@@ -141,6 +212,12 @@ export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
     // Y el hueco de romaji. Sin esto el campo no se podría ni enfocar: el libro
     // anula la pulsación antes de que llegue. Ver `wordAnswer.ts`.
     const unmountAnswer = mountWordAnswer(holder)
+    // Y las opciones de kana. Estas no necesitan callar nada: son <button>, y el
+    // libro ya deja pasar la pulsación sobre ellos. Ver `wordChoice.ts`.
+    const unmountPick = mountWordChoice(holder)
+    // Y las tarjetas que se arrastran. Estas SÍ callan el gesto del libro: mover
+    // una tarjeta y pasar la hoja son el mismo movimiento. Ver `kanaPairing.ts`.
+    const unmountPairing = mountKanaPairing(holder)
 
     return () => {
       // Primero lo del kana: si se deja vivo, quedan una timeline y un manejador
@@ -149,6 +226,8 @@ export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
       unmountAudio?.()
       unmountBoard?.()
       unmountAnswer?.()
+      unmountPick?.()
+      unmountPairing?.()
       flip.destroy()
       mount.replaceChildren()
     }
@@ -165,7 +244,7 @@ export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
           copia acababa pidiendo un recorte que no existía y el trazo salía sin
           recortar. Se esconde por CSS, sin apagarla. */}
       <div className="volume-reader__template" ref={templateRef}>
-        {[...READER_PAGES].reverse().map((page) => (
+        {[...readerPages].reverse().map((page) => (
           <div className="volume-reader__page" key={page.id} data-density="soft">
             <div className="volume-reader__paper">
               {/* La caja de contenido: se queda con todo el alto que sobra
@@ -179,10 +258,55 @@ export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
                 {(() => {
                   // El contenido de la hoja sale del temario, no de aquí: la
                   // página solo dice qué kana y cuál de sus dos caras.
+                  // La portada no habla de ningún kana ni de ninguna palabra,
+                  // sino del bloque entero, así que se resuelve la primera y por
+                  // su cuenta.
+                  if (page.shows === 'intro') {
+                    return block ? (
+                      <VolumeIntro
+                        block={block}
+                        characters={block.lessons.flatMap(
+                          (lesson) => HIRAGANA_BY_ID.get(lesson.kanaId)?.character ?? [],
+                        )}
+                        progress={progressThrough(block.id)}
+                      />
+                    ) : null
+                  }
+
+                  if (page.shows === 'goal') {
+                    return block ? (
+                      <VolumeGoal
+                        sentences={block.sentenceIds.flatMap(
+                          (id) => SENTENCES_BY_ID.get(id) ?? [],
+                        )}
+                      />
+                    ) : null
+                  }
+
+                  const word = page.wordId ? VOCABULARY_BY_ID.get(page.wordId) : undefined
+
+                  // Las dos caras del enunciado sin palabras van SOLO de la
+                  // palabra: no estudian ningún kana en concreto, así que se
+                  // resuelven antes de exigir uno. Son las únicas hojas del tomo
+                  // que no llevan kana.
+                  if (page.shows === 'prompt') {
+                    return word ? <WordPrompt word={word} /> : null
+                  }
+
+                  if (page.shows === 'promptAudio') {
+                    return word ? <WordPrompt word={word} showVisual={false} /> : null
+                  }
+
                   const kana = page.kanaId
                     ? HIRAGANA_BY_ID.get(page.kanaId)
                     : undefined
                   if (!kana) return null
+
+                  // Lo estudiado hasta esta lección, para las hojas que reparten
+                  // tarjetas. Vacío si la lección no está en el mapa: entonces las
+                  // tarjetas son solo las de la palabra, que es lo que había antes
+                  // de que hubiera bloque del que tirar.
+                  const pool = pools.get(kana.id) ?? []
 
                   if (page.shows === 'illustration') {
                     return <KanaStroke kana={kana} />
@@ -196,17 +320,44 @@ export function VolumeReader({ pageWidth, pageHeight }: VolumeReaderProps) {
                     return <KanaTrace kana={kana} />
                   }
 
-                  // Las hojas de palabra necesitan las dos cosas: la palabra y el
-                  // kana que hay que encontrar dentro. Si falta la palabra la hoja
-                  // se queda vacía en vez de enseñar media cosa.
-                  const word = page.wordId ? VOCABULARY_BY_ID.get(page.wordId) : undefined
-
                   if (page.shows === 'word') {
                     return word ? <WordCard word={word} kana={kana} /> : null
                   }
 
                   if (page.shows === 'gap') {
                     return word ? <WordGap word={word} kana={kana} /> : null
+                  }
+
+                  if (page.shows === 'reading') {
+                    return word ? <WordReading word={word} kana={kana} /> : null
+                  }
+
+                  if (page.shows === 'pick') {
+                    return word ? <WordPick word={word} kana={kana} pool={pool} /> : null
+                  }
+
+                  if (page.shows === 'match') {
+                    return word ? (
+                      <KanaMatch word={word} kana={kana} scope="kana" pool={pool} />
+                    ) : null
+                  }
+
+                  if (page.shows === 'matchWord') {
+                    return word ? (
+                      <KanaMatch word={word} kana={kana} scope="word" pool={pool} />
+                    ) : null
+                  }
+
+                  if (page.shows === 'build') {
+                    return word ? (
+                      <KanaMatch word={word} kana={kana} scope="build" pool={pool} />
+                    ) : null
+                  }
+
+                  if (page.shows === 'drill') {
+                    return word ? (
+                      <WordDrill word={word} kana={kana} pool={pool} />
+                    ) : null
                   }
 
                   // La hoja de texto lleva dos partes: la historia que fija el

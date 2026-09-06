@@ -179,6 +179,7 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
         >
           {opened ? (
             <VolumeReader
+              blockId={volume.blockId}
               pageWidth={layout.paper.width / 2}
               pageHeight={layout.paper.height}
             />

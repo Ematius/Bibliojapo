@@ -1,0 +1,125 @@
+// La palabra con el hueco de kana y las opciones para rellenarlo.
+//
+// Mismo esqueleto que `WordGap` —palabra, traducción, aviso— porque son el mismo
+// ejercicio en las dos direcciones. Lo que cambia es que aquí no se teclea: se
+// elige entre botones, y esa fila de opciones es lo único que esta hoja añade.
+
+.word-pick {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+
+  // La palabra en kana, con el hueco dentro. Mismos valores que `WordCard`: es la
+  // misma palabra y tiene que verse igual de grande en las dos hojas.
+  &__word {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: clamp(1.6rem, 22cqmin, 5rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+  }
+
+  // Los kana que sí se ven. En tinta plena y no atenuados como en `WordCard`:
+  // aquí no acompañan al que se estudia, son la pista con la que se reconoce el
+  // hueco, y atenuarlos escondería justo lo que hay que leer.
+  &__unit {
+    color: var(--color-ink);
+  }
+
+  // El hueco.
+  //
+  // Ancho fijo y del tamaño de un kana: si creciera al rellenarse, la palabra
+  // entera daría un salto justo en el momento de acertar. La raya de debajo es la
+  // misma que marca el hueco de romaji en la hoja anterior.
+  &__slot {
+    display: inline-block;
+    width: 1.15em;
+    border-bottom: 2px solid var(--color-ink-soft);
+    color: var(--color-ink);
+    text-align: center;
+  }
+
+  // Relleno con el kana correcto. Se marca en hiedra —el único verde de la
+  // paleta— por lo mismo que el hueco de romaji: sobre papel crema se lee sin
+  // desentonar, y el latón quedaría casi del tono de la hoja.
+  &__slot--right {
+    border-bottom-color: var(--color-ivy-dark);
+    color: var(--color-ivy-dark);
+  }
+
+  &__meaning {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 6cqmin, 1.4rem);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // La fila de opciones. Se envuelve porque el número de kana entre los que
+  // elegir va a crecer con el temario: hoy son tres y en el bloque 9 serán seis o
+  // más, y una fila que no se parte los sacaría de la hoja.
+  &__options {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5cqh 2cqw;
+  }
+
+  // Cada elemento de la lista no pinta nada: solo deja que su botón ocupe todo el
+  // hueco, para que la zona pulsable sea la tarjeta entera y no el texto de dentro.
+  &__option {
+    display: flex;
+  }
+
+  // Cada opción es un botón de latón, pero cuadrado y con el kana grande: lo que
+  // se pulsa es el carácter, no una etiqueta con texto. El aspecto de latón lo
+  // pone `BookButton.scss`; aquí solo la forma y el tamaño de la letra.
+  &__choice {
+    min-width: 2.2em;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 9cqmin, 2rem);
+    line-height: 1.1;
+  }
+
+  // Acertada. Se queda marcada para que se vea cuál era, no para bloquear nada.
+  &__choice--right {
+    border-color: var(--color-ivy-dark);
+    color: var(--color-ivy-dark);
+  }
+
+  // Fallada. Sin rojo: la paleta del libro no tiene color de error, y meter uno
+  // por esto sería colar en la biblioteca un tono que no es suyo. Se apaga, que
+  // es lo que dice «esta ya la has probado», y quien explica el fallo es el aviso
+  // de debajo. No se bloquea: se sigue probando, que es lo que hace alguien
+  // aprendiendo.
+  &__choice--wrong {
+    opacity: 0.45;
+  }
+
+  // El aviso de acierto o fallo. Reserva su hueco para que las opciones no den un
+  // salto la primera vez que se pulsa.
+  &__result {
+    flex: none;
+    margin: 0;
+    min-height: 1.5em;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.58rem, 4.2cqw, 0.95rem);
+    text-align: center;
+    text-wrap: pretty;
+  }
+}
