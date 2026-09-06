@@ -294,19 +294,19 @@
     <div class="panel">
       <div class="block">
         <h2>Plantilla del contorno</h2>
-        <p class="plate">Zen Kaku Gothic New · あ · lienzo 743 × 857</p>
-        <p class="hint">Es la plantilla del proyecto. Se quedó sola a propósito: teniendo varias, es fácil trazar sobre la equivocada y que luego los puntos no encajen con la silueta que lleva el libro.</p>
+        <p class="plate" id="plateLabel">Zen Kaku Gothic New · う · lienzo 483 × 888</p>
+        <p class="hint">La silueta la pone la fuente del proyecto — la misma con la que se traza en el libro—, para que los puntos encajen con el recorte que usará el lector.</p>
       </div>
 
       <div class="block">
-        <h2>Trazos de あ</h2>
+        <h2 id="strokesHeading">Trazos de う</h2>
         <div class="strokes" id="strokeList"></div>
         <div class="row" style="margin-top: 0.75rem">
           <button id="undo">Deshacer punto</button>
           <button id="clearStroke">Vaciar trazo</button>
           <button id="clearAll">Vaciar todo</button>
         </div>
-        <p class="hint">Clic en el papel para añadir un punto. Arrastra un punto para moverlo. <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> cambian de trazo, <kbd>Ctrl</kbd>+<kbd>Z</kbd> deshace.</p>
+        <p class="hint">Clic en el papel para añadir un punto. Arrastra un punto para moverlo. <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> cambian de trazo, <kbd>Ctrl</kbd>+<kbd>Z</kbd> deshace. Un kana de dos trazos deja el tercero vacío — no pasa nada, se omite solo al copiar.</p>
       </div>
 
       <div class="block">
@@ -336,24 +336,33 @@
       <div class="block">
         <h2>Orden y sentido</h2>
         <ol class="steps">
-          <li><strong>Trazo 1</strong> — la barra de arriba, de izquierda a derecha.</li>
-          <li><strong>Trazo 2</strong> — la vertical, de arriba abajo.</li>
-          <li><strong>Trazo 3</strong> — el bucle, empezando arriba a la derecha.</li>
+          <li>De arriba abajo, y de izquierda a derecha.</li>
+          <li>Si dos trazos se cruzan, el horizontal va antes que el vertical.</li>
+          <li>Comprueba el número de trazos y el sentido exacto de este kana en una tabla de referencia antes de empezar — aquí no se detalla trazo a trazo para no dar por buena una forma que no se ha verificado.</li>
         </ol>
-        <p class="hint">El sentido importa: la animación recorre cada camino desde su primer punto —marcado con un anillo— hasta el último.</p>
+        <p class="hint">El sentido sí importa para el resultado: la animación recorre cada camino desde su primer punto —marcado con un anillo— hasta el último.</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const GLYPHS = {"zenkaku":{"W":743,"H":857,"d":"M424,857Q421,845 413,828Q405,811 394,801Q527,780 603,715Q678,649 678,557Q678,487 636,444Q593,400 521,383Q482,459 437,524Q391,588 343,638Q349,662 357,685Q364,707 372,727Q359,730 341,738Q322,746 313,752Q307,737 302,721Q296,705 291,688Q230,740 173,765Q116,790 72,783Q57,780 40,770Q23,760 12,738Q0,716 0,679Q0,607 33,543Q66,479 124,429Q182,378 255,350Q255,276 261,207Q193,212 133,214Q73,216 35,215L28,154Q67,158 131,157Q194,155 266,149Q271,107 276,69Q281,31 288,0L350,12Q343,40 338,74Q332,107 327,144Q404,136 475,124Q545,112 591,97L601,155Q551,170 476,182Q401,193 321,201Q318,232 317,265Q315,298 314,331Q365,319 419,319Q453,319 486,322Q494,303 503,284Q511,264 518,244L575,262Q568,280 561,298Q553,316 545,333Q633,355 688,412Q743,468 743,558Q743,673 658,751Q572,828 424,857ZM154,709Q180,698 211,676Q242,654 276,623Q266,573 262,519Q257,464 255,408Q199,433 155,474Q111,514 86,565Q61,615 61,671Q61,702 74,714Q87,725 108,723Q129,720 154,709ZM329,568Q364,528 398,480Q431,431 461,374Q451,373 441,373Q430,372 419,372Q365,372 314,387Q316,433 319,479Q322,524 329,568Z"}};
+// El kana de turno. Se va uno por uno: cuando este quede trazado, esta misma
+// herramienta se actualiza al siguiente —ver docs/estructura-aprendizaje.md
+// para el orden—, en vez de tener varios sueltos en la misma plantilla.
+const KANA = { id: 'u', character: 'う' };
+
+// El contorno, extraído del mismo .ttf y con el mismo script que あ —ver
+// tools/kana-extract en el historial del proyecto—: la silueta de Zen Kaku
+// Gothic New, en el lienzo propio del glifo. Verificado contra la fuente antes
+// de pegarlo aquí: la vez anterior el `d` de los cinco kana nuevos no
+// coincidía con su propio lienzo declarado y la silueta se salía del recorte.
+const GLYPH = {"W":483,"H":888,"d":"M245,888Q235,878 216,867Q197,855 183,851Q249,808 302,744Q355,680 387,603Q418,525 418,442Q418,377 385,347Q351,317 304,317Q262,317 213,329Q163,341 118,361Q72,381 40,404Q36,393 23,374Q10,355 0,346Q39,325 91,304Q143,283 199,269Q255,255 304,255Q353,255 394,277Q434,298 459,340Q483,381 483,442Q483,532 452,616Q420,700 367,770Q313,840 245,888ZM399,153Q380,148 345,137Q309,125 268,110Q227,95 192,80Q156,65 138,55L169,0Q185,9 218,23Q250,36 289,51Q328,65 364,77Q399,88 420,93L399,153Z"};
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const STROKE_VARS = ['--s1', '--s2', '--s3'];
 
 const state = {
-  font: 'zenkaku',
   strokes: [[], [], []],
   active: 0,
   brush: 180,
@@ -365,8 +374,12 @@ const state = {
 const canvas = document.getElementById('canvas');
 const out = document.getElementById('out');
 const strokeList = document.getElementById('strokeList');
+const plateLabel = document.getElementById('plateLabel');
+const strokesHeading = document.getElementById('strokesHeading');
 
-const glyph = () => GLYPHS[state.font];
+const glyph = () => GLYPH;
+const strokes = () => state.strokes;
+
 const el = (name, attrs) => {
   const node = document.createElementNS(SVG_NS, name);
   for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
@@ -384,6 +397,9 @@ function render() {
   const g = glyph();
   canvas.setAttribute('viewBox', `0 0 ${g.W} ${g.H}`);
   canvas.replaceChildren();
+
+  plateLabel.textContent = `Zen Kaku Gothic New · ${KANA.character} · lienzo ${g.W} × ${g.H}`;
+  strokesHeading.textContent = `Trazos de ${KANA.character}`;
 
   const defs = el('defs', {});
   const clip = el('clipPath', { id: 'silhouette' });
@@ -408,7 +424,7 @@ function render() {
   // El pincel: la línea central engordada y recortada por la silueta. Es
   // exactamente lo que se verá animado en el libro.
   const brushLayer = el('g', state.clip ? { 'clip-path': 'url(#silhouette)' } : {});
-  state.strokes.forEach((pts, i) => {
+  strokes().forEach((pts, i) => {
     if (pts.length < 2) return;
     brushLayer.appendChild(el('path', {
       class: 'brush', d: pathOf(pts), 'stroke-width': state.brush,
@@ -418,7 +434,7 @@ function render() {
   canvas.appendChild(brushLayer);
 
   // La línea central en sí, y sus puntos.
-  state.strokes.forEach((pts, i) => {
+  strokes().forEach((pts, i) => {
     const dim = i === state.active ? 1 : 0.45;
     if (pts.length > 1) {
       canvas.appendChild(el('path', {
@@ -445,7 +461,7 @@ function render() {
 
 function renderList() {
   strokeList.replaceChildren();
-  state.strokes.forEach((pts, i) => {
+  strokes().forEach((pts, i) => {
     const row = document.createElement('button');
     row.className = 'stroke-row' + (i === state.active ? ' is-active' : '');
     row.type = 'button';
@@ -461,10 +477,17 @@ function renderList() {
 
 function renderOut() {
   const g = glyph();
-  const done = state.strokes.filter((s) => s.length > 1);
-  if (!done.length) { out.textContent = 'Aún no hay ningún punto.'; return; }
-  const lines = state.strokes.map((s) => (s.length > 1 ? `      '${pathOf(s)}',` : '      // trazo sin puntos'));
-  out.textContent = `    strokes: [\n${lines.join('\n')}\n    ],\n    strokeViewBox: '0 0 ${g.W} ${g.H}',`;
+  // El contorno se copia siempre, haya o no puntos: hace falta para el campo
+  // `outline` de kana.ts y no depende de los trazos, así que no hay razón para
+  // esperar a que estén.
+  const header = `    // ${KANA.character} (${KANA.id})\n    outline:\n      '${g.d}',`;
+  const done = strokes().filter((s) => s.length > 1);
+  if (!done.length) {
+    out.textContent = `${header}\n    strokeViewBox: '0 0 ${g.W} ${g.H}',\n\n    // strokes: aún no hay ningún punto.`;
+    return;
+  }
+  const lines = strokes().map((s) => (s.length > 1 ? `      '${pathOf(s)}',` : '      // trazo sin puntos'));
+  out.textContent = `${header}\n    strokes: [\n${lines.join('\n')}\n    ],\n    strokeViewBox: '0 0 ${g.W} ${g.H}',`;
 }
 
 // Coordenadas del puntero pasadas al sistema del SVG.
@@ -485,13 +508,13 @@ canvas.addEventListener('pointerdown', (evt) => {
     render();
     return;
   }
-  state.strokes[state.active].push(toLocal(evt));
+  strokes()[state.active].push(toLocal(evt));
   render();
 });
 
 canvas.addEventListener('pointermove', (evt) => {
   if (!state.dragging) return;
-  state.strokes[state.dragging.stroke][state.dragging.index] = toLocal(evt);
+  strokes()[state.dragging.stroke][state.dragging.index] = toLocal(evt);
   render();
 });
 
@@ -503,10 +526,10 @@ canvas.addEventListener('pointerup', (evt) => {
 });
 
 document.getElementById('undo').addEventListener('click', () => {
-  state.strokes[state.active].pop(); render();
+  strokes()[state.active].pop(); render();
 });
 document.getElementById('clearStroke').addEventListener('click', () => {
-  state.strokes[state.active] = []; render();
+  strokes()[state.active] = []; render();
 });
 document.getElementById('clearAll').addEventListener('click', () => {
   state.strokes = [[], [], []]; render();
@@ -560,7 +583,7 @@ document.addEventListener('keydown', (evt) => {
   if (evt.target.matches('input, textarea')) return;
   if (['1', '2', '3'].includes(evt.key)) { state.active = +evt.key - 1; render(); }
   if (evt.key.toLowerCase() === 'z' && (evt.ctrlKey || evt.metaKey)) {
-    evt.preventDefault(); state.strokes[state.active].pop(); render();
+    evt.preventDefault(); strokes()[state.active].pop(); render();
   }
 });
 
