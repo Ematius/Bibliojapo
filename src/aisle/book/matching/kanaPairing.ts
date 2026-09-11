@@ -32,6 +32,8 @@
 // Con el teclado no hay arrastre posible: Enter y Espacio sobre un <button> solo
 // saben disparar un `click`. Esa vía se queda —ver `onClick`, más abajo—, porque
 // sin ella el ejercicio sería imposible sin ratón ni dedo.
+import { announceSolved } from '../parts/solved'
+
 export function mountKanaPairing(root: HTMLElement): (() => void) | null {
   const matches = [...root.querySelectorAll<HTMLElement>('.kana-match')]
   if (matches.length === 0) return null
@@ -109,6 +111,10 @@ function mountOne(match: HTMLElement): (() => void) | null {
     const word = match.dataset.word ?? ''
     const reading = match.dataset.reading ?? ''
     result.textContent = `Eso es: ${word} se lee «${reading}».`
+
+    // Con todos los huecos llenos la ficha está resuelta. Solo se llega aquí una
+    // vez: un hueco lleno no se vacía, así que no hay segunda vez que avisar.
+    announceSolved(match)
   }
 
   // Decide qué pasa con la tarjeta que se acaba de dejar en un hueco.

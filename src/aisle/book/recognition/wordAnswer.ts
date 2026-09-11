@@ -18,6 +18,8 @@
 // da el foco: se podría pulsar el campo todo el día sin que apareciera el cursor.
 //
 // Cortando ahí el evento, ni el libro se entera ni el campo pierde su foco.
+import { announceSolved } from '../parts/solved'
+
 export function mountWordAnswer(root: HTMLElement): (() => void) | null {
   const gaps = [...root.querySelectorAll<HTMLElement>('.word-gap')]
   if (gaps.length === 0) return null
@@ -39,6 +41,11 @@ function mountOne(gap: HTMLElement): (() => void) | null {
   // ejercicio pregunta por el sonido del kana, no por la pulsación exacta de las
   // teclas. Un móvil que ponga la primera letra en mayúscula no puede suspender.
   const clean = (value: string) => value.trim().toLowerCase()
+
+  // Solo para el aviso de fuera. La corrección sigue siendo viva —se recalcula en
+  // cada tecla, porque lo escrito cambia—, pero «resuelto» se dice una sola vez:
+  // sin esto, cada pulsación posterior volvería a contar como un acierto nuevo.
+  let announced = false
 
   const check = () => {
     let filled = 0
@@ -73,6 +80,11 @@ function mountOne(gap: HTMLElement): (() => void) | null {
       const word = gap.dataset.word ?? ''
       const reading = gap.dataset.reading ?? ''
       result.textContent = `Eso es: ${word} se lee «${reading}».`
+
+      if (!announced) {
+        announced = true
+        announceSolved(gap)
+      }
       return
     }
 

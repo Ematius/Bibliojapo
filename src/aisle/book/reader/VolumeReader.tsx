@@ -18,6 +18,9 @@ import { KanaMatch } from '../matching/KanaMatch'
 import { WordPrompt } from '../matching/WordPrompt'
 import { mountKanaPairing } from '../matching/kanaPairing'
 import { WordDrill } from '../drill/WordDrill'
+import { ExamSheet } from '../exam/ExamSheet'
+import { FinalNotice, FinalScope } from '../exam/FinalNotice'
+import { mountExamSeal } from '../exam/examSeal'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { groupSentencesByTopic } from '../intro/goalGroups'
 import { KanaStroke } from '../mnemonic/KanaStroke'
@@ -260,6 +263,9 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
     // Y las tarjetas que se arrastran. Estas SÍ callan el gesto del libro: mover
     // una tarjeta y pasar la hoja son el mismo movimiento. Ver `kanaPairing.ts`.
     const unmountPairing = mountKanaPairing(holder)
+    // Y el sello del examen, que escucha a todos los anteriores: es el primero que
+    // se entera de que un ejercicio se ha resuelto. Ver `parts/solved.ts`.
+    const unmountSeal = mountExamSeal(holder, blockId)
 
     return () => {
       // Primero lo del kana: si se deja vivo, quedan una timeline y un manejador
@@ -270,6 +276,7 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
       unmountAnswer?.()
       unmountPick?.()
       unmountPairing?.()
+      unmountSeal?.()
       flip.destroy()
       mount.replaceChildren()
     }
@@ -289,7 +296,15 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
           recortar. Se esconde por CSS, sin apagarla. */}
       <div className="volume-reader__template" ref={templateRef}>
         {[...readerPages].reverse().map((page) => (
-          <div className="volume-reader__page" key={page.id} data-density="soft">
+          <div
+            className="volume-reader__page"
+            key={page.id}
+            data-density="soft"
+            // Marca las hojas del examen con el kana del que son. Es lo que le
+            // permite al sello contar sus pruebas sin que nadie escriba cuántas
+            // hay. Ver `examSeal.ts`.
+            data-exam={page.exam}
+          >
             <div className="volume-reader__paper">
               {/* La caja de contenido: se queda con todo el alto que sobra
                   después del folio, y es lo que impide que la ilustración o el
@@ -326,6 +341,22 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                         )}
                       />
                     ) : null
+                  }
+
+                  // Las dos hojas que anuncian el examen final. Como la portada,
+                  // hablan del tomo entero y no de un kana, así que se resuelven
+                  // antes de exigir ninguno.
+                  if (page.shows === 'finalNotice' || page.shows === 'finalScope') {
+                    const characters =
+                      block?.lessons.flatMap(
+                        (lesson) => HIRAGANA_BY_ID.get(lesson.kanaId)?.character ?? [],
+                      ) ?? []
+
+                    return page.shows === 'finalNotice' ? (
+                      <FinalNotice characters={characters} />
+                    ) : (
+                      <FinalScope characters={characters} />
+                    )
                   }
 
                   const word = page.wordId ? VOCABULARY_BY_ID.get(page.wordId) : undefined
@@ -402,6 +433,21 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                   if (page.shows === 'drill') {
                     return word ? (
                       <WordDrill word={word} kana={kana} pool={pool} />
+                    ) : null
+                  }
+
+                  // Las dos hojas del examen. La derecha es una prueba suelta que
+                  // ya existe —el sonido del kana contra su forma—; la izquierda
+                  // junta las otras dos y es donde cae el sello.
+                  if (page.shows === 'examKana') {
+                    return word ? (
+                      <KanaMatch word={word} kana={kana} scope="kana" pool={pool} />
+                    ) : null
+                  }
+
+                  if (page.shows === 'examWord') {
+                    return word ? (
+                      <ExamSheet word={word} kana={kana} pool={pool} seal={page.seal} />
                     ) : null
                   }
 

@@ -1,0 +1,113 @@
+// La plana que anuncia el examen final: a la derecha qué es, a la izquierda lo
+// que entra.
+//
+// Se parece a la portada del tomo a propósito —mismo antetítulo en voz baja,
+// mismo título en mincho, mismo texto en voz baja debajo—: son las dos planas del
+// libro donde no hay nada que hacer, solo que leer, y conviene que se reconozcan
+// como pareja. Una abre y la otra cierra.
+
+.final-notice {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2.2cqh;
+
+  &__eyebrow {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 8cqmin, 2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  &__body {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.55rem, 4cqmin, 0.9rem);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  // Lo que se gana. Al pie y en pequeño: se enseña el premio sin celebrarlo
+  // todavía, que para eso hace falta aprobar.
+  &__prize {
+    margin-top: auto;
+    padding-top: 1.4cqh;
+    border-top: 1px solid var(--color-brass);
+
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+  }
+
+  // Apagado: es el sello que se va a ganar, no uno ganado. Verlo a todo color
+  // aquí le quitaría el momento al de verdad.
+  &__seal {
+    width: 18cqmin;
+    max-width: 3.4rem;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  &__caption {
+    color: var(--color-ink-soft);
+    font-size: clamp(0.42rem, 2.8cqmin, 0.7rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+}
+
+// Lo que entra en el examen.
+.final-scope {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3cqh;
+
+  // La misma fila de la portada, con el mismo subrayado de latón: es la misma
+  // lista con la que se abrió el libro.
+  &__kana {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3em 0.28em;
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 10cqmin, 2.4rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  &__kana-item {
+    padding: 0.1em 0.2em;
+    border-bottom: 2px solid var(--color-brass);
+  }
+
+  &__note {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.5rem, 3.6cqmin, 0.85rem);
+    line-height: 1.5;
+    text-align: center;
+    text-wrap: pretty;
+  }
+}

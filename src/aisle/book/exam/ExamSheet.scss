@@ -1,0 +1,85 @@
+// La hoja que cierra el mini examen: dos pruebas y el sello.
+//
+// Mismo reparto que `WordDrill`, que es la otra hoja del tomo con dos preguntas:
+// cada una se lleva el alto que necesita y el filete las separa, para que no se
+// lean como una sola pregunta larga.
+.exam-sheet {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  // Ancla el sello, que va posicionado contra esta caja.
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5cqh;
+
+  // Cada prueba es SU PROPIO contenedor de consulta, igual que en `WordDrill` y
+  // por el mismo motivo: `KanaMatch` y `WordGap` están escritos para ocupar la
+  // hoja entera y miden su letra en `cq*` contra el papel. Aquí solo tienen media
+  // hoja cada una, y sin esto la primera se estira —lleva `flex: 1`— y empuja a la
+  // segunda fuera de la página. Con `container-type: size` los `cq*` de dentro
+  // pasan a mirar a su mitad, y la misma pieza vale para una hoja entera o para
+  // media sin que ninguna de las dos sepa que existe la otra.
+  &__task {
+    flex: 1;
+    min-height: 0;
+    container-type: size;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1cqh;
+  }
+
+  // La línea entre las dos pruebas. Fina y apagada: separa, no decora.
+  &__divider {
+    flex: none;
+    align-self: stretch;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--color-ink-soft);
+    opacity: 0.35;
+  }
+}
+
+// ── El sello ───────────────────────────────────────────────────────────────
+// Nace invisible y fuera del flujo: un sello no empuja el texto de debajo, se
+// estampa encima. Quien lo saca es `examSeal.ts`, con GSAP.
+//
+// `pointer-events: none` porque no es un control: cae sobre los ejercicios ya
+// resueltos y no debe robarles ni un clic.
+// Arriba y a la derecha, que es donde se estampa un «aprobado» en un papel de
+// verdad. Abajo caía justo encima de los huecos del dictado y tapaba la respuesta
+// recién acertada: el sello celebra el acierto, no lo esconde.
+.exam-seal {
+  position: absolute;
+  top: -1cqh;
+  right: -1cqw;
+  z-index: 2;
+
+  width: 30cqmin;
+  max-width: 7rem;
+  pointer-events: none;
+
+  // El estado de partida, y también el de después de estampar si alguien tiene
+  // el movimiento reducido: invisible hasta que se gana.
+  opacity: 0;
+
+  &__mark {
+    display: block;
+    width: 100%;
+    height: auto;
+    // La tinta de un sello de verdad no es opaca del todo: deja ver el papel.
+    opacity: 0.88;
+  }
+}
+
+// Ganado y ya estampado. La clase la pone `examSeal.ts` — al animarlo, y también
+// al abrir el libro cuando el sello ya estaba de antes, que entonces aparece sin
+// animación porque no se acaba de conseguir: ya estaba ahí.
+.exam-seal--earned {
+  opacity: 1;
+}

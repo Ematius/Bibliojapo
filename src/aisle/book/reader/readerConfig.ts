@@ -41,6 +41,10 @@ import { shuffle } from '../parts/shuffle'
 //   build         la palabra entera por construir, con todos los huecos vacíos
 //   drill         dos preguntas en una hoja: reconstruir la palabra con tarjetas
 //                 y, debajo, escribir su lectura completa en rōmaji
+//   examKana      un examen por su cara del kana: su sonido y su forma
+//   examWord      la otra cara: el kana en su palabra y la lectura entera
+//   finalNotice   la hoja que anuncia el examen final y lo que desbloquea
+//   finalScope    lo que entra en ese examen: los kana del tomo
 //
 // `word`/`gap` y `reading`/`pick` son el mismo ejercicio en las dos direcciones:
 // de la escritura al sonido y del sonido a la escritura.
@@ -61,6 +65,10 @@ export type PageContent =
   | 'promptAudio'
   | 'build'
   | 'drill'
+  | 'examKana'
+  | 'examWord'
+  | 'finalNotice'
+  | 'finalScope'
 
 export interface ReaderPage {
   id: string
@@ -80,6 +88,14 @@ export interface ReaderPage {
   wordId?: string
   // Qué se enseña en esta hoja.
   shows?: PageContent
+  // A qué examen pertenece la hoja, si pertenece a alguno: el id del kana si es el
+  // examen de una lección, y `final` si es del examen del tomo. Es lo que agrupa
+  // sus pruebas para poder contarlas sin que nadie escriba cuántas hay — ver
+  // `examSeal.ts`.
+  exam?: string
+  // La hoja donde cae el sello. Hay UNA en todo el tomo: la última del examen
+  // final. El examen de cada lección no sella —ver `finalExamSpreads`—.
+  seal?: boolean
 }
 
 // Una plana: las dos hojas que se ven a la vez, sin `id` ni `folio`. Esos los
@@ -118,7 +134,7 @@ export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): S
   // es como funcionaba el tomo entero antes de que existiera `wordId2`.
   const lastWordId = wordId2 ?? wordId
 
-  return [
+  const taught: Spread[] = [
     // Primera plana: el ejercicio 1. La mnemotecnia y el dibujo que la sostiene.
     {
       right: { kanaId, title: 'Ejercicio mnemotécnico', shows: 'mnemonic' },
@@ -216,7 +232,56 @@ export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): S
       right: { wordId: lastWordId, title: 'Escucha', shows: 'promptAudio' },
       left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
     },
+
   ]
+
+  // Y la lección se cierra en dos tiempos: primero el repaso, con la ayuda de
+  // siempre, y luego el examen, sin ninguna.
+  return [...taught, reviewSpread(taught), examSpread(kanaId, wordId)]
+}
+
+// El repaso de la lección: una de sus propias planas, otra vez.
+//
+// Se sortea, y esa es la gracia — un repaso que sale igual todas las veces se
+// memoriza como plana en vez de practicarse como kana. Se sortea UNA vez por
+// apertura del libro, como el resto: `VolumeReader` guarda el resultado con
+// `useMemo`, así que no cambia con el lector dentro.
+//
+// Va la plana ENTERA y no dos hojas sueltas a propósito: en el tomo el enunciado
+// vive en una hoja y la respuesta en la de enfrente, así que partir una plana
+// dejaría preguntas sin enunciado o enunciados sin pregunta.
+function reviewSpread(taught: Spread[]): Spread {
+  const pool = taught.filter(
+    (spread) => !NOT_REVIEWABLE.includes(spread.right.shows as PageContent),
+  )
+  const picked = shuffle(pool)[0] ?? taught[0]
+
+  const label = (side: Spread['right']) => (side.title ? `Repaso: ${side.title}` : 'Repaso')
+
+  return {
+    right: { ...picked.right, title: label(picked.right) },
+    left: { ...picked.left, title: label(picked.left) },
+  }
+}
+
+// El examen de la lección. Tres pruebas ya vistas y ninguna instrucción.
+//
+// Las dos hojas se bastan solas, y eso es lo que las distingue del resto del tomo:
+// ahí el enunciado está en una hoja y la respuesta en la otra, y en un examen la
+// hoja de enfrente es otra pregunta, no una ayuda. Por eso las pruebas salen de
+// `KanaMatch` en sus modos `kana` y `word`, que traen su propia pista y su audio.
+//
+// Vuelve a la PRIMERA palabra de la lección: las planas de antes van con la
+// segunda, y examinar de lo que se acaba de hacer sería preguntar por lo que
+// todavía se tiene en la mano.
+//
+// Aquí NO se sella. El sello es uno solo y está al final del tomo — ver
+// `finalExamSpreads`.
+function examSpread(kanaId: string, wordId: string): Spread {
+  return {
+    right: { kanaId, wordId, title: 'Examen', shows: 'examKana', exam: kanaId },
+    left: { kanaId, wordId, title: 'Examen', shows: 'examWord', exam: kanaId },
+  }
 }
 
 // Una plana ya colocada en el libro: sus dos hojas con su id y su folio. El folio
@@ -256,44 +321,72 @@ function introSpread(): Spread {
   }
 }
 
+// El tomo entero, en tres tramos: la portada, las lecciones —cada una con sus
+// ejercicios, su repaso y su examen— y el examen final.
 export function buildVolumePages(lessons: ReadyLesson[]): ReaderPage[] {
   const spreads = [
     introSpread(),
     ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
+    ...finalExamSpreads(lessons),
   ]
-  const pages = spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
 
-  // La reserva del ejercicio 10 sale de las planas de ESTE tomo, así que un libro
-  // de seis kana repasa los seis sin que haya que enumerar nada a mano.
-  const reviewable = spreads.filter(
-    (spread) => !NOT_REVIEWABLE.includes(spread.right.shows as PageContent),
-  )
-
-  return [...pages, ...pickReviewPages(reviewable, pages.length)]
+  return spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
 }
 
-// El ejercicio 10: tres planas del repaso, elegidas al azar y sin repetir entre
-// sí, numeradas a partir de donde se queda el resto del libro.
+// El final del tomo: el anuncio y, detrás, el examen de todo el libro.
 //
-// Se llama UNA vez por apertura del libro, no en cada render: `VolumeReader`
-// guarda el resultado con `useMemo`. Así el repaso cambia de una vez a otra —que
-// es lo que pide un repaso—, pero no a media lectura, que sería reordenar el
-// libro con el lector dentro.
+// Una plana por kana, así que el examen final crece con el bloque: el día que uno
+// traiga siete kana, se examina de los siete sin tocar nada aquí. Nada de elegir
+// unos cuantos al azar — esto es lo que desbloquea el tomo siguiente, y no se
+// puede pasar sin que te hayan preguntado por uno de los que dice que sabes.
 //
-// El título de cada página lleva delante «Repaso: », que es cómo se entera quien
-// lee de que esto ya no es la primera vez que ve el ejercicio.
-export function pickReviewPages(pool: Spread[], afterFolio: number): ReaderPage[] {
-  const picks = shuffle(pool).slice(0, 3)
+// Es el mismo formato que el examen de cada lección, y a propósito: lo que cambia
+// no es la pregunta, es CUÁNDO se hace. Ahí se pregunta por el kana recién
+// aprendido; aquí, por el de hace cinco lecciones y con las tarjetas falsas de
+// todo el bloque. Esa es la diferencia que de verdad mide.
+//
+// Un tomo sin lecciones listas no tiene examen final: no habría de qué.
+function finalExamSpreads(lessons: ReadyLesson[]): Spread[] {
+  if (lessons.length === 0) return []
 
-  return picks.flatMap((spread, index) => {
-    const label = (side: Spread['right']) => (side.title ? `Repaso: ${side.title}` : 'Repaso')
-    const [right, left] = placeSpread(spread, `review-${index}`, afterFolio + index * 2 + 1)
+  const exams = lessons.map<Spread>((lesson, index) => ({
+    right: {
+      kanaId: lesson.kanaId,
+      wordId: lesson.wordId,
+      title: 'Examen final',
+      shows: 'examKana',
+      exam: FINAL_EXAM,
+    },
+    left: {
+      kanaId: lesson.kanaId,
+      wordId: lesson.wordId,
+      title: 'Examen final',
+      shows: 'examWord',
+      exam: FINAL_EXAM,
+      // El sello, en la última hoja del último kana: cuando esta se resuelve, el
+      // examen entero está resuelto. Es el ÚNICO sello del tomo.
+      seal: index === lessons.length - 1,
+    },
+  }))
 
-    return [
-      { ...right, title: label(spread.right) },
-      { ...left, title: label(spread.left) },
-    ]
-  })
+  return [noticeSpread(), ...exams]
+}
+
+// Lo que agrupa las pruebas del examen final, repartidas por una plana de cada
+// kana. No es un id de kana —los kana ya usan el suyo— y por eso no puede chocar
+// con ninguno: `final` no es romaji de nada.
+const FINAL_EXAM = 'final'
+
+// El anuncio: qué viene ahora y para qué sirve.
+//
+// Va en su propia plana y no como un encabezado del examen porque lo que dice no
+// es una instrucción, es lo que está en juego. Quien llega aquí ha terminado las
+// seis lecciones y merece que se le diga antes de empezar.
+function noticeSpread(): Spread {
+  return {
+    right: { shows: 'finalNotice' },
+    left: { title: 'Entra todo esto', shows: 'finalScope' },
+  }
 }
 
 export const READER = {

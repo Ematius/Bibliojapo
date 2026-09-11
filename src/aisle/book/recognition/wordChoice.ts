@@ -17,6 +17,8 @@
 // page-flip deja pasar la pulsación sobre <button> y <a> —lo hace con
 // `clickEventForward`— y solo la anula en todo lo demás. Así que elegir una
 // opción no pasa página y no hay nada que interceptar.
+import { announceSolved } from '../parts/solved'
+
 export function mountWordChoice(root: HTMLElement): (() => void) | null {
   const picks = [...root.querySelectorAll<HTMLElement>('.word-pick')]
   if (picks.length === 0) return null
@@ -67,6 +69,9 @@ function mountOne(pick: HTMLElement): (() => void) | null {
     const word = pick.dataset.word ?? ''
     const reading = pick.dataset.reading ?? ''
     result.textContent = `Eso es: ${word} se lee «${reading}».`
+
+    // Y se avisa hacia fuera. `solved` ya garantiza que esto pasa una sola vez.
+    announceSolved(pick)
   }
 
   choices.forEach((choice) => {
