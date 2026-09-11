@@ -63,11 +63,11 @@ export const HIRAGANA: Kana[] = [
     romaji: 'i',
     audio: '/audio/hiragana/b1/i.wav',
     mnemonic:
-      'En Japón siempre van perfectos, pero nada es **i**mperdible, y lo saben,' +
-      'por eso siempre llevan consigo un **i**mperdible, asi que hay que mirar' +
-      'con lupa en el bolso de un japones y siempre encontraremos un **i**mperdible,' +
-      'para ir tan perfectos como ellos.' +
-      'Todo es gracias al hiragana **い** es la razón de que vayan perfectos siempre.',
+      'En Japón siempre van perfectos, pero nada es **i**mperdible, y lo saben, ' +
+      'por eso siempre llevan consigo un **i**mperdible, así que hay que mirar ' +
+      'con lupa en el bolso de un japonés y siempre encontraremos un **i**mperdible, ' +
+      'para ir tan perfectos como ellos. ' +
+      'Todo es gracias al hiragana **い**, es la razón de que vayan perfectos siempre.',
     // Los dos trazos, contados sobre el imperdible: el cuerpo a la izquierda y la
     // aguja suelta a la derecha.
     strokeOrder: [
