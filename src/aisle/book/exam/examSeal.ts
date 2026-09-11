@@ -1,6 +1,6 @@
 import gsap from 'gsap'
 import { SOLVED_EVENT } from '../parts/solved'
-import { addSeal, readSeals } from '../../../shared/seals'
+import { fetchSeals, saveSeal } from '../../../api/progress'
 
 // El sello del mini examen: cuenta las pruebas de cada examen y lo estampa cuando
 // están todas resueltas.
@@ -52,11 +52,18 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
   // Los que ya estaban ganados de otras veces salen puestos y sin animación: no
   // se acaban de conseguir, ya estaban ahí. Estamparlos otra vez al abrir el libro
   // convertiría un logro en un efecto que se repite solo.
-  const earned = readSeals(blockId)
-  for (const [id, exam] of exams) {
-    if (!earned.has(id)) continue
-    exam.seals.forEach((seal) => seal.classList.add('exam-seal--earned'))
-  }
+  //
+  // Llegan con retraso —pueden venir de la cuenta, y la cuenta está en el
+  // servidor—, pero no importa: para cuando alguien llega a la última hoja del
+  // examen ya han llegado. Si el libro se cierra antes, la respuesta se tira.
+  let mounted = true
+  void fetchSeals(blockId).then((earned) => {
+    if (!mounted) return
+    for (const [id, exam] of exams) {
+      if (!earned.has(id)) continue
+      exam.seals.forEach((seal) => seal.classList.add('exam-seal--earned'))
+    }
+  })
 
   const onSolved = (event: Event) => {
     const check = (event.target as Element | null)?.closest(EXERCISES)
@@ -73,21 +80,22 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
     if (exam.solved.size < exam.checks.size) return
 
     // ── El momento en que se cierra un tomo ──────────────────────────────────
-    // Aquí, y en ningún otro sitio, es donde el tomo queda superado. De este
-    // punto van a colgar las cosas que hoy NO existen —guardar la hoja de repaso,
-    // el trofeo, abrir el tomo siguiente—, y todas dependen de que haya cuentas,
-    // que es la fase 4 y está sin decidir. Ver CLAUDE.md.
+    // Aquí, y en ningún otro sitio, es donde el tomo queda superado. El sello se
+    // guarda y de ahí sale todo lo demás: con cuenta, el servidor lo convierte en
+    // la insignia que abre el tomo siguiente; sin ella, se queda en el navegador
+    // hasta que se cree una. Ver `api/progress.ts`.
     //
-    // Se deja en un solo sitio y señalado a propósito: el día que se decida, se
-    // añade debajo de esta línea y no hay que buscar dónde. Mientras tanto, lo
-    // único que pasa es lo que se ve — se apunta y se estampa.
-    addSeal(blockId, id)
+    // Se estampa sin esperar a la respuesta. El sello ya está ganado y apuntado
+    // en el navegador en cuanto se llama; lo que puede tardar o fallar es la
+    // subida a la cuenta, y eso se reintenta solo la próxima vez que se entre.
+    void saveSeal(blockId, id).catch(() => undefined)
     exam.seals.forEach((seal) => stamp(seal))
   }
 
   root.addEventListener(SOLVED_EVENT, onSolved)
 
   return () => {
+    mounted = false
     root.removeEventListener(SOLVED_EVENT, onSolved)
   }
 }

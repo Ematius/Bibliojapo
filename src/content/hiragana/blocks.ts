@@ -82,6 +82,31 @@ export const BLOCKS: Block[] = [
 
 export const BLOCKS_BY_ID = new Map(BLOCKS.map((block) => [block.id, block]))
 
+// El temario entero del pasillo, en orden: los doce bloques de «Estructura
+// general» en docs/estructura-aprendizaje.md, escritos o no.
+//
+// `BLOCKS` solo tiene los que ya tienen contenido; esto es el PLAN, y es lo que
+// dice cuántos tomos hay en la estantería. Un bloque sin escribir sigue siendo un
+// tomo —se ve en la balda y se desbloquea a su hora—, solo que al abrirlo dice que
+// todavía se está escribiendo.
+//
+// Solo ids a propósito: el título y el contenido de cada bloque llegan cuando se
+// escribe, y del bloque 2 en adelante no viajarán en el bundle.
+export const BLOCK_PLAN: readonly string[] = [
+  'b1',
+  'b2',
+  'b3',
+  'b4',
+  'b5',
+  'b6',
+  'b7',
+  'b8',
+  'b9',
+  'b10',
+  'b11',
+  'b12',
+]
+
 // Los 46 kana base, que es contra lo que se mide cuánto hiragana se lleva. Los
 // bloques B10 a B12 no traen kana nuevos —son dakuten, っ y yōon, transformaciones
 // de los que ya se saben—, así que el silabario completo son 110 formas pero los

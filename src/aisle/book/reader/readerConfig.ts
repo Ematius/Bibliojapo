@@ -1,4 +1,5 @@
 import { shuffle } from '../parts/shuffle'
+import { FINAL_SEAL } from '../../../api/contract'
 
 // Cómo se arma el tomo abierto.
 //
@@ -375,7 +376,10 @@ function finalExamSpreads(lessons: ReadyLesson[]): Spread[] {
 // Lo que agrupa las pruebas del examen final, repartidas por una plana de cada
 // kana. No es un id de kana —los kana ya usan el suyo— y por eso no puede chocar
 // con ninguno: `final` no es romaji de nada.
-const FINAL_EXAM = 'final'
+//
+// Viene del contrato con el servidor y no se escribe aquí: su sello es el que da
+// la insignia del tomo, así que el lector y el servidor tienen que llamarlo igual.
+const FINAL_EXAM = FINAL_SEAL
 
 // El anuncio: qué viene ahora y para qué sirve.
 //

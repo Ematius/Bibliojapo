@@ -30,6 +30,29 @@ export function readSeals(blockId: string): Set<string> {
   }
 }
 
+// Los de todos los tomos a la vez, por bloque. Es lo que se le entrega a la
+// cuenta al crearla o al entrar: todo lo hecho en este navegador sin ella.
+//
+// Recorre las claves en vez de preguntar tomo a tomo para no tener que saber
+// cuántos tomos hay: guardar sellos no es asunto del temario.
+export function readAllSeals(): Record<string, string[]> {
+  const all: Record<string, string[]> = {}
+
+  try {
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i)
+      if (!key?.startsWith(PREFIX)) continue
+
+      const blockId = key.slice(PREFIX.length)
+      all[blockId] = [...readSeals(blockId)]
+    }
+  } catch {
+    // Sin almacenamiento no hay nada que entregar.
+  }
+
+  return all
+}
+
 export function addSeal(blockId: string, kanaId: string): void {
   try {
     const seals = readSeals(blockId)
