@@ -17,32 +17,68 @@
   flex-direction: column;
   gap: 2cqh;
 
-  // La caja donde el kana se superpone al dibujo. Es la que se encoge; el botón
-  // mantiene su tamaño.
+  // El hueco del dibujo: todo el alto que sobra después del botón. Es el que se
+  // encoge; el botón mantiene su tamaño.
+  //
+  // Es contenedor de consulta para que el dibujo pueda medirse contra él —ver
+  // `&__image`—, y centra lo que lleva dentro en los dos ejes.
   &__figure {
-    position: relative;
     flex: 1;
     min-height: 0;
+    container-type: size;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  // La ilustración y el trazo ocupan la MISMA caja: es lo que hace que el kana
-  // caiga siempre sobre la pose, se agrande el libro o se encoja.
+  // La caja del dibujo, ceñida a él: la pone el tamaño de la imagen, no el del
+  // hueco. Es el sistema de referencia del kana, así que el kana cae siempre en el
+  // mismo sitio del DIBUJO, sea la hoja alta o cuadrada.
+  //
+  // El tamaño del kana vive aquí, y es UNO para todos: `--glyph-size` es la parte
+  // del dibujo que ocupa, en cada eje, la caja donde se planta. El kana entra en
+  // ella sin deformarse y centrado, así que ocupa ese porcentaje por su lado más
+  // largo y algo menos por el otro. Es el número a mover si todos se ven grandes o
+  // pequeños; que caiga sobre el motivo es cosa de la ilustración, que va con el
+  // motivo en el centro.
+  &__frame {
+    --glyph-size: 60%;
+
+    position: relative;
+  }
+
+  // Encajada sin deformarse y sin agrandarse: los topes van en unidades del hueco
+  // y no en %, porque un % de alto dentro de una caja que se ciñe a su contenido
+  // no tiene contra qué medirse. Con los dos topes y el tamaño en `auto`, el
+  // navegador reduce la imagen conservando su proporción hasta que cabe.
   &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  &__glyph {
-    position: absolute;
-    // Los cuatro números vienen del contenido, uno por ilustración.
-    top: var(--fit-top);
-    right: var(--fit-right);
-    bottom: var(--fit-bottom);
-    left: var(--fit-left);
+    display: block;
     width: auto;
     height: auto;
+    max-width: 100cqw;
+    max-height: 100cqh;
+  }
+
+  // El kana, en el centro de la caja del dibujo.
+  //
+  // El ancho y el alto van ESCRITOS, no deducidos de los márgenes. Un SVG es un
+  // elemento reemplazado, y con posición absoluta y alto `auto` el navegador saca
+  // el alto de su proporción e ignora el margen de abajo: el kana se salía por
+  // debajo del dibujo y tapaba el botón.
+  &__glyph {
+    position: absolute;
+    top: calc((100% - var(--glyph-size)) / 2);
+    left: calc((100% - var(--glyph-size)) / 2);
+    width: var(--glyph-size);
+    height: var(--glyph-size);
     overflow: visible;
+    // Transparente al puntero. Es decoración —ni se pulsa ni se lee, por eso va
+    // `aria-hidden`—, y los trazos, con su brocha gorda, pintan más allá de la
+    // caja. Cuando esa caja se salía por abajo tapaba el botón «Animar»: el clic se
+    // lo llevaba el SVG y page-flip lo tomaba por un clic en la hoja, así que
+    // pasaba página en vez de animar.
+    pointer-events: none;
   }
 
   &__path {

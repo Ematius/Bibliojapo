@@ -1,5 +1,4 @@
 import type { Kana } from '../../../content/types'
-import type { StyleWithVars } from '../../../shared/styleWithVars'
 import { BookButton } from '../parts/BookButton'
 import './KanaStroke.scss'
 
@@ -18,63 +17,64 @@ interface KanaStrokeProps {
 // Los trazos salen aquí desnudos: sin medidas ni líneas discontinuas. De cuánto
 // mide cada camino y de irlo descubriendo se encarga DrawSVGPlugin, que se lo
 // pregunta al navegador — ver `kanaStrokeAnimation.ts`.
+//
+// ── Dónde cae el kana ──────────────────────────────────────────────────────
+// Centrado sobre el DIBUJO y del mismo tamaño relativo en todas las hojas. No hay
+// un encaje por kana: la regla es una, y lo que se ajusta es la ilustración, que
+// se dibuja con su motivo en el centro. Ver `KanaStroke.scss`.
 export function KanaStroke({ kana }: KanaStrokeProps) {
-  // El encaje del kana sobre el dibujo llega como variables: los números son
-  // contenido —cambian con cada ilustración— y el CSS solo los coloca.
   const clipId = `kana-silhouette-${kana.id}`
-
-  const fit: StyleWithVars = {
-    '--fit-top': `${kana.strokeFit.top}%`,
-    '--fit-right': `${kana.strokeFit.right}%`,
-    '--fit-bottom': `${kana.strokeFit.bottom}%`,
-    '--fit-left': `${kana.strokeFit.left}%`,
-  }
 
   return (
     <div className="kana-stroke">
-      {/* La ilustración y el kana comparten caja, y esa caja se queda con todo
-          el alto que sobre después del botón. */}
+      {/* El hueco que queda después del botón. El dibujo se encaja dentro sin
+          deformarse, y casi nunca lo llena: sobra por los lados o por arriba y
+          abajo, según su proporción. */}
       <div className="kana-stroke__figure">
-        <img
-          className="kana-stroke__image"
-          src={kana.image}
-          alt={kana.imageAlt}
-        />
+        {/* La caja del DIBUJO, ceñida a él. Es a esta caja, y no al hueco, a la
+            que se refiere el kana: si no, en una hoja más ancha que el dibujo el
+            kana se medía contra papel vacío y salía más grande que la escena. */}
+        <div className="kana-stroke__frame">
+          <img
+            className="kana-stroke__image"
+            src={kana.image}
+            alt={kana.imageAlt}
+          />
 
-        {/* El kana conserva su proporción: se planta dentro del hueco que le da
-            `strokeFit` sin estirarse. Un あ deformado deja de ser un あ bien
-            escrito, y esto es material de estudio. */}
-        <svg
-          className="kana-stroke__glyph"
-          style={fit}
-          viewBox={kana.strokeViewBox}
-          preserveAspectRatio="xMidYMid meet"
-          // El kana ya está escrito al lado, en el texto de la página: para un
-          // lector de pantalla esto es decoración repetida.
-          aria-hidden="true"
-        >
-          <defs>
-            {/* La silueta del kana, que nunca se pinta: solo recorta.
-                El id lleva el del kana porque page-flip clona estas páginas, y
-                dos siluetas distintas con el mismo nombre se pisarían. */}
-            <clipPath id={clipId}>
-              <path d={kana.outline} />
-            </clipPath>
-          </defs>
+          {/* El kana conserva su proporción: se planta en el centro de la caja
+              sin estirarse. Un あ deformado deja de ser un あ bien escrito, y esto
+              es material de estudio. */}
+          <svg
+            className="kana-stroke__glyph"
+            viewBox={kana.strokeViewBox}
+            preserveAspectRatio="xMidYMid meet"
+            // El kana ya está escrito al lado, en el texto de la página: para un
+            // lector de pantalla esto es decoración repetida.
+            aria-hidden="true"
+          >
+            <defs>
+              {/* La silueta del kana, que nunca se pinta: solo recorta.
+                  El id lleva el del kana porque page-flip clona estas páginas, y
+                  dos siluetas distintas con el mismo nombre se pisarían. */}
+              <clipPath id={clipId}>
+                <path d={kana.outline} />
+              </clipPath>
+            </defs>
 
-          {/* Cada trazo es una brocha muy gorda recortada por la silueta: se ve
-              solo lo que cae dentro de la forma de la letra, y así el trazo sale
-              con su grosor real en cada punto en vez de como un tubo. */}
-          <g clipPath={`url(#${clipId})`}>
-            {kana.strokes.map((d, index) => (
-              <path
-                className="kana-stroke__path"
-                key={`${kana.id}-${index}`}
-                d={d}
-              />
-            ))}
-          </g>
-        </svg>
+            {/* Cada trazo es una brocha muy gorda recortada por la silueta: se ve
+                solo lo que cae dentro de la forma de la letra, y así el trazo sale
+                con su grosor real en cada punto en vez de como un tubo. */}
+            <g clipPath={`url(#${clipId})`}>
+              {kana.strokes.map((d, index) => (
+                <path
+                  className="kana-stroke__path"
+                  key={`${kana.id}-${index}`}
+                  d={d}
+                />
+              ))}
+            </g>
+          </svg>
+        </div>
       </div>
 
       {/* Sin `onClick`: este botón acaba clonado por page-flip, y un clon está

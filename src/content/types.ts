@@ -3,20 +3,6 @@
 //
 // El contenido es dato: nada de esto se escribe dentro de un componente.
 
-// Dónde cae el kana sobre su ilustración mnemotécnica.
-//
-// Son márgenes en % de la caja de la ilustración, contados desde cada borde:
-// `{ top: 12, left: 15 }` deja el trazo empezando al 12 % de la altura y al 15 %
-// del ancho. Van en el contenido y no en el CSS porque el encaje cambia con cada
-// dibujo — el kana tiene que caer sobre la pose del personaje, y esa pose es
-// distinta en cada ilustración.
-export interface StrokeFit {
-  top: number
-  right: number
-  bottom: number
-  left: number
-}
-
 // Un kana de una palabra, con lo que suena.
 //
 // Van emparejados y no en dos listas paralelas —una de kana y otra de lecturas—
@@ -224,6 +210,10 @@ export interface Kana {
 
   // Ilustración mnemotécnica: ruta desde `public/`. Va LIMPIA, sin el kana
   // pintado encima — el trazo lo dibuja el SVG.
+  //
+  // El kana se pinta centrado sobre ella y siempre del mismo tamaño relativo, así
+  // que el motivo del dibujo tiene que ir en el CENTRO. No hay un encaje por kana
+  // que corrija un dibujo descentrado: se corrige el dibujo.
   image: string
   // Qué se ve en la ilustración, para quien no pueda verla.
   imageAlt: string
@@ -241,7 +231,8 @@ export interface Kana {
   strokes: string[]
   // Sistema de coordenadas en el que están escritos la silueta y los trazos.
   // Los dos comparten lienzo, o el recorte no cuadraría.
+  //
+  // Ceñido a la silueta, sin aire alrededor: es lo que hace que centrar el lienzo
+  // sobre el dibujo sea centrar el KANA. Con margen en un lado, saldría desplazado.
   strokeViewBox: string
-  // Cómo se encaja el kana sobre la ilustración.
-  strokeFit: StrokeFit
 }

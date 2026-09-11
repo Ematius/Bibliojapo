@@ -56,10 +56,6 @@ export const HIRAGANA: Kana[] = [
       'M547,255L474,415L415,502L342,596L256,684L168,734L123,750L83,752L54,747L38,714L29,681L31,646L39,608L51,569L68,534L89,501L118,472L149,444L184,414L222,395L243,381L329,357L399,350L458,347L574,363L602,389L653,418L684,454L703,501L712,550L710,593L695,646L670,694L629,735L586,771L539,793L490,814L444,827L412,834',
     ],
     strokeViewBox: '0 0 743 857',
-    // Dónde se planta ese lienzo sobre la ilustración. Puesto a ojo sobre la
-    // pose de Arturo: son los cuatro números a mover si el kana no cae donde
-    // debe.
-    strokeFit: { top: 12, right: 12, bottom: 8, left: 15 },
   },
   {
     id: 'i',
@@ -97,15 +93,6 @@ export const HIRAGANA: Kana[] = [
       'M536,46L612,167L704,342',
     ],
     strokeViewBox: '0 0 739 557',
-    // Medido sobre el dibujo: el imperdible ocupa de un 22 % a un 79 % del ancho,
-    // y el trazo queda centrado sobre él.
-    //
-    // El encaje no puede ser perfecto y no es un fallo: el imperdible del dibujo
-    // es más alargado que い, que es un kana ancho y bajo (739 × 557). Como el SVG
-    // entra con `meet` y sin deformarse, ajusta por el ancho y se centra en
-    // vertical, así que los trazos no llegan ni a lo más alto del cuerpo ni a la
-    // punta de la aguja. Estos son los cuatro números a mover si cae torcido.
-    strokeFit: { top: 18, right: 21, bottom: 15, left: 22 },
   },
   {
     id: 'u',
@@ -137,10 +124,6 @@ export const HIRAGANA: Kana[] = [
     // lista mide lo mismo que `strokeOrder`.
     strokes: ['M157,29L406,127', 'M23,370L322,274L443,365L410,666L218,865'],
     strokeViewBox: '0 0 483 888',
-    // A ojo sobre el dibujo, y provisional: la brocha cae sobre la punta del
-    // pincel y la curva sobre la uña. Estos son los cuatro números a mover si el
-    // kana no cae donde debe.
-    strokeFit: { top: 17, right: 9, bottom: 33, left: 43 },
   },
   {
     id: 'e',
@@ -177,9 +160,6 @@ export const HIRAGANA: Kana[] = [
       'M73,324L466,273L48,797L287,510L404,512L425,592L445,759L511,799L719,779',
     ],
     strokeViewBox: '0 0 727 829',
-    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
-    // que se hará al cerrar el contenido del tomo 1.
-    strokeFit: { top: 20, right: 12, bottom: 20, left: 5 },
   },
   {
     id: 'o',
@@ -218,9 +198,6 @@ export const HIRAGANA: Kana[] = [
       'M549,174L771,310',
     ],
     strokeViewBox: '0 0 790 804',
-    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
-    // que se hará al cerrar el contenido del tomo 1.
-    strokeFit: { top: 6, right: 6, bottom: 6, left: 10 },
   },
   {
     id: 'ha',
@@ -259,9 +236,6 @@ export const HIRAGANA: Kana[] = [
       'M499,1L517,669L476,701L415,722L331,727L261,682L256,601L326,563L401,554L476,564L589,601L667,643L739,701',
     ],
     strokeViewBox: '0 0 760 775',
-    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
-    // que se hará al cerrar el contenido del tomo 1.
-    strokeFit: { top: 8, right: 10, bottom: 6, left: 8 },
   },
 ]
 
