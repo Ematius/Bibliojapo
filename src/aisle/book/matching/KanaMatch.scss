@@ -22,6 +22,10 @@
 .kana-match__pair {
   display: flex;
   align-items: stretch;
+  // La ficha nunca pasa del ancho de la hoja. Con tres kana y un significado
+  // largo —«muchos / abundante»— se salía por el borde; con esto, lo que cede es
+  // la pista, que se parte en líneas. Ver `.kana-match__clue--meaning`.
+  max-width: 100%;
   border: 2px solid var(--color-ink-soft);
   border-radius: 0.2em;
   font-size: clamp(1.1rem, 13cqmin, 2.6rem);
@@ -31,6 +35,9 @@
 // entera, los kana que la acompañan. La línea que separa las dos caras vive aquí y
 // no en el hueco, porque con varios kana el hueco ya no es la última pieza.
 .kana-match__written {
+  // No encoge: los huecos tienen que seguir siendo del tamaño de una tarjeta.
+  // Si falta sitio, cede la pista de al lado.
+  flex: none;
   display: flex;
   align-items: stretch;
   border-right: 2px solid var(--color-ink-soft);
@@ -107,6 +114,20 @@
 // leería como una sigla—.
 .kana-match__clue--reading {
   letter-spacing: 0.1em;
+}
+
+// Cuando la pista es el significado. Va más pequeña que los kana: es la otra cara
+// de la ficha, no lo que hay que colocar, y a su tamaño una palabra española se
+// comía la hoja entera. Es la parte que cede cuando falta sitio —se parte en
+// líneas equilibradas y, si una sola palabra no cabe, se corta—, así que la ficha
+// entra en la hoja la lleve quien la lleve.
+.kana-match__clue--meaning {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 0.6em;
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 // El montón de donde salen las tarjetas. Se envuelve porque el número de kana va

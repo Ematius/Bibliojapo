@@ -135,7 +135,7 @@ export function KanaMatch({ word, kana, scope, pool }: KanaMatchProps) {
           <span
             className={
               scope === 'word'
-                ? 'kana-match__clue'
+                ? 'kana-match__clue kana-match__clue--meaning'
                 : 'kana-match__clue kana-match__clue--reading'
             }
           >
