@@ -20,8 +20,9 @@ export const NAV_LINKS = [
   { id: 'collection', label: 'Mi biblioteca', to: null, fromNav: false },
 ] as const
 
-// Llamada a la acción, al otro extremo de la barra. Todavía sin destino: no hay
-// registro hasta que haya backend.
+// Llamada a la acción, al otro extremo de la barra, para quien no tiene sesión.
+// Abre el panel de la cuenta; con sesión, el botón lleva el nombre de quien está
+// dentro.
 export const NAV_CTA_LABEL = 'Crear cuenta'
 
 // Entrada de la barra: se despliega de izquierda a derecha hasta ocupar su

@@ -99,6 +99,11 @@
     white-space: nowrap;
     cursor: pointer;
     transition: opacity var(--duration-fast) ease;
+    // Con sesión lleva el nombre de quien está dentro, y un nombre largo no
+    // puede estirar la barra hasta comerse la pantalla.
+    max-width: 12rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__cta:hover {

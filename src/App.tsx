@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { LandingRoute } from './landing/LandingRoute.tsx'
+import { AccountPanel } from './account/AccountPanel'
 import { useVh } from './shared/useVh'
 
 // Cargadas bajo demanda: la portada no necesita el lector, page-flip ni
@@ -22,18 +23,24 @@ function App() {
   useVh()
 
   return (
-    <Suspense fallback={null}>
-      <Routes>
-        {/* El recorrido es portada → umbral → vestíbulo → pasillo. La portada y la
-            puerta se cruzan; el vestíbulo es el sitio al que se vuelve. */}
-        <Route path="/" element={<LandingRoute />} />
-        <Route path="/entrada" element={<LibraryEntrance />} />
-        <Route path="/biblioteca" element={<LibraryHall />} />
-        {/* Un solo pasillo para las cuatro secciones: el id decide qué estantería
-            se pinta. Ver shared/aisles.ts. */}
-        <Route path="/pasillo/:aisleId" element={<LibraryAisle />} />
-      </Routes>
-    </Suspense>
+    <>
+      <Suspense fallback={null}>
+        <Routes>
+          {/* El recorrido es portada → umbral → vestíbulo → pasillo. La portada y la
+              puerta se cruzan; el vestíbulo es el sitio al que se vuelve. */}
+          <Route path="/" element={<LandingRoute />} />
+          <Route path="/entrada" element={<LibraryEntrance />} />
+          <Route path="/biblioteca" element={<LibraryHall />} />
+          {/* Un solo pasillo para las cuatro secciones: el id decide qué estantería
+              se pinta. Ver shared/aisles.ts. */}
+          <Route path="/pasillo/:aisleId" element={<LibraryAisle />} />
+        </Routes>
+      </Suspense>
+
+      {/* Fuera de las rutas: es el mismo panel en cualquier pantalla, y lo abre
+          quien lo necesite. Ver `account/AccountPanel.tsx`. */}
+      <AccountPanel />
+    </>
   )
 }
 

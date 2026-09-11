@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { openAccountPanel } from '../account/accountPanelState'
+import { useSession } from '../account/useSession'
 import { NAV_CTA_LABEL, NAV_LINKS, NAV_LOGO_KANJI } from './siteNavConfig'
 import { useSiteNavIntro } from './useSiteNavIntro'
 import './SiteNav.scss'
@@ -11,6 +13,7 @@ import './SiteNav.scss'
 // acompaña al usuario a partir de ahí.
 export function SiteNav() {
   const navRef = useRef<HTMLElement>(null)
+  const session = useSession()
 
   useSiteNavIntro(navRef)
 
@@ -40,9 +43,15 @@ export function SiteNav() {
         ))}
       </ul>
 
-      {/* Sin acción hasta que haya registro; de momento solo ocupa su sitio. */}
-      <button className="site-nav__cta" type="button">
-        {NAV_CTA_LABEL}
+      {/* Abre el panel de la cuenta. Sin sesión invita a crearla; con sesión
+          lleva el nombre de quien está dentro y abre su carné. */}
+      <button
+        className="site-nav__cta"
+        type="button"
+        onClick={() => openAccountPanel()}
+        aria-label={session.account ? `Tu cuenta: ${session.account.name}` : undefined}
+      >
+        {session.account ? session.account.name : NAV_CTA_LABEL}
       </button>
     </nav>
   )
