@@ -198,21 +198,23 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       autoSize: true,
       flippingTime: READER.flippingTimeMs,
       maxShadowOpacity: READER.maxShadowOpacity,
-      // La hoja se pasa de dos maneras, y las dos valen desde cualquier punto:
-      // arrastrándola, con la física de la propia librería —sigue al puntero y
-      // cae sola al soltar—, o pulsando sobre ella sin más.
+      // La hoja se pasa de dos maneras: arrastrándola desde cualquier punto, con
+      // la física de la propia librería —sigue al puntero y cae sola al soltar—,
+      // o pulsando en una de sus esquinas de fuera.
       //
-      // `disableFlipByClick` se queda APAGADO a propósito. Encendido no apaga el
-      // arrastre, solo el clic, y únicamente el que cae fuera de las esquinas:
-      // el resultado es una hoja que responde a los bordes y se queda muerta por
-      // el medio, que es justo donde se pulsa por instinto.
+      // `disableFlipByClick` va ENCENDIDO. Apagado, cualquier clic en cualquier
+      // punto de la hoja la pasaba: rozar el texto, fallar un botón por un píxel
+      // o pulsar la ilustración se llevaba la página, y en unas hojas llenas de
+      // ejercicios eso pasaba sin querer a cada rato. Encendido no toca el
+      // arrastre, solo el clic, y lo deja en las esquinas —un cuadrado de un
+      // quinto de la diagonal de la hoja—, que es donde se agarra una página de
+      // verdad.
       //
-      // Lo que protege al contenido no es esa opción, es `clickEventForward`: la
-      // librería ignora el `mousedown` que cae sobre un <button> o un <a>, así
-      // que el botón de animar el trazo —y cualquier control que venga después—
-      // recibe su pulsación sin llevarse la hoja por delante. Un control nuevo
-      // que NO sea uno de esos dos elementos sí pasaría página al pulsarlo.
-      disableFlipByClick: false,
+      // Lo que protege a los controles es `clickEventForward`: la librería ignora
+      // el `mousedown` que cae sobre un <button> o un <a>. Pero mira solo el
+      // elemento pulsado, no a sus padres, así que un control tapado por otra
+      // capa —aunque sea transparente— pierde la protección. Ver `KanaStroke.scss`.
+      disableFlipByClick: true,
       useMouseEvents: true,
       // La librería levanta un pico de la esquina al pasar por encima. Es la
       // única señal de que la hoja se puede coger, así que va explícito: es
