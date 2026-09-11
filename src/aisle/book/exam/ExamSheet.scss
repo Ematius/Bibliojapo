@@ -34,6 +34,19 @@
     gap: 1cqh;
   }
 
+  // El rótulo del dictado. El mismo aspecto que el de `WordDrill`: son las dos
+  // hojas del tomo con dos preguntas, y el rótulo tiene que leerse igual en las
+  // dos. Es la segunda copia; a la tercera, se unifica.
+  &__label {
+    flex: none;
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.55rem, 8cqh, 0.85rem);
+    font-weight: 600;
+    text-align: center;
+  }
+
   // La línea entre las dos pruebas. Fina y apagada: separa, no decora.
   &__divider {
     flex: none;

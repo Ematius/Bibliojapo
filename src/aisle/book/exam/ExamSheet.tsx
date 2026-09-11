@@ -35,10 +35,12 @@ export function ExamSheet({ word, kana, pool, seal = false }: ExamSheetProps) {
 
       <hr className="exam-sheet__divider" />
 
-      {/* Sin rótulo, a diferencia de `WordDrill`. En un examen no se explica lo
-          que hay que hacer: los huecos vacíos debajo de la palabra que se acaba de
-          colocar ya lo dicen, y la hoja no da para una línea de más. */}
+      {/* Con rótulo, como en `WordDrill`. Sin él, los huecos vacíos debajo de la
+          palabra no decían en qué había que escribir: con «aoi» se adivina, pero
+          con palabras más largas y kana más parecidos, rōmaji o kana deja de ser
+          obvio. Decir QUÉ se escribe no es ayudar a contestar. */}
       <section className="exam-sheet__task">
+        <h3 className="exam-sheet__label">Escribe en rōmaji</h3>
         <WordGap word={word} kana={kana} scope="all" />
       </section>
 
