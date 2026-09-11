@@ -18,11 +18,14 @@ vestíbulo, pasillo y estantería— y el tomo del bloque 1 se abre y se lee con
 diez ejercicios. Lo que falta es contenido, no código: los trazos, las
 ilustraciones, los audios y las mnemotecnias de los kana que quedan. Ver «Cómo se
 arma un tomo».
+En paralelo, el **front** de la progresión y las cuentas está hecho contra un
+servidor simulado: los doce tomos en la balda, el sello que da la insignia, la
+cuenta que la guarda. Ver «La capa `api/`».
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
-**Backend:** Todavía no, y la decisión está sin tomar: o uno propio con Nest
-subido a la nube, o Firebase. Se decide en la fase 4 de aquí abajo, junto con la
-pasarela de pago.
+**Backend:** Todavía no, a propósito. El front se termina entero contra
+`src/api/mockServer.ts`, y con él hecho se decide entre un backend propio con Nest
+o Firebase sabiendo exactamente qué datos hacen falta. Ver la fase 4.
 
 ---
 
@@ -41,10 +44,13 @@ todavía no están tomadas en la anterior.
    modo que siempre quepa y la ilustración haga de relleno. Es la pieza que
    convierte el punto 2 en algo abordable, porque ningún ajuste de tomos arregla
    un mueble que se sale de la pantalla.
-4. **Progresión y cuentas.** Van juntas y arrastran las dos decisiones grandes:
-   backend y pasarela de pago. Hay un hueco técnico que resolver antes: hoy los
-   ejercicios **no avisan de nada al acertar** —escriben en el DOM y ahí acaba—,
-   así que no hay de dónde sacar el progreso.
+4. **Progresión y cuentas.** El FRONT se adelantó a propósito (11-09-2026) y ya
+   está, contra un servidor simulado —ver «La capa `api/`»—: hacer el backend
+   antes que las cuentas habría obligado a reabrir la base de datos al llegar a
+   ellas. Quedan las dos decisiones grandes: el backend, que ahora se toma viendo
+   qué datos pide el front, y la pasarela de pago, que todavía no tiene front.
+   Los ejercicios ya avisan al acertar (`parts/solved.ts`), y de ese aviso sale el
+   sello que da la insignia.
 5. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
    completar el contenido mientras ya se usa.
 
@@ -62,8 +68,11 @@ De ahí salen tres reglas que afectan al código desde ya:
 dentro del bundle y se lee desde las herramientas del navegador. El bloque 1 puede
 quedarse donde está —es el gratuito y da igual que se lea—, pero del 2 en adelante
 habrá que servirlo. Al escribir el bloque 2, tenerlo presente en vez de meterlo sin
-pensar junto al 1. Juega a favor que solo `VolumeReader` lee datos del temario: los
-demás importan únicamente tipos.
+pensar junto al 1. Juega a favor que el temario solo lo lee el servidor simulado
+(`api/mockServer.ts`): el lector recibe el tomo ya empaquetado por `fetchVolume`,
+así que del bloque 2 en adelante basta con que ese paquete llegue del servidor de
+verdad. Los demás importan únicamente tipos —y la estantería, la lista de ids de
+`BLOCK_PLAN`, que no es contenido—.
 
 **El progreso del tomo 1 se hará SIN cuenta y tiene que sobrevivir al registro.**
 Guardarlo en local no es un apaño provisional: es la pieza que la cuenta absorbe al
@@ -74,6 +83,44 @@ cuenta desbloquea lo siguiente, nunca da acceso a lo ya hecho.
 estado de desarrollo que no vaya a ver nadie: lo va a ver gente de verdad. Por eso
 una lección solo entra en el libro cuando está entera —ver «Cómo se arma un tomo»—
 y por eso lo que falta tiene que leerse siempre como «todavía no», nunca como roto.
+
+### La capa `api/` — el servidor, simulado
+
+Todo lo que un día hablará con el backend vive en `src/api/`, y **es lo único que
+cambia el día que llegue**. Las pantallas no saben si detrás hay un servidor
+simulado, Firebase o Nest.
+
+```text
+api/
+  contract.ts      la forma de lo que va y viene: Account, VolumeContent, FINAL_SEAL…
+  apiError.ts      los fallos con nombre: sin conexión, sin cuenta, correo cogido…
+  apiChanges.ts    el aviso de que algo del usuario ha cambiado
+  account.ts       la sesión, entrar, salir y crearla
+  progress.ts      los sellos y las insignias
+  volumes.ts       qué tomos se abren y qué hay dentro de cada uno
+  mockServer.ts    EL SERVIDOR SIMULADO: lo único que se tira
+```
+
+- **Ningún componente importa `mockServer.ts`.** Se llama a `account`, `progress`
+  y `volumes`. El día del backend se reescriben esas tres por dentro, se borra el
+  simulado y no se toca ni un componente.
+- **El simulado tarda y puede fallar.** Cada llamada espera un rato al azar, y
+  `MOCK_SERVER.failureRate` hace que falle como sin conexión. Si respondiera al
+  instante y siempre bien, el front no tendría esperas ni errores que enseñar, y
+  habría que añadirlos pantalla a pantalla el día del servidor de verdad.
+- **Quién abre qué tomo lo decide el servidor**, nunca el navegador: si lo
+  decidiera la app, bastaría con tocar sus datos para llevarse el tomo siguiente.
+- **Un sello se guarda primero en el navegador** y después en la cuenta, si la
+  hay. Lo local es el progreso sin cuenta que la cuenta absorbe al crearse; si la
+  subida falla, se reintenta al volver a entrar.
+- **La cuenta de prueba vive en este navegador**, y el panel lo dice. Es
+  «todavía no», y tiene que leerse así.
+
+La regla del tomo: el 1 se abre siempre y sin cuenta; cada uno de los demás pide
+la **insignia** del anterior, que da el servidor al recibir el sello del examen
+final. Sin cuenta, el sello se queda en el navegador y el tomo siguiente pide
+crearla en vez de abrirse. El diseño de la insignia está sin pulir: de momento es
+el sello en el carné.
 
 ---
 
@@ -265,6 +312,10 @@ src/
       recognition/  ← la palabra y el hueco de rōmaji
       matching/     ← emparejar arrastrando, y el enunciado sin palabras
       drill/        ← dos preguntas en una hoja
+  account/          ← la cuenta: el panel para crearla o entrar, y el carné
+  api/              ← excepción justificada: todo lo que habla con el servidor, y
+                      el servidor simulado. Es la única carpeta que cambia el día
+                      del backend — ver «La capa `api/`»
   content/          ← el temario: kana, vocabulario, frases. Dato, no código
   shared/           ← lo único que va fuera: usado en más de un dominio
   styles/           ← excepción justificada: tokens globales, reset, tipografía base
@@ -429,16 +480,29 @@ independientes del contenido.
 sus datos: no hay ni una línea de código por libro.
 
 ```text
-VOLUME_ORDER       la colección en orden: qué tomos hay y qué bloque trae cada uno
+BLOCK_PLAN         el temario entero en orden: doce bloques, escritos o no
+      ↓
+VOLUME_ORDER       un tomo por bloque, con las caras de su puesto (volumeArt.ts)
       ↓
 SHELF_GRID         el mueble medido: sus baldas y sus vanos
       ↓
 placeVolumes       posa cada tomo en el primer hueco libre → SHELF_VOLUMES
       ↓
-VolumeReader       recibe ese blockId y busca el bloque en content/
+fetchVolume        el servidor empaqueta el bloque con todo lo que nombra
+      ↓
+VolumeReader       recibe ese paquete, sin mirar content/ por su cuenta
       ↓
 buildVolumePages   genera las páginas a partir de sus lecciones
 ```
+
+**Cuántos tomos hay no se escribe:** son tantos como bloques tenga `BLOCK_PLAN`.
+Un bloque sin escribir sigue siendo un tomo —se ve en la balda y se desbloquea a
+su hora—, pero al pulsarlo dice que todavía se está escribiendo.
+
+Un tomo en la balda puede estar abierto, cerrado (falta sellar el anterior),
+esperando cuenta (sellado sin cuenta) o sin escribir. Los cerrados se ven
+apagados, y al pulsarlos dan un tirón y dicen qué les falta. Ver `VolumeAccess` en
+`api/volumes.ts`.
 
 ### Dónde se posa un tomo tampoco se escribe a mano
 
@@ -462,7 +526,8 @@ Un ejercicio nuevo se añade a `kanaSpreads` y aparece en todos los tomos a la v
 
 ### Una lección entra solo si está COMPLETA
 
-`VolumeReader` deja fuera la lección cuyo contenido no esté listo, y hacen falta
+`VolumeReader` deja fuera la lección cuyo contenido no esté listo —mirando el
+paquete que le llega, no el temario—, y hacen falta
 las tres cosas:
 
 - la ficha del kana en `kana.ts` —mnemotecnia, trazos, ilustración, audio—;
@@ -482,26 +547,29 @@ bloque entero para poder abrirse.
    silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
 3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
    `image`.
-4. `aisle/shelf/shelfConfig.ts` → una entrada en `VOLUME_ORDER` con su `blockId`.
-   Nada de coordenadas: la rejilla lo posa en el primer hueco libre, y el orden
-   de esa lista es el orden en la balda.
+4. Nada en la estantería: el tomo ya está, porque su bloque ya figura en
+   `BLOCK_PLAN`. Un bloque nuevo fuera de los doce se añade ahí, y la rejilla lo
+   posa en el primer hueco libre.
 
 Nada más: ningún componente, ninguna página, ningún ejercicio.
 
-### Las tapas y los lomos son de cada tomo — todavía no
+**Del bloque 2 en adelante, ojo:** es contenido de pago, y no puede quedarse en
+`content/` para siempre — ver «El contenido de pago no puede vivir en
+`content/`».
 
-Va a haber **entre 12 y 16 tapas y lomos distintos**, uno por tomo. Aún no están
-dibujados ni está decidido el orden en que saldrán con su ilustración
-correspondiente, así que de momento todos los tomos comparten el mismo render.
+### Las tapas y los lomos son de cada tomo
 
-Eso tiene una consecuencia en el código que hay que resolver el día que lleguen:
-`VOLUME_FACES` es hoy **una constante única** en `shelfConfig.ts` —un lomo, una
-tapa, una contra, un canto para todos—, y las cuatro caras tendrán que pasar a ser
-un dato de cada tomo, junto a su `blockId` en `VOLUME_ORDER`. No cambia la regla
-de que no hay una línea de código por libro: cambia de sitio el dato, nada más.
+Cada tomo tiene su lomo, su tapa y su tapa girada, en `aisle/shelf/volumeArt.ts`,
+por orden: la primera entrada es la del tomo 1. Salen de `books/moreBoks/` —tres
+PNG por tomo: lomo (impar), tapa (par) y tapa girada (N.N o N.1)— recortados a su
+silueta y pasados a WebP en `books/volumes/`. Hay trece juegos para doce bloques.
 
-Hasta entonces, cuidado al juzgar la estantería llena: varios tomos seguidos se
-ven idénticos, y eso es contenido que falta, no un fallo de la rejilla.
+El canto —el filo de las hojas— es el único que comparten todos (`FORE_EDGE`).
+
+Cada tomo apunta las medidas de sus recortes, y la proporción de la tapa sale de
+la **girada**, no de la plana: la plana es un 12 % más ancha, y con cada una a su
+proporción el relevo del final del giro daba un salto. La plana se estira a la
+girada. Si se cambia un render, hay que recortarlo y medirlo otra vez.
 
 ### La portada
 
