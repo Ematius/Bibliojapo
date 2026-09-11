@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { PageFlip } from 'page-flip'
+import type { Word } from '../../../content/types'
 import { READER, buildVolumePages } from './readerConfig'
 import { HIRAGANA_BY_ID } from '../../../content/hiragana/kana'
 import { VOCABULARY_BY_ID } from '../../../content/hiragana/vocabulary'
@@ -97,12 +98,28 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
     // Con menos de eso la lección se queda fuera entera. Media lección son planas
     // en blanco, que es peor que una lección de menos: quien lee no distingue una
     // página vacía de una rota.
+
+    // Lo que hace falta para poder ENSEÑAR una palabra en una hoja de enunciado:
+    // cómo suena y cómo se representa. Sin las dos, la plana sale muda o vacía.
+    const usable = (word?: Word) => Boolean(word?.audio && (word.swatch || word.image))
+
     const lessons = (BLOCKS_BY_ID.get(blockId)?.lessons ?? []).flatMap((lesson) => {
       const word = lesson.wordId ? VOCABULARY_BY_ID.get(lesson.wordId) : undefined
-      const ready =
-        word?.audio && (word.swatch || word.image) && HIRAGANA_BY_ID.has(lesson.kanaId)
+      const ready = usable(word) && HIRAGANA_BY_ID.has(lesson.kanaId)
+      if (!ready || !word) return []
 
-      return ready ? [{ kanaId: lesson.kanaId, wordId: word.id }] : []
+      // La segunda palabra no condiciona a la lección: si no está lista, las dos
+      // últimas planas repiten la primera y la lección entra igual. Es media
+      // mejora, no media lección.
+      const word2 = lesson.wordId2 ? VOCABULARY_BY_ID.get(lesson.wordId2) : undefined
+
+      return [
+        {
+          kanaId: lesson.kanaId,
+          wordId: word.id,
+          wordId2: usable(word2) ? word2?.id : undefined,
+        },
+      ]
     })
 
     // De dónde salen los distractores de cada lección: los kana de esa lección y

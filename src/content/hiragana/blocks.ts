@@ -26,13 +26,21 @@ export const BLOCKS: Block[] = [
     // con はは y no con は, por la misma razón: una palabra de un solo kana deja
     // sin sentido media lección, porque no se puede pedir que se encuentre el
     // kana DENTRO de la palabra si la palabra es el kana entero.
+    //
+    // La segunda palabra es para los dos últimos ejercicios, y su reparto no es
+    // libre: う solo aparece en うえ, あう e いう, y は solo en はは y はい. Desde
+    // esos dos, que casi no tienen dónde elegir, sale forzado todo lo demás.
+    //
+    // え repite いえ y お repite あお: las dos ya se conocen a esas alturas del
+    // tomo, y no pasa nada — lo que se pide es el kana dentro de OTRA palabra, no
+    // una palabra que no se haya visto nunca.
     lessons: [
-      { kanaId: 'a', wordId: 'aoi' },
-      { kanaId: 'i', wordId: 'ie' },
-      { kanaId: 'u', wordId: 'ue' },
-      { kanaId: 'e', wordId: 'iie' },
-      { kanaId: 'o', wordId: 'ooi' },
-      { kanaId: 'ha', wordId: 'haha' },
+      { kanaId: 'a', wordId: 'aoi', wordId2: 'au' },
+      { kanaId: 'i', wordId: 'ie', wordId2: 'ii' },
+      { kanaId: 'u', wordId: 'ue', wordId2: 'iu' },
+      { kanaId: 'e', wordId: 'iie', wordId2: 'ie' },
+      { kanaId: 'o', wordId: 'ooi', wordId2: 'ao' },
+      { kanaId: 'ha', wordId: 'haha', wordId2: 'hai' },
     ],
     // Las trece palabras del bloque, en `vocabulary.ts`.
     wordIds: [

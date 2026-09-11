@@ -163,6 +163,17 @@ export interface Lesson {
   // elegido con qué palabra se enseña. Sin palabra no genera páginas todavía, así
   // que el tomo crece según se va cerrando el temario en vez de romperse.
   wordId?: string
+  // La SEGUNDA palabra de la lección, para los dos últimos ejercicios.
+  //
+  // El kana se presenta y se reconoce con `wordId`, y al final se pide dentro de
+  // otra palabra distinta: encontrar は en はは y luego en はい demuestra que se
+  // reconoce el carácter, no que se ha memorizado un dibujo. Antes las dos últimas
+  // planas repetían la palabra —y la misma ilustración— de las anteriores.
+  //
+  // Opcional, y con el mismo espíritu que `wordId`: si falta, o si esa palabra
+  // todavía no está lista, esas planas siguen usando la primera. Nadie se queda
+  // mirando una hoja vacía porque falte una ilustración.
+  wordId2?: string
 }
 
 export interface Block {

@@ -25,11 +25,14 @@ export const VOCABULARY: Word[] = [
       { kana: 'い', romaji: 'i' },
     ],
     meaning: 'azul',
-    // El azul de la palabra. Tirando a apagado y con un punto de gris: sobre el
-    // papel crema del tomo, un azul de pantalla chillaría y se saldría de la
-    // biblioteca. Sigue siendo inconfundiblemente azul, que es lo único que no se
-    // puede negociar — es el significado, no un adorno.
-    swatch: '#3f6f96',
+    // Dibujo y no `swatch`, aunque sea un color: un cuadrado azul dice «azul» pero
+    // no dice nada más, y esta es la primera palabra del tomo. La escena la sostiene
+    // mejor. El `swatch` se queda en `ao`, que es el azul como sustantivo.
+    image: '/images/hiragana/imagesSupport/aoi-azul.webp',
+    imageAlt:
+      'Un niño con kimono azul pintando una gran mancha azul con un pincel de ' +
+      'caligrafía, junto a un cuenco de tinta azul, con hortensias azules y el ' +
+      'monte Fuji al fondo',
     // Grabado con la misma voz que los kana, para que la palabra y sus piezas
     // suenen a la misma persona. Ver la nota de formato en `kana.ts`.
     audio: '/audio/hiragana/b1/aoi.wav',
@@ -44,9 +47,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'お', romaji: 'o' },
     ],
     meaning: 'azul (sustantivo)',
-    // El mismo color que `aoi`: es el mismo azul, dicho de otra manera, y tiene
-    // que verse como el mismo azul.
+    // Aquí sí un color y no un dibujo: «el azul» como cosa en sí no tiene escena
+    // que valga, es el color y nada más. Tirando a apagado y con un punto de gris,
+    // porque sobre el papel crema del tomo un azul de pantalla chillaría.
     swatch: '#3f6f96',
+    audio: '/audio/hiragana/b1/ao.wav',
   },
   {
     id: 'e',
@@ -113,6 +118,14 @@ export const VOCABULARY: Word[] = [
       { kana: 'い', romaji: 'i' },
     ],
     meaning: 'bueno',
+    audio: '/audio/hiragana/b1/ii.wav',
+    // El gesto japonés de «correcto» —los brazos en círculo sobre la cabeza— y el
+    // ○ rojo. Es el espejo exacto de いいえ, que usa la equis: las dos palabras son
+    // contrarias y sus dibujos también, que es como se recuerdan.
+    image: '/images/hiragana/imagesSupport/ii-bueno.webp',
+    imageAlt:
+      'Una niña sonriente con los brazos formando un círculo por encima de la ' +
+      'cabeza y un círculo rojo grande a su lado',
   },
   {
     id: 'ooi',
@@ -138,6 +151,14 @@ export const VOCABULARY: Word[] = [
       { kana: 'う', romaji: 'u' },
     ],
     meaning: 'encontrarse',
+    audio: '/audio/hiragana/b1/au.wav',
+    // Encontrarse es un verbo, y un verbo no se dibuja: se dibuja la escena en la
+    // que ocurre. Dos que se cruzan y se saludan con una reverencia lo cuentan sin
+    // una palabra.
+    image: '/images/hiragana/imagesSupport/au-encontrarse.webp',
+    imageAlt:
+      'Dos chicas que se cruzan en una calle empedrada y se saludan inclinándose ' +
+      'la una hacia la otra, sonriendo, con un torii al fondo',
   },
   {
     id: 'iu',
@@ -146,6 +167,13 @@ export const VOCABULARY: Word[] = [
       { kana: 'う', romaji: 'u' },
     ],
     meaning: 'decir',
+    audio: '/audio/hiragana/b1/iu.wav',
+    // El bocadillo va VACÍO a propósito: escribir dentro lo que dice sería poner
+    // en la hoja la respuesta que se está pidiendo.
+    image: '/images/hiragana/imagesSupport/iu-decir.webp',
+    imageAlt:
+      'Un niño con kimono azul hablando con la mano abierta y un bocadillo de ' +
+      'cómic vacío saliéndole de la boca',
   },
   {
     id: 'hai',
@@ -154,6 +182,7 @@ export const VOCABULARY: Word[] = [
       { kana: 'い', romaji: 'i' },
     ],
     meaning: 'sí',
+    audio: '/audio/hiragana/b1/hai.wav',
   },
   {
     id: 'iie',

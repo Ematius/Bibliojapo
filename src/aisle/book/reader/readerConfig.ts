@@ -96,6 +96,9 @@ export interface Spread {
 export interface ReadyLesson {
   kanaId: string
   wordId: string
+  // La segunda palabra, si la lección la tiene Y está lista. Quien llama ya ha
+  // comprobado lo segundo: aquí no se decide, solo se coloca.
+  wordId2?: string
 }
 
 // Las ocho planas con las que se enseña UN kana, en orden de lectura.
@@ -109,7 +112,12 @@ export interface ReadyLesson {
 //
 // Los ejemplos de los comentarios son de あ con あおい, que es la lección con la
 // que se construyó la secuencia. Valen igual para cualquier otra.
-export function kanaSpreads(kanaId: string, wordId: string): Spread[] {
+export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): Spread[] {
+  // Las dos últimas planas piden el kana dentro de OTRA palabra. Si la lección no
+  // tiene segunda —o la que tiene todavía no está lista—, repiten la primera, que
+  // es como funcionaba el tomo entero antes de que existiera `wordId2`.
+  const lastWordId = wordId2 ?? wordId
+
   return [
     // Primera plana: el ejercicio 1. La mnemotecnia y el dibujo que la sostiene.
     {
@@ -185,23 +193,28 @@ export function kanaSpreads(kanaId: string, wordId: string): Spread[] {
       left: { kanaId, wordId, title: 'Escribe la palabra', shows: 'build' },
     },
 
-    // Séptima plana: el ejercicio 8, la palabra sin pistas por segunda vez, y ahora
-    // con las dos comprobaciones en la misma hoja. La derecha repite el enunciado
-    // de la plana anterior —la representación y el sonido, sin ninguna letra—; la
-    // izquierda junta reconstruir la palabra con tarjetas y, debajo, escribir su
+    // Séptima plana: el ejercicio 8, y aquí cambia la palabra. Mismo enunciado sin
+    // letras —la representación y el sonido—, pero de OTRA palabra que también
+    // lleva el kana estudiado: se ha encontrado は dentro de はは cuatro veces, y
+    // ahora hay que encontrarla en はい. Eso es reconocer el carácter; repetir la
+    // misma palabra por quinta vez era recordar un dibujo.
+    //
+    // La izquierda junta reconstruir la palabra con tarjetas y, debajo, escribir su
     // lectura completa. Ver `WordDrill`.
     {
-      right: { wordId, title: 'Escucha', shows: 'prompt' },
-      left: { kanaId, wordId, title: 'Escribe y lee', shows: 'drill' },
+      right: { wordId: lastWordId, title: 'Escucha', shows: 'prompt' },
+      left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
     },
 
     // Octava plana: el ejercicio 9, el mismo peldaño sin la imagen. La derecha
     // retira la representación visual —solo queda el sonido, que sin nada que mirar
     // deja de poder sustituir al oído—; la izquierda repite la misma hoja compuesta
-    // que la plana anterior.
+    // que la plana anterior. Sigue con la segunda palabra: el salto de vocabulario
+    // ya se dio en la plana anterior, y darlo otra vez aquí mezclaría dos
+    // dificultades en el mismo peldaño.
     {
-      right: { wordId, title: 'Escucha', shows: 'promptAudio' },
-      left: { kanaId, wordId, title: 'Escribe y lee', shows: 'drill' },
+      right: { wordId: lastWordId, title: 'Escucha', shows: 'promptAudio' },
+      left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
     },
   ]
 }
@@ -243,7 +256,7 @@ function introSpread(): Spread {
 export function buildVolumePages(lessons: ReadyLesson[]): ReaderPage[] {
   const spreads = [
     introSpread(),
-    ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId)),
+    ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
   ]
   const pages = spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
 
