@@ -84,7 +84,18 @@ function mountOne(match: HTMLElement): (() => void) | null {
   const fill = (slot: HTMLElement, tile: HTMLButtonElement) => {
     slot.textContent = tile.dataset.kana ?? ''
     slot.classList.add('kana-match__slot--filled')
-    tile.classList.add('kana-match__tile--placed')
+
+    // La tarjeta se retira solo cuando ya no hace falta.
+    //
+    // Hay palabras que piden el MISMO kana dos veces —おおい, はは— y el montón trae
+    // una sola tarjeta de cada uno: `pickCards` quita los repetidos, porque dos
+    // tarjetas idénticas no son dos opciones, son la misma dos veces. Retirándola
+    // al primer uso, el segundo hueco se quedaba sin con qué llenarse y el
+    // ejercicio no se podía terminar.
+    const chosen = tile.dataset.kana ?? ''
+    if (!pending().some((free) => free.dataset.answer === chosen)) {
+      tile.classList.add('kana-match__tile--placed')
+    }
 
     if (pending().length > 0) {
       // Quedan huecos: se confirma el acierto sin destripar la palabra, que es
