@@ -13,11 +13,12 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** el primer tomo. El recorrido está entero —landing, zaguán,
-vestíbulo, pasillo y estantería— y el tomo del bloque 1 se abre y se lee con sus
-diez ejercicios. Lo que falta es contenido, no código: los trazos, las
-ilustraciones, los audios y las mnemotecnias de los kana que quedan. Ver «Cómo se
-arma un tomo».
+**Fase actual:** cerrando el primer tomo. El recorrido está entero —landing,
+zaguán, vestíbulo, pasillo y estantería— y el tomo del bloque 1 se lee de principio
+a fin: sus seis lecciones completas, cada una con sus ejercicios, su repaso y su
+examen, y el examen final que pone el sello. Solo queda revisar a ojo que cada kana
+caiga sobre su ilustración. Lo siguiente es el encuadre de la estantería. Ver
+«Cómo se arma un tomo».
 En paralelo, el **front** de la progresión y las cuentas está hecho contra un
 servidor simulado: los doce tomos en la balda, el sello que da la insignia, la
 cuenta que la guarda. Ver «La capa `api/`».
@@ -34,16 +35,19 @@ o Firebase sabiendo exactamente qué datos hacen falta. Ver la fase 4.
 El orden importa y **no se adelantan fases**: cada una depende de decisiones que
 todavía no están tomadas en la anterior.
 
-1. **Terminar el tomo 1.** Es contenido, no código: los trazos, las ilustraciones,
-   los audios y las mnemotecnias de los kana que faltan.
-2. **Responsive.**
-3. **La estantería.** La colocación ya está resuelta: los tomos se posan solos
-   sobre la rejilla de `shelfGrid.ts` — ver «Cómo se arma un tomo». Lo que queda
-   es el encuadre: el stage encuadra hoy la ILUSTRACIÓN, y en pantallas estrechas
-   el recorte se come el mueble entero. Hay que encuadrar por la estantería, de
-   modo que siempre quepa y la ilustración haga de relleno. Es la pieza que
-   convierte el punto 2 en algo abordable, porque ningún ajuste de tomos arregla
-   un mueble que se sale de la pantalla.
+1. **Terminar el tomo 1.** Hecho el contenido (11-09-2026): los seis kana tienen
+   su ficha entera y todas sus palabras, su audio y su dibujo. Queda una revisión:
+   comprobar que cada kana cae sobre su ilustración con la regla única —centrado,
+   al 60 % del dibujo—; si alguno no cuadra, se corrige la ilustración, no el
+   código.
+2. **El encuadre de la estantería.** La colocación ya está resuelta: los tomos se
+   posan solos sobre la rejilla de `shelfGrid.ts` — ver «Cómo se arma un tomo».
+   Lo que queda es el encuadre: el stage encuadra hoy la ILUSTRACIÓN, y en
+   pantallas estrechas el recorte se come el mueble entero. Hay que encuadrar por
+   la estantería, de modo que siempre quepa y la ilustración haga de relleno. Va
+   ANTES que el responsive porque es la pieza que lo vuelve abordable: ningún
+   ajuste de tomos arregla un mueble que se sale de la pantalla.
+3. **Responsive.**
 4. **Progresión y cuentas.** El FRONT se adelantó a propósito (11-09-2026) y ya
    está, contra un servidor simulado —ver «La capa `api/`»—: hacer el backend
    antes que las cuentas habría obligado a reabrir la base de datos al llegar a
@@ -312,6 +316,7 @@ src/
       recognition/  ← la palabra y el hueco de rōmaji
       matching/     ← emparejar arrastrando, y el enunciado sin palabras
       drill/        ← dos preguntas en una hoja
+      exam/         ← el examen de cada lección, el examen final y su sello
   account/          ← la cuenta: el panel para crearla o entrar, y el carné
   api/              ← excepción justificada: todo lo que habla con el servidor, y
                       el servidor simulado. Es la única carpeta que cambia el día
@@ -516,10 +521,11 @@ recolocar la estantería entera se tocan los números del mueble, no los tomos.
 
 ### Las páginas se generan, nunca se escriben a mano
 
-`kanaSpreads(kanaId, wordId)` devuelve las ocho planas con las que se enseña un
-kana. `buildVolumePages` las encadena para todas las lecciones del bloque, pone la
-portada delante, el repaso al final y numera de corrido. Dos lecciones son 16
-páginas de estudio; seis son 48.
+`kanaSpreads(kanaId, wordId, wordId2)` devuelve las nueve planas de una lección:
+siete de estudio, un repaso sorteado entre ellas y el examen. `buildVolumePages`
+las encadena para todas las lecciones del bloque, pone la portada delante y el
+examen final detrás, y numera de corrido. Cada lección son 18 páginas; seis son
+108, más la portada y el examen final.
 
 **Nunca escribir una página suelta con su `kanaId` y su `wordId` puestos a mano.**
 Un ejercicio nuevo se añade a `kanaSpreads` y aparece en todos los tomos a la vez.
@@ -561,8 +567,10 @@ Nada más: ningún componente, ninguna página, ningún ejercicio.
 
 Cada tomo tiene su lomo, su tapa y su tapa girada, en `aisle/shelf/volumeArt.ts`,
 por orden: la primera entrada es la del tomo 1. Salen de `books/moreBoks/` —tres
-PNG por tomo: lomo (impar), tapa (par) y tapa girada (N.N o N.1)— recortados a su
-silueta y pasados a WebP en `books/volumes/`. Hay trece juegos para doce bloques.
+imágenes por tomo: lomo (impar), tapa (par) y tapa girada (N.N o N.1)— recortadas
+a su silueta en `books/volumes/`. Hay trece juegos para doce bloques. Los de
+`moreBoks/` son los originales sin recortar, ya en WebP: nada del proyecto los
+carga, pero están dentro de `public/` y se despliegan.
 
 El canto —el filo de las hojas— es el único que comparten todos (`FORE_EDGE`).
 
@@ -672,23 +680,27 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 
 ### Bloques completos de la fase hiragana
 
-Fase hiragana base (B1–B9)
-Bloque	Kana	Acum.	% base (46)	Palabras	Acum.	% N5
-B1	6	|6	|13,0%|	13|	13	|1,6%
-B2	6	12	26,1%	25	38	4,8%
-B3	6	18	39,1%	25	63	7,9%
-B4	7	25	54,3%	31	94	11,8%
-B5	6	31	67,4%	31	125	15,6%
-B6	4	35	76,1%	30	155	19,4%
-B7	4	39	84,8%	30	185	23,1%
-B8	4	43	93,5%	24	209	26,1%
-B9	3	46	100%	19	228	28,5%
+#### Fase hiragana base (B1–B9)
 
-Fase derivada (B10–B12)
-Bloque	Formas nuevas	Acum.	% silabario (110)	Palabras	Acum.	% N5
-B10	25 (dakuten)	71	64,5%	61	289	36,1%
-B11	6 (ぱ行 + っ)	77	70,0%	8	297	37,1%
-B12	33 (yōon)	110	100%	7	304	38,0%
+| Bloque | Kana | Acum. | % base (46) | Palabras | Acum. |  % N5 |
+| ------ | ---: | ----: | ----------: | -------: | ----: | ----: |
+| B1     |    6 |     6 |       13,0% |       13 |    13 |  1,6% |
+| B2     |    6 |    12 |       26,1% |       25 |    38 |  4,8% |
+| B3     |    6 |    18 |       39,1% |       25 |    63 |  7,9% |
+| B4     |    7 |    25 |       54,3% |       31 |    94 | 11,8% |
+| B5     |    6 |    31 |       67,4% |       31 |   125 | 15,6% |
+| B6     |    4 |    35 |       76,1% |       30 |   155 | 19,4% |
+| B7     |    4 |    39 |       84,8% |       30 |   185 | 23,1% |
+| B8     |    4 |    43 |       93,5% |       24 |   209 | 26,1% |
+| B9     |    3 |    46 |        100% |       19 |   228 | 28,5% |
+
+#### Fase derivada (B10–B12)
+
+| Bloque | Formas nuevas | Acum. | % silabario (110) | Palabras | Acum. |  % N5 |
+| ------ | ------------- | ----: | ----------------: | -------: | ----: | ----: |
+| B10    | 25 (dakuten)  |    71 |             64,5% |       61 |   289 | 36,1% |
+| B11    | 6 (ぱ行 + っ) |    77 |             70,0% |        8 |   297 | 37,1% |
+| B12    | 33 (yōon)     |   110 |              100% |        7 |   304 | 38,0% |
 
 #### Orden de aprendizaje del hiragana
 
