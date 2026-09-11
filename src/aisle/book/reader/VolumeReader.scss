@@ -134,7 +134,7 @@
       //
       // Si algún día cambia libro-abierto-100.webp hay que volver a recortarlo, o
       // las dos capas dejarán de ser el mismo papel.
-      url('/images/hallways/libro/papel-tomo.webp') center / 100% 100% no-repeat,
+      url('/images/hallways/books/papel-tomo.webp') center / 100% 100% no-repeat,
       var(--color-page);
   }
 

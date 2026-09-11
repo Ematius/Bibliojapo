@@ -14,24 +14,24 @@ export type { ShelfVolume, VolumeEntry } from './shelfGrid'
 // espacio para formar la esquina. Por eso no valdría un render en tres cuartos,
 // que trae la perspectiva ya pintada en el píxel.
 export const VOLUME_FACES = {
-  spine: '/images/hallways/libro/tomo-lomo.webp',
-  cover: '/images/hallways/libro/tomo-tapa.webp',
+  spine: '/images/hallways/books/tomo-lomo.webp',
+  cover: '/images/hallways/books/tomo-tapa.webp',
   // La contratapa. Es la que asoma por la derecha con el tomo en la balda: la
   // portada de verdad cuelga del otro lado, mirando al fondo del estante, y solo
   // aparece cuando el tomo se gira hacia el lector. De momento reutiliza el
   // render de la tapa; cuando haya un dibujo propio de la contra, se cambia aquí.
-  back: '/images/hallways/libro/tomo-tapa.webp',
+  back: '/images/hallways/books/tomo-tapa.webp',
   // El canto: el filo del bloque de hojas, la cara opuesta al lomo. Es lo que
   // cierra el libro por detrás y lo que se asoma por el lado al girarlo, y sin
   // ella el tomo se lee como dos cartones sueltos en vez de como un objeto.
-  foreEdge: '/images/hallways/libro/libro-cerrado-100.webp',
+  foreEdge: '/images/hallways/books/libro-cerrado-100.webp',
   // La portada pintada de tres cuartos: la tapa con el bloque de hojas asomando
   // por la izquierda, con su perspectiva y su sombra ya resueltas en el píxel.
   //
   // Existe porque armar esa misma vista con planos quedaba pobre: por geometría
   // el canto sale de un par de píxeles y se lee como una raya, no como el filo
   // de un libro. En la pose de portada se pone encima y sustituye al montaje.
-  coverTurned: '/images/hallways/libro/tapa-degrado.webp',
+  coverTurned: '/images/hallways/books/tapa-degrado.webp',
 }
 
 // Proporciones del tomo, medidas sobre esos dos renders y expresadas respecto a

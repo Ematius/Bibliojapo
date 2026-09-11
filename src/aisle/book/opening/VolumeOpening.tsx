@@ -24,7 +24,7 @@ interface VolumeOpeningProps {
 
 // El tomo abriéndose.
 //
-// Los cuatro fotogramas van apilados y se encienden por orden: cada uno entra
+// Los cinco fotogramas van apilados y se encienden por orden: cada uno entra
 // con fundido sobre el anterior, que sigue debajo hasta que el nuevo está entero
 // y entonces se apaga. En cada momento hay como mucho dos capas mezclándose, que
 // es lo que hace que la apertura se lea continua y no a saltos, y ninguna se

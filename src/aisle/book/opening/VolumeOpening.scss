@@ -10,10 +10,9 @@
   z-index: 4;
   transform: translate(-50%, -50%);
 
-  // Los cuatro apilados en el mismo hueco. `contain` en vez de estirar: los tres
-  // primeros vienen en un lienzo algo más estrecho, y respetando su proporción
-  // el libro se ve angosto al empezar y se ensancha al abrirse, que es lo que
-  // hace de verdad. Anclados abajo para que la encuadernación no flote.
+  // Los cinco apilados en el mismo hueco. `contain` en vez de estirar: si algún
+  // fotograma llega en un lienzo de otra proporción, se respeta en vez de
+  // deformarlo. Anclados abajo para que la encuadernación no flote.
   &__frame {
     position: absolute;
     inset: 0;
