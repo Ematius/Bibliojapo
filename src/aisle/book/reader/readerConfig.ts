@@ -249,7 +249,10 @@ function introSpread(): Spread {
   // hoja en grande. Dos encabezados seguidos diciendo casi lo mismo sobraría.
   return {
     right: { shows: 'intro' },
-    left: { title: 'Al terminarlo', shows: 'goal' },
+    // «Al terminarlo» no decía qué había debajo. Esto sí, y además es la
+    // promesa del tomo: lo que hay en esa hoja son frases de verdad que hoy no
+    // se pueden leer.
+    left: { title: 'Ya podrás leer', shows: 'goal' },
   }
 }
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { PageFlip } from 'page-flip'
 import type { Word } from '../../../content/types'
+import { readBookmark, writeBookmark } from '../../../shared/bookmark'
 import { READER, buildVolumePages } from './readerConfig'
 import { HIRAGANA_BY_ID } from '../../../content/hiragana/kana'
 import { VOCABULARY_BY_ID } from '../../../content/hiragana/vocabulary'
@@ -18,6 +19,7 @@ import { WordPrompt } from '../matching/WordPrompt'
 import { mountKanaPairing } from '../matching/kanaPairing'
 import { WordDrill } from '../drill/WordDrill'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
+import { groupSentencesByTopic } from '../intro/goalGroups'
 import { KanaStroke } from '../mnemonic/KanaStroke'
 import { KanaCard } from '../presentation/KanaCard'
 import { KanaTrace } from '../writing/KanaTrace'
@@ -204,14 +206,37 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
 
     flip.loadFromHTML(pages)
 
-    // El libro ABRE por la página 1, que es la primera plana de lectura. Desde
+    // El libro abre por donde se quedó, y por la página 1 la primera vez. Desde
     // ahí se avanza arrastrando la hoja.
     //
-    // El índice se comprueba a mano y no se da por supuesto: con las páginas
-    // invertidas, la primera de lectura es la ÚLTIMA del DOM. Queda a la
-    // derecha, emparejada con la 2 a su izquierda, que es la primera plana de
-    // un tomo japonés.
-    flip.turnToPage(pages.length - 1)
+    // El índice se calcula a mano y no se da por supuesto: con las páginas
+    // invertidas, la primera de lectura es la ÚLTIMA del DOM. De ahí sale la
+    // conversión, que vale en los dos sentidos — folio 1 da el último índice,
+    // que es la plana con la 1 a la derecha y la 2 a su izquierda, como en
+    // cualquier tomo japonés.
+    const indexOfFolio = (folio: number) => pages.length - folio
+    const folioOfIndex = (index: number) => pages.length - index
+
+    // Siempre la hoja DERECHA de la plana, que es la que se lee primero. Los
+    // folios impares son los de la derecha, porque la plana 1 empieza en la 1.
+    const rightOfSpread = (folio: number) => (folio % 2 === 1 ? folio : folio - 1)
+
+    const saved = readBookmark(blockId)
+    const startFolio = saved && saved <= pages.length ? rightOfSpread(saved) : 1
+
+    flip.turnToPage(indexOfFolio(startFolio))
+
+    // Y a partir de aquí se va apuntando. Se engancha DESPUÉS de colocar el
+    // libro a propósito: así lo primero que se guarda es una página que se ha
+    // pasado de verdad, no el salto con el que se acaba de abrir.
+    //
+    // El evento trae el índice del DOM; al disco va el folio. Ver `bookmark.ts`.
+    flip.on('flip', (event) => {
+      const index = Number(event.data)
+      if (!Number.isInteger(index)) return
+
+      writeBookmark(blockId, rightOfSpread(folioOfIndex(index)))
+    })
 
     // El trazado del kana se engancha AQUÍ y no dentro de KanaStroke: hasta esta
     // línea los únicos nodos que existen en pantalla son los clones que se acaban
@@ -248,7 +273,9 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
       flip.destroy()
       mount.replaceChildren()
     }
-  }, [pageWidth, pageHeight])
+    // `blockId` entra porque de él sale el marcador: cambiar de tomo tiene que
+    // volver a montar el libro, no seguir apuntando en el del anterior.
+  }, [pageWidth, pageHeight, blockId])
 
   return (
     <div className="volume-reader">
@@ -293,8 +320,9 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                   if (page.shows === 'goal') {
                     return block ? (
                       <VolumeGoal
-                        sentences={block.sentenceIds.flatMap(
-                          (id) => SENTENCES_BY_ID.get(id) ?? [],
+                        groups={groupSentencesByTopic(
+                          block.sentenceIds.flatMap((id) => SENTENCES_BY_ID.get(id) ?? []),
+                          (id) => VOCABULARY_BY_ID.get(id),
                         )}
                       />
                     ) : null

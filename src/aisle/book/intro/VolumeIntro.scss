@@ -1,35 +1,96 @@
-// La plana con la que abre el tomo: a la derecha qué es, a la izquierda a dónde
-// lleva.
+// La plana con la que abre el tomo: a la derecha qué es y a dónde lleva, a la
+// izquierda lo que se podrá leer al terminarlo.
 //
 // Es la única del libro sin ejercicio, y tiene que notarse: aquí no hay nada que
 // hacer, solo que leer. Por eso el texto va alineado a la izquierda y no centrado
 // como en las hojas de estudio — se lee de corrido, no de un vistazo.
+//
+// ── Jerarquía ──────────────────────────────────────────────────────────────
+// Antes todo pesaba lo mismo y la hoja se leía como un formulario. El orden de
+// importancia es: los kana, el título, el camino, y por último las cifras del
+// pie. Los tamaños de aquí abajo están puestos para que se lea en ese orden sin
+// que nadie tenga que proponérselo.
 
 .volume-intro {
   width: 100%;
   flex: 1;
   min-height: 0;
 
+  // Ancla el kana de fondo, que va posicionado contra esta caja.
+  position: relative;
+  // Y lo recorta. El kana sangra por el borde derecho a propósito, y sin esto su
+  // caja de texto agranda el área desplazable de la hoja: una página de papel
+  // que se puede desplazar veinte píxeles es una página rota, aunque no se note
+  // a simple vista.
+  overflow: hidden;
+
   display: flex;
   flex-direction: column;
   // Arranca arriba, no centrado. Centrada, la portada dejaba un palmo de papel en
   // blanco por encima del título y se leía como un descuadre, no como aire.
   justify-content: flex-start;
-  gap: 3cqh;
+  gap: 2.6cqh;
 
-  // El título del bloque. En la fuente de cabeceras porque esto es una portada y
+  // El kana del bloque, enorme y casi invisible, detrás de todo lo demás.
+  //
+  // Al 4 % de tinta: lo justo para que el papel deje de estar liso sin llegar a
+  // competir con una sola línea de texto. Sin `filter` ni sombras — esto vive
+  // dentro de una hoja que page-flip gira, y cualquier repintado por frame ahí
+  // se nota. Ver «Errores conocidos» en CLAUDE.md.
+  &__ghost {
+    position: absolute;
+    right: -4cqw;
+    bottom: 4cqh;
+    z-index: 0;
+
+    font-family: var(--font-body);
+    font-size: 62cqmin;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-ink);
+    opacity: 0.04;
+    // Decorativo: no se selecciona ni se puede pulsar sin querer.
+    user-select: none;
+    pointer-events: none;
+  }
+
+  // Todo lo que no es el fondo va por encima de él.
+  > *:not(.volume-intro__ghost) {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  // «Bloque 1», en voz baja y encima del nombre. Es la referencia, no el nombre:
+  // quien abre el tomo ya sabe cuál ha cogido.
+  &__number {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  // El nombre del bloque. En la fuente de cabeceras porque esto es una portada y
   // no material de estudio: aquí no hay ningún carácter que copiar, así que la
   // mincho con sus remates no confunde a nadie.
   &__title {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(0.95rem, 8cqmin, 2rem);
+    font-size: clamp(0.95rem, 7.5cqmin, 1.9rem);
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.2;
     text-wrap: balance;
   }
 
-  // Los kana del bloque, en fila.
+  // Los kana del bloque, en fila y protagonistas.
   //
   // En la fuente del cuerpo, igual que la tarjeta de presentación: es la misma
   // con la que se traza, y enseñarlos aquí con remates sería enseñar una forma
@@ -38,57 +99,114 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35em;
+    gap: 0.3em 0.28em;
     font-family: var(--font-body);
-    font-size: clamp(1.1rem, 11cqmin, 2.6rem);
+    font-size: clamp(1.1rem, 10cqmin, 2.4rem);
     font-weight: 500;
     line-height: 1;
   }
 
-  // Cada kana va sobre su propia pastilla de papel: en fila y sin nada que los
+  // Cada kana sobre su propia pastilla de papel: en fila y sin nada que los
   // separe se leerían como una palabra, que es justo lo que no son.
   &__kana-item {
-    padding: 0.12em 0.22em;
+    padding: 0.1em 0.2em;
     border-bottom: 2px solid var(--color-brass);
   }
 
   &__summary {
     margin: 0;
     color: var(--color-ink-soft);
-    font-size: clamp(0.6rem, 4.6cqmin, 1rem);
-    line-height: 1.6;
+    font-size: clamp(0.55rem, 4cqmin, 0.9rem);
+    line-height: 1.5;
     text-wrap: pretty;
   }
 
-  // Las cuentas del tomo. Cuatro, en dos filas de dos: en columna ocuparían media
-  // hoja, y en una sola fila los rótulos quedan tan estrechos que se parten.
+  // ── El camino ────────────────────────────────────────────────────────────
+  // Tres peldaños: kana, palabra, frase. Se comen el hueco muerto que quedaba
+  // entre el resumen y el pie, y de paso dicen para qué sirve cada cifra.
+  &__path {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-brass);
+  }
+
+  // Cada peldaño: el número de orden, lo que se hace, y cuántos son.
+  //
+  // El filete entre uno y otro es lo que los hace leerse como escalones y no
+  // como tres frases sueltas. El último no lleva, que si no cierra una caja y
+  // parece una tabla.
+  &__step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.7em;
+    padding: 3.4cqh 0;
+
+    & + & {
+      border-top: 1px solid var(--color-page-fold);
+    }
+  }
+
+  // El número de orden, en latón. Pequeño: marca la secuencia, no compite con
+  // la cuenta de la derecha.
+  &__step-index {
+    font-family: var(--font-display);
+    font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+    font-weight: 700;
+    color: var(--color-brass);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__step-label {
+    font-size: clamp(0.55rem, 4cqmin, 0.9rem);
+    line-height: 1.3;
+  }
+
+  // La cuenta. Con cifras de ancho fijo, que es lo que mantiene la columna
+  // derecha alineada cuando una pasa de un dígito a dos.
+  &__step-count {
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 6cqmin, 1.5rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // ── El pie ───────────────────────────────────────────────────────────────
+  // Lo que se lleva del camino largo. `margin-top: auto` lo empuja al fondo de
+  // la hoja pase lo que pase con el alto de lo de arriba.
   &__counts {
     margin-top: auto;
     margin-bottom: 0;
+    padding-top: 1.1cqh;
+    border-top: 1px solid var(--color-brass);
+
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3cqh 4cqw;
+    gap: 4cqw;
   }
 
   &__count {
     display: flex;
-    flex-direction: column;
-    gap: 0.1em;
+    align-items: baseline;
+    gap: 0.5em;
 
-    // El rótulo, arriba y en voz baja.
+    // El rótulo, delante y en voz baja.
     dt {
       color: var(--color-ink-soft);
-      font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+      font-size: clamp(0.42rem, 2.8cqmin, 0.7rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
 
-    // El número. Con cifras de ancho fijo, que es lo que mantiene las tres
-    // columnas alineadas cuando una pasa de un dígito a dos.
     dd {
       margin: 0;
       font-family: var(--font-display);
-      font-size: clamp(0.85rem, 7cqmin, 1.7rem);
+      font-size: clamp(0.6rem, 4.4cqmin, 1.05rem);
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       line-height: 1;
@@ -96,7 +214,8 @@
   }
 }
 
-// Las frases que se leerán al terminar.
+// ── Lo que se podrá leer ───────────────────────────────────────────────────
+// Las frases del bloque, repartidas por el tema del que hablan.
 //
 // Van apretadas a propósito: son quince y tienen que caber sin que la hoja pida
 // desplazarse, que en un libro de papel no tiene sentido. Se miran de arriba
@@ -106,17 +225,57 @@
   flex: 1;
   min-height: 0;
 
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
   display: flex;
   flex-direction: column;
   // Arriba y sin centrar, igual que la portada de al lado. Centrar una lista que
-  // no cabe la recorta por los DOS lados, y con quince frases eso deja fuera la
-  // primera y la última sin avisar.
+  // no cabe la recorta por los DOS lados, y eso deja fuera la primera y la última
+  // sin avisar.
+  // Un pelo de holgura sobre lo que mide el contenido: quince frases en seis
+  // grupos caben justas, y sin margen cualquier redondeo corta la última línea.
   justify-content: flex-start;
-  gap: 1.6cqh;
+  gap: 1cqh;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45cqh;
+  }
+
+  // El tema del grupo: la palabra y lo que significa, en un renglón de latón.
+  // Es el ancla que rompe el muro — de arriba abajo se leen seis, no quince.
+  &__topic {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    padding-bottom: 0.2cqh;
+    border-bottom: 1px solid var(--color-brass);
+  }
+
+  &__topic-word {
+    font-family: var(--font-body);
+    font-size: clamp(0.5rem, 3.6cqmin, 0.84rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__topic-meaning {
+    color: var(--color-ink-soft);
+    font-size: clamp(0.4rem, 2.8cqmin, 0.68rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+  }
+
+  &__lines {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.3cqh;
+  }
 
   // Una frase por línea, con su traducción al lado. `baseline` y no `center`: los
   // dos textos son de tamaños muy distintos, y alineados por el centro el español
@@ -125,25 +284,25 @@
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.15em 0.7em;
+    gap: 0.15em 0.6em;
   }
 
   // La frase en japonés. Es lo que todavía no se puede leer, así que va primero y
   // con más peso: es la meta, no el pie de foto.
   &__text {
     font-family: var(--font-body);
-    font-size: clamp(0.55rem, 4.2cqmin, 0.95rem);
+    font-size: clamp(0.48rem, 3.5cqmin, 0.82rem);
     font-weight: 500;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
-  // La traducción, detrás y en voz baja. Se lleva el espacio que sobre para que
-  // las frases queden alineadas por la izquierda aunque midan distinto.
+  // La traducción, detrás y en voz baja — pero legible. Antes iba tan apagada que
+  // sobre el papel crema se perdía, y una traducción que no se lee no está.
   &__meaning {
     flex: 1;
     min-width: 0;
     color: var(--color-ink-soft);
-    font-size: clamp(0.42rem, 3cqmin, 0.72rem);
-    line-height: 1.35;
+    font-size: clamp(0.4rem, 2.9cqmin, 0.7rem);
+    line-height: 1.3;
   }
 }
