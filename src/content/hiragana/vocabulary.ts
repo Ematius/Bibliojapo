@@ -68,6 +68,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'は', romaji: 'ha' },
     ],
     meaning: 'madre',
+    audio: '/audio/hiragana/b1/haha.wav',
+    image: '/images/hiragana/imagesSupport/haha-mama.webp',
+    imageAlt:
+      'Una madre sonriente con los ojos cerrados abrazando a su hija pequeña, que ' +
+      'ríe apoyada contra ella, en un salón luminoso con un osito de peluche al lado',
   },
   {
     id: 'ie',
@@ -117,6 +122,14 @@ export const VOCABULARY: Word[] = [
       { kana: 'い', romaji: 'i' },
     ],
     meaning: 'muchos / abundante',
+    audio: '/audio/hiragana/b1/ooi.wav',
+    // No es un color, así que dibujo. Muchísimos gatitos a la vez dicen
+    // «abundante» sin necesidad de la palabra en español.
+    image: '/images/hiragana/imagesSupport/ooi-muchos.webp',
+    imageAlt:
+      'Una chica sonriente abrazando un gatito entre los brazos, rodeada por ' +
+      'decenas y decenas de gatitos más que llenan cestas y estanterías hasta el ' +
+      'borde de la imagen',
   },
   {
     id: 'au',

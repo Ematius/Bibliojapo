@@ -181,6 +181,88 @@ export const HIRAGANA: Kana[] = [
     // que se hará al cerrar el contenido del tomo 1.
     strokeFit: { top: 20, right: 12, bottom: 20, left: 5 },
   },
+  {
+    id: 'o',
+    character: 'お',
+    romaji: 'o',
+    audio: '/audio/hiragana/b1/o.wav',
+    mnemonic:
+      'La gran ola de Hokusai. Para este hiragana nos imaginamos el tsunami ' +
+      'japonés: una **O**la gigante, con un surfista atravesándola sobre su tabla, ' +
+      'y el tercer trazo son las gotas de espuma que saltan de la cresta. Ahí ' +
+      'tienes el hiragana **お**.',
+    // Los tres trazos, contados sobre el dibujo: la tabla, la ola y la espuma.
+    strokeOrder: [
+      'La tabla del surfista atravesando la ola: el trazo horizontal de arriba, ' +
+        'de izquierda a derecha.',
+      'La ola gigante que se enrosca: baja cruzando la tabla y termina ' +
+        'rizándose en espuma abajo.',
+      'La gota de espuma que salta de la cresta, suelta arriba a la derecha.',
+    ],
+
+    image: '/images/hiragana/hiragana-o.webp',
+    imageAlt:
+      'Un surfista deslizándose sobre una ola gigante que se enrosca en espiral, ' +
+      'estilo Hokusai, con un grupo de gotas de espuma saltando aparte, arriba a ' +
+      'la derecha',
+
+    // Mismo origen que las siluetas anteriores: el glifo de Zen Kaku Gothic New.
+    outline:
+      'M235,796Q172,804 119,795Q66,785 34,757Q2,728 2,680Q2,610 60,549Q117,487 213,449L213,251Q158,257 105,260Q52,262 5,260L0,196Q42,200 98,198Q154,196 213,190L213,0L274,0L274,182Q328,174 377,164Q426,153 460,140L468,201Q429,214 379,225Q329,236 274,244L274,429Q316,417 363,411Q410,404 460,404Q545,404 609,429Q672,453 708,496Q743,539 743,595Q743,653 717,694Q691,734 647,754Q602,774 544,773Q399,771 353,622Q359,620 372,616Q384,611 397,606Q409,600 413,597Q428,652 459,681Q489,709 544,710Q603,711 640,681Q677,650 677,595Q677,553 649,523Q621,493 572,477Q523,460 460,461Q409,461 362,468Q315,475 274,488L274,753Q274,775 265,785Q255,794 235,796ZM189,740Q203,739 208,735Q213,731 213,721L213,511Q145,542 105,587Q65,631 65,678Q65,714 101,729Q137,743 189,740ZM751,342Q728,318 689,291Q650,264 607,240Q564,215 528,201L564,151Q588,161 619,178Q649,194 682,214Q714,234 743,254Q771,273 790,289Q787,292 778,304Q769,316 761,328Q753,339 751,342Z',
+
+    // Tres trazos: es el primer kana del bloque que usa los tres. Como en los
+    // demás, esta lista mide lo mismo que `strokeOrder`.
+    strokes: [
+      'M2,229L216,224L453,173',
+      'M243,1L244,758L139,769L63,746L30,686L41,615L91,552L155,507L299,449L401,430L581,450L660,488L712,554L708,620L688,693L641,717L584,738L520,736L456,716L411,671L390,622',
+      'M549,174L771,310',
+    ],
+    strokeViewBox: '0 0 790 804',
+    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
+    // que se hará al cerrar el contenido del tomo 1.
+    strokeFit: { top: 6, right: 6, bottom: 6, left: 10 },
+  },
+  {
+    id: 'ha',
+    character: 'は',
+    romaji: 'ha',
+    audio: '/audio/hiragana/b1/ha.wav',
+    mnemonic:
+      'Para este hiragana vamos a viajar a los **ja**rdines **ja**poneses, esa paz ' +
+      'que emanan. Por eso tendremos que imaginarnos a un **ja**ponés con sus ' +
+      'herramientas en su **ja**rdín, eso sí: como siempre en **Ja**pón hacen tan ' +
+      'poco ruido y es todo tan suave que en realidad se pronuncia **ha**.',
+    // Los tres trazos, contados sobre el dibujo: la pala, la rama y el tallo que
+    // se enrosca en la maceta.
+    strokeOrder: [
+      'El mango y la pala de la herramienta de jardín, clavada en el suelo: el ' +
+        'trazo vertical largo de la izquierda, de arriba abajo.',
+      'La rama que cruza el tallo: el trazo horizontal, de izquierda a derecha.',
+      'El tallo que baja desde arriba y se enrosca en la maceta de barro: el ' +
+        'trazo largo de la derecha, que termina en el bucle de la olla.',
+    ],
+
+    image: '/images/hiragana/hiragana-ha.webp',
+    imageAlt:
+      'Una pala de jardín de mango de madera apoyada junto a una maceta de barro ' +
+      'cubierta de musgo, de la que crece un tallo con flores de cerezo que se ' +
+      'enrosca alrededor de ella, en un jardín japonés con una linterna de piedra ' +
+      'y un cerezo en flor al fondo',
+
+    // Mismo origen que las siluetas anteriores: el glifo de Zen Kaku Gothic New.
+    outline:
+      'M361,756Q293,754 257,721Q220,688 221,643Q221,614 240,588Q259,562 297,546Q334,529 388,529Q411,529 435,531Q458,533 480,537Q479,487 476,412Q473,337 471,243Q403,247 339,249Q274,250 230,248L225,182Q266,186 333,186Q399,186 470,182Q469,139 469,94Q468,49 468,0L531,0Q529,94 531,178Q596,173 650,167Q704,160 730,153L730,218Q702,223 649,229Q596,234 532,239Q534,340 538,421Q541,501 543,554Q649,588 760,673Q756,676 747,689Q738,701 730,713Q722,725 720,730Q674,689 631,662Q588,634 546,617L546,627Q546,696 495,727Q444,757 361,756ZM18,775Q11,739 7,680Q3,620 2,548Q0,475 2,397Q3,319 7,245Q11,171 18,109Q24,46 33,6L96,21Q86,58 79,117Q72,176 68,248Q63,319 62,395Q61,470 63,541Q65,612 70,670Q74,728 81,764L18,775ZM365,699Q422,699 453,681Q484,662 484,622Q484,617 484,611Q483,605 483,596Q459,590 435,588Q411,585 386,584Q334,584 308,603Q281,621 280,644Q280,666 302,683Q323,699 365,699Z',
+
+    strokes: [
+      'M61,23L29,387L33,650L53,768',
+      'M229,218L731,197',
+      'M499,1L517,669L476,701L415,722L331,727L261,682L256,601L326,563L401,554L476,564L589,601L667,643L739,701',
+    ],
+    strokeViewBox: '0 0 760 775',
+    // A ojo sobre el dibujo, y provisional: entra en la pasada única de encaje
+    // que se hará al cerrar el contenido del tomo 1.
+    strokeFit: { top: 8, right: 10, bottom: 6, left: 8 },
+  },
 ]
 
 // Acceso por id, que es como lo pide una página del tomo.
