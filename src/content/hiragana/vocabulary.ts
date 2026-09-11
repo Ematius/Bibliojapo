@@ -187,6 +187,12 @@ export const VOCABULARY: Word[] = [
     ],
     meaning: 'sí',
     audio: '/audio/hiragana/b1/hai.wav',
+    // El «sí» se cuenta con el gesto: asentir con la cabeza, marcado por las
+    // flechas y por la silueta de la cabeza un instante antes.
+    image: '/images/hiragana/imagesSupport/hai-si.webp',
+    imageAlt:
+      'Un niño con sudadera azul asintiendo con la cabeza, sonriendo, con flechas ' +
+      'que marcan el movimiento y un bocadillo que dice «sí»',
   },
   {
     id: 'iie',
