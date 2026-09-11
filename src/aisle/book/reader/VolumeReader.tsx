@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { PageFlip } from 'page-flip'
 import type { Word } from '../../../content/types'
+import type { VolumeContent } from '../../../api/volumes'
 import { readBookmark, writeBookmark } from '../../../shared/bookmark'
 import { READER, buildVolumePages } from './readerConfig'
-import { HIRAGANA_BY_ID } from '../../../content/hiragana/kana'
-import { VOCABULARY_BY_ID } from '../../../content/hiragana/vocabulary'
-import { BLOCKS_BY_ID, progressThrough } from '../../../content/hiragana/blocks'
-import { SENTENCES_BY_ID } from '../../../content/hiragana/sentences'
 import { ContentText } from '../parts/ContentText'
 import { WordCard } from '../recognition/WordCard'
 import { WordGap } from '../recognition/WordGap'
@@ -32,12 +29,16 @@ import { mountKanaBoard } from '../writing/kanaBoard'
 import './VolumeReader.scss'
 
 interface VolumeReaderProps {
-  // Qué bloque del temario contiene este tomo, por su id en `content/`.
+  // Todo lo que lleva este tomo: su bloque y lo que el bloque nombra.
   //
-  // Es lo único que distingue un libro de otro: de aquí salen sus lecciones, y de
-  // las lecciones todas sus páginas. Un segundo tomo es un segundo bloque en la
+  // Es lo único que distingue un libro de otro: del bloque salen sus lecciones, y
+  // de las lecciones todas sus páginas. Un segundo tomo es un segundo bloque en la
   // estantería, sin una línea más de lector.
-  blockId: string
+  //
+  // Llega hecho, pedido al servidor, y el lector no mira el temario por su
+  // cuenta: es lo que permite que del tomo 2 en adelante el contenido no viaje
+  // en el bundle. Ver `api/volumes.ts`.
+  content: VolumeContent
   // Medidas de UNA página, en píxeles. Salen del hueco de papel del libro
   // pintado, así que las hojas que se pasan caen justo sobre las dibujadas.
   pageWidth: number
@@ -77,15 +78,32 @@ interface VolumeReaderProps {
 // Por eso las páginas viven en una plantilla que React sí gobierna, y al
 // contenedor de la librería se le entregan copias: cada montaje parte de un
 // juego nuevo y el desmontaje puede arrasar con lo suyo sin tocar el original.
-export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderProps) {
+export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderProps) {
   const templateRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
+
+  // El bloque entero, para la portada y para saber de qué tomo es el marcador.
+  const { block } = content
+  const blockId = block.id
+
+  // Lo que el paquete trae en listas, puesto en mapas para buscar por id. Son las
+  // mismas búsquedas que antes se hacían contra el temario completo; ahora se
+  // hacen solo contra lo que este tomo necesita.
+  const { kanaById, wordsById, sentencesById } = useMemo(
+    () => ({
+      kanaById: new Map(content.kana.map((kana) => [kana.id, kana])),
+      wordsById: new Map(content.words.map((word) => [word.id, word])),
+      sentencesById: new Map(content.sentences.map((sentence) => [sentence.id, sentence])),
+    }),
+    [content],
+  )
 
   // El repaso se sortea UNA vez por tomo abierto, no en cada render: sin
   // `useMemo` volvería a barajar en cualquier repintado ajeno —por ejemplo, el
   // libro reaccionando a otra cosa— y las páginas cambiarían debajo de quien
-  // estuviera leyendo. Las dependencias vacías son a propósito: un libro nuevo
-  // es un componente nuevo, así que un repaso nuevo ya llega solo con el montaje.
+  // estuviera leyendo. Solo depende del paquete del tomo, que es el mismo objeto
+  // mientras el tomo siga en la estantería: un libro nuevo es un componente nuevo,
+  // así que un repaso nuevo ya llega solo con el montaje.
   const { pages: readerPages, pools } = useMemo(() => {
     // Solo entran en el libro las lecciones que se pueden dar ENTERAS. El bloque
     // nombra los seis kana del temario, pero el contenido se va escribiendo a
@@ -108,15 +126,15 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
     // cómo suena y cómo se representa. Sin las dos, la plana sale muda o vacía.
     const usable = (word?: Word) => Boolean(word?.audio && (word.swatch || word.image))
 
-    const lessons = (BLOCKS_BY_ID.get(blockId)?.lessons ?? []).flatMap((lesson) => {
-      const word = lesson.wordId ? VOCABULARY_BY_ID.get(lesson.wordId) : undefined
-      const ready = usable(word) && HIRAGANA_BY_ID.has(lesson.kanaId)
+    const lessons = block.lessons.flatMap((lesson) => {
+      const word = lesson.wordId ? wordsById.get(lesson.wordId) : undefined
+      const ready = usable(word) && kanaById.has(lesson.kanaId)
       if (!ready || !word) return []
 
       // La segunda palabra no condiciona a la lección: si no está lista, las dos
       // últimas planas repiten la primera y la lección entra igual. Es media
       // mejora, no media lección.
-      const word2 = lesson.wordId2 ? VOCABULARY_BY_ID.get(lesson.wordId2) : undefined
+      const word2 = lesson.wordId2 ? wordsById.get(lesson.wordId2) : undefined
 
       return [
         {
@@ -141,16 +159,14 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
         lesson.kanaId,
         lessons
           .slice(0, index + 1)
-          .flatMap((seen) => HIRAGANA_BY_ID.get(seen.kanaId)?.character ?? []),
+          .flatMap((seen) => kanaById.get(seen.kanaId)?.character ?? []),
       )
     })
 
     return { pages: buildVolumePages(lessons), pools }
-  }, [blockId])
-
-  // El bloque entero, para la portada. No va en el `useMemo` porque no hay nada
-  // que calcular: es una búsqueda en un mapa.
-  const block = BLOCKS_BY_ID.get(blockId)
+    // Depende del paquete y de nada más: mientras sea el mismo tomo, el repaso
+    // no se vuelve a sortear.
+  }, [block, kanaById, wordsById])
 
   useEffect(() => {
     const template = templateRef.current
@@ -321,36 +337,35 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                   // sino del bloque entero, así que se resuelve la primera y por
                   // su cuenta.
                   if (page.shows === 'intro') {
-                    return block ? (
+                    return (
                       <VolumeIntro
                         block={block}
                         characters={block.lessons.flatMap(
-                          (lesson) => HIRAGANA_BY_ID.get(lesson.kanaId)?.character ?? [],
+                          (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
                         )}
-                        progress={progressThrough(block.id)}
+                        progress={content.progress}
                       />
-                    ) : null
+                    )
                   }
 
                   if (page.shows === 'goal') {
-                    return block ? (
+                    return (
                       <VolumeGoal
                         groups={groupSentencesByTopic(
-                          block.sentenceIds.flatMap((id) => SENTENCES_BY_ID.get(id) ?? []),
-                          (id) => VOCABULARY_BY_ID.get(id),
+                          block.sentenceIds.flatMap((id) => sentencesById.get(id) ?? []),
+                          (id) => wordsById.get(id),
                         )}
                       />
-                    ) : null
+                    )
                   }
 
                   // Las dos hojas que anuncian el examen final. Como la portada,
                   // hablan del tomo entero y no de un kana, así que se resuelven
                   // antes de exigir ninguno.
                   if (page.shows === 'finalNotice' || page.shows === 'finalScope') {
-                    const characters =
-                      block?.lessons.flatMap(
-                        (lesson) => HIRAGANA_BY_ID.get(lesson.kanaId)?.character ?? [],
-                      ) ?? []
+                    const characters = block.lessons.flatMap(
+                      (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
+                    )
 
                     return page.shows === 'finalNotice' ? (
                       <FinalNotice characters={characters} />
@@ -359,7 +374,7 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                     )
                   }
 
-                  const word = page.wordId ? VOCABULARY_BY_ID.get(page.wordId) : undefined
+                  const word = page.wordId ? wordsById.get(page.wordId) : undefined
 
                   // Las dos caras del enunciado sin palabras van SOLO de la
                   // palabra: no estudian ningún kana en concreto, así que se
@@ -374,7 +389,7 @@ export function VolumeReader({ blockId, pageWidth, pageHeight }: VolumeReaderPro
                   }
 
                   const kana = page.kanaId
-                    ? HIRAGANA_BY_ID.get(page.kanaId)
+                    ? kanaById.get(page.kanaId)
                     : undefined
                   if (!kana) return null
 

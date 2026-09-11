@@ -1,22 +1,34 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import type { StyleWithVars } from '../../shared/styleWithVars'
+import type { VolumeAccess } from '../../api/volumes'
+import { openAccountPanel } from '../../account/accountPanelState'
 import {
-  VOLUME_FACES,
+  FORE_EDGE,
+  VOLUME_LOCK,
   VOLUME_PULL,
-  VOLUME_SHAPE,
   type ShelfVolume as ShelfVolumeData,
 } from './shelfConfig'
 import { openBookLayout, type OpenBookLayout } from '../book/opening/openingConfig'
 import { useVolumePull, type VolumeStage } from './useVolumePull'
+import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
 import { VolumeReader } from '../book/reader/VolumeReader'
+import { VolumeStatus } from '../book/reader/VolumeStatus'
+import { useVolumeContent } from '../book/reader/useVolumeContent'
 import { VolumeScrim } from './VolumeScrim'
+import { ShelfNote } from './ShelfNote'
 import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 import './ShelfVolume.scss'
 
+// `pending` mientras no se sabe todavía si el tomo se puede coger. Se ve igual
+// que uno cerrado, pero no responde: decir «se abre al sellar el anterior» a
+// alguien que quizá ya lo ha sellado sería mentirle.
+export type ShelfAccess = VolumeAccess | 'pending'
+
 interface ShelfVolumeProps {
   volume: ShelfVolumeData
+  access: ShelfAccess
 }
 
 // La pose que sigue a cada una. El recorrido es de ida: se coge el tomo, se le
@@ -54,18 +66,41 @@ const RELAY_STAGES = new Set<VolumeStage>(['spine', 'edge'])
 // giros. La tapa no hay que esconderla en ningún momento: al
 // girar se pone de perfil ella sola, que es justo lo que hace un libro de
 // verdad.
-export function ShelfVolume({ volume }: ShelfVolumeProps) {
+export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   const [stage, setStage] = useState<VolumeStage>('shelf')
   const [layout, setLayout] = useState<OpenBookLayout | null>(null)
   // La apertura tiene dos momentos: el libro abriéndose y el libro ya abierto.
   // Las hojas del lector no se montan hasta el segundo, porque antes no hay
   // hueco de papel donde ponerlas — todavía se está formando.
   const [opened, setOpened] = useState(false)
+  // La nota que explica por qué un tomo no sale. Null cuando no hay nada que
+  // decir. Va en un objeto y no como texto suelto para que pulsar dos veces
+  // seguidas cuente como dos notas: con el mismo texto, React no vería cambio y
+  // la cuenta atrás no se reiniciaría.
+  const [note, setNote] = useState<{ text: string } | null>(null)
   const rootRef = useRef<HTMLButtonElement>(null)
   const boxRef = useRef<HTMLSpanElement>(null)
   const turnedRef = useRef<HTMLImageElement>(null)
+  const stopNudgeRef = useRef<(() => void) | null>(null)
 
   useVolumePull({ rootRef, boxRef, turnedRef, volume, stage })
+
+  // Las hojas se piden en cuanto el tomo sale de la balda. Ver `useVolumeContent`.
+  const { load, retry } = useVolumeContent(volume.blockId, stage !== 'shelf')
+
+  // La nota se va sola al rato. Cada nota nueva reinicia la cuenta, así que
+  // pulsar dos veces seguidas no la hace desaparecer antes de tiempo.
+  useEffect(() => {
+    if (!note) return
+
+    const hide = gsap.delayedCall(VOLUME_LOCK.noteSeconds, () => setNote(null))
+    return () => {
+      hide.kill()
+    }
+  }, [note])
+
+  // Si el tomo se desmonta a medio tirón, el tirón se para con él.
+  useEffect(() => () => stopNudgeRef.current?.(), [])
 
   // Medidas del libro abierto, tomadas del stage. Se miden aquí y no dentro del
   // libro porque es el tomo quien conoce su sitio en la escena.
@@ -140,20 +175,65 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [stage, dismiss])
 
+  // Pulsar el tomo. Fuera de la balda, o si se puede coger, sigue el recorrido de
+  // siempre; en la balda y cerrado, se resiste y dice por qué.
+  const onPress = () => {
+    if (stage !== 'shelf' || access === 'open') {
+      goTo(NEXT_STAGE[stage])
+      return
+    }
+
+    // Aún no se sabe cómo está: no se promete nada.
+    if (access === 'pending') return
+
+    // Ganado pero sin sitio donde guardar la insignia. No hace falta tirón ni
+    // nota: lo que hay que hacer es crear la cuenta, y el panel ya lo explica.
+    if (access === 'needsAccount') {
+      openAccountPanel(
+        `Has sellado el tomo ${volume.number - 1}. Crea tu cuenta para guardar su ` +
+          `insignia y abrir el tomo ${volume.number}.`,
+      )
+      return
+    }
+
+    stopNudgeRef.current?.()
+    if (boxRef.current) stopNudgeRef.current = nudgeVolume(boxRef.current)
+
+    setNote({
+      text:
+        access === 'soon'
+          ? `El tomo ${volume.number} todavía se está escribiendo.`
+          : `Se abre al sellar el tomo ${volume.number - 1}.`,
+    })
+  }
+
+  const { shape } = volume.art
   const volumeStyle: StyleWithVars = {
     '--volume-x': volume.x,
     '--volume-base-y': volume.baseY,
     '--volume-focus-height': VOLUME_PULL.focusHeight,
-    '--cover-ratio': VOLUME_SHAPE.coverRatio,
-    '--cover-turned-ratio': VOLUME_SHAPE.coverTurnedRatio,
-    '--spine-ratio': VOLUME_SHAPE.spineRatio,
+    '--volume-pull-seconds': VOLUME_PULL.durationSeconds,
+    '--cover-ratio': shape.coverRatio,
+    '--cover-turned-ratio': shape.coverTurnedRatio,
+    '--spine-ratio': shape.spineRatio,
   }
 
   // Lo que promete el botón es dónde acaba la pulsación, no el giro que arranca:
   // desde la portada, pulsar ya no gira el tomo y se queda ahí — lo abre, porque
   // el giro de canto viene encadenado detrás.
+  //
+  // En la balda depende de si se puede coger: un tomo cerrado no promete «coger»,
+  // dice qué le falta.
+  const shelfLabel = {
+    open: `Coger ${volume.label}`,
+    pending: volume.label,
+    locked: `${volume.label}, cerrado: se abre al sellar el tomo ${volume.number - 1}`,
+    needsAccount: `${volume.label}: crea tu cuenta para abrirlo`,
+    soon: `${volume.label}, todavía se está escribiendo`,
+  }[access]
+
   const label = {
-    shelf: `Coger ${volume.label}`,
+    shelf: shelfLabel,
     spine: `Ver la portada de ${volume.label}`,
     cover: `Abrir ${volume.label}`,
     edge: `Abrir ${volume.label}`,
@@ -177,23 +257,32 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
           onOpened={() => setOpened(true)}
           onClosed={() => goTo('shelf')}
         >
+          {/* Las hojas si ya han llegado; si no, el papel dice qué pasa. Lo
+              normal es lo primero: se pidieron al coger el tomo. */}
           {opened ? (
-            <VolumeReader
-              blockId={volume.blockId}
-              pageWidth={layout.paper.width / 2}
-              pageHeight={layout.paper.height}
-            />
+            load.status === 'ready' ? (
+              <VolumeReader
+                content={load.content}
+                pageWidth={layout.paper.width / 2}
+                pageHeight={layout.paper.height}
+              />
+            ) : (
+              <VolumeStatus load={load} onRetry={retry} />
+            )
           ) : null}
         </VolumeOpening>
       ) : null}
 
+      <ShelfNote volume={volume} message={note?.text ?? null} />
+
       <button
         type="button"
-        className={`shelf-volume shelf-volume--${stage}`}
+        className={`shelf-volume shelf-volume--${stage} shelf-volume--${access}`}
         style={volumeStyle}
         ref={rootRef}
-        onClick={() => goTo(NEXT_STAGE[stage])}
+        onClick={onPress}
         aria-label={label}
+        aria-disabled={access === 'pending' ? true : undefined}
         // Con el libro abierto el tomo sigue montado —es quien guarda la pose y
         // las referencias— pero deja de ser alcanzable: el que manda entonces es
         // el lector.
@@ -204,19 +293,20 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
         {/* Las cuatro caras del tomo, de la más lejana a la más cercana: cuando
             el giro deja alguna casi de canto, el orden del DOM decide cuál se
             pinta encima si el navegador no puede desempatar por profundidad. */}
+        {/* La contra reutiliza la portada: todavía no hay dibujo propio. */}
         <span className="shelf-volume__face shelf-volume__face--back">
-          <img src={VOLUME_FACES.back} alt="" draggable="false" />
+          <img src={volume.art.cover} alt="" draggable="false" />
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--cover">
-          <img src={VOLUME_FACES.cover} alt="" draggable="false" />
+          <img src={volume.art.cover} alt="" draggable="false" />
 
           {/* La misma portada, pero pintada de tres cuartos y con el bloque de
               hojas. Vive dentro de la cara, así que gira con ella; solo se
               enciende al final del giro, cuando el tomo ya está de frente. */}
           <img
             className="shelf-volume__turned"
-            src={VOLUME_FACES.coverTurned}
+            src={volume.art.coverTurned}
             alt=""
             draggable="false"
             ref={turnedRef}
@@ -225,12 +315,12 @@ export function ShelfVolume({ volume }: ShelfVolumeProps) {
           {/* El canto cuelga de la portada y no de la caja: es la única forma de
               llevarlo al fondo con medidas en proporción. */}
           <span className="shelf-volume__face shelf-volume__face--edge">
-            <img src={VOLUME_FACES.foreEdge} alt="" draggable="false" />
+            <img src={FORE_EDGE} alt="" draggable="false" />
           </span>
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--spine">
-          <img src={VOLUME_FACES.spine} alt="" draggable="false" />
+          <img src={volume.art.spine} alt="" draggable="false" />
         </span>
       </span>
     </button>

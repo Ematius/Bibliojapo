@@ -18,20 +18,13 @@
 // stage recorta la escena por los lados. Ver `styles/_stage.scss`.
 // ───────────────────────────────────────────────────────────────────────────
 
-// Un tomo antes de colocarse: qué es y qué trae dentro, sin dónde va.
-export interface VolumeEntry {
-  id: string
-  // Texto accesible, en español.
-  label: string
-  // Qué bloque del temario contiene, por su id en `content/hiragana/blocks.ts`.
-  // Un tomo ES un bloque: aquí se dice cuál y de ahí sale todo lo que lleva.
-  blockId: string
-}
-
-// El mismo tomo ya colocado. Las tres medidas las pone `placeVolumes`, y son las
-// que consumen el componente y su animación — de ahí que sigan llamándose igual
-// que cuando se escribían a mano.
-export interface ShelfVolume extends VolumeEntry {
+// Dónde queda un tomo en la balda. Las tres medidas las pone `placeVolumes`, y son
+// las que consumen el componente y su animación — de ahí que sigan llamándose
+// igual que cuando se escribían a mano.
+//
+// La rejilla no sabe qué es un tomo, solo cuánto abulta su lomo: lo demás lo
+// pone quien la usa. Ver `shelfConfig.ts`.
+export interface Placement {
   // Centro del lomo. Es el centro y no el borde para que al cambiar de altura el
   // tomo crezca hacia los lados por igual y no se desplace.
   x: number
@@ -146,15 +139,22 @@ export const SHELF_CAPACITY =
 // Coloca los tomos sobre la estantería por orden: se llena un vano, se pasa al
 // siguiente, y al agotarse los dos de una balda se baja a la de abajo.
 //
-// `spineRatio` es el grosor del lomo respecto a su alto, y sale del render en
-// `VOLUME_SHAPE`. Se recibe por parámetro en vez de importarse para que este
-// módulo no sepa nada de cómo está dibujado el tomo: aquí solo hay un mueble con
-// baldas y huecos, y vale igual el día que el libro se dibuje de otra manera.
-export function placeVolumes(
-  entries: readonly VolumeEntry[],
-  spineRatio: number,
-): ShelfVolume[] {
+// `spineRatioOf` dice el grosor del lomo de cada tomo respecto a su alto, y sale
+// de su render. Cada tomo trae el suyo —no todos los libros son igual de
+// gruesos—, y se pide por parámetro en vez de importarse para que este módulo no
+// sepa nada de cómo está dibujado el tomo: aquí solo hay un mueble con baldas y
+// huecos, y vale igual el día que el libro se dibuje de otra manera.
+export function placeVolumes<Entry>(
+  entries: readonly Entry[],
+  spineRatioOf: (entry: Entry) => number,
+): (Entry & Placement)[] {
   const { shelves, bays, sceneRatio, nominalHeight, maxFill, gap, volumesPerBay } = SHELF_GRID
+
+  // Dónde acaba el último tomo puesto en el vano en curso. Se lleva a mano y no
+  // se calcula con el puesto porque los lomos no miden igual: el tercero no está
+  // a dos lomos del primero, sino a lo que midan de verdad los dos de antes.
+  let bayInUse = -1
+  let cursor = 0
 
   return entries.map((entry, index) => {
     // Pasada la capacidad, los que sobran siguen en el último vano y se salen por
@@ -165,20 +165,20 @@ export function placeVolumes(
     const shelf = shelves[Math.floor(bayIndex / bays.length)]
     const bay = bays[bayIndex % bays.length]
 
+    // Vano nuevo: el primero se apoya en la ménsula de la izquierda.
+    if (bayIndex !== bayInUse) {
+      bayInUse = bayIndex
+      cursor = bay.from
+    }
+
     const height = Math.min(nominalHeight, (shelf.baseY - shelf.ceilingY) * maxFill)
     // El alto va en fracción del alto de la escena y la x en fracción de su
     // ancho, así que el grosor del lomo hay que pasarlo de un lado al otro.
-    const spine = (height * spineRatio) / sceneRatio
-    // Qué puesto ocupa dentro de su vano. El primero se apoya en la ménsula de la
-    // izquierda y los demás en el anterior; se suma medio lomo porque la x es su
-    // centro y no su borde.
-    const place = index - bayIndex * volumesPerBay
+    const spine = (height * spineRatioOf(entry)) / sceneRatio
+    // Se suma medio lomo porque la x es su centro y no su borde.
+    const x = cursor + spine / 2
+    cursor += spine * (1 + gap)
 
-    return {
-      ...entry,
-      x: bay.from + spine / 2 + place * spine * (1 + gap),
-      baseY: shelf.baseY,
-      height,
-    }
+    return { ...entry, x, baseY: shelf.baseY, height }
   })
 }

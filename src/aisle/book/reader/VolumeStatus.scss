@@ -1,0 +1,56 @@
+// El papel del libro abierto mientras sus hojas no han llegado. Con la tinta del
+// tomo: es parte del libro, no un aviso de aplicación puesto encima.
+//
+// Ocupa solo la página DERECHA, que es la primera que se lee en un tomo japonés.
+// Centrado en el pliego entero, el texto cruzaba el lomo y se partía en la
+// costura.
+
+.volume-status {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  // Las medidas de texto van atadas a la página, como en las hojas: el libro
+  // mide lo que el libro pintado, no lo que la ventana.
+  container-type: inline-size;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2em;
+
+  // El aire a los lados va en el texto y no en la caja: los `cq*` se miden sobre
+  // el CONTENIDO del contenedor, y un relleno en la caja lo encogía tanto que la
+  // letra se quedaba siempre en el mínimo.
+  &__text {
+    margin: 0;
+    padding: 0 12cqw;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 4.8cqw, 1.15rem);
+    line-height: 1.5;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  // La espera late despacio: es algo que está pasando, no algo que ha fallado.
+  &__text--waiting {
+    animation: volume-status-pulse var(--duration-pulse) ease-in-out infinite;
+  }
+}
+
+// Un bucle decorativo, que es para lo único que se usan keyframes de CSS. Ver
+// «Principios de animación» en CLAUDE.md.
+@keyframes volume-status-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .volume-status__text--waiting {
+    animation: none;
+  }
+}

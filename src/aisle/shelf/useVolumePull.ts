@@ -4,7 +4,6 @@ import { OPENING, OPENING_FRAMES } from '../book/opening/openingConfig'
 import {
   COVER_TURN_ART as coverArt,
   VOLUME_PULL as pull,
-  VOLUME_SHAPE as shape,
   VOLUME_TURN as turn,
   type ShelfVolume,
 } from './shelfConfig'
@@ -73,6 +72,8 @@ export function useVolumePull({
     if (!root || !box || !turned || !stageEl) return
 
     const stageRect = stageEl.getBoundingClientRect()
+    // La forma de ESTE tomo: cada uno tiene la suya.
+    const shape = volume.art.shape
 
     // En la pose adelantada el tomo queda centrado, así que `focusY` es su centro
     // y hay que bajar hasta su base, que es por donde está anclado.

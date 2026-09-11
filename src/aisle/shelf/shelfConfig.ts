@@ -5,66 +5,61 @@
 // `shelfGrid.ts`. Este archivo dice cómo ES un tomo —sus caras, su forma, cómo
 // gira y cómo se adelanta— y cuáles hay; la estantería dice dónde caben.
 
-import { placeVolumes, type VolumeEntry } from './shelfGrid'
+import { BLOCK_PLAN } from '../../content/hiragana/blocks'
+import { placeVolumes, type Placement } from './shelfGrid'
+import { VOLUME_ART, type VolumeArt } from './volumeArt'
 
-export type { ShelfVolume, VolumeEntry } from './shelfGrid'
-
-// Las dos caras del tomo, renderizadas de frente y con cámara ortográfica. No
-// son una ilustración del libro: son sus caras reales, que se montan en el
-// espacio para formar la esquina. Por eso no valdría un render en tres cuartos,
-// que trae la perspectiva ya pintada en el píxel.
-export const VOLUME_FACES = {
-  spine: '/images/hallways/books/tomo-lomo.webp',
-  cover: '/images/hallways/books/tomo-tapa.webp',
-  // La contratapa. Es la que asoma por la derecha con el tomo en la balda: la
-  // portada de verdad cuelga del otro lado, mirando al fondo del estante, y solo
-  // aparece cuando el tomo se gira hacia el lector. De momento reutiliza el
-  // render de la tapa; cuando haya un dibujo propio de la contra, se cambia aquí.
-  back: '/images/hallways/books/tomo-tapa.webp',
-  // El canto: el filo del bloque de hojas, la cara opuesta al lomo. Es lo que
-  // cierra el libro por detrás y lo que se asoma por el lado al girarlo, y sin
-  // ella el tomo se lee como dos cartones sueltos en vez de como un objeto.
-  foreEdge: '/images/hallways/books/libro-cerrado-100.webp',
-  // La portada pintada de tres cuartos: la tapa con el bloque de hojas asomando
-  // por la izquierda, con su perspectiva y su sombra ya resueltas en el píxel.
-  //
-  // Existe porque armar esa misma vista con planos quedaba pobre: por geometría
-  // el canto sale de un par de píxeles y se lee como una raya, no como el filo
-  // de un libro. En la pose de portada se pone encima y sustituye al montaje.
-  coverTurned: '/images/hallways/books/tapa-degrado.webp',
-}
-
-// Proporciones del tomo, medidas sobre esos dos renders y expresadas respecto a
-// su ALTO. De aquí sale la forma de la caja: el alto es la referencia, el ancho
-// de la tapa y el grosor del lomo se derivan de él.
+// El canto: el filo del bloque de hojas, la cara opuesta al lomo. Es lo que
+// cierra el libro por detrás y lo que se asoma por el lado al girarlo, y sin él
+// el tomo se lee como dos cartones sueltos en vez de como un objeto.
 //
-// Los dos archivos no tenían exactamente la misma altura (1441 y 1415 px), pero
-// da igual: cada cara se dimensiona por su propia proporción a una altura común,
-// así que la diferencia se normaliza sola.
-export const VOLUME_SHAPE = {
-  coverRatio: 905 / 1415, // ancho de la tapa ÷ alto
-  spineRatio: 284 / 1441, // grosor del lomo ÷ alto
-  // La tapa pintada de tres cuartos, medida sobre su archivo ya recortado a la
-  // silueta. Es más ancha que la plana, y la diferencia entre las dos es
-  // exactamente el bloque de hojas que asoma. De ahí sale su ancho en el CSS,
-  // así que no hay ningún número puesto a ojo para encajarla.
-  coverTurnedRatio: 938 / 1358,
+// Es el único que comparten todos los tomos: las hojas son papel y el papel es el
+// mismo en toda la colección. Lomo y tapas son de cada uno — ver `volumeArt.ts`.
+export const FORE_EDGE = '/images/hallways/books/libro-cerrado-100.webp'
+
+// Un tomo antes de colocarse: qué es y qué trae dentro, sin dónde va.
+export interface VolumeEntry {
+  id: string
+  // Qué puesto ocupa en la colección, empezando por 1. Es lo que se le dice a
+  // quien lee: «se abre al sellar el tomo 3».
+  number: number
+  // Texto accesible, en español.
+  label: string
+  // Qué bloque del temario contiene, por su id en `content/hiragana/blocks.ts`.
+  // Un tomo ES un bloque: aquí se dice cuál y de ahí sale todo lo que lleva.
+  blockId: string
+  // Sus caras y su forma.
+  art: VolumeArt
 }
 
-// La colección, EN ORDEN. Es lo único que hay que tocar para poner un tomo más
-// en la estantería: se añade su entrada al final y la rejilla lo coloca sola, en
-// el primer hueco libre. No hay coordenadas que medir ni que revisar después.
+// El mismo tomo ya posado en su balda.
+export type ShelfVolume = VolumeEntry & Placement
+
+// La colección, EN ORDEN: un tomo por cada bloque del temario, escrito o no. Doce
+// bloques son doce tomos, y el día que el plan cambie la estantería cambia con él
+// sin tocar nada aquí.
+//
+// Cada tomo se lleva las caras de su mismo puesto en `VOLUME_ART`. Si algún día
+// hubiera más bloques que dibujos, los que falten repiten el último —se ve, que
+// es lo que hace falta: un tomo sin tapas sería mucho peor que uno repetido—.
 //
 // El orden de esta lista ES el orden en la balda: se llena el vano izquierdo de
-// la balda de arriba, luego el derecho, y de ahí se baja. Reordenarla recoloca
-// la estantería entera.
-const VOLUME_ORDER: readonly VolumeEntry[] = [
-  { id: 'nibanme', label: 'Tomo にばんめ', blockId: 'b1' },
-]
+// la balda de arriba, luego el derecho, y de ahí se baja. No hay coordenadas que
+// medir: la rejilla lo coloca sola.
+const VOLUME_ORDER: readonly VolumeEntry[] = BLOCK_PLAN.map((blockId, index) => ({
+  id: blockId,
+  number: index + 1,
+  label: `Tomo ${index + 1}`,
+  blockId,
+  art: VOLUME_ART[Math.min(index, VOLUME_ART.length - 1)],
+}))
 
 // Los mismos tomos, ya posados en su balda. `placeVolumes` les añade el centro
-// del lomo, la balda y el alto a partir de la rejilla y del grosor del render.
-export const SHELF_VOLUMES = placeVolumes(VOLUME_ORDER, VOLUME_SHAPE.spineRatio)
+// del lomo, la balda y el alto a partir de la rejilla y del grosor de cada uno.
+export const SHELF_VOLUMES: readonly ShelfVolume[] = placeVolumes(
+  VOLUME_ORDER,
+  (entry) => entry.art.shape.spineRatio,
+)
 
 // Poses del tomo, en grados de giro sobre su eje vertical.
 //
@@ -179,6 +174,29 @@ export const COVER_TURN_ART = {
   // guarda desde esta pose: entonces vuelve al estante y la tapa pintada ya no
   // se corresponde con lo que se ve.
   hideSeconds: 0.18,
+}
+
+// Lo que pasa al pulsar un tomo que todavía no se puede coger.
+//
+// No sale: da un tirón corto, como un libro encajado que no cede, y encima aparece
+// una nota diciendo por qué. El tirón es lo que hace que no parezca roto — un tomo
+// que no reacciona a nada se lee como un fallo; uno que se resiste, como algo que
+// se abrirá.
+export const VOLUME_LOCK = {
+  // Cuánto cede al tirar, en grados de giro sobre su eje. Poco: es un libro que
+  // no sale, no uno que se mueve.
+  nudgeDeg: 7,
+  nudgeSeconds: 0.12,
+  // La vuelta a su sitio, con un pequeño rebote de algo que se suelta.
+  settleSeconds: 0.7,
+  settleEase: 'elastic.out(1, 0.4)',
+  // Cuánto se queda la nota a la vista antes de irse sola. Da para leer una
+  // frase corta dos veces.
+  noteSeconds: 3.2,
+  noteFadeSeconds: 0.35,
+  // Si no se ha podido preguntar qué tomos están abiertos, cuánto se espera para
+  // volver a intentarlo.
+  retrySeconds: 4,
 }
 
 // El velo que separa el tomo del pasillo mientras está fuera de la balda.

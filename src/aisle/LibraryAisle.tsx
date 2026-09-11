@@ -3,6 +3,7 @@ import { findAisle } from '../shared/aisles'
 import { SiteNav } from '../shared/SiteNav'
 import { ShelfVolume } from './shelf/ShelfVolume'
 import { SHELF_VOLUMES } from './shelf/shelfConfig'
+import { useVolumeAccess } from './shelf/useVolumeAccess'
 import './LibraryAisle.scss'
 
 // Pasillo de la biblioteca: la estantería de una sección.
@@ -14,6 +15,10 @@ import './LibraryAisle.scss'
 export function LibraryAisle() {
   const { aisleId } = useParams()
   const aisle = findAisle(aisleId)
+  // Qué tomos se pueden coger. Se pide una vez para toda la estantería y no tomo
+  // a tomo: es una sola pregunta al servidor, y así los doce se enteran a la vez
+  // de que se ha sellado uno.
+  const access = useVolumeAccess()
 
   // Un pasillo que no existe manda al vestíbulo, que es donde están todos los
   // que sí existen. `replace` evita que la URL inválida quede en el historial y
@@ -30,7 +35,11 @@ export function LibraryAisle() {
         <img className="library-aisle__scene" src={aisle.scene} alt="" draggable="false" />
 
         {SHELF_VOLUMES.map((volume) => (
-          <ShelfVolume key={volume.id} volume={volume} />
+          <ShelfVolume
+            key={volume.id}
+            volume={volume}
+            access={access.get(volume.blockId) ?? 'pending'}
+          />
         ))}
       </div>
 
