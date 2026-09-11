@@ -27,7 +27,7 @@ export const VOCABULARY: Word[] = [
     meaning: 'azul',
     // Dibujo y no `swatch`, aunque sea un color: un cuadrado azul dice «azul» pero
     // no dice nada más, y esta es la primera palabra del tomo. La escena la sostiene
-    // mejor. El `swatch` se queda en `ao`, que es el azul como sustantivo.
+    // mejor. `ao` usa este mismo dibujo.
     image: '/images/hiragana/imagesSupport/aoi-azul.webp',
     imageAlt:
       'Un niño con kimono azul pintando una gran mancha azul con un pincel de ' +
@@ -47,10 +47,14 @@ export const VOCABULARY: Word[] = [
       { kana: 'お', romaji: 'o' },
     ],
     meaning: 'azul (sustantivo)',
-    // Aquí sí un color y no un dibujo: «el azul» como cosa en sí no tiene escena
-    // que valga, es el color y nada más. Tirando a apagado y con un punto de gris,
-    // porque sobre el papel crema del tomo un azul de pantalla chillaría.
-    swatch: '#3f6f96',
+    // El mismo dibujo que `aoi`, y no un círculo de color: en la hoja del enunciado
+    // un círculo suelto se leía como una imagen que faltaba, no como «azul». Las dos
+    // son el mismo azul, así que comparten escena; lo que las separa es el sonido.
+    image: '/images/hiragana/imagesSupport/aoi-azul.webp',
+    imageAlt:
+      'Un niño con kimono azul pintando una gran mancha azul con un pincel de ' +
+      'caligrafía, junto a un cuenco de tinta azul, con hortensias azules y el ' +
+      'monte Fuji al fondo',
     audio: '/audio/hiragana/b1/ao.wav',
   },
   {
