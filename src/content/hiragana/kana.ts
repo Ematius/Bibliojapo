@@ -67,8 +67,11 @@ export const HIRAGANA: Kana[] = [
     romaji: 'i',
     audio: '/audio/hiragana/b1/i.wav',
     mnemonic:
-      'En Japón son tan meticulosos que lo ven todo con lupa. Por eso, si miras ' +
-      'con lupa un **i**mperdible, es el hiragana **い** sin problema alguno.',
+      'En Japón siempre van perfectos, pero nada es **i**mperdible, y lo saben,' +
+      'por eso siempre llevan consigo un **i**mperdible, asi que hay que mirar' +
+      'con lupa en el bolso de un japones y siempre encontraremos un **i**mperdible,' +
+      'para ir tan perfectos como ellos.' +
+      'Todo es gracias al hiragana **い** es la razón de que vayan perfectos siempre.',
     // Los dos trazos, contados sobre el imperdible: el cuerpo a la izquierda y la
     // aguja suelta a la derecha.
     strokeOrder: [
@@ -132,10 +135,7 @@ export const HIRAGANA: Kana[] = [
 
     // Dos trazos: el final de la brocha y la curva de la uña. Como en い, esta
     // lista mide lo mismo que `strokeOrder`.
-    strokes: [
-      'M157,29L406,127',
-      'M23,370L322,274L443,365L410,666L218,865',
-    ],
+    strokes: ['M157,29L406,127', 'M23,370L322,274L443,365L410,666L218,865'],
     strokeViewBox: '0 0 483 888',
     // A ojo sobre el dibujo, y provisional: la brocha cae sobre la punta del
     // pincel y la curva sobre la uña. Estos son los cuatro números a mover si el
