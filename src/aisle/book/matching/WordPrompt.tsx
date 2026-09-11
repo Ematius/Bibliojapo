@@ -4,13 +4,6 @@ import './WordPrompt.scss'
 
 interface WordPromptProps {
   word: Word
-  // Si además del sonido se enseña la representación de la palabra.
-  //
-  // El temario sube el listón quitándola: con ella, ver y oír van juntos, y basta
-  // con una de las dos pistas para saber qué palabra es. Sin ella, el sonido se
-  // queda solo — es el ejercicio auditivo puro, y es lo que separa reconocer una
-  // palabra de reconocerla SOLO por cómo suena.
-  showVisual?: boolean
 }
 
 // El enunciado de la hoja de al lado: la palabra sin escribirla, sin traducirla y
@@ -29,11 +22,11 @@ interface WordPromptProps {
 // un color esa representación es el color; para いえ o はは es un dibujo. Las dos
 // las dice la palabra, no esta hoja. Ver `swatch` e `image` en
 // `content/types.ts`.
-export function WordPrompt({ word, showVisual = true }: WordPromptProps) {
+export function WordPrompt({ word }: WordPromptProps) {
   // El color manda sobre el dibujo: una palabra que ES un color se enseña con su
   // color, y añadirle además un dibujo sería decir lo mismo dos veces.
-  const swatch = showVisual ? word.swatch : undefined
-  const image = showVisual && !swatch ? word.image : undefined
+  const swatch = word.swatch
+  const image = !swatch ? word.image : undefined
 
   return (
     <div className="word-prompt">

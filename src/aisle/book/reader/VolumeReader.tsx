@@ -110,8 +110,8 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // mano y no todo llega a la vez, así que el tomo crece según se cierra en vez
     // de exigir el bloque completo para poder abrirse.
     //
-    // Se comprueban las tres cosas que las ocho planas necesitan, y no solo que
-    // el kana y la palabra existan:
+    // Se comprueban las tres cosas que las planas de la lección necesitan, y no
+    // solo que el kana y la palabra existan:
     //
     //   · la ficha del kana, o no hay ni mnemotecnia ni trazos;
     //   · el audio de la palabra, porque tres planas son de escuchar;
@@ -378,16 +378,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined
 
-                  // Las dos caras del enunciado sin palabras van SOLO de la
-                  // palabra: no estudian ningún kana en concreto, así que se
-                  // resuelven antes de exigir uno. Son las únicas hojas del tomo
-                  // que no llevan kana.
+                  // El enunciado sin palabras va SOLO de la palabra: no estudia
+                  // ningún kana en concreto, así que se resuelve antes de exigir
+                  // uno. Es la única hoja del tomo que no lleva kana.
                   if (page.shows === 'prompt') {
                     return word ? <WordPrompt word={word} /> : null
-                  }
-
-                  if (page.shows === 'promptAudio') {
-                    return word ? <WordPrompt word={word} showVisual={false} /> : null
                   }
 
                   const kana = page.kanaId

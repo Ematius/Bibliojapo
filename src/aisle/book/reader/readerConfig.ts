@@ -38,7 +38,6 @@ import { FINAL_SEAL } from '../../../api/contract'
 //   match         emparejar el sonido del kana con su forma, arrastrando
 //   matchWord     lo mismo con una palabra: los demás kana vienen ya puestos
 //   prompt        la palabra sin escribirla: solo lo que significa y cómo suena
-//   promptAudio   lo mismo, pero sin el color: solo queda el sonido
 //   build         la palabra entera por construir, con todos los huecos vacíos
 //   drill         dos preguntas en una hoja: reconstruir la palabra con tarjetas
 //                 y, debajo, escribir su lectura completa en rōmaji
@@ -63,7 +62,6 @@ export type PageContent =
   | 'match'
   | 'matchWord'
   | 'prompt'
-  | 'promptAudio'
   | 'build'
   | 'drill'
   | 'examKana'
@@ -118,7 +116,8 @@ export interface ReadyLesson {
   wordId2?: string
 }
 
-// Las ocho planas con las que se enseña UN kana, en orden de lectura.
+// Las siete planas con las que se enseña UN kana, en orden de lectura, y detrás su
+// repaso y su examen.
 //
 // Es una función y no una lista escrita a mano porque el tomo repite exactamente
 // esta secuencia para cada kana del bloque. Antes eran dieciséis páginas con el
@@ -218,22 +217,15 @@ export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): S
     //
     // La izquierda junta reconstruir la palabra con tarjetas y, debajo, escribir su
     // lectura completa. Ver `WordDrill`.
+    //
+    // Aquí acaba la lección. Hubo una octava plana, el ejercicio 9, que repetía
+    // esta sin la imagen para dejar solo el sonido. Se quitó: una hoja con un
+    // título y un botón se leía como una página rota, y la de la izquierda era la
+    // misma que esta, así que no añadía peldaño.
     {
       right: { wordId: lastWordId, title: 'Escucha', shows: 'prompt' },
       left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
     },
-
-    // Octava plana: el ejercicio 9, el mismo peldaño sin la imagen. La derecha
-    // retira la representación visual —solo queda el sonido, que sin nada que mirar
-    // deja de poder sustituir al oído—; la izquierda repite la misma hoja compuesta
-    // que la plana anterior. Sigue con la segunda palabra: el salto de vocabulario
-    // ya se dio en la plana anterior, y darlo otra vez aquí mezclaría dos
-    // dificultades en el mismo peldaño.
-    {
-      right: { wordId: lastWordId, title: 'Escucha', shows: 'promptAudio' },
-      left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
-    },
-
   ]
 
   // Y la lección se cierra en dos tiempos: primero el repaso, con la ayuda de
@@ -298,8 +290,8 @@ function placeSpread(spread: Spread, key: string, rightFolio: number): ReaderPag
 // el repaso al final.
 //
 // Esto es lo que hace que el segundo libro no haya que escribirlo. Un tomo es su
-// lista de lecciones y nada más: con dos lecciones salen dieciséis páginas de
-// estudio, con seis salen cuarenta y ocho, y en ningún caso hay que tocar el
+// lista de lecciones y nada más: cada una son nueve planas —siete de estudio, el
+// repaso y el examen—, dieciocho páginas, y en ningún caso hay que tocar el
 // lector ni este archivo.
 // Lo que no se repasa nunca: presenta, pero no comprueba nada, así que volver a
 // verlo no diría si el kana se sabe.
