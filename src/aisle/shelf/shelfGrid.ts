@@ -8,10 +8,11 @@
 //
 // ── DE DÓNDE SALEN ESTOS NÚMEROS ───────────────────────────────────────────
 // De medir la propia ilustración (`pasillo-hiragana.webp`, 1672 × 941), no de
-// ajustar a ojo hasta que encajara. Las baldas se localizaron por la caída de luz
-// de su canto, y las ménsulas por su perfil de luminancia promediado en los
-// cuatro huecos: aparecen en la MISMA x en los cuatro, y eso es lo que convierte
-// esto en una rejilla y no en cuatro filas sueltas.
+// ajustar a ojo hasta que encajara. El apoyo de cada balda es donde acaban los
+// libros que YA vienen pintados en ella —el paso del lomo oscuro a la madera—, y
+// las ménsulas salen de su perfil de luminancia promediado en los cuatro huecos:
+// aparecen en la MISMA x en los cuatro, y eso es lo que convierte esto en una
+// rejilla y no en cuatro filas sueltas.
 //
 // Todo va en fracciones [0, 1] de la ilustración, no de la ventana. El origen es
 // su esquina superior izquierda, así que las medidas siguen valiendo cuando el
@@ -63,15 +64,22 @@ export const SHELF_GRID = {
 
   // Las cuatro baldas, de arriba abajo.
   //
-  // Los huecos NO miden lo mismo: el de arriba tiene 0,142 de aire y el tercero
-  // solo 0,090. En parte es la perspectiva —el tercero cae casi sobre la línea
-  // del horizonte, que está a media altura, y se ve aplastado— y en parte es que
-  // el mueble tiene el primer estante más alto a propósito.
+  // El apoyo se mide sobre los libros pintados, no sobre el tablero: donde
+  // apoyan ellos es donde apoya un libro en este dibujo. Por debajo de la línea
+  // del horizonte —que cae a media altura— se ve la cara de arriba de cada balda,
+  // y a ojo es fácil quedarse con su filo en vez de con el sitio donde de verdad
+  // se posa algo. Los valores heredados de la colocación a mano hacían eso: las
+  // tres baldas de abajo quedaban entre 12 y 22 milésimas altas —de 17 a 32 px en
+  // una pantalla de 1440— y los tomos se veían flotando. En la de arriba, por
+  // encima del horizonte, ya coincidía.
+  //
+  // El de arriba es el hueco más alto, 0,142 de aire, porque el mueble tiene el
+  // primer estante más alto a propósito; los otros tres rondan 0,11–0,13.
   shelves: [
     { baseY: 0.355, ceilingY: 0.213 },
-    { baseY: 0.485, ceilingY: 0.372 },
-    { baseY: 0.6, ceilingY: 0.51 },
-    { baseY: 0.725, ceilingY: 0.633 },
+    { baseY: 0.497, ceilingY: 0.372 },
+    { baseY: 0.622, ceilingY: 0.51 },
+    { baseY: 0.745, ceilingY: 0.633 },
   ] as const satisfies readonly Shelf[],
 
   // Los vanos donde se pueden dejar tomos, IGUALES en las cuatro baldas.
@@ -102,9 +110,11 @@ export const SHELF_GRID = {
 
   // Cuánto del hueco puede llegar a ocupar un tomo, como mucho.
   //
-  // Es el freno para las baldas bajas, donde `nominalHeight` no cabe: allí el
-  // tomo se recorta hasta esto y se ve algo menor, que es exactamente lo que les
-  // pasa a los libros pintados en esas mismas baldas.
+  // Es un freno por si algún hueco no diera para `nominalHeight`: el tomo se
+  // recorta hasta esto en vez de meterse en la balda de encima. Con el apoyo bien
+  // medido apenas actúa —en las dos baldas de abajo quita un 1,5 %—, y los tomos
+  // miden lo mismo en las cuatro, igual que los libros pintados, que rondan 0,1
+  // en todas.
   maxFill: 0.88,
 
   // Aire entre dos tomos vecinos, en fracción del ancho de un lomo.
@@ -123,13 +133,13 @@ export const SHELF_GRID = {
   // Cuántos tomos van en cada vano antes de pasar al siguiente.
   //
   // Por ancho cabrían unos ocho, pero doce lomos apretados en un vano y los otros
-  // siete vacíos no se lee como una colección: se lee como un error. Con tres,
-  // los doce tomos del hiragana llenan las dos baldas de arriba en grupos
-  // apoyados contra su ménsula, y la estantería crece de arriba abajo según se
-  // van desbloqueando.
+  // siete vacíos no se lee como una colección: se lee como un error. Con dos, los
+  // doce tomos del hiragana llenan las tres baldas de arriba en parejas apoyadas
+  // contra su ménsula, y la de abajo queda libre con sitio para cuatro más. Con
+  // tres se quedaban apretados en las dos de arriba y medio mueble vacío.
   //
   // Es el número que hay que tocar para repartirlos de otra forma.
-  volumesPerBay: 3,
+  volumesPerBay: 2,
 }
 
 // Cuántos tomos admite la estantería con este reparto.
