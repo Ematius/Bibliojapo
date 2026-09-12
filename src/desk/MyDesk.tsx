@@ -80,8 +80,8 @@ export function MyDesk() {
           ilustración se pintaría encima del texto por el orden de pintado.
           Es también lo que irá menguando según los objetos ocupen su sitio. */}
       <div className="my-desk__content">
-        <h1 className="my-desk__title">Mi escritorio</h1>
-
+        {/* Sin título: la escena ya dice dónde estás, y el nombre está en la barra
+            de arriba con su enlace marcado. Ninguna otra escena lo lleva. */}
         {session.status === 'loading' ? (
           <p className="my-desk__note">Un momento…</p>
         ) : session.status === 'signedOut' ? (
@@ -92,16 +92,30 @@ export function MyDesk() {
             </p>
 
             {/* El motivo va con la llamada: el panel empieza por él en vez de
-                presentarse solo. Ver `accountPanelState.ts`. */}
-            <button
-              className="my-desk__cta"
-              type="button"
-              onClick={() =>
-                openAccountPanel('Crea tu cuenta para guardar aquí los tomos que cierres.')
-              }
-            >
-              Crear cuenta
-            </button>
+                presentarse solo. Y cada botón abre por SU vía: quien ya tiene
+                cuenta no debería tener que pasar por el formulario de crearla
+                para encontrar el enlace de entrar. Ver `accountPanelState.ts`. */}
+            <div className="my-desk__ways">
+              <button
+                className="my-desk__cta"
+                type="button"
+                onClick={() =>
+                  openAccountPanel('Crea tu cuenta para guardar aquí los tomos que cierres.')
+                }
+              >
+                Crear cuenta
+              </button>
+
+              <button
+                className="my-desk__cta my-desk__cta--quiet"
+                type="button"
+                onClick={() =>
+                  openAccountPanel('Entra para recuperar tus sellos y tus insignias.', 'signIn')
+                }
+              >
+                Ya tengo cuenta
+              </button>
+            </div>
           </section>
         ) : badges === null ? (
           <p className="my-desk__note">Buscando tus tomos…</p>

@@ -34,15 +34,6 @@
     padding: 7.5rem 1.5rem 4rem;
   }
 
-  &__title {
-    max-width: 60rem;
-    margin: 0 auto 1.5rem;
-    font-family: var(--font-display);
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: 700;
-    line-height: 1.15;
-  }
-
   // Lo que se dice mientras no hay tomos que enseñar: que están llegando, que no
   // han llegado, o que todavía no hay ninguno. Los tres casos son la misma voz
   // tranquila, así que comparten aspecto.
@@ -73,8 +64,20 @@
     color: var(--color-ink-soft);
   }
 
-  &__cta {
+  // Las dos vías, una al lado de la otra. La separación de arriba vive aquí y no
+  // en el botón: el botón dice cómo se ve, y dónde va lo dice quien lo pone.
+  //
+  // En columna por debajo de cierto ancho, que es donde dos botones de píldora
+  // dejan de caber en una línea sin partirse.
+  &__ways {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
     margin-top: 1.5rem;
+  }
+
+  &__cta {
     padding: 0.75rem 1.75rem;
     border: none;
     border-radius: var(--radius-pill);
@@ -94,6 +97,16 @@
       outline: 2px solid var(--color-brass);
       outline-offset: 3px;
     }
+  }
+
+  // La segunda vía, apagada. Las dos llevan al mismo panel, pero solo una es la
+  // que se espera de quien llega aquí por primera vez: con las dos igual de
+  // fuertes, hay que pararse a leer para saber cuál es la suya.
+  &__cta--quiet {
+    background: none;
+    color: var(--color-ink-soft);
+    font-weight: 400;
+    text-decoration: underline;
   }
 
   // ── Los tomos ganados ────────────────────────────────────────────────────
