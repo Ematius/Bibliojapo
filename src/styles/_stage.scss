@@ -57,39 +57,46 @@
 // de `scene-stage`: sin variables, esto no protege nada, pero tampoco rompe la
 // escena.
 //
+// ── CONTRA QUÉ SE MIDE ─────────────────────────────────────────────────────
+// Contra la caja del padre, en unidades de contenedor (`cqw`/`cqh`), así que
+// quien lo use tiene que declararla `container-type: size`.
+//
+// No vale `100vw`: `html` reserva siempre el hueco de la barra de scroll
+// —`scrollbar-gutter: stable`, en `base.scss`— y esos 15 px cuentan en `vw` pero
+// no en el ancho disponible. Encuadrando por `vw`, todo quedaba medio hueco
+// descentrado. Tampoco valen los porcentajes: el alto saldría de una cuenta hecha
+// sobre el ancho.
+//
 // ── POR QUÉ NO HAY `transform` ─────────────────────────────────────────────
 // La escena ya no está centrada en la ventana, así que su sitio se dice con `left`
 // y `top` y no con un desplazamiento de media caja. Los dos van con `clamp` para
 // que la zona quede centrada MIENTRAS no se vea el borde del dibujo: en cuanto
 // centrarla dejaría hueco por un lado, la escena se queda pegada a ese borde.
 @mixin framed-stage($width: 1672, $height: 941) {
-  // Alto de la ventana, que se repite en todas las cuentas de abajo.
-  --stage-vh: calc(var(--vh, 1vh) * 100);
-
   // Lo que mediría la escena cubriendo la ventana, y lo que mide dejando la zona
   // justa dentro. Manda la menor: cubrir mientras se pueda, y encoger si no.
-  --stage-cover: max(100vw, calc(var(--stage-vh) * #{$width} / #{$height}));
+  --stage-cover: max(100cqw, calc(100cqh * #{$width} / #{$height}));
   --stage-fit: min(
-    calc(100vw / var(--frame-width, 1)),
-    calc(var(--stage-vh) * #{$width} / #{$height} / var(--frame-height, 1))
+    calc(100cqw / var(--frame-width, 1)),
+    calc(100cqh * #{$width} / #{$height} / var(--frame-height, 1))
   );
   --stage-width: min(var(--stage-cover), var(--stage-fit));
   --stage-height: calc(var(--stage-width) * #{$height} / #{$width});
 
   // Cuánto sobra de escena por cada eje. Negativo mientras la escena sea mayor que
   // la ventana, que es lo normal: es lo que hay para desplazarla.
-  --stage-slack-x: calc(100vw - var(--stage-width));
-  --stage-slack-y: calc(var(--stage-vh) - var(--stage-height));
+  --stage-slack-x: calc(100cqw - var(--stage-width));
+  --stage-slack-y: calc(100cqh - var(--stage-height));
 
   position: absolute;
   left: clamp(
     min(0px, var(--stage-slack-x)),
-    calc(50vw - var(--frame-center-x, 0.5) * var(--stage-width)),
+    calc(50cqw - var(--frame-center-x, 0.5) * var(--stage-width)),
     max(0px, var(--stage-slack-x))
   );
   top: clamp(
     min(0px, var(--stage-slack-y)),
-    calc(var(--stage-vh) / 2 - var(--frame-center-y, 0.5) * var(--stage-height)),
+    calc(50cqh - var(--frame-center-y, 0.5) * var(--stage-height)),
     max(0px, var(--stage-slack-y))
   );
   width: var(--stage-width);
