@@ -1,14 +1,6 @@
-// Las frases del pasillo de hiragana.
-//
-// Salen de `docs/estructura-aprendizaje.md`. Todas siguen el mismo patrón —TEMA
-// + は + PREDICADO— y todas necesitan la misma regla: `topic-wa`, en
-// `grammar.ts`.
-//
-// «はい» y «いいえ» —sí / no— NO están aquí. No son esta clase de frase: son una
-// palabra sola usada entera como respuesta, y esa palabra ya está en
-// `vocabulary.ts` con sus ids `hai` e `iie`. Convertirlas en `Sentence` sería
-// duplicar el mismo dato con otro nombre, y el bloque guarda referencias, nunca
-// copias.
+// «はい» y «いいえ» —sí / no— NO están aquí: son una palabra usada entera como
+// respuesta, y ya están en `vocabulary.ts`. Convertirlas en `Sentence` sería
+// duplicar el mismo dato con otro nombre.
 import type { Sentence } from '../types'
 
 export const SENTENCES: Sentence[] = [
@@ -105,9 +97,8 @@ export const SENTENCES: Sentence[] = [
   },
   {
     id: 'ha-wa-ii',
-    // Dos は seguidos y cada uno es una cosa distinta: el primero es la palabra
-    // «diente» —se lee «ha»—, el segundo es esta misma partícula —se lee «wa»—.
-    // «hawaii» sale de aquí, y es la frase entera, no una coincidencia.
+    // Dos は seguidos y cada uno es una cosa: el primero es la palabra «diente» —«ha»—,
+    // el segundo la partícula —«wa»—.
     text: 'ははいい',
     meaning: 'El diente está bien',
     wordIds: ['ha', 'ii'],

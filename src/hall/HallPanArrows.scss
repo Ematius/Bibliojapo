@@ -1,0 +1,59 @@
+// Mismo cristal que la barra de navegación y no el latón de las pantallas de dentro:
+// son mandos de la interfaz, no parte de la escena.
+.hall-pan {
+  --pan-inset: 1rem;
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-glass-edge);
+  border-radius: var(--radius-pill);
+  background: var(--color-glass);
+  backdrop-filter: blur(0.75rem);
+  box-shadow: var(--shadow-float);
+  color: var(--color-nav-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--duration-fast) ease;
+
+  &--left {
+    left: var(--pan-inset);
+  }
+
+  &--right {
+    right: var(--pan-inset);
+  }
+
+  &--right &__icon {
+    transform: scaleX(-1);
+  }
+
+  &__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  // Sin escena hacia ese lado la flecha desaparece del todo: atenuada pero visible se
+  // leería como algo roto, y no lo está.
+  &:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-nav-ink);
+    outline-offset: 3px;
+  }
+}

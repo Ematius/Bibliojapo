@@ -1,41 +1,23 @@
-// Las caras de cada tomo, en el orden de la colección: la primera es la del tomo
-// 1, la segunda la del 2, y así.
+// Las caras de cada tomo, en el orden de la colección: la primera es la del tomo 1.
 //
-// ── De dónde salen ─────────────────────────────────────────────────────────
-// De `books/moreBoks/`, tres renders por tomo: el lomo (el impar), la tapa plana
-// (el par siguiente) y la tapa girada, con el bloque de hojas asomando por la
-// izquierda (N.N o N.1). Se recortaron a su silueta y se pasaron a WebP en
-// `books/volumes/`; los PNG originales siguen en su carpeta sin tocar.
+// Salen de `books/moreBoks/`, tres renders por tomo —lomo, tapa plana y tapa girada con
+// el bloque de hojas—, recortados a su silueta en `books/volumes/`.
 //
-// Hay trece juegos y el temario tiene doce bloques, así que el último
-// (27 / 28 / 28.1) sobra de momento.
-//
-// ── Por qué la tapa se mide sobre la girada y no sobre la plana ────────────
-// Las dos no tienen la misma proporción: la plana es 2:3 exacto y la tapa que se
-// ve en el render girado es alrededor de un 12 % más estrecha. Al final del giro
-// una releva a la otra, y cada una con su proporción daba un salto de ancho justo
-// en el momento en que el tomo se queda quieto.
-//
-// Así que la proporción del tomo se toma de la girada —su ancho SIN el bloque de
-// hojas— y la plana se estira hasta ella. En la balda y durante el giro la plana
-// solo se ve de escorzo y no se nota; en el relevo, las dos coinciden al píxel.
-// Por eso cada tomo apunta dónde acaban sus hojas: es lo que separa la tapa del
-// resto del render.
+// La proporción del tomo se toma de la GIRADA, no de la plana: la plana es 2:3 exacto y
+// la tapa del render girado es un 12 % más estrecha, y al relevarse al final del giro cada
+// una con la suya daba un salto de ancho. La plana se estira hasta la girada. Por eso cada
+// tomo apunta dónde acaban sus hojas: es lo que separa la tapa del resto del render.
 //
 // SI SE CAMBIA UN RENDER hay que volver a recortarlo y volver a medir sus números.
 
 const DIR = '/images/hallways/books/volumes'
 
-// Proporciones del tomo, respecto a su ALTO. De aquí sale la forma de la caja:
-// el alto es la referencia, y el ancho de la tapa y el grosor del lomo se derivan
-// de él.
+// Proporciones del tomo respecto a su ALTO: el alto es la referencia, y el ancho de la
+// tapa y el grosor del lomo se derivan de él.
 export interface VolumeShape {
-  // Ancho de la tapa ÷ alto.
   coverRatio: number
-  // Grosor del lomo ÷ alto.
   spineRatio: number
-  // La tapa pintada de tres cuartos, con el bloque de hojas, ÷ alto. Es más
-  // ancha que `coverRatio`, y la diferencia es exactamente ese bloque.
+  // Con el bloque de hojas. La diferencia con `coverRatio` es exactamente ese bloque.
   coverTurnedRatio: number
 }
 
@@ -47,11 +29,9 @@ export interface VolumeArt {
   shape: VolumeShape
 }
 
-// Un tomo a partir de lo medido sobre sus recortes, en píxeles:
-//   spine        ancho y alto del lomo
-//   turned       ancho y alto de la tapa girada
-//   coverLeft    dónde empieza la tapa dentro de la girada, o sea dónde acaban las
-//                hojas. Medido sobre la franja central, donde no hay herrajes.
+// A partir de lo medido sobre los recortes, en píxeles. `coverLeft` es dónde empieza la
+// tapa dentro de la girada, o sea dónde acaban las hojas: medido sobre la franja central,
+// donde no hay herrajes.
 function volumeArt(
   volume: number,
   spine: [number, number],

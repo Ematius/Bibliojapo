@@ -2,24 +2,18 @@ import gsap from 'gsap'
 import { SOLVED_EVENT } from '../parts/solved'
 import { fetchSeals, saveSeal } from '../../../api/progress'
 
-// El sello del mini examen: cuenta las pruebas de cada examen y lo estampa cuando
-// están todas resueltas.
+// El sello del examen: cuenta las pruebas de cada uno y lo estampa cuando están todas
+// resueltas.
 //
-// ── Por qué esto no es un hook ─────────────────────────────────────────────
-// Lo mismo que `kanaStrokeAnimation.ts`, `wordChoice.ts` y compañía: page-flip
-// clona las páginas de React, así que esto recibe el nodo YA clonado y trabaja
-// sobre él. Un `useEffect` se quedaría mirando la copia que nadie ve.
+// No es un hook porque page-flip clona las páginas: esto recibe el nodo YA clonado.
 //
-// ── Cómo sabe cuántas pruebas tiene un examen ──────────────────────────────
-// Contándolas. Cada hoja del examen lleva `data-exam` con el id de su kana, y
-// dentro están los ejercicios de siempre; el examen de あ son todos los ejercicios
-// que cuelguen de una hoja marcada con `data-exam="a"`, estén en la hoja derecha o
-// en la izquierda. No hay ningún número escrito a mano: añadir una prueba más a la
-// plana del examen la suma sola.
+// Cuántas pruebas tiene un examen se sabe CONTÁNDOLAS: cada hoja lleva `data-exam` con el id
+// de su kana, y el examen de あ son todos los ejercicios que cuelguen de una hoja marcada
+// con `data-exam="a"`, esté a la derecha o a la izquierda. No hay ningún número escrito a
+// mano: añadir una prueba a la plana la suma sola.
 //
-// Los ejercicios avisan por `bof:solved`, que burbujea —ver `parts/solved.ts`—, y
-// se cuentan por el nodo que lo manda, así que resolver dos veces el mismo no
-// cuenta dos veces.
+// Los ejercicios avisan por `bof:solved`, que burbujea, y se cuentan por el nodo que lo
+// manda: resolver dos veces el mismo no cuenta dos veces.
 const EXERCISES = '.kana-match, .word-gap, .word-pick'
 
 export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) | null {
@@ -39,23 +33,19 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
     exams.set(id, exam)
   }
 
-  // Solo interesa el examen que lleva sello, que hoy es uno: el final. Los de cada
-  // lección se cuentan igual al recorrer las hojas, pero sin sello no hay nada que
-  // estampar ni nada que guardar, así que se sueltan aquí en vez de arrastrarlos
-  // vacíos y tener que preguntar por ellos en cada acierto.
+  // Solo interesa el examen que lleva sello. Los de cada lección se cuentan igual al recorrer
+  // las hojas, pero sin sello no hay nada que estampar ni que guardar.
   for (const [id, exam] of [...exams]) {
     if (exam.seals.length === 0 || exam.checks.size === 0) exams.delete(id)
   }
 
   if (exams.size === 0) return null
 
-  // Los que ya estaban ganados de otras veces salen puestos y sin animación: no
-  // se acaban de conseguir, ya estaban ahí. Estamparlos otra vez al abrir el libro
-  // convertiría un logro en un efecto que se repite solo.
+  // Los ya ganados de otras veces salen puestos y sin animación: estamparlos otra vez al
+  // abrir el libro convertiría un logro en un efecto que se repite solo.
   //
-  // Llegan con retraso —pueden venir de la cuenta, y la cuenta está en el
-  // servidor—, pero no importa: para cuando alguien llega a la última hoja del
-  // examen ya han llegado. Si el libro se cierra antes, la respuesta se tira.
+  // Llegan con retraso —pueden venir de la cuenta—, pero para cuando alguien llega a la
+  // última hoja ya han llegado. Si el libro se cierra antes, la respuesta se tira.
   let mounted = true
   void fetchSeals(blockId).then((earned) => {
     if (!mounted) return
@@ -79,15 +69,12 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
     exam.solved.add(check)
     if (exam.solved.size < exam.checks.size) return
 
-    // ── El momento en que se cierra un tomo ──────────────────────────────────
-    // Aquí, y en ningún otro sitio, es donde el tomo queda superado. El sello se
-    // guarda y de ahí sale todo lo demás: con cuenta, el servidor lo convierte en
-    // la insignia que abre el tomo siguiente; sin ella, se queda en el navegador
-    // hasta que se cree una. Ver `api/progress.ts`.
+    // Aquí, y en ningún otro sitio, es donde el tomo queda superado: con cuenta el servidor
+    // convierte el sello en la insignia que abre el siguiente; sin ella se queda en el
+    // navegador hasta que se cree una.
     //
-    // Se estampa sin esperar a la respuesta. El sello ya está ganado y apuntado
-    // en el navegador en cuanto se llama; lo que puede tardar o fallar es la
-    // subida a la cuenta, y eso se reintenta solo la próxima vez que se entre.
+    // Se estampa sin esperar a la respuesta: el sello ya está ganado y apuntado en el
+    // navegador, y la subida se reintenta sola la próxima vez que se entre.
     void saveSeal(blockId, id).catch(() => undefined)
     exam.seals.forEach((seal) => stamp(seal))
   }
@@ -100,18 +87,15 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
   }
 }
 
-// El gesto de estampar: el sello baja de golpe, aplasta contra el papel y se
-// asienta. Tres tiempos, y el del medio es el que lo hace parecer un sello y no
-// una imagen que aparece — un sello de verdad rebota un poco al levantar la mano.
+// El sello baja de golpe, aplasta contra el papel y se asienta. El tiempo del medio es el
+// que lo hace parecer un sello y no una imagen que aparece.
 //
-// El giro es fijo y no al azar: está torcido porque las manos no estampan rectas,
-// pero que cambie en cada partida haría que la misma página se viera distinta cada
-// vez que se abre, y eso ya no es un sello, es un adorno inquieto.
+// El giro es fijo y no al azar: está torcido porque las manos no estampan rectas, pero que
+// cambiara en cada partida lo convertiría en un adorno inquieto.
 function stamp(seal: HTMLElement): void {
   seal.classList.add('exam-seal--earned')
 
-  // Quien ha pedido menos movimiento se queda con el sello puesto y sin el golpe.
-  // La clase de arriba ya lo deja visible, así que no se pierde nada.
+  // Con «reducir movimiento», el sello puesto y sin el golpe: la clase ya lo deja visible.
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
   gsap

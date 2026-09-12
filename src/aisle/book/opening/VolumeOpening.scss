@@ -1,23 +1,18 @@
-// El libro abriéndose, centrado en la ventana.
-//
-// Sin drop-shadow: los fotogramas ya traen su sombra pintada, y añadir un filtro
-// encima obligaría a repintar la zona entera en cada frame del fundido.
+// El libro abriéndose, centrado en la ventana. Sin drop-shadow: los fotogramas ya traen su
+// sombra pintada, y un filtro encima obligaría a repintar la zona en cada frame del fundido.
 
 .volume-opening {
-  // `fixed` y no `absolute`: el libro abierto ya no es parte de la escena sino
-  // algo que se pone delante de ella, y lo que tiene que quedar centrado es la
-  // ventana. Estando dentro del stage, `absolute` lo centraba en la ESCENA, que
-  // desde que el pasillo encuadra por la estantería está descentrada: en una
-  // pantalla estrecha el libro se iba a un lado. Ver `styles/_stage.scss`.
+  // `fixed` y no `absolute`: lo que tiene que quedar centrado es la VENTANA. Dentro del stage,
+  // `absolute` lo centraba en la escena, que desde que el pasillo encuadra por la estantería
+  // está descentrada, y en una pantalla estrecha el libro se iba a un lado.
   position: fixed;
   top: 50%;
   left: 50%;
   z-index: 4;
   transform: translate(-50%, -50%);
 
-  // Los cinco apilados en el mismo hueco. `contain` en vez de estirar: si algún
-  // fotograma llega en un lienzo de otra proporción, se respeta en vez de
-  // deformarlo. Anclados abajo para que la encuadernación no flote.
+  // Los cinco apilados en el mismo hueco. `contain` en vez de estirar, por si algún fotograma
+  // llega en un lienzo de otra proporción. Anclados abajo para que la encuadernación no flote.
   &__frame {
     position: absolute;
     inset: 0;
@@ -28,8 +23,8 @@
     user-select: none;
   }
 
-  // El hueco de las hojas dentro del libro pintado. Las medidas llegan en línea
-  // desde la config, que es donde están tomadas sobre el archivo.
+  // El hueco de las hojas dentro del libro pintado. Las medidas llegan en línea desde la
+  // config, que es donde están tomadas sobre el archivo.
   &__paper {
     position: absolute;
   }

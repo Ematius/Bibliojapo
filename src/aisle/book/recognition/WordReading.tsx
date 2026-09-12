@@ -7,17 +7,11 @@ interface WordReadingProps {
   kana: Kana
 }
 
-// La misma palabra que en `WordCard`, pero dicha en romaji: `aoi` con la `a`
-// destacada.
+// La misma palabra que en `WordCard`, dicha en rōmaji: `aoi` con la `a` destacada.
 //
-// Es la hoja de partida del reconocimiento inverso. En el ejercicio anterior se
-// veía あおい y había que sacar el sonido; aquí se da el sonido y en la hoja de al
-// lado hay que reconstruir la escritura. Lo que se aprende es lo mismo visto del
-// otro lado, y por eso las dos hojas se parecen tanto a propósito: cambiar la
-// presentación además de la dirección haría parecer que son dos cosas distintas.
-//
-// Qué se destaca no lo decide este componente: destaca la lectura de lo que
-// coincida con el kana que se estudia, igual que `WordCard` destaca su carácter.
+// Es la hoja de partida del reconocimiento inverso, y se parece tanto a `WordCard` a
+// propósito: cambiar la presentación además de la dirección haría parecer que son dos cosas
+// distintas. Destaca la lectura de lo que coincida con el kana que se estudia.
 export function WordReading({ word, kana }: WordReadingProps) {
   return (
     <div className="word-reading">

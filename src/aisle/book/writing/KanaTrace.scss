@@ -1,9 +1,8 @@
 // La pauta para escribir el kana a mano: los pasos del trazado y la pizarra.
 //
-// Todo lo impreso —marcos, cruces guía, trazos de referencia— usa el tono del
-// pliegue del papel o tinta muy rebajada, nunca tinta plena. Es lo que hace que
-// se lea como pauta de cuaderno y no como algo ya escrito: lo que el cuaderno
-// trae de fábrica tiene que verse más flojo que lo que uno escribe encima.
+// Todo lo impreso —marcos, cruces guía, trazos de referencia— usa el tono del pliegue del
+// papel o tinta muy rebajada, nunca tinta plena: lo que el cuaderno trae de fábrica tiene que
+// verse más flojo que lo que uno escribe encima.
 
 .kana-trace {
   width: 100%;
@@ -24,43 +23,38 @@
     text-wrap: pretty;
   }
 
-  // Los pasos, uno al lado del otro y repartiéndose el ancho a partes iguales.
-  //
-  // En fila y sin envolver: el hiragana no pasa de cuatro trazos y así se leen
-  // como una secuencia de izquierda a derecha. El día que esto sirva para kanji
-  // —doce o más trazos— habrá que dejarlos saltar de línea, o saldrán del tamaño
-  // de un sello.
+  // Los pasos, en fila y sin envolver: el hiragana no pasa de cuatro trazos y así se leen como
+  // una secuencia. El día que esto sirva para kanji —doce o más— habrá que dejarlos saltar de
+  // línea, o saldrán del tamaño de un sello.
   &__steps {
     width: 100%;
     display: flex;
+    justify-content: center;
     gap: 1.2cqh;
   }
 
+  // Referencia, no protagonista: la pizarra es donde se escribe, así que la casilla se queda
+  // pequeña y a tamaño fijo en vez de estirarse a llenar la fila. `flex-shrink` la encoge si
+  // algún día hay más trazos de los que caben, en vez de desbordar la hoja.
   &__step {
-    flex: 1;
-    // El número de la esquina se mide contra la casilla, así que la casilla
-    // tiene que ser contenedor.
+    flex: 0 1 15cqh;
+    max-width: 24cqw;
+    // El número de la esquina se mide contra la casilla, así que tiene que ser contenedor.
     container-type: size;
     container-name: step;
   }
 
-  // Casilla de cuaderno: marco y cruz guía.
-  //
-  // Los pasos y la pizarra la comparten porque son la misma casilla a dos
-  // tamaños — lo que se mira y lo que se escribe tienen que estar cuadriculados
-  // igual, o la referencia no sirve para colocar nada.
+  // Casilla de cuaderno: marco y cruz guía. Los pasos y la pizarra la comparten porque son la
+  // misma casilla a dos tamaños — lo que se mira y lo que se escribe tienen que estar
+  // cuadriculados igual, o la referencia no sirve para colocar nada.
   &__step,
   &__board {
     position: relative;
     aspect-ratio: 1;
     border: 1px solid var(--color-page-fold);
 
-    // La cruz marca dónde cae el centro del carácter: es la referencia que evita
-    // que salga torcido o descentrado.
-    //
-    // En pseudo-elementos y no en degradados de fondo: un borde discontinuo lo
-    // puntea el navegador solo, y a base de degradados habría que dibujar cada
-    // guion a mano.
+    // La cruz marca dónde cae el centro del carácter. En pseudo-elementos y no en degradados
+    // de fondo: un borde discontinuo lo puntea el navegador solo.
     &::before,
     &::after {
       content: '';
@@ -68,7 +62,6 @@
       opacity: 0.75;
     }
 
-    // Eje horizontal.
     &::before {
       top: 50%;
       right: 0;
@@ -76,7 +69,6 @@
       border-top: 1px dashed var(--color-page-fold);
     }
 
-    // Eje vertical.
     &::after {
       top: 0;
       bottom: 0;
@@ -85,7 +77,6 @@
     }
   }
 
-  // El kana a medio escribir dentro de su casilla.
   &__glyph {
     position: absolute;
     inset: 8%;
@@ -93,16 +84,15 @@
     height: auto;
   }
 
-  // Un trazo ya dado en un paso anterior. Rebajado hasta casi desaparecer: está
-  // para situar el trazo nuevo, no para mirarlo.
+  // Un trazo ya dado en un paso anterior. Rebajado hasta casi desaparecer: está para situar
+  // el trazo nuevo, no para mirarlo.
   &__stroke {
     fill: none;
     stroke: var(--color-ink);
     stroke-linecap: round;
     stroke-linejoin: round;
-    // El mismo pincel que en la ilustración mnemotécnica, y por el mismo motivo:
-    // va emparejado con la silueta que lo recorta, y cambiarlo aquí sin cambiarlo
-    // allí daría dos letras distintas. Ver KanaStroke.scss.
+    // El mismo pincel que en la ilustración mnemotécnica: va emparejado con la silueta que lo
+    // recorta, y cambiarlo aquí sin cambiarlo allí daría dos letras distintas.
     stroke-width: 70;
     opacity: 0.16;
   }
@@ -112,7 +102,6 @@
     opacity: 0.72;
   }
 
-  // El número del paso, en la esquina.
   &__number {
     position: absolute;
     top: 5cqmin;
@@ -124,25 +113,19 @@
     line-height: 1;
   }
 
-  // La pizarra: la misma casilla, en grande y vacía.
-  //
-  // Se queda con todo el alto que sobre y de ahí saca su ancho, porque es
-  // cuadrada. El `max-width` es el tope por el otro lado: en una hoja baja y
-  // ancha, el cuadrado que cabe de alto se saldría por los lados.
+  // La pizarra: la misma casilla, en grande y vacía. Se queda con todo el alto que sobre y de
+  // ahí saca su ancho, porque es cuadrada. El `max-width` es el tope por el otro lado: en una
+  // hoja baja y ancha, el cuadrado que cabe de alto se saldría por los lados.
   &__board {
     flex: 1;
     min-height: 0;
     max-width: 100%;
   }
 
-  // Donde se escribe.
+  // Donde se escribe. `touch-action: none` no es opcional: sin él, arrastrar el dedo hace que
+  // el navegador desplace o amplíe la página en vez de dejar pintar, y el trazo sale a saltos.
   //
-  // `touch-action: none` no es opcional: sin él, arrastrar el dedo sobre la
-  // pizarra hace que el navegador desplace o amplíe la página en vez de dejar
-  // pintar, y el trazo sale a saltos o no sale.
-  //
-  // El tamaño de la rejilla de píxeles lo fija `kanaBoard.ts`; esto solo dice
-  // cuánto ocupa en la hoja.
+  // El tamaño de la rejilla de píxeles lo fija `kanaBoard.ts`.
   &__canvas {
     position: absolute;
     inset: 0;
@@ -152,11 +135,9 @@
     cursor: crosshair;
   }
 
-  // La corrección del último trazo.
-  //
-  // El hueco está reservado aunque no haya nada escrito: si la línea apareciera y
-  // desapareciera, la pizarra y el botón darían un salto cada vez que se levanta
-  // el dedo, justo en el momento en que se está mirando lo que se acaba de hacer.
+  // La corrección del último trazo. El hueco está reservado aunque no haya nada escrito: si la
+  // línea apareciera y desapareciera, la pizarra daría un salto cada vez que se levanta el
+  // dedo, justo cuando se está mirando lo que se acaba de hacer.
   &__result {
     flex: none;
     margin: 0;
@@ -168,8 +149,8 @@
     text-wrap: pretty;
   }
 
-  // El veredicto del kana terminado. Manda sobre el aviso de trazo: aquello se
-  // sustituye con cada movimiento y esto es el resultado del ejercicio.
+  // El veredicto del kana terminado. Manda sobre el aviso de trazo: aquello se sustituye con
+  // cada movimiento y esto es el resultado del ejercicio.
   &__verdict {
     flex: none;
     margin: 0;
@@ -179,23 +160,21 @@
     font-weight: 700;
     text-align: center;
 
-    // El hueco NO se reserva, al revés que en el aviso de trazo: esto aparece una
-    // sola vez, al terminar, y dejarle sitio vacío toda la sesión partiría en dos
-    // la hoja por una línea que casi nunca está.
+    // El hueco NO se reserva, al revés que en el aviso de trazo: esto aparece una sola vez, y
+    // dejarle sitio toda la sesión partiría la hoja en dos por una línea que casi nunca está.
     &:empty {
       display: none;
     }
   }
 
-  // Lo que ha sacado cada trazo, debajo y en voz baja.
   &__detail {
     flex: none;
     margin: 0;
     color: var(--color-ink-soft);
     font-family: var(--font-display);
     font-size: clamp(0.55rem, 3.8cqw, 0.9rem);
-    // Las cifras se leen en columna comparándolas entre sí, así que todas tienen
-    // que ocupar lo mismo: sin esto, un 100 y un 78 desalinean la fila.
+    // Las cifras se leen en columna comparándolas, así que todas tienen que ocupar lo mismo:
+    // sin esto, un 100 y un 78 desalinean la fila.
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.06em;
     text-align: center;
@@ -205,8 +184,6 @@
     }
   }
 
-  // El botón de borrar no lleva ninguna regla propia: se ve como todos —eso lo
-  // pone `BookButton.scss`— y se coloca donde lo deja la columna, sin margen
-  // añadido. Por eso aquí no hay `&__clear`: una regla vacía no dice nada, y
-  // buscarla para cambiar el aspecto llevaría al sitio equivocado.
+  // El botón de borrar no lleva regla propia: se ve como todos y se coloca donde lo deja la
+  // columna. Una regla vacía no diría nada y llevaría al sitio equivocado.
 }

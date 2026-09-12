@@ -7,16 +7,12 @@ interface WordCardProps {
   kana: Kana
 }
 
-// Una palabra de verdad, con el kana que se estudia destacado dentro.
+// Una palabra de verdad, con el kana que se estudia destacado dentro. Los kana que todavía
+// no se han visto se adelantan a propósito: aquí no hay que leerlos, solo verlos acompañando
+// al que ya se conoce.
 //
-// Es el salto del carácter suelto a la lengua: reconocer あ en una tabla no
-// demuestra gran cosa, y encontrarlo dentro de あおい sí. Los kana que todavía no
-// se han visto se adelantan a propósito —aquí no hay que leerlos, solo verlos
-// acompañando al que ya se conoce—.
-//
-// Qué destacar no lo decide este componente: destaca lo que coincida con el kana
-// que se está estudiando, así que la misma hoja sirve para cualquier kana de
-// cualquier pasillo sin tocar nada.
+// Qué destacar no lo decide este componente: destaca lo que coincida con el kana que se está
+// estudiando, así que la misma hoja sirve para cualquier kana de cualquier pasillo.
 export function WordCard({ word, kana }: WordCardProps) {
   return (
     <div className="word-card">

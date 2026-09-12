@@ -1,9 +1,6 @@
-// Emparejar el sonido con su kana.
-//
-// La hoja tiene dos zonas y se leen de arriba abajo: la pareja a medias, y debajo
-// el montón de tarjetas de donde sale la que falta. Ese orden es el enunciado —
-// «esto es lo que hay que completar, y esto es con qué»— y por eso el hueco va
-// arriba y no al lado.
+// Emparejar el sonido con su kana. La hoja tiene dos zonas y se leen de arriba abajo: la
+// pareja a medias, y debajo el montón de donde sale la que falta. Ese orden es el enunciado, y
+// por eso el hueco va arriba y no al lado.
 
 .kana-match {
   width: 100%;
@@ -17,42 +14,37 @@
   gap: 4cqh;
 }
 
-// La pareja: el hueco y su lectura, pegados como las dos mitades de una ficha de
-// dominó. La línea entre los dos es lo que dice que van juntos.
+// La pareja: el hueco y su lectura, pegados como las dos mitades de una ficha de dominó.
 .kana-match__pair {
   display: flex;
   align-items: stretch;
-  // La ficha nunca pasa del ancho de la hoja. Con tres kana y un significado
-  // largo —«muchos / abundante»— se salía por el borde; con esto, lo que cede es
-  // la pista, que se parte en líneas. Ver `.kana-match__clue--meaning`.
+  // La ficha nunca pasa del ancho de la hoja: con tres kana y un significado largo se salía
+  // por el borde. Lo que cede es la pista, que se parte en líneas.
   max-width: 100%;
   border: 2px solid var(--color-ink-soft);
   border-radius: 0.2em;
   font-size: clamp(1.1rem, 13cqmin, 2.6rem);
 }
 
-// La mitad escrita de la ficha: el hueco y, si el ejercicio va con la palabra
-// entera, los kana que la acompañan. La línea que separa las dos caras vive aquí y
-// no en el hueco, porque con varios kana el hueco ya no es la última pieza.
+// La mitad escrita de la ficha. La línea que separa las dos caras vive aquí y no en el hueco,
+// porque con varios kana el hueco ya no es la última pieza.
 .kana-match__written {
   // No encoge: los huecos tienen que seguir siendo del tamaño de una tarjeta.
-  // Si falta sitio, cede la pista de al lado.
   flex: none;
   display: flex;
   align-items: stretch;
   border-right: 2px solid var(--color-ink-soft);
   font-family: var(--font-body);
 
-  // Construyendo la palabra entera no hay otra cara: la pista está en la hoja de
-  // enfrente. Sin esto quedaría una línea suelta partiendo el borde de la ficha.
+  // Construyendo la palabra entera no hay otra cara: sin esto quedaría una línea suelta
+  // partiendo el borde de la ficha.
   &:last-child {
     border-right: none;
   }
 }
 
-// Un kana que acompaña, ya colocado. En tinta plena y no atenuado: es la pista con
-// la que se sabe dónde encaja el que falta, y apagarlo escondería justo lo que hay
-// que leer.
+// Un kana que acompaña, ya colocado. En tinta plena y no atenuado: es la pista con la que se
+// sabe dónde encaja el que falta.
 .kana-match__unit {
   display: flex;
   align-items: center;
@@ -63,11 +55,8 @@
   line-height: 1;
 }
 
-// Donde se suelta el kana.
-//
-// Va con el papel hundido de fondo: un hueco que se ve vacío antes de leer nada.
-// Es más ancho que un kana puesto para que se lea como un sitio donde cabe algo,
-// no como un carácter que falta.
+// Donde se suelta el kana. Va con el papel hundido de fondo, y más ancho que un kana puesto
+// para que se lea como un sitio donde cabe algo y no como un carácter que falta.
 .kana-match__slot {
   display: flex;
   align-items: center;
@@ -79,23 +68,21 @@
   line-height: 1;
 }
 
-// Dos huecos seguidos se separan con una línea del color del papel. Sin ella, los
-// tres de la palabra entera se leerían como una sola barra hundida y no como tres
-// sitios donde cabe un kana cada uno. Con un único hueco no aplica nunca.
+// Dos huecos seguidos se separan con una línea del color del papel: sin ella, los tres de la
+// palabra entera se leerían como una sola barra hundida.
 .kana-match__slot + .kana-match__slot {
   border-left: 2px solid var(--color-page);
 }
 
-// Con el kana correcto puesto. Hiedra —el único verde de la paleta— por lo mismo
-// que en los otros ejercicios: sobre papel crema se lee sin desentonar, y el latón
-// quedaría casi del tono de la hoja.
+// Con el kana correcto puesto. Hiedra —el único verde de la paleta—: sobre papel crema se lee
+// sin desentonar, y el latón quedaría casi del tono de la hoja.
 .kana-match__slot--filled {
   background: transparent;
   color: var(--color-ivy-dark);
 }
 
-// La otra mitad de la ficha: la pista con la que se empareja. La lectura del kana
-// cuando va suelto, y el significado cuando va una palabra entera.
+// La otra mitad de la ficha: la lectura del kana cuando va suelto, y el significado cuando va
+// una palabra entera.
 .kana-match__clue {
   display: flex;
   align-items: center;
@@ -108,19 +95,15 @@
   text-align: center;
 }
 
-// Cuando la pista es una transcripción. Las letras del romaji se leen sueltas, no
-// como una palabra española: mismo criterio que en el resto del libro, y por eso
-// el espaciado va aquí y no en la clase base —«azul» con las letras separadas se
-// leería como una sigla—.
+// Cuando la pista es una transcripción. El espaciado va aquí y no en la clase base: «azul»
+// con las letras separadas se leería como una sigla.
 .kana-match__clue--reading {
   letter-spacing: 0.1em;
 }
 
-// Cuando la pista es el significado. Va más pequeña que los kana: es la otra cara
-// de la ficha, no lo que hay que colocar, y a su tamaño una palabra española se
-// comía la hoja entera. Es la parte que cede cuando falta sitio —se parte en
-// líneas equilibradas y, si una sola palabra no cabe, se corta—, así que la ficha
-// entra en la hoja la lleve quien la lleve.
+// Cuando la pista es el significado. Más pequeña que los kana: es la otra cara de la ficha,
+// no lo que hay que colocar. Es la parte que cede cuando falta sitio, así que la ficha entra
+// en la hoja la lleve quien la lleve.
 .kana-match__clue--meaning {
   flex: 0 1 auto;
   min-width: 0;
@@ -130,8 +113,8 @@
   overflow-wrap: break-word;
 }
 
-// El montón de donde salen las tarjetas. Se envuelve porque el número de kana va
-// a crecer con el temario: hoy son tres y en el bloque 9 serán seis o más.
+// El montón de donde salen las tarjetas. Se envuelve porque el número de kana crece con el
+// temario: hoy son tres y en el bloque 9 serán seis o más.
 .kana-match__deck {
   margin: 0;
   padding: 0;
@@ -142,69 +125,59 @@
   gap: 1.5cqh 2cqw;
 }
 
-// Cada sitio del montón. No pinta nada: solo deja que su tarjeta lo llene, para
-// que la zona que se agarra sea la tarjeta entera y no el carácter de dentro.
+// Cada sitio del montón. No pinta nada: solo deja que su tarjeta lo llene, para que la zona
+// que se agarra sea la tarjeta entera y no el carácter de dentro.
 .kana-match__seat {
   display: flex;
 }
 
-// La tarjeta que se arrastra. El latón lo pone `BookButton.scss`; aquí solo la
-// forma, el tamaño de la letra y cómo se comporta al moverla.
+// La tarjeta que se arrastra. El latón lo pone `BookButton.scss`; aquí solo la forma.
 .kana-match__tile {
   min-width: 2.2em;
   font-family: var(--font-body);
   font-size: clamp(0.9rem, 9cqmin, 2rem);
   line-height: 1.1;
 
-  // Sin esto, en una pantalla táctil el navegador se queda el gesto para hacer
-  // scroll o zoom y la tarjeta no llega a moverse.
+  // Sin esto, en una pantalla táctil el navegador se queda el gesto para hacer scroll.
   touch-action: none;
-  // Arrastrar sobre texto lo selecciona, y una tarjeta con el carácter resaltado
-  // en azul a media arrastrada se ve rota.
+  // Arrastrar sobre texto lo selecciona, y una tarjeta con el carácter en azul se ve rota.
   user-select: none;
 
-  // Para que el `z-index` del arrastre valga con seguridad. Funcionaría igual sin
-  // esto —una tarjeta es hija de un contenedor flexible y esas admiten z-index
-  // siendo estáticas—, pero es una regla poco conocida y basta con que alguien
-  // cambie el `display` del asiento para que deje de cumplirse en silencio.
+  // Para que el `z-index` del arrastre valga con seguridad: funcionaría igual sin esto, pero
+  // basta con que alguien cambie el `display` del asiento para que deje de cumplirse en
+  // silencio.
   position: relative;
 
-  // Vuelve a su sitio deslizándose. La transición está AQUÍ y no en la clase de
-  // arrastre: mientras se arrastra hay que quitarla, o la tarjeta iría siempre un
-  // poco por detrás del dedo.
+  // Vuelve a su sitio deslizándose. La transición está AQUÍ y no en la clase de arrastre:
+  // mientras se arrastra hay que quitarla, o la tarjeta iría por detrás del dedo.
   //
-  // El fondo se repite a propósito. `transition` es una propiedad abreviada, y
-  // esta regla se aplica DESPUÉS de la de `BookButton`, así que nombrar solo el
-  // desplazamiento borraría el cambio de color que tienen todos los botones del
-  // libro — y la tarjeta sería el único que no responde al pasar por encima.
+  // El fondo se repite a propósito: `transition` es abreviada y esta regla se aplica DESPUÉS
+  // de la de `BookButton`, así que nombrar solo el desplazamiento borraría el cambio de color.
   transition:
     background var(--duration-fast) ease,
     transform var(--duration-fast) var(--ease-book);
 }
 
-// Mientras se arrastra. Por encima de todo lo demás, y sin transición: el
-// movimiento lo manda el dedo, no una animación.
+// Mientras se arrastra: por encima de todo y sin transición, que el movimiento lo manda el
+// dedo.
 .kana-match__tile--dragging {
   z-index: 2;
   cursor: grabbing;
-  // Solo se calla el desplazamiento: el fondo sigue respondiendo, porque la
-  // tarjeta que se lleva en la mano tiene que seguir pareciendo la misma tarjeta.
+  // Solo se calla el desplazamiento: la tarjeta que se lleva en la mano tiene que seguir
+  // pareciendo la misma tarjeta.
   transition: background var(--duration-fast) ease;
 }
 
-// Fallada. Rojo de ladrillo y no de pantalla —`--color-error`—, para que el fallo
-// de un arrastre se note tanto como el acierto en hiedra, y sin dejar de ser un
-// color de la propia paleta. Se queda así aunque se suelte otra tarjeta encima:
-// dice «esta ya la has probado», y quien explica el fallo es el aviso de debajo.
-// No se bloquea: se sigue intentando.
+// Fallada. Rojo de ladrillo y no de pantalla, para que el fallo se note tanto como el acierto
+// sin salirse de la paleta. Se queda así aunque se suelte otra encima: dice «esta ya la has
+// probado». No se bloquea: se sigue intentando.
 .kana-match__tile--wrong {
   border-color: var(--color-error);
   color: var(--color-error);
 }
 
-// Colocada. Deja su sitio vacío en lugar de desaparecer del todo: si el montón se
-// recolocara, las otras dos tarjetas darían un salto justo en el momento de
-// acertar, que es cuando se está mirando el hueco de arriba.
+// Colocada. Deja su sitio vacío en lugar de desaparecer: recolocando el montón, las otras
+// darían un salto justo al acertar, que es cuando se está mirando el hueco de arriba.
 .kana-match__tile--placed {
   visibility: hidden;
 }
@@ -214,8 +187,8 @@
   flex: none;
 }
 
-// El aviso de acierto o fallo. Reserva su hueco para que las tarjetas no den un
-// salto la primera vez que se coloca una.
+// El aviso de acierto o fallo. Reserva su hueco para que las tarjetas no den un salto la
+// primera vez que se coloca una.
 .kana-match__result {
   flex: none;
   margin: 0;
@@ -227,11 +200,8 @@
   text-wrap: pretty;
 }
 
-// Sin desplazamiento animado para quien lo ha desactivado: la tarjeta vuelve a su
-// sitio de golpe, que es igual de claro y no obliga a esperar a que termine nada.
-//
-// El cambio de fondo se queda: no es movimiento, es la respuesta del botón a que
-// lo estás tocando, y quitarla dejaría la tarjeta sin acusar recibo de nada.
+// Sin desplazamiento animado para quien lo ha desactivado. El cambio de fondo se queda: no es
+// movimiento, es la respuesta del botón a que lo estás tocando.
 @media (prefers-reduced-motion: reduce) {
   .kana-match__tile {
     transition: background var(--duration-fast) ease;

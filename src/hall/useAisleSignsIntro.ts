@@ -3,15 +3,9 @@ import gsap from 'gsap'
 import { AISLE_SIGNS_INTRO as intro } from './aisleSignsConfig'
 import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 
-// Caída de los carteles al entrar en el vestíbulo.
-//
-// Dos tramos encadenados: primero el cartel cae desde arriba, y en cuanto llega
-// arranca el balanceo, que parte del ángulo que le deja el golpe y se va
-// amortiguando hasta quedarse quieto.
-//
-// El balanceo empieza un poco antes de que termine la caída (el solape negativo
-// de la posición) para que no se vea un cartel parado un instante entre las dos
-// fases: en un péndulo real la oscilación nace del propio impacto.
+// Dos tramos encadenados: el cartel cae y en cuanto llega arranca el balanceo. El
+// balanceo empieza un poco ANTES de que acabe la caída —el solape negativo de la
+// posición— para que no se vea un cartel parado entre las dos fases.
 export function useAisleSignsIntro(groupRef: RefObject<HTMLElement | null>): void {
   useLayoutEffect(() => {
     const group = groupRef.current
@@ -42,9 +36,8 @@ export function useAisleSignsIntro(groupRef: RefObject<HTMLElement | null>): voi
           duration: intro.swaySeconds,
           ease: intro.swayEase,
           stagger: intro.staggerSeconds,
-          // Sin rastro de transform al acabar: el balanceo de hover es una
-          // animación CSS sobre `rotate`, y un transform inline residual le
-          // dejaría un salto al terminar cada pasada.
+          // Sin rastro de transform al acabar: el balanceo de hover es una animación CSS
+          // sobre `rotate`, y un transform inline residual le dejaría un salto.
           clearProps: 'transform',
         },
         `<${intro.fallSeconds * 0.85}`,

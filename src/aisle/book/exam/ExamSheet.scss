@@ -1,8 +1,6 @@
-// La hoja que cierra el mini examen: dos pruebas y el sello.
-//
-// Mismo reparto que `WordDrill`, que es la otra hoja del tomo con dos preguntas:
-// cada una se lleva el alto que necesita y el filete las separa, para que no se
-// lean como una sola pregunta larga.
+// La hoja que cierra el examen: dos pruebas y el sello. Mismo reparto que `WordDrill`, la
+// otra hoja del tomo con dos preguntas: cada una se lleva el alto que necesita y el filete las
+// separa, para que no se lean como una sola pregunta larga.
 .exam-sheet {
   width: 100%;
   flex: 1;
@@ -15,13 +13,10 @@
   flex-direction: column;
   gap: 1.5cqh;
 
-  // Cada prueba es SU PROPIO contenedor de consulta, igual que en `WordDrill` y
-  // por el mismo motivo: `KanaMatch` y `WordGap` están escritos para ocupar la
-  // hoja entera y miden su letra en `cq*` contra el papel. Aquí solo tienen media
-  // hoja cada una, y sin esto la primera se estira —lleva `flex: 1`— y empuja a la
-  // segunda fuera de la página. Con `container-type: size` los `cq*` de dentro
-  // pasan a mirar a su mitad, y la misma pieza vale para una hoja entera o para
-  // media sin que ninguna de las dos sepa que existe la otra.
+  // Cada prueba es SU PROPIO contenedor de consulta, igual que en `WordDrill`: `KanaMatch` y
+  // `WordGap` están escritos para ocupar la hoja entera y miden su letra en `cq*` contra el
+  // papel. Aquí tienen media hoja cada una, y sin esto la primera se estira y empuja a la
+  // segunda fuera de la página.
   &__task {
     flex: 1;
     min-height: 0;
@@ -34,9 +29,8 @@
     gap: 1cqh;
   }
 
-  // El rótulo del dictado. El mismo aspecto que el de `WordDrill`: son las dos
-  // hojas del tomo con dos preguntas, y el rótulo tiene que leerse igual en las
-  // dos. Es la segunda copia; a la tercera, se unifica.
+  // El rótulo del dictado, con el mismo aspecto que el de `WordDrill`: es la segunda copia; a
+  // la tercera, se unifica.
   &__label {
     flex: none;
     margin: 0;
@@ -58,9 +52,8 @@
   }
 }
 
-// ── El sello ───────────────────────────────────────────────────────────────
-// Nace invisible y fuera del flujo: un sello no empuja el texto de debajo, se
-// estampa encima. Quien lo saca es `examSeal.ts`, con GSAP.
+// El sello nace invisible y fuera del flujo: no empuja el texto de debajo, se estampa encima.
+// Quien lo saca es `examSeal.ts`.
 //
 // `pointer-events: none` porque no es un control: cae sobre los ejercicios ya
 // resueltos y no debe robarles ni un clic.

@@ -1,22 +1,20 @@
-// El servidor, simulado. Es la ÚNICA pieza que se tira el día que haya backend.
+// El servidor, simulado: la ÚNICA pieza que se tira el día que haya backend.
 //
-// Hace lo que hará el de verdad —guardar cuentas, sellos e insignias, decidir qué
-// tomos se abren y servir su contenido— pero dentro del navegador, sobre
-// localStorage. Así el front se termina entero antes de decidir entre Firebase y
-// Nest, y cuando se decida se sabrá exactamente qué datos hacen falta.
+// Tarda y falla A PROPÓSITO. Si respondiera al instante y siempre bien, el front no
+// tendría esperas ni errores que enseñar, y habría que añadirlos pantalla a pantalla
+// el día del servidor de verdad. Sube `failureRate` a 0.3 y navega para verlos.
 //
-// ── Por qué tarda y por qué puede fallar ───────────────────────────────────
-// Un servidor nunca contesta al instante, y a veces no contesta. Si el simulado
-// respondiera en el acto y siempre bien, el front no tendría ni esperas ni errores
-// que enseñar, y el día del servidor de verdad habría que añadirlos en cada
-// pantalla. Por eso cada llamada espera un rato al azar, y `failureRate` deja
-// probar qué ve el usuario cuando la conexión falla: súbelo a 0.3 y navega.
-//
-// ── Qué NO es ──────────────────────────────────────────────────────────────
-// Seguridad. Todo esto vive en el navegador y se lee y se toca desde sus
-// herramientas: la contraseña va resumida para no dejarla escrita tal cual, pero
-// ese resumen no protege nada. El servidor de verdad es el que hará todo eso.
-import { BLOCK_PLAN, BLOCKS_BY_ID, progressThrough } from '../content/hiragana/blocks'
+// Nada de esto es seguridad: vive en el navegador y se lee desde sus herramientas.
+// El resumen de la contraseña solo evita dejarla escrita tal cual.
+import {
+  BLOCK_PLAN,
+  BLOCKS_BY_ID,
+  HIRAGANA_BASE_COUNT,
+  KATAKANA_BASE_COUNT,
+  N5_KANJI_COUNT,
+  N5_WORD_COUNT,
+  progressThrough,
+} from '../content/hiragana/blocks'
 import type { Block } from '../content/types'
 import { ApiError } from './apiError'
 import {
@@ -24,14 +22,14 @@ import {
   PASSWORD_MIN_LENGTH,
   type Account,
   type Badge,
+  type JourneyTrack,
   type SealsByBlock,
   type VolumeContent,
   type VolumeGate,
 } from './contract'
 
 export const MOCK_SERVER = {
-  // Lo que tarda en contestar, al azar entre estos dos. Por debajo de un cuarto
-  // de segundo las esperas no se llegan a ver y no se prueban.
+  // Por debajo de un cuarto de segundo las esperas no se llegan a ver ni a probar.
   latencyMs: { min: 250, max: 700 },
   // Qué parte de las llamadas falla como si no hubiera conexión, de 0 a 1.
   failureRate: 0,
@@ -45,22 +43,18 @@ interface StoredUser {
   // Null en las cuentas de Google, que no tienen contraseña.
   passwordHash: string | null
   seals: SealsByBlock
-  // Los bloques superados, en el orden en que se ganaron.
   badges: string[]
 }
 
 interface Db {
   users: StoredUser[]
-  // La sesión abierta en este navegador. En el de verdad será un token o una
-  // cookie; aquí basta con saber de quién es.
   sessionUserId: string | null
 }
 
 const DB_KEY = 'bof:mock-server'
 
-// La base entera se lee una vez y a partir de ahí se trabaja en memoria. Si
-// localStorage no está —navegación privada, disco lleno—, el servidor sigue
-// funcionando igual y solo pierde la memoria al recargar.
+// Sin localStorage —navegación privada, disco lleno— el servidor sigue funcionando
+// y solo pierde la memoria al recargar.
 let memory: Db | null = null
 
 function readDb(): Db {
@@ -90,12 +84,8 @@ function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-// Una llamada al servidor: la espera, el posible fallo de red, el trabajo y, si
-// escribe, el guardado.
-//
-// La respuesta sale COPIADA. Un servidor de verdad manda datos nuevos cada vez, y
-// si aquí se devolviera el mismo objeto de la base, una pantalla que lo tocase
-// estaría cambiando el «servidor» por debajo sin que nadie lo notara.
+// La respuesta sale COPIADA: si se devolviera el objeto de la base, una pantalla que
+// lo tocase estaría cambiando el «servidor» por debajo.
 async function respond<T>(
   work: (db: Db) => T | Promise<T>,
   { writes = false } = {},
@@ -130,10 +120,8 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
 }
 
-// Un resumen de la contraseña para no guardarla tal cual. FNV-1a, que es
-// síncrono y funciona en cualquier contexto —`crypto.subtle` no existe si se abre
-// la app por la IP de la red local, que es como se prueba en el móvil—. No
-// protege nada: ver «Qué NO es» arriba.
+// FNV-1a porque es síncrono y funciona en cualquier contexto: `crypto.subtle` no
+// existe al abrir la app por la IP de la red local, que es como se prueba en el móvil.
 function digest(text: string): string {
   let hash = 0x811c9dc5
   for (let i = 0; i < text.length; i++) {
@@ -147,11 +135,8 @@ function newId(): string {
   return `u-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-// Lo hecho sin cuenta pasa a la cuenta. Se SUMA a lo que ya tuviera, nunca lo
-// sustituye: entrar desde un móvil nuevo no puede borrar lo ganado en otro.
-//
-// Aquí es donde se ganan las insignias. El sello del examen final cierra el tomo,
-// y el servidor —no la app— es quien lo convierte en insignia.
+// Lo hecho sin cuenta se SUMA a lo que ya tuviera, nunca lo sustituye: entrar desde
+// un móvil nuevo no puede borrar lo ganado en otro. Aquí se ganan las insignias.
 function absorb(user: StoredUser, seals: SealsByBlock): void {
   for (const [blockId, earned] of Object.entries(seals)) {
     if (!BLOCK_PLAN.includes(blockId)) continue
@@ -165,21 +150,13 @@ function absorb(user: StoredUser, seals: SealsByBlock): void {
   }
 }
 
-// Si este usuario puede abrir el tomo que está en esta posición del temario. El
-// primero es gratis y sin cuenta; cada uno de los demás pide la insignia del
-// anterior, y la insignia solo existe dentro de una cuenta.
 function unlockedAt(index: number, user: StoredUser | null): boolean {
   if (index === 0) return true
   return Boolean(user?.badges.includes(BLOCK_PLAN[index - 1]))
 }
 
-// El paquete de un tomo: el bloque y todo lo que sus páginas nombran.
-//
-// El temario se carga AQUÍ, al pedir un tomo, y no arriba del archivo. Este
-// servidor lo importa la barra —para saber quién hay en sesión—, y la barra va en
-// el bundle inicial: importado arriba, el temario entero viajaría con la portada,
-// que no lo necesita para nada. Cargado aquí, llega en su propio trozo cuando
-// alguien coge un tomo, que es cuando antes lo cargaba el lector.
+// El temario se carga AQUÍ y no arriba del archivo: este servidor lo importa la
+// barra, que va en el bundle inicial, y el temario entero viajaría con la portada.
 async function packVolume(block: Block): Promise<VolumeContent> {
   const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }] = await Promise.all([
     import('../content/hiragana/kana'),
@@ -209,11 +186,9 @@ async function packVolume(block: Block): Promise<VolumeContent> {
 interface Credentials {
   email: string
   password: string
-  // Lo hecho en este navegador sin cuenta, para que la cuenta lo absorba.
   seals: SealsByBlock
 }
 
-// Las «rutas» del servidor. Cada una es lo que será una llamada de verdad.
 export const mockServer = {
   session: () =>
     respond((db) => {
@@ -256,9 +231,8 @@ export const mockServer = {
         const cleanEmail = normalizeEmail(email)
         const user = db.users.find((candidate) => candidate.email === cleanEmail)
 
-        // El mismo error para correo desconocido y para contraseña mala: decir
-        // cuál de los dos falla sería contarle a cualquiera qué correos tienen
-        // cuenta.
+        // El mismo error para correo desconocido y para contraseña mala: distinguirlos
+        // sería contar qué correos tienen cuenta.
         if (!user || user.passwordHash !== digest(`${cleanEmail}:${password}`)) {
           throw new ApiError('wrong-credentials')
         }
@@ -270,8 +244,7 @@ export const mockServer = {
       { writes: true },
     ),
 
-  // Google, simulado: siempre la misma cuenta de prueba. El de verdad abre la
-  // ventana de Google y devuelve quien haya elegido el usuario.
+  // Simulado: siempre la misma cuenta de prueba.
   signInWithGoogle: ({ seals }: { seals: SealsByBlock }) =>
     respond(
       (db) => {
@@ -305,8 +278,6 @@ export const mockServer = {
       { writes: true },
     ),
 
-  // Sube sellos a la cuenta abierta. Se usa tanto para uno recién ganado como
-  // para ponerse al día con los que se ganaron sin conexión.
   syncSeals: (seals: SealsByBlock) =>
     respond(
       (db) => {
@@ -324,6 +295,26 @@ export const mockServer = {
         volume: BLOCK_PLAN.indexOf(blockId) + 1,
       })),
     ),
+
+  // Cuenta hasta el ÚLTIMO tomo sellado, no uno por uno: se ganan en orden, así que
+  // el más avanzado ya incluye los anteriores y `progressThrough` no repite lo
+  // reutilizado. Katakana y kanji van a cero mientras no haya temario suyo.
+  journey: () =>
+    respond((db): JourneyTrack[] => {
+      const badges = sessionUser(db)?.badges ?? []
+      const furthest = badges.reduce(
+        (best, blockId) => Math.max(best, BLOCK_PLAN.indexOf(blockId)),
+        -1,
+      )
+      const done = furthest < 0 ? null : progressThrough(BLOCK_PLAN[furthest])
+
+      return [
+        { id: 'hiragana', learned: done?.kana ?? 0, total: HIRAGANA_BASE_COUNT },
+        { id: 'katakana', learned: 0, total: KATAKANA_BASE_COUNT },
+        { id: 'kanji', learned: 0, total: N5_KANJI_COUNT },
+        { id: 'vocabulary', learned: done?.words ?? 0, total: N5_WORD_COUNT },
+      ]
+    }),
 
   volumeGates: () =>
     respond((db): VolumeGate[] => {

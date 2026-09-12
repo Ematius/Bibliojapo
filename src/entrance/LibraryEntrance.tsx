@@ -26,8 +26,8 @@ const stageStyle: StyleWithVars = {
   '--sign-width': config.facade.sign.width,
 }
 
-// La cara trasera reutiliza el mismo PNG que la frontal, oscurecido y
-// desaturado para simular el dorso sin talla de una hoja de puerta real.
+// La cara trasera reutiliza el PNG de la frontal, oscurecido y desaturado: es el dorso
+// sin talla de una hoja de puerta.
 const doorBackFaceStyle: StyleWithVars = {
   '--door-back-brightness': config.doors3D.backBrightness,
   '--door-back-saturation': config.doors3D.backSaturation,
@@ -73,9 +73,8 @@ export function LibraryEntrance() {
     particlesFrontRef,
     enterButtonRef,
   }, () => {
-    // Cruzado el umbral: se recuerda para no repetir el viaje de presentación
-    // en la próxima visita, y se sigue al vestíbulo, que arranca con esta misma
-    // ilustración del interior en la misma posición.
+    // Al vestíbulo, que arranca con esta misma ilustración del interior en la misma
+    // posición.
     markJourneyDone()
     navigate('/biblioteca')
   })

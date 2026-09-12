@@ -1,27 +1,21 @@
-// La colocación de un objeto sobre la mesa.
-//
-// Las tres medidas llegan como variables desde `deskSpots.ts`, en fracciones de la
-// ILUSTRACIÓN. Aquí se convierten en porcentajes de la escena, que es la caja que
-// las contiene: por eso el objeto sigue sobre su trozo de madera aunque la escena
-// se recorte. Ver `DeskScene.scss`.
+// La colocación de un objeto sobre la mesa. Las tres medidas llegan como variables desde
+// `deskSpots.ts`, en fracciones de la ILUSTRACIÓN, y aquí se convierten en porcentajes de la
+// escena: por eso el objeto sigue sobre su trozo de madera aunque la escena se recorte.
 .desk-object {
   position: absolute;
-  // `top` marca dónde TOCA la madera y el desplazamiento sube el objeto entero por
-  // encima de esa línea. Con `bottom` habría que restar la fracción a uno y se lee
-  // peor; el resultado es el mismo.
+  // `top` marca dónde TOCA la madera y el desplazamiento sube el objeto por encima de esa
+  // línea. Con `bottom` habría que restar la fracción a uno y se lee peor.
   top: calc(var(--spot-base-y) * 100%);
   left: calc(var(--spot-x) * 100%);
   width: calc(var(--spot-width) * 100%);
   transform: translate(-50%, -100%);
-  // Un botón trae de fábrica marco, fondo y relleno propios, y aquí lo que se ve
-  // es solo el dibujo.
+  // Un botón trae de fábrica marco, fondo y relleno propios, y aquí lo que se ve es el dibujo.
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
-  // El objeto se levanta un punto al apuntarlo. Es una transición y no un timeline
-  // de GSAP a propósito: GSAP es para las entradas y salidas de la escena, no para
-  // un estado que se enciende y se apaga con el ratón.
+  // Transición y no timeline de GSAP: GSAP es para las entradas y salidas de la escena, no
+  // para un estado que se enciende y se apaga con el ratón.
   transition: transform var(--duration-fast) var(--ease-book);
 
   &:hover,
@@ -35,8 +29,8 @@
     outline-offset: 4px;
   }
 
-  // Sin movimiento, el objeto sigue respondiendo: lo que se quita es el salto, no
-  // la señal de que está apuntado.
+  // Sin movimiento el objeto sigue respondiendo: lo que se quita es el salto, no la señal de
+  // que está apuntado.
   @media (prefers-reduced-motion: reduce) {
     transition: none;
 
@@ -47,8 +41,8 @@
   }
 }
 
-// El dibujo recortado. Su alto sale de su propia proporción: el sitio solo dice
-// cuánto ocupa a lo ancho, igual que un tomo saca su grosor de su render.
+// El dibujo recortado. Su alto sale de su propia proporción: el sitio solo dice cuánto ocupa
+// a lo ancho, igual que un tomo saca su grosor de su render.
 .desk-object__art {
   display: block;
   width: 100%;
@@ -56,12 +50,50 @@
   user-select: none;
 }
 
-// Ayuda de taller: el rectángulo que de verdad se pulsa.
-//
-// No coincide con la silueta del objeto —un botón es una caja, y el dibujo tiene
-// esquinas transparentes—, así que esto enseña dónde responde y dónde no. Con los
-// objetos separados como están no molesta; si algún día se juntan, es lo primero
-// que hay que mirar. Se enciende con `SHOW_DESK_SPOTS`.
+// La cara de frente, esperando encima de la de reposo. Va encogida y desplazada para que su
+// objeto caiga justo sobre el otro: los dos recortes no llenan igual su lienzo, y sin esto el
+// objeto pegaría un salto en mitad del fundido. Apagada de salida: la enciende el viaje.
+.desk-object__art--front {
+  position: absolute;
+  top: calc(var(--front-top) * 100%);
+  left: calc(var(--front-left) * 100%);
+  width: calc(var(--front-scale) * 100%);
+  opacity: 0;
+}
+
+// Los fotogramas de apertura comparten lienzo con la cara de reposo, así que se apilan sin
+// ajuste ninguno: lo quieto del dibujo se queda quieto.
+.desk-object__art--frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+// Lo que se lee sobre la cara de frente. Se coloca con sus mismas medidas, de ahí que repita
+// las tres variables. El alto se calcula igual que el ancho, lo que vale mientras las dos
+// caras tengan lienzos de la misma proporción — lo mismo que ya da por hecho `frontFit`.
+.desk-object__face {
+  position: absolute;
+  top: calc(var(--front-top) * 100%);
+  left: calc(var(--front-left) * 100%);
+  width: calc(var(--front-scale) * 100%);
+  height: calc(var(--front-height) * 100%);
+  opacity: 0;
+  // Lo de dentro se mide contra esta caja, así que la tipografía crece con la tarjeta en vez
+  // de quedarse en un tamaño fijo que el viaje agranda a lo bruto.
+  container-type: inline-size;
+  transition: opacity var(--duration-fast) ease;
+}
+
+// Aparece al final del viaje y no durante: mientras el objeto vuela se está cruzando un
+// dibujo con otro, y un texto encima de ese cruce se lee como un fallo.
+.desk-object--lifted .desk-object__face {
+  opacity: 1;
+  transition-delay: var(--duration-slow);
+}
+
+// Ayuda de taller: el rectángulo que de verdad se pulsa. No coincide con la silueta —un botón
+// es una caja y el dibujo tiene esquinas transparentes—. Se enciende con `SHOW_DESK_SPOTS`.
 .desk-object--marked {
   outline: 1px dashed var(--color-brass);
 }

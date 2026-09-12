@@ -1,15 +1,9 @@
 // Las dos preguntas del repaso, apiladas en una sola hoja.
 //
-// `KanaMatch` y `WordGap` están escritos para ocupar la hoja ENTERA: su letra y
-// sus huecos se miden en `cq*` contra el papel de la página. Aquí solo tienen
-// media hoja cada uno, y sin hacer nada más esa letra saldría pensada para el
-// doble del sitio que tiene.
-//
-// Por eso cada tarea es SU PROPIO contenedor de consulta —igual que la propia
-// página lo es para el libro entero, ver `VolumeReader.scss`—. Con
-// `container-type: size` puesto en `&__task`, los `cq*` de lo que hay dentro dejan
-// de mirar al papel y pasan a mirar a su mitad: la misma pieza vale para una hoja
-// entera o para media sin que ninguna de las dos sepa que existe la otra.
+// `KanaMatch` y `WordGap` están escritos para ocupar la hoja ENTERA: miden su letra en `cq*`
+// contra el papel. Aquí tienen media hoja cada uno, así que cada tarea es SU PROPIO contenedor
+// de consulta y los `cq*` de dentro pasan a mirar a su mitad — la misma pieza vale para una
+// hoja entera o para media sin que ninguna sepa que existe la otra.
 
 .word-drill {
   width: 100%;
@@ -17,9 +11,8 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  // Poco aire entre las dos tareas: cada una ya respira por dentro —hereda el
-  // `gap` de `KanaMatch` y `WordGap`—, y demasiado aquí encima dejaría menos sitio
-  // del que hace falta para el contenido.
+  // Poco aire entre las dos tareas: cada una ya respira por dentro, y demasiado aquí dejaría
+  // menos sitio del que hace falta para el contenido.
   gap: 1.5cqh;
 }
 
@@ -35,9 +28,8 @@
   gap: 1cqh;
 }
 
-// El título de cada tarea. Menor que el subtítulo de sección del resto del libro
-// —`volume-reader__subtitle`—: aquí no separa bloques de la página, separa dos
-// preguntas dentro de un espacio ya pequeño.
+// El título de cada tarea, menor que el subtítulo de sección del resto del libro: aquí no
+// separa bloques de la página, separa dos preguntas dentro de un espacio ya pequeño.
 .word-drill__label {
   flex: none;
   margin: 0;

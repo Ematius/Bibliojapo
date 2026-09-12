@@ -11,22 +11,18 @@ interface ShelfNoteProps {
   message: string | null
 }
 
-// La nota que aparece encima de un tomo que no se puede coger, diciendo por qué.
+// La nota que aparece encima de un tomo que no se puede coger. Va FUERA del tomo, como
+// hermana suya en el stage: dentro heredaría su escala de balda y saldría del tamaño de un
+// lomo, ilegible.
 //
-// Va FUERA del tomo, como hermana suya en el stage, y no dentro: el tomo está
-// encogido en la balda con una escala de una fracción, y un texto dentro de él
-// saldría del mismo tamaño que un lomo — ilegible.
-//
-// Siempre está montada, vacía y apagada cuando no hay nada que decir: un aviso
-// que se anuncia a los lectores de pantalla tiene que existir ANTES de cambiar,
-// o no se anuncia.
+// Siempre montada, vacía y apagada cuando no hay nada que decir: un aviso que se anuncia a
+// los lectores de pantalla tiene que existir ANTES de cambiar, o no se anuncia.
 export function ShelfNote({ volume, message }: ShelfNoteProps) {
   const rootRef = useRef<HTMLParagraphElement>(null)
   const isFirstRender = useRef(true)
 
-  // El texto se queda mientras la nota se va, para que no se vacíe a media
-  // salida. Se ajusta durante el render, que es como React pide derivar estado
-  // de una prop que cambia.
+  // El texto se queda mientras la nota se va, para que no se vacíe a media salida. Se
+  // ajusta durante el render, que es como React pide derivar estado de una prop.
   const [text, setText] = useState(message)
   if (message && message !== text) setText(message)
 
@@ -38,8 +34,8 @@ export function ShelfNote({ volume, message }: ShelfNoteProps) {
     const jump = isFirstRender.current || prefersReducedMotion()
     isFirstRender.current = false
 
-    // Centrada sobre el lomo y con su borde de abajo en el ancla. Va en GSAP y no
-    // en el CSS porque GSAP reescribe el transform entero al animar.
+    // Centrada sobre el lomo y con su borde de abajo en el ancla. Va en GSAP y no en el CSS
+    // porque GSAP reescribe el transform entero al animar.
     if (jump) {
       gsap.set(root, { xPercent: -50, yPercent: -100, autoAlpha: shown ? 1 : 0, y: 0 })
       return

@@ -1,0 +1,103 @@
+// Lo escrito en el carné.
+//
+// Todo se mide en `cqw` —fracciones del ancho de la tarjeta— y no en `rem`: la tarjeta viaja
+// creciendo con un `transform`, y un tamaño fijo se agrandaría con ella hasta quedar enorme.
+//
+// El texto tira a tinta porque el fondo es papel crema, al revés que el resto de la pantalla.
+.journey-card {
+  display: flex;
+  flex-direction: column;
+  // Dentro de la orla, que ocupa el borde del dibujo: menos que esto y las cifras se montarían
+  // sobre la filigrana.
+  padding: 11cqw 10cqw 9cqw;
+  height: 100%;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  text-align: center;
+
+  // Quién es, arriba y en la tipografía de cabecera, como el nombre escrito a mano en la ficha
+  // de una biblioteca.
+  &__owner {
+    margin: 0 0 4cqw;
+    font-family: var(--font-display);
+    font-size: 5cqw;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  // Los cuatro frentes en fila, sin partirse en dos líneas: cuatro es justo lo que cabe de un
+  // vistazo, y en dos filas dejarían de compararse entre sí.
+  &__tracks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3cqw;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1cqw;
+  }
+
+  &__dial {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  // El surco entero, en tinta muy rebajada: tiene que leerse como el hueco de lo que falta, no
+  // como una segunda medida.
+  &__groove {
+    fill: none;
+    stroke: var(--color-ink-soft);
+    stroke-width: 7;
+    opacity: 0.25;
+  }
+
+  // Lo recorrido, en latón. Con la punta redondeada, que es lo que hace que un arco corto siga
+  // pareciendo un trazo y no una mota.
+  &__arc {
+    fill: none;
+    stroke: var(--color-brass);
+    stroke-width: 7;
+    stroke-linecap: round;
+  }
+
+  &__percent {
+    fill: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    // El texto de un SVG se ancla por su línea de base; con esto queda centrado en el círculo
+    // sin calcular a mano cuánto bajarlo.
+    dominant-baseline: central;
+    text-anchor: middle;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 3cqw;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__count {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: 2.6cqw;
+    line-height: 1.2;
+  }
+
+  // Los tomos cerrados, al pie. `margin-top: auto` lo empuja abajo del todo, así que la
+  // tarjeta se lee de arriba abajo sin que importe cuánto ocupe el medio.
+  &__volumes {
+    margin: auto 0 0;
+    color: var(--color-ink-soft);
+    font-size: 3cqw;
+    line-height: 1.2;
+  }
+}

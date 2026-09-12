@@ -6,32 +6,20 @@ interface KanaTraceProps {
   kana: Kana
 }
 
-// La pauta para escribir el kana a mano.
+// La pauta para escribir el kana a mano, enfrentada a la tarjeta: allí se ve y se oye, aquí
+// se escribe.
 //
-// Va enfrentada a la tarjeta: allí se ve y se oye, y aquí se escribe.
+// Una casilla por trazo, y cada una enseña el kana como va quedando. El trazo que ENTRA va
+// marcado y los que ya estaban salen apagados. Cuántas casillas hay lo dice el contenido,
+// por el número de trazos del kana.
 //
-// ── Los pasos ──────────────────────────────────────────────────────────────
-// Una casilla por trazo, y cada una enseña el kana tal y como va quedando: la
-// primera con el primer trazo, la segunda con los dos primeros, y así. El trazo
-// que ENTRA en cada paso va marcado y los que ya estaban salen apagados, que es
-// lo que permite ver de un vistazo qué añade cada movimiento sin tener que
-// comparar una casilla con la de al lado.
-//
-// Cuántas casillas hay no lo decide este componente: lo dice el contenido, por el
-// número de trazos que tenga el kana. Uno de dos trazos genera dos casillas sin
-// tocar nada aquí.
-//
-// ── La pizarra ─────────────────────────────────────────────────────────────
-// Aquí SOLO está el markup. El dibujo se cablea a mano sobre el nodo clonado, por
-// lo mismo que el sonido y la animación: page-flip clona estas páginas y un
-// manejador de React se quedaría en la copia que nadie ve. Ver `kanaBoard.ts`.
+// Aquí SOLO está el markup: el dibujo se cablea a mano sobre el nodo clonado, por lo mismo
+// que el sonido y la animación. Ver `kanaBoard.ts`.
 export function KanaTrace({ kana }: KanaTraceProps) {
   return (
-    // El carácter viaja en un atributo porque el veredicto lo nombra —«あ al 87 %»—
-    // y quien lo escribe es un clon fuera de React, que solo conserva atributos.
-    //
-    // Va el carácter y no la palabra «hiragana»: este ejercicio tiene que servir
-    // igual en katakana y en kanji, y para eso no puede saber en qué pasillo está.
+    // El carácter viaja en un atributo porque el veredicto lo nombra —«あ al 87 %»— y quien lo
+    // escribe es un clon fuera de React, que solo conserva atributos. Va el carácter y no la
+    // palabra «hiragana»: este ejercicio tiene que servir igual en katakana y en kanji.
     <div className="kana-trace" data-character={kana.character}>
       <p className="kana-trace__hint">
         Sigue el orden de los trazos y escríbelo en la pizarra.
@@ -42,9 +30,8 @@ export function KanaTrace({ kana }: KanaTraceProps) {
           del ejercicio anterior. */}
       <div className="kana-trace__steps" aria-hidden="true">
         {kana.strokes.map((_, step) => {
-          // Un recorte por casilla. El id lleva el del kana y el del paso porque
-          // page-flip clona estas hojas, y dos siluetas con el mismo nombre en el
-          // documento se pisarían.
+          // El id lleva el del kana y el del paso porque page-flip clona estas hojas, y dos
+          // siluetas con el mismo nombre en el documento se pisarían.
           const clipId = `kana-step-${kana.id}-${step}`
 
           return (

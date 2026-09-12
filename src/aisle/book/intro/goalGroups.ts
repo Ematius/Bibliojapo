@@ -8,17 +8,13 @@ export interface GoalGroup {
   sentences: Sentence[]
 }
 
-// Agrupa las frases por su tema, que en este temario es siempre la primera
-// palabra: todas siguen el patrón TEMA + は + PREDICADO. Ver `sentences.ts`.
+// Agrupa las frases por su tema, que en este temario es siempre la primera palabra: todas
+// siguen el patrón TEMA + は + PREDICADO.
 //
-// Agrupa las SEGUIDAS, no todas las del mismo tema estén donde estén. Así el
-// orden que decidió quien escribió el temario se respeta tal cual: si algún día
-// alterna los temas a propósito, saldrán dos grupos con el mismo nombre en vez de
-// una reordenación silenciosa por la espalda.
+// Agrupa las SEGUIDAS, no todas las del mismo tema estén donde estén: así el orden que
+// decidió quien escribió el temario se respeta tal cual, en vez de reordenarlo por la espalda.
 //
-// El buscador de palabras llega de fuera, y no se importa `vocabulary.ts` aquí,
-// por lo mismo que los caracteres de la portada: una hoja del tomo no lee el
-// temario, lo recibe. El único que conoce el contenido es el lector.
+// El buscador de palabras llega de fuera: una hoja del tomo no lee el temario, lo recibe.
 export function groupSentencesByTopic(
   sentences: Sentence[],
   wordById: (id: string) => Word | undefined,

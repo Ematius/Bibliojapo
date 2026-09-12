@@ -2,78 +2,137 @@ import { useEffect, useState } from 'react'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
 import { onApiChange } from '../api/apiChanges'
-import { fetchBadges, type Badge } from '../api/progress'
+import { fetchBadges, fetchJourney, type Badge, type JourneyTrack } from '../api/progress'
 import { SiteNav } from '../shared/SiteNav'
+import { DeskObject } from './DeskObject'
 import { DeskScene } from './DeskScene'
+import { JourneyCard } from './JourneyCard'
+import { DESK_ART } from './deskArt'
+import { DESK_SPOTS, SHOW_EVERY_OBJECT } from './deskSpots'
 import './MyDesk.scss'
 
 // Mi escritorio: la mesa propia, con lo que se ha ganado encima.
 //
-// ── Por qué pide cuenta ────────────────────────────────────────────────────
-// Lo que se enseña aquí son las INSIGNIAS, y una insignia se guarda en la cuenta:
-// sin ella el sello se queda en el navegador y no hay nada que enseñar —ver
-// `api/progress.ts`—. Por eso quien llega sin sesión no ve una mesa vacía,
-// que se leería como «no has hecho nada», sino la invitación a crear la cuenta que
-// absorbe lo que ya lleva hecho.
+// Pide cuenta porque lo que se enseña son las INSIGNIAS, y una insignia se guarda en la
+// cuenta. Quien llega sin sesión no ve una mesa vacía, que se leería como «no has hecho
+// nada», sino la invitación a crear la cuenta que absorbe lo que ya lleva hecho.
 //
-// ── Por qué no calcula nada ────────────────────────────────────────────────
-// Qué tomos están ganados lo dice el servidor, nunca el navegador. Es la misma
-// regla que la estantería del pasillo: si lo decidiera la app, bastaría con tocar
-// sus datos para llevarse la colección entera.
+// Qué tomos están ganados lo dice el servidor, nunca el navegador: la misma regla que la
+// estantería del pasillo.
 export function MyDesk() {
   const session = useSession()
 
-  // Lo que ha llegado, y DE QUIÉN. Sin el dueño, al salir de una cuenta y entrar
-  // en otra se verían un instante los tomos de la anterior: la lista ya está en
-  // memoria y la nueva todavía no ha llegado. Con él, lo que no es de quien está
-  // dentro no se enseña —ver `badges` abajo—, y así no hay que vaciarlo a mano
-  // desde el efecto.
-  const [loaded, setLoaded] = useState<{ accountId: string; badges: Badge[] | 'error' } | null>(
-    null,
-  )
+  // Lo que ha llegado, y DE QUIÉN. Sin el dueño, al salir de una cuenta y entrar en otra se
+  // verían un instante los tomos de la anterior: la lista ya está en memoria y la nueva
+  // todavía no ha llegado.
+  const [loaded, setLoaded] = useState<{
+    accountId: string
+    badges: Badge[] | 'error'
+    // Viaja con las insignias y no aparte porque es del mismo dueño y cambia por lo mismo:
+    // sellar un tomo mueve las dos cosas.
+    journey: JourneyTrack[] | null
+  } | null>(null)
 
-  // null mientras llegan; `error` si no han llegado. Lo segundo se dice en vez de
-  // enseñar una lista vacía, que se leería como «no tienes ninguno».
-  const badges =
-    session.account && loaded?.accountId === session.account.id ? loaded.badges : null
+  // Lo que se contesta al pulsar un objeto cuyo destino todavía no existe. Se borra al
+  // cambiar de objeto.
+  const [note, setNote] = useState<string | null>(null)
+
+  // Cuál está levantado. Lo lleva la pantalla y no cada objeto porque solo puede haber uno
+  // enfrente: con el estado repartido, pulsar el segundo dejaría los dos en el aire.
+  const [lifted, setLifted] = useState<keyof typeof DESK_SPOTS | null>(null)
+
+  // El aviso viaja con el objeto: se enciende al levantarlo y se apaga al dejarlo, así que
+  // nunca queda un «todavía no» suelto hablando de algo que ya no está enfrente.
+  const press = (id: keyof typeof DESK_SPOTS, pending: string | null = null) => {
+    const next = lifted === id ? null : id
+    setLifted(next)
+    setNote(next ? pending : null)
+  }
+
+  // null mientras llegan; `error` si no han llegado. Se dice en vez de enseñar una lista
+  // vacía, que se leería como «no tienes ninguno».
+  const mine = session.account && loaded?.accountId === session.account.id ? loaded : null
+  const badges = mine ? mine.badges : null
+  const journey = mine ? mine.journey : null
 
   useEffect(() => {
-    // Sin sesión no hay a quién preguntar, y la respuesta sería siempre la lista
-    // vacía.
+    // Sin sesión no hay a quién preguntar.
     if (session.status !== 'signedIn') return
 
     let current = true
     const owner = session.account.id
 
     const load = () => {
-      fetchBadges()
-        .then((earned) => {
-          if (current) setLoaded({ accountId: owner, badges: earned })
+      // Las dos a la vez: son preguntas independientes, y encadenadas tardarían el doble.
+      Promise.all([fetchBadges(), fetchJourney().catch(() => null)])
+        .then(([earned, journey]) => {
+          if (current) setLoaded({ accountId: owner, badges: earned, journey })
         })
         .catch(() => {
-          if (current) setLoaded({ accountId: owner, badges: 'error' })
+          if (current) setLoaded({ accountId: owner, badges: 'error', journey: null })
         })
     }
 
     load()
 
-    // Y se vuelve a preguntar cuando algo del usuario cambia: sellar un tomo en
-    // otra pestaña, o la subida de un sello que estaba pendiente, añade una
-    // insignia que esta pantalla tiene que ver sin recargar. Ver `apiChanges.ts`.
+    // Se vuelve a preguntar cuando algo del usuario cambia: sellar un tomo en otra pestaña
+    // añade una insignia que esta pantalla tiene que ver sin recargar.
     const stop = onApiChange(load)
 
     return () => {
       current = false
       stop()
     }
-    // Por `account.id` y no por la sesión entera: lo que obliga a volver a pedir
-    // las insignias es que sea OTRA persona, no que el objeto de sesión se haya
-    // vuelto a crear.
+    // Por `account.id` y no por la sesión entera: lo que obliga a volver a pedir las insignias
+    // es que sea OTRA persona, no que el objeto de sesión se haya vuelto a crear.
   }, [session.status, session.account?.id])
+
+  // El carné está siempre que haya sesión —es la cuenta misma—; la hoja y la caja solo cuando
+  // hay algo detrás que enseñar. Las dos todavía no llevan a ninguna parte: al pulsarlas dicen
+  // que se están escribiendo. Lo que no puede pasar es que una puerta se abra a un sitio vacío.
+  const earned = SHOW_EVERY_OBJECT || (Array.isArray(badges) && badges.length > 0)
 
   return (
     <main className="my-desk">
-      <DeskScene />
+      <DeskScene>
+        {session.status === 'signedIn' ? (
+          <>
+            <DeskObject
+              spot={DESK_SPOTS.card}
+              art={DESK_ART.card}
+              label="Tu carné: cuánto llevas recorrido"
+              lifted={lifted === 'card'}
+              onPress={() => press('card')}
+            >
+              <JourneyCard
+                name={session.account.name}
+                tracks={journey}
+                volumes={Array.isArray(badges) ? badges.length : 0}
+              />
+            </DeskObject>
+
+            {earned ? (
+              <>
+                <DeskObject
+                  spot={DESK_SPOTS.sheet}
+                  art={DESK_ART.sheet}
+                  label="Tus chuletas"
+                  lifted={lifted === 'sheet'}
+                  onPress={() => press('sheet', 'Las chuletas se están escribiendo.')}
+                />
+
+                <DeskObject
+                  spot={DESK_SPOTS.box}
+                  art={DESK_ART.box}
+                  label="Tus juegos"
+                  lifted={lifted === 'box'}
+                  onPress={() => press('box', 'Los juegos se están preparando.')}
+                />
+              </>
+            ) : null}
+          </>
+        ) : null}
+      </DeskScene>
 
       {/* Lo que se dice con palabras, por encima de la mesa. Va en su propia caja
           porque la escena se coloca en absoluto: sin un envoltorio colocado, la
@@ -121,22 +180,11 @@ export function MyDesk() {
           <p className="my-desk__note">Buscando tus tomos…</p>
         ) : badges === 'error' ? (
           <p className="my-desk__note">No se han podido traer tus tomos.</p>
-        ) : badges.length === 0 ? (
-          <p className="my-desk__note">
-            Todavía ninguno. Un tomo entra aquí al superar su examen final.
-          </p>
-        ) : (
-          // Los objetos de la mesa todavía no están puestos: de momento, la lista
-          // de lo ganado. Lo que manda es el dato, que es lo que no se puede
-          // improvisar después.
-          <ul className="my-desk__volumes">
-            {badges.map((badge) => (
-              <li className="my-desk__volume" key={badge.blockId}>
-                Tomo {badge.volume}
-              </li>
-            ))}
-          </ul>
-        )}
+        ) : note ? (
+          // Lo que contesta una puerta que todavía no lleva a ningún sitio. Y nada más: con la
+          // mesa puesta, lo que hay ganado lo dicen los objetos.
+          <p className="my-desk__note">{note}</p>
+        ) : null}
       </div>
 
       <SiteNav />

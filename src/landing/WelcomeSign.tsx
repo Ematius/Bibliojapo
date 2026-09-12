@@ -2,60 +2,54 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { WELCOME_SIGN_SRC } from './parallaxLandingConfig'
 import { buildWelcomeSignHide, buildWelcomeSignReveal } from './welcomeSignReveal'
+import { zoomWelcomeSign } from './welcomeSignZoom'
 import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 import './WelcomeSign.scss'
 
-// El cartel que cuenta de qué va la biblioteca.
+// El cartel que cuenta de qué va la biblioteca. En reposo es un fantasma que se asoma
+// —eso lo lleva el CSS—, y al pulsarlo se monta a trozos hasta el centro de la pantalla.
 //
-// En reposo es un fantasma que se asoma y se va —eso lo lleva el CSS solo—, y
-// al pulsarlo se monta a trozos con la aparición en cuadrícula. Volver a
-// pulsarlo lo devuelve a su fantasma: no es un callejón sin salida.
-//
-// Es un botón y no una imagen decorativa porque es un destino real: se puede
-// pulsar, así que tiene que poder alcanzarse también con el teclado y anunciarse
-// a un lector de pantalla. La ilustración de dentro sigue siendo decorativa
-// —`alt=""`—: lo que hay que anunciar es la acción, no el dibujo.
-//
-// El texto del cartel va pintado dentro de la propia imagen. No es lo ideal —un
-// lector de pantalla no puede leerlo—, y por eso la etiqueta del botón dice de
-// qué va; cuando el contenido de bienvenida exista como texto de verdad, esta
-// imagen pasa a ser solo el marco.
+// Es un botón y no una imagen decorativa porque es un destino real. La ilustración de
+// dentro sí es decorativa (`alt=""`): lo que hay que anunciar es la acción. El texto va
+// pintado dentro de la imagen —por eso la etiqueta del botón dice de qué va—; cuando
+// exista como texto de verdad, la imagen pasa a ser solo el marco.
 export function WelcomeSign() {
   const [isRevealed, setIsRevealed] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const layerRef = useRef<HTMLSpanElement>(null)
   const timelineRef = useRef<gsap.core.Timeline | null>(null)
-  // El "ocupado" va en una referencia y no en el estado: sirve para descartar
-  // pulsaciones dentro del mismo instante, y un cambio de estado no se ha
-  // aplicado todavía cuando llega la segunda.
+  // En una referencia y no en el estado: descarta pulsaciones del mismo instante, y un
+  // cambio de estado todavía no se ha aplicado cuando llega la segunda.
   const isBusyRef = useRef(false)
 
-  // Al desmontar, la timeline se mata: si no, seguiría escribiendo sobre nodos
-  // que ya no están en el documento.
+  // Al desmontar, la timeline se mata: si no, seguiría escribiendo sobre nodos que ya
+  // no están en el documento.
   useEffect(() => () => {
     timelineRef.current?.kill()
   }, [])
 
   const handleClick = () => {
+    const button = buttonRef.current
     const image = imageRef.current
     const layer = layerRef.current
-    if (!image || !layer) return
+    if (!button || !image || !layer) return
 
-    // Una pulsación mientras la cuadrícula está en marcha no hace nada: dejarla
-    // entrar significaría montar una rejilla nueva encima de la que se está
-    // animando.
     if (isBusyRef.current) return
 
     const isHiding = isRevealed
 
-    // Cómo queda el cartel cuando el barrido termina — y también cuando no hay
-    // barrido que valga. Lo que no puede pasar es que una pulsación no haga
-    // nada.
+    // Se da por abierto al pulsar y no al terminar: de este estado depende que el cartel
+    // esté por delante de la caminante MIENTRAS crece. Al cerrar lo suelta `settle`, al
+    // final, para que también encoja por delante.
+    if (!isHiding) setIsRevealed(true)
+
+    // Cómo queda el cartel al terminar el barrido, y también cuando no hay barrido: lo
+    // que no puede pasar es que una pulsación no haga nada.
     const settle = () => {
       if (isHiding) {
-        // Se sueltan los estilos que escribió GSAP y el cartel vuelve a su
-        // ciclo de fantasma, que es cosa del CSS. El ciclo arranca de cero, o
-        // sea invisible, así que el relevo no se ve.
+        // El ciclo de fantasma vuelve a ser cosa del CSS. Arranca invisible, así que el
+        // relevo no se ve.
         gsap.set(image, { clearProps: 'opacity,animation' })
       } else {
         gsap.set(image, { opacity: 1 })
@@ -64,15 +58,11 @@ export function WelcomeSign() {
       setIsRevealed(!isHiding)
     }
 
-    // Al aparecer, el cartel arranca apagado del todo: si no, su fantasma se
-    // vería por los huecos que la cuadrícula aún no ha cubierto. Al irse no
-    // hace falta —la rejilla que lo tapa es idéntica a él—, y de apagarlo se
-    // encarga la propia timeline en su primer instante.
+    // Al aparecer, el cartel arranca apagado del todo o su fantasma se vería por los
+    // huecos. Al irse no hace falta: la rejilla que lo tapa es idéntica a él.
     //
-    // `animation: 'none'` no es opcional: mientras el ciclo de fantasma corre,
-    // manda él sobre la opacidad —una animación CSS pisa cualquier valor
-    // escrito a mano, incluido el que pone GSAP—, y el cartel seguiría
-    // asomándose por debajo de la rejilla.
+    // `animation: 'none'` no es opcional: mientras el ciclo de fantasma corre, una
+    // animación CSS pisa cualquier valor escrito a mano, incluido el de GSAP.
     if (!isHiding) {
       gsap.set(image, { animation: 'none', opacity: 0 })
     }
@@ -84,8 +74,11 @@ export function WelcomeSign() {
         ? buildWelcomeSignHide(layer, image)
         : buildWelcomeSignReveal(layer, image)
 
-    // Sin cuadrícula —porque se ha pedido no mover cosas, o porque el cartel aún
-    // no tiene tamaño— el cambio es instantáneo.
+    // Con la duración del barrido, para que crecer y montarse terminen a la vez. Sin
+    // cuadrícula no hay duración que copiar y el cartel salta a su sitio.
+    zoomWelcomeSign(button, { open: !isHiding, duration: timeline?.duration() ?? 0 })
+
+    // Sin cuadrícula el cambio es instantáneo.
     if (!timeline) {
       settle()
       return
@@ -103,9 +96,13 @@ export function WelcomeSign() {
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       className="welcome-sign"
       onClick={handleClick}
+      // Lo que un lector de pantalla necesita para anunciarlo, y de lo que tira el CSS
+      // para subirlo por delante del resto de la portada.
+      aria-expanded={isRevealed}
       aria-label={isRevealed ? 'Ocultar la bienvenida' : 'Leer de qué va esta biblioteca'}
     >
       <img

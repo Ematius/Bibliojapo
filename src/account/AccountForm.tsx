@@ -5,15 +5,12 @@ import { ACCOUNT_ERRORS, PASSWORD_HINT } from './accountConfig'
 import type { AccountMode } from './accountPanelState'
 
 interface AccountFormProps {
-  // Por qué se pide la cuenta, si la ha pedido algo concreto. Sustituye a la
-  // presentación de siempre: quien llega desde un tomo quiere saber qué gana.
+  // Por qué se pide la cuenta. Sustituye a la presentación de siempre: quien llega desde un
+  // tomo quiere saber qué gana.
   reason: string | null
-  // El id del título, para que el diálogo diga cómo se llama.
   titleId: string
-  // Por cuál de las dos vías se empieza. Es solo el arranque: el enlace de abajo
-  // sigue llevando a la otra.
+  // Solo el arranque: el enlace de abajo sigue llevando a la otra vía.
   mode: AccountMode
-  // Se llama al entrar con éxito.
   onDone: () => void
 }
 
@@ -34,18 +31,16 @@ const COPY: Record<AccountMode, { title: string; intro: string; submit: string }
 
 // Crear la cuenta o entrar en ella: el mismo formulario, con un campo de más.
 //
-// No comprueba nada por su cuenta —ni el formato del correo ni el largo de la
-// contraseña—: lo comprueba el servidor y aquí se enseña lo que diga. Validar en
-// los dos sitios sería escribir dos veces la misma regla, y la del servidor es la
-// que manda. Lo único que se adelanta es la pista de la contraseña, para que nadie
-// tenga que equivocarse para enterarse.
+// No comprueba nada por su cuenta —ni el formato del correo ni el largo de la contraseña—: lo
+// comprueba el servidor y aquí se enseña lo que diga. Validar en los dos sitios sería
+// escribir dos veces la misma regla. Lo único que se adelanta es la pista de la contraseña.
 export function AccountForm({ reason, titleId, mode: startMode, onDone }: AccountFormProps) {
   const [mode, setMode] = useState<AccountMode>(startMode)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  // Qué se está enviando, para apagar los botones y decir que se espera. Son dos
-  // porque Google tiene su propio botón y su propia espera.
+  // Qué se está enviando, para apagar los botones. Son dos porque Google tiene su propio
+  // botón y su propia espera.
   const [pending, setPending] = useState<'form' | 'google' | null>(null)
   const [error, setError] = useState<ApiErrorCode | null>(null)
   const fieldId = useId()
@@ -73,8 +68,8 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
     )
   }
 
-  // Cambiar de modo se lleva el error: el de «ese correo ya tiene cuenta» no
-  // pinta nada en el formulario de entrar, que es justo a donde manda.
+  // Cambiar de modo se lleva el error: el de «ese correo ya tiene cuenta» no pinta nada en el
+  // formulario de entrar, que es justo a donde manda.
   const switchMode = () => {
     setMode(mode === 'signUp' ? 'signIn' : 'signUp')
     setError(null)

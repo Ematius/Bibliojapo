@@ -1,0 +1,15 @@
+export const SCENE_PAN = {
+  // En fracción de lo que se ve. Menos de una pantalla: dejando a la vista un trozo de lo
+  // anterior se entiende que uno se ha movido y no que ha cambiado de sitio.
+  stepRatio: 0.7,
+  durationSeconds: 0.55,
+  ease: 'power2.out',
+
+  // Lo que tiene que sobrar de escena, en fracción del ancho visible, para que haya flechas
+  // y arrastre. Por debajo son ruido: en un escritorio apaisado sobran unos píxeles.
+  minRangeRatio: 0.1,
+
+  // Sin este margen, el temblor del dedo al tocar un cartel contaría como arrastre y se
+  // tragaría la pulsación.
+  dragThresholdPx: 8,
+} as const

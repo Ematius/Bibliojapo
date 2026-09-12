@@ -1,23 +1,16 @@
-// Lo que se teclea en el hueco de romaji, y si está bien.
+// Lo que se teclea en el hueco de rōmaji, y si está bien.
 //
-// El archivo NO se llama como el componente al que atiende —WordGap.tsx— y no es
-// un capricho: en Windows y en macOS el sistema de archivos no distingue mayúsculas,
-// así que `WordGap.ts` y `WordGap.tsx` serían el mismo nombre para el compilador.
-// Se nombra por lo que hace, como `bookAudio.ts` o `kanaBoard.ts`.
+// NO se llama como el componente al que atiende —WordGap.tsx— porque en Windows y macOS el
+// sistema de archivos no distingue mayúsculas, y `WordGap.ts` y `WordGap.tsx` serían el
+// mismo nombre para el compilador. Se nombra por lo que hace.
 //
-// ── Por qué esto no es un hook ─────────────────────────────────────────────
-// Lo mismo que en `bookAudio.ts`, `kanaBoard.ts` y `kanaStrokeAnimation.ts`:
-// page-flip clona las páginas de React, y un `onChange` de React se quedaría
+// No es un hook porque page-flip clona las páginas de React: un `onChange` se quedaría
 // enganchado a la copia que nadie ve.
 //
-// ── Por qué hay que callar el gesto del libro ──────────────────────────────
-// Aquí no es solo que la hoja se pasara al escribir: es que el campo NO SE PODRÍA
-// NI ENFOCAR. page-flip deja pasar el `mousedown` sobre <button> y <a>, y sobre
-// cualquier otra cosa hace `preventDefault()` para que arrastrar no seleccione
-// texto. Un <input> cae en ese «cualquier otra cosa», y un `mousedown` anulado no
-// da el foco: se podría pulsar el campo todo el día sin que apareciera el cursor.
-//
-// Cortando ahí el evento, ni el libro se entera ni el campo pierde su foco.
+// HAY QUE CALLAR EL GESTO DEL LIBRO, y aquí no es solo que la hoja se pasara al escribir:
+// el campo NO SE PODRÍA NI ENFOCAR. page-flip deja pasar el `mousedown` sobre <button> y
+// <a>, y sobre cualquier otra cosa hace `preventDefault()` para que arrastrar no seleccione
+// texto. Un <input> cae en ese «cualquier otra cosa», y un `mousedown` anulado no da el foco.
 import { announceSolved } from '../parts/solved'
 
 export function mountWordAnswer(root: HTMLElement): (() => void) | null {
@@ -37,14 +30,13 @@ function mountOne(gap: HTMLElement): (() => void) | null {
   const result = gap.querySelector<HTMLElement>('.word-gap__result')
   if (inputs.length === 0 || !result) return null
 
-  // Lo escrito vale igual en mayúscula o en minúscula, y con espacios de más: el
-  // ejercicio pregunta por el sonido del kana, no por la pulsación exacta de las
-  // teclas. Un móvil que ponga la primera letra en mayúscula no puede suspender.
+  // Vale igual en mayúscula o minúscula y con espacios de más: el ejercicio pregunta por el
+  // sonido, no por la pulsación exacta. Un móvil que ponga la primera letra en mayúscula no
+  // puede suspender.
   const clean = (value: string) => value.trim().toLowerCase()
 
-  // Solo para el aviso de fuera. La corrección sigue siendo viva —se recalcula en
-  // cada tecla, porque lo escrito cambia—, pero «resuelto» se dice una sola vez:
-  // sin esto, cada pulsación posterior volvería a contar como un acierto nuevo.
+  // Solo para el aviso de fuera. La corrección sigue siendo viva —se recalcula en cada
+  // tecla—, pero «resuelto» se dice una vez: si no, cada pulsación contaría como un acierto.
   let announced = false
 
   const check = () => {
@@ -56,8 +48,7 @@ function mountOne(gap: HTMLElement): (() => void) | null {
       const answer = clean(input.dataset.answer ?? '')
 
       input.classList.remove('word-gap__input--right', 'word-gap__input--wrong')
-      // Un hueco vacío todavía no es un fallo: es un hueco sin contestar. Se queda
-      // sin marca, o el ejercicio estaría corrigiendo antes de que se responda.
+      // Un hueco vacío todavía no es un fallo: es un hueco sin contestar.
       if (typed === '') return
 
       filled += 1
@@ -74,8 +65,8 @@ function mountOne(gap: HTMLElement): (() => void) | null {
       return
     }
 
-    // Se felicita cuando están TODOS: si el kana apareciera dos veces en la
-    // palabra habría dos huecos, y acertar uno no es haber leído la palabra.
+    // Se felicita cuando están TODOS: si el kana apareciera dos veces habría dos huecos, y
+    // acertar uno no es haber leído la palabra.
     if (right === inputs.length) {
       const word = gap.dataset.word ?? ''
       const reading = gap.dataset.reading ?? ''
@@ -91,9 +82,8 @@ function mountOne(gap: HTMLElement): (() => void) | null {
     result.textContent = 'Esa no. Vuelve a mirar el kana de la hoja de al lado.'
   }
 
-  // El evento es `input` y no `keyup`: salta igual con el teclado, pegando,
-  // dictando o con el teclado en pantalla de un móvil, que con `keyup` no siempre
-  // avisa. Y así corrige en el momento, sin botón ni Enter.
+  // `input` y no `keyup`: salta igual tecleando, pegando, dictando o con el teclado en
+  // pantalla de un móvil, donde `keyup` no siempre avisa.
   const onInput = () => check()
 
   // Los dos eventos con los que el libro empieza a pasar la hoja.

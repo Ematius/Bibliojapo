@@ -8,11 +8,8 @@ import './AccountPanel.scss'
 
 // El panel de la cuenta: crearla, entrar, y el carné de quien ya está dentro.
 //
-// Se monta UNA vez, arriba del todo, y lo abre quien lo necesite con
-// `openAccountPanel` —la barra, o un tomo que pide cuenta para abrirse—. Va encima
-// de cualquier pantalla y no se lleva a nadie a otra ruta: crear la cuenta es un
-// paso de en medio, y al terminar se sigue donde se estaba, con el tomo recién
-// abierto delante.
+// Se monta UNA vez, arriba del todo, y no lleva a nadie a otra ruta: crear la cuenta es un
+// paso de en medio, y al terminar se sigue donde se estaba.
 export function AccountPanel() {
   const { open, reason, mode } = useAccountPanel()
   const session = useSession()
@@ -22,17 +19,15 @@ export function AccountPanel() {
   // Dónde estaba el foco antes de abrir, para devolverlo al cerrar.
   const returnFocusRef = useRef<HTMLElement | null>(null)
 
-  // Montado no es lo mismo que abierto: al cerrarse sigue montado mientras se va,
-  // y solo se quita cuando la salida termina. Se ajusta durante el render, que es
-  // como React pide derivar estado de otro que cambia.
+  // Montado no es lo mismo que abierto: al cerrarse sigue montado mientras se va. Se ajusta
+  // durante el render, que es como React pide derivar estado de otro que cambia.
   const [mounted, setMounted] = useState(open)
   if (open && !mounted) setMounted(true)
 
   const onHidden = useCallback(() => setMounted(false), [])
   useAccountPanelReveal({ rootRef, cardRef, open, onHidden })
 
-  // Escape cierra, como en cualquier ventana que ocupa la pantalla. Solo se
-  // escucha con el panel abierto.
+  // Escape cierra. Solo se escucha con el panel abierto.
   useEffect(() => {
     if (!open) return
 
@@ -44,9 +39,8 @@ export function AccountPanel() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open])
 
-  // El foco entra en el panel al abrirse —al primer campo, que es lo que se va a
-  // hacer— y vuelve a donde estaba al cerrarse. Sin lo segundo, quien navega con
-  // teclado acabaría al principio de la página.
+  // El foco entra al primer campo al abrirse y vuelve a donde estaba al cerrarse. Sin lo
+  // segundo, quien navega con teclado acabaría al principio de la página.
   useEffect(() => {
     if (!open) return
 

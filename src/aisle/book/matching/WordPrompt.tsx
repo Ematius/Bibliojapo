@@ -6,36 +6,26 @@ interface WordPromptProps {
   word: Word
 }
 
-// El enunciado de la hoja de al lado: la palabra sin escribirla, sin traducirla y
-// sin su lectura. Solo lo que significa —un círculo azul, si lo lleva— y cómo
-// suena.
+// El enunciado de la hoja de al lado: la palabra sin escribirla, sin traducirla y sin su
+// lectura. Solo lo que significa y cómo suena.
 //
-// ── Por qué no hay ni una letra ────────────────────────────────────────────
-// Es la primera vez que la palabra se pide entera. Con «azul» escrito se
-// resolvería recordando una traducción, y con `aoi` directamente leyendo. Un color
-// y un sonido no se pueden leer: hay que haber aprendido あおい.
+// No hay ni una letra porque es la primera vez que la palabra se pide entera: con «azul»
+// escrito se resolvería recordando una traducción y con `aoi` leyendo.
 //
-// ── De dónde sale lo que se ve ─────────────────────────────────────────────
-// El temario tiene 228 palabras y siete ejercicios que las usan. Ilustrar cada
-// palabra para cada ejercicio no se acaba nunca, así que lo que se ilustra es la
-// PALABRA, una vez: todos los ejercicios piden lo mismo, su representación. Para
-// un color esa representación es el color; para いえ o はは es un dibujo. Las dos
-// las dice la palabra, no esta hoja. Ver `swatch` e `image` en
-// `content/types.ts`.
+// Lo que se ilustra es la PALABRA, una vez, no cada ejercicio: los siete que la usan piden
+// lo mismo, su representación. Ver `swatch` e `image` en `content/types.ts`.
 export function WordPrompt({ word }: WordPromptProps) {
-  // El color manda sobre el dibujo: una palabra que ES un color se enseña con su
-  // color, y añadirle además un dibujo sería decir lo mismo dos veces.
+  // El color manda sobre el dibujo: añadirle uno a una palabra que ES un color sería decir
+  // lo mismo dos veces.
   const swatch = word.swatch
   const image = !swatch ? word.image : undefined
 
   return (
     <div className="word-prompt">
       {swatch ? (
-        // El color va en el atributo y no en la hoja de estilos porque es
-        // contenido: lo dice la palabra, no el diseño de la página.
-        //
-        // `role="img"` con su etiqueta para quien no ve el color. Decir «azul» ahí
-        // no destripa nada: la respuesta que se pide es あおい, no la traducción.
+        // El color va en el atributo y no en la hoja de estilos porque es contenido: lo dice
+        // la palabra, no el diseño. Decir «azul» en la etiqueta no destripa nada: la respuesta
+        // que se pide es あおい, no la traducción.
         <span
           className="word-prompt__swatch"
           style={{ background: swatch }}

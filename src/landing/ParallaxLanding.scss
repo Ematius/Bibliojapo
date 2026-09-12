@@ -1,104 +1,97 @@
-.parallax-landing {
-  // Punto de la imagen que queda centrado cuando hay que recortar en vertical.
-  // Las capas de fondo son 16:9, así que en una pantalla apaisada encajan casi
-  // sin recorte; esto solo entra en juego en formatos más altos, donde por
-  // debajo del 50% se gana cielo y por encima se gana primer plano de flores.
-  --scene-focus-y: 55%;
+@use '../styles/stage' as *;
 
+.parallax-landing {
   position: relative;
   width: 100%;
   height: calc(var(--vh) * 100);
   overflow: hidden;
-  // Ninguna de las cuatro ilustraciones cubre el encuadre entero por sí sola:
-  // todas tienen zonas transparentes. El degradado de cielo tapa lo que quede
-  // al descubierto, sobre todo al recortar en pantallas muy apaisadas.
+  // La caja contra la que se encuadra la escena. Es la ventana de verdad: `100vw` contaría
+  // además el hueco que `html` reserva para la barra de scroll.
+  container-type: size;
+  // Ninguna de las cuatro ilustraciones cubre el encuadre entero por sí sola: el degradado de
+  // cielo tapa lo que quede al descubierto al recortar en pantallas muy apaisadas.
   background: linear-gradient(180deg, var(--color-sky) 0%, var(--color-sky-low) 100%);
 
+  // No vale el encuadre del vestíbulo, que recorta desde el centro: la biblioteca está a dos
+  // tercios a la derecha y en una pantalla estrecha el recorte se la lleva entera. Este
+  // encuadra por la zona que llega en variables desde el componente.
   &__scene {
-    position: absolute;
-    inset: 0;
+    @include framed-stage;
   }
 
   &__layer {
-    // Cuánto se ensancha la capa respecto a la pantalla para dar margen a la
-    // deriva lateral. Por defecto ninguno: ensanchar saca contenido fuera del
-    // encuadre, así que solo lo reciben las capas que de verdad lo necesitan.
+    // Cuánto se ensancha la capa para dar margen a la deriva lateral. Por defecto ninguno:
+    // ensanchar saca contenido fuera del encuadre.
     --layer-overscan: 1;
 
     position: absolute;
-    top: 0;
-    // Ensanchado simétrico: con 1.08 la capa sobresale un 4% por cada lado. El
-    // ancho tiene que ir explícito — una imagen posicionada en absoluto con
-    // `width: auto` no se estira entre left y right, se queda en su tamaño
-    // intrínseco y deja la pantalla a medio cubrir. Se posiciona con left y
-    // width en vez de con un transform porque GSAP anima el transform de estas
-    // capas.
+    // La escena ya tiene la proporción del dibujo, así que la capa crece en los dos ejes a la
+    // vez: ensanchar solo en horizontal la deformaría, y recortar con `object-fit` despegaría
+    // la zona de la puerta de la puerta pintada. El tamaño va explícito —una imagen en
+    // absoluto con `width: auto` no se estira entre left y right— y con left/top y no con un
+    // transform, que es lo que anima GSAP.
     left: calc((1 - var(--layer-overscan)) * 50%);
+    top: calc((1 - var(--layer-overscan)) * 50%);
     width: calc(100% * var(--layer-overscan));
-    height: 100%;
-    // Las capas de fondo comparten tamaño y proporción, así que recortarlas con
-    // el mismo encuadre mantiene la composición alineada entre ellas.
-    object-fit: cover;
-    object-position: center var(--scene-focus-y);
+    height: calc(100% * var(--layer-overscan));
     user-select: none;
   }
 
-  // El primer plano de flores es lo más cercano y lo que más recorrido necesita.
-  // Es una franja homogénea de lado a lado, así que puede permitirse el margen
-  // más ancho de todas las capas sin que se note lo que pierde por los bordes.
+  // Lo más cercano y lo que más recorrido necesita. Es una franja homogénea de lado a lado,
+  // así que puede permitirse el margen más ancho sin que se note lo que pierde por los bordes.
   &__layer--foreground {
     --layer-overscan: 1.1;
 
     will-change: transform;
   }
 
-  // El valle es el plano más lejano y apenas se desplaza, así que le basta con
-  // un margen mínimo. Pero no puede ser cero: un fondo completamente clavado
-  // hace que el ojo lo tome como marco fijo y lea el resto como objetos
-  // moviéndose solos, en vez de como una cámara desplazándose.
+  // El plano más lejano, que apenas se desplaza. Pero su margen no puede ser cero: un fondo
+  // clavado hace que el ojo lo tome como marco fijo y lea el resto como objetos moviéndose
+  // solos, en vez de como una cámara.
   &__layer--valley {
     --layer-overscan: 1.02;
 
     will-change: transform;
   }
 
-  // La biblioteca lleva el mismo margen que el prado porque recorre exactamente
-  // lo mismo: va apoyada en esa ladera y las dos capas se mueven solidarias. Su
-  // ilustración deja aire suficiente a ambos lados como para permitírselo.
+  // El mismo margen que el prado porque recorre exactamente lo mismo: va apoyada en esa
+  // ladera y las dos capas se mueven solidarias.
   &__layer--library {
     --layer-overscan: 1.08;
 
     will-change: transform;
   }
 
-  // El prado sí es homogéneo de lado a lado, así que perder un 4% por cada borde
-  // no se nota y a cambio permite un recorrido bastante más amplio: es la capa
-  // más cercana y la que más profundidad aporta.
+  // Homogéneo de lado a lado, así que perder un 4 % por borde no se nota y a cambio permite
+  // un recorrido más amplio.
   &__layer--meadow {
     --layer-overscan: 1.08;
 
     will-change: transform;
   }
 
-  // La capa que solo lleva la zona pulsable de la puerta.
+  // Comparte clases con la ilustración del prado y de ahí saca su caja y su barrido.
   //
-  // Comparte clases con la ilustración de la biblioteca —`__layer` y
-  // `__layer--library`— y de ahí saca su caja y su barrido de cámara. Aquí solo
-  // se corrige lo que un div no puede heredar de una imagen.
-  //
-  // `pointer-events: none` es lo importante: sin él esta capa cubriría la escena
-  // entera y se tragaría cualquier pulsación, incluida la de la caminante. Solo
-  // la zona de la puerta vuelve a activarlos, para sí misma.
+  // `container-type` hace que dentro `100cqw` y `100cqh` sean el ancho y el alto del DIBUJO;
+  // con `vw` y `vh` la figura recorrería la ventana y se saldría del sendero. Crea además un
+  // contexto de apilamiento, así que el `z-index` va aquí y no en la figura: sin él, el cartel
+  // de bienvenida —casi transparente pero pulsable— se queda con medio sendero.
+  &__walker-layer {
+    container-type: size;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  // Sin `pointer-events: none` la capa cubriría la escena entera y se tragaría hasta la
+  // pulsación de la caminante; la puerta los reactiva para sí misma.
   &__door-layer {
     pointer-events: none;
   }
 
-  // Dónde se coloca el cartel de bienvenida. Cómo se ve lo dice él, en
-  // `WelcomeSign.scss`.
+  // Dónde se coloca el cartel de bienvenida; cómo se ve lo dice `WelcomeSign.scss`.
   //
-  // Tamaño en vw y no en vh: la imagen es más alta que ancha, así que fijar el
-  // ancho es lo que evita que en una pantalla baja y apaisada se dispare de
-  // alto y tape media escena.
+  // El tamaño va en vw y no en vh: la imagen es más alta que ancha, así que fijar el ancho es
+  // lo que evita que en una pantalla baja y apaisada se dispare de alto.
   &__welcome-sign {
     position: absolute;
     top: 5rem;
@@ -107,19 +100,21 @@
     z-index: 0;
   }
 
+  // Abierto, el cartel manda: si no, la caminante y las gotas le cruzan el texto. Sube el
+  // ENVOLTORIO porque su `z-index: 0` es un contexto de apilamiento y desde dentro el botón
+  // no puede adelantar a nada de fuera.
+  &__welcome-sign:has([aria-expanded='true']) {
+    z-index: 2;
+  }
+
   &__drops {
     position: absolute;
     inset: 0;
-    // Recorta la copia de gotas que en cada momento está fuera de la pantalla.
     overflow: hidden;
-    // Por encima del cartel de bienvenida (z-index: 0): sin esto quedarían
-    // debajo, ya que en el DOM la escena —que las contiene— va antes que el
-    // cartel.
+    // Por encima del cartel de bienvenida: en el DOM la escena —que las contiene— va antes.
     z-index: 1;
-    // Y obligatorio en cuanto sube: esta capa cubre la pantalla entera, así que
-    // por delante de todo se tragaría cualquier pulsación —la del cartel, la de
-    // la puerta y la de la caminante—. Las gotas son decoración pura y no
-    // necesitan recibir ninguna.
+    // Y obligatorio en cuanto sube: esta capa cubre la pantalla entera, así que por delante de
+    // todo se tragaría cualquier pulsación. Las gotas son decoración pura.
     pointer-events: none;
   }
 
@@ -127,39 +122,32 @@
     position: absolute;
     inset-inline: 0;
     top: 0;
-    // Dos copias apiladas: el doble de alto que la pantalla. La de abajo empieza
-    // fuera del encuadre y entra a medida que la pista sube.
+    // Dos copias apiladas: el doble de alto que la pantalla. La de abajo entra según sube.
     height: 200%;
     will-change: transform;
   }
 
   &__drops-tile {
-    // Tamaño de las gotas. Es un factor sobre el lado corto de la pantalla:
-    // bajarlo las hace más pequeñas.
+    // Factor sobre el lado corto de la pantalla: bajarlo las hace más pequeñas.
     --drops-size: 0.7;
-    // Posición horizontal de las gotas: 0% las pega al borde izquierdo, 50% las
-    // centra. Van a la izquierda, al lado contrario de la biblioteca, para no
-    // taparla y para equilibrar el peso visual de la escena.
+    // 0 % las pega al borde izquierdo. Van al lado contrario de la biblioteca para no taparla
+    // y para equilibrar el peso de la escena.
     --drops-x: 6%;
 
     display: block;
     width: 100%;
-    // Cada copia ocupa exactamente una pantalla, que es lo que hace que subir la
-    // pista un 50% deje la segunda copia justo donde estaba la primera.
+    // Cada copia ocupa exactamente una pantalla: es lo que hace que subir la pista un 50 %
+    // deje la segunda copia justo donde estaba la primera.
     height: 50%;
-    // `contain` y no `cover`: cubriendo, la ilustración se recorta por arriba y
-    // por abajo, y hay gotas pegadas al borde superior que quedaban partidas por
-    // la mitad. Conteniéndola entra entera y además se escala por el lado corto,
-    // que en una pantalla apaisada ya las deja bastante más pequeñas.
+    // `contain` y no `cover`: cubriendo se recorta por arriba y por abajo, y hay gotas pegadas
+    // al borde superior que quedaban partidas.
     object-fit: contain;
     object-position: var(--drops-x) center;
-    // Reduce el dibujo sin tocar el layout de la pista, así el empalme del bucle
-    // sigue cuadrando. No colisiona con GSAP, que anima el transform de la pista
-    // y no el de las copias.
+    // Reduce el dibujo sin tocar el layout de la pista, así el empalme del bucle sigue
+    // cuadrando. No colisiona con GSAP, que anima el transform de la pista y no el de las copias.
     scale: var(--drops-size);
-    // El escalado se ancla en el mismo punto donde se ha colocado la ilustración.
-    // Con el origen por defecto —el centro— reducirla la arrastraría otra vez
-    // hacia el medio de la pantalla y desharía el desplazamiento.
+    // El escalado se ancla donde se ha colocado la ilustración: con el origen por defecto
+    // —el centro— reducirla la arrastraría otra vez hacia el medio y desharía el desplazamiento.
     transform-origin: var(--drops-x) center;
     user-select: none;
   }

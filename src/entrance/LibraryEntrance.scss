@@ -7,8 +7,7 @@
   overflow: hidden;
   background: var(--color-bg);
 
-  // El encuadre que comparten las tres escenas pintadas — entrada, vestíbulo y
-  // pasillo. Ver `styles/_stage.scss`.
+  // El encuadre que comparten las tres escenas pintadas. Ver `styles/_stage.scss`.
   &__stage {
     @include scene-stage;
   }
@@ -24,10 +23,9 @@
     pointer-events: none;
   }
 
-  // Cielo: la única capa de la fachada con movimiento. Va ensanchada respecto
-  // al stage para tener margen por el que derivar; el ancho tiene que ir
-  // explícito porque una imagen en posición absoluta no se estira sola entre
-  // left y right, se queda en su tamaño intrínseco.
+  // La única capa de la fachada con movimiento. Va ensanchada respecto al stage para tener
+  // margen por el que derivar; el ancho tiene que ir explícito porque una imagen en absoluto
+  // no se estira sola entre left y right.
   &__sky {
     position: absolute;
     top: 0;
@@ -41,8 +39,8 @@
     will-change: transform;
   }
 
-  // Cartel de bienvenida, en primer plano. Solo se le da el ancho: el alto sale
-  // de la proporción de la ilustración, que es la del stage.
+  // Solo se le da el ancho: el alto sale de la proporción de la ilustración, que es la del
+  // stage.
   &__sign {
     position: absolute;
     left: calc(var(--sign-left) * 100%);
@@ -101,29 +99,24 @@
     z-index: 4;
     transform-style: preserve-3d;
     will-change: transform, opacity, filter;
-    // Cubre todo el escenario y sigue en el DOM aunque acabe con opacidad 0,
-    // así que sin esto interceptaría los clics de los carteles que hay debajo.
+    // Cubre todo el escenario y sigue en el DOM aunque acabe con opacidad 0: sin esto
+    // interceptaría los clics de los carteles que hay debajo.
     pointer-events: none;
   }
 
   &__doors {
     position: absolute;
-    // Ligeramente más grandes que el hueco (--portal-bleed) para que las hojas
-    // se solapen un poco con el marco en vez de dejar un filamento de separación
-    // por el que se cuele la luz/el interior.
+    // Un poco más grandes que el hueco para que las hojas se solapen con el marco en vez de
+    // dejar un filamento por el que se cuele la luz.
     left: calc((var(--portal-left) - var(--portal-bleed)) * 100%);
     top: calc((var(--portal-top) - var(--portal-bleed)) * 100%);
     width: calc((var(--portal-width) + var(--portal-bleed) * 2) * 100%);
     height: calc((var(--portal-height) + var(--portal-bleed) * 2) * 100%);
 
-    // La perspectiva vive aquí y no en el stage por dos razones. La primera es
-    // que el punto de fuga queda en el centro de las propias puertas, que es
-    // desde donde se mira una entrada. La segunda es que así la distancia del
-    // ojo se expresa en múltiplos del ancho de las hojas
-    // (--door-perspective-ratio) en vez de en píxeles fijos: al cambiar el
-    // tamaño del PORTAL, el escorzo se mantiene igual de marcado. Con un valor
-    // en px, unas puertas pequeñas quedan casi sin escorzo y la apertura deja
-    // de leerse como hacia dentro.
+    // La perspectiva vive aquí y no en el stage por dos razones: el punto de fuga queda en el
+    // centro de las propias puertas, y así la distancia del ojo va en múltiplos del ancho de
+    // las hojas en vez de en píxeles fijos. Con un valor en px, unas puertas pequeñas quedan
+    // casi sin escorzo y la apertura deja de leerse como hacia dentro.
     perspective: calc(
       (var(--portal-width) + var(--portal-bleed) * 2) * 100vw * var(--door-perspective-ratio)
     );
@@ -136,10 +129,9 @@
     position: absolute;
     top: 0;
     height: 100%;
-    // 50% + un pequeño extra que invade hacia el centro (--door-center-overlap),
-    // para que ambas hojas se solapen un poco en la costura en vez de dejar un
-    // filamento por el que se cuele el interior. Solo mueve el borde interior:
-    // el de la bisagra queda fijo por el left/right:0 de cada variante.
+    // 50 % más un extra que invade hacia el centro, para que las dos hojas se solapen en la
+    // costura en vez de dejar un filamento. Solo mueve el borde interior: el de la bisagra
+    // queda fijo por el left/right:0 de cada variante.
     width: calc(50% + var(--door-center-overlap) * 100%);
     transform-style: preserve-3d;
     will-change: transform;
@@ -155,8 +147,8 @@
     }
   }
 
-  // Las dos caras de la hoja, con el mismo PNG: la frontal tallada y el dorso,
-  // oscurecido. La hoja no tiene grosor — es una lámina sin canto.
+  // Las dos caras de la hoja, con el mismo PNG: la frontal tallada y el dorso oscurecido. La
+  // hoja no tiene grosor — es una lámina sin canto.
   .door3d__face {
     position: absolute;
     inset: 0;
@@ -172,20 +164,16 @@
       pointer-events: none;
     }
 
-    // El dorso: el mismo PNG dado la vuelta sobre el mismo plano. Se ve cuando
-    // la hoja pasa de los 90° al abrirse hacia dentro.
+    // El mismo PNG dado la vuelta sobre el mismo plano. Se ve cuando la hoja pasa de los 90°.
     &--back {
       transform: rotateY(180deg);
       filter: brightness(var(--door-back-brightness, 0.6)) saturate(var(--door-back-saturation, 0.75));
     }
   }
 
-  // La hoja invade un poco hacia el centro (--door-center-overlap) para que no
-  // quede un filamento de separación en la costura. Para que esa invasión no se
-  // vea como un corte duro de una hoja tapando a la otra (cualquiera que quede
-  // por delante), la cara frontal se desvanece justo en ese pequeño sobrante,
-  // dejando siempre su mitad natural totalmente opaca — así hay una única
-  // costura degradada en vez de un escalón visible.
+  // Para que la invasión hacia el centro no se vea como un corte duro de una hoja tapando a la
+  // otra, la cara frontal se desvanece justo en ese sobrante y deja su mitad natural opaca: una
+  // única costura degradada en vez de un escalón.
   &__door--left .door3d__face--front img {
     mask-image: linear-gradient(to right, black calc(var(--door-seam-fade-start) * 1%), transparent 100%);
     -webkit-mask-image: linear-gradient(to right, black calc(var(--door-seam-fade-start) * 1%), transparent 100%);
@@ -212,8 +200,8 @@
     opacity: 0;
     pointer-events: none;
     backface-visibility: hidden;
-    // Un pelo por delante de la cara frontal: las dos ocupan el mismo plano y
-    // sin esta separación el navegador puede pintar una sobre otra a saltos.
+    // Un pelo por delante de la cara frontal: las dos ocupan el mismo plano y sin esta
+    // separación el navegador puede pintar una sobre otra a saltos.
     transform: translateZ(1px);
   }
 

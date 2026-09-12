@@ -1,8 +1,5 @@
-// El enunciado sin palabras: la mancha de color y el botón que la dice.
-//
-// La hoja va casi vacía a propósito. Es la única del tomo que no lleva ni un
-// carácter, y ese vacío es parte del ejercicio: no hay nada que leer, así que solo
-// queda mirar, escuchar y acordarse.
+// El enunciado sin palabras: la mancha de color y el botón que la dice. La hoja va casi vacía
+// a propósito — es la única del tomo sin un solo carácter, y ese vacío es parte del ejercicio.
 
 .word-prompt {
   width: 100%;
@@ -16,40 +13,30 @@
   gap: 5cqh;
 }
 
-// La mancha de color.
-//
-// El color lo pone el contenido en el atributo `style`, así que aquí solo está la
-// forma. Es redondo y no cuadrado porque un cuadrado de color en una página se lee
-// como un recuadro de interfaz —un aviso, una etiqueta—, y un círculo se lee como
-// una mancha de pintura, que es lo que tiene que parecer.
+// La mancha de color. El color lo pone el contenido en el atributo `style`, así que aquí solo
+// está la forma. Redonda y no cuadrada: un cuadrado de color se lee como un recuadro de
+// interfaz, y un círculo como una mancha de pintura.
 .word-prompt__swatch {
   display: block;
   width: clamp(3rem, 34cqmin, 9rem);
   aspect-ratio: 1;
   border-radius: 50%;
 
-  // Dos capas hacia dentro, ninguna hacia fuera:
+  // Dos capas hacia dentro: un aro fino del propio color en sombra, que evita que la mancha se
+  // recorte contra el papel con un canto de vinilo, y una sombra suave por arriba que la hunde
+  // en la hoja.
   //
-  //   · un aro fino del propio color en sombra, que hace de borde y evita que la
-  //     mancha se recorte contra el papel con un canto de vinilo;
-  //   · una sombra suave por arriba, que la hunde un poco en la hoja en vez de
-  //     dejarla flotando encima.
-  //
-  // Nada de `filter: drop-shadow` ni sombras hacia fuera: la hoja está dentro del
-  // libro que page-flip repinta al girar, y una sombra externa cuesta un repintado
-  // de toda la zona en cada frame.
+  // Nada de `filter: drop-shadow` ni sombras hacia fuera: la hoja está dentro del libro que
+  // page-flip repinta al girar, y una sombra externa cuesta un repintado de toda la zona en
+  // cada frame.
   box-shadow:
     inset 0 0 0 1px rgba(var(--rgb-bg), 0.35),
     inset 0 0.12em 0.5em rgba(var(--rgb-bg), 0.28);
 }
 
-// El dibujo, para las palabras que no son un color.
-//
-// Ocupa más que la mancha porque tiene que leerse como una ilustración y no como
-// un icono: de un círculo azul basta el color, pero de una casa hay que reconocer
-// que es una casa. El alto manda —`cqmin` dejaría el dibujo diminuto en una hoja
-// más ancha que alta— y el ancho se limita aparte para que en la plana estrecha no
-// llegue a tocar los márgenes.
+// El dibujo, para las palabras que no son un color. Ocupa más que la mancha porque tiene que
+// leerse como una ilustración y no como un icono. El alto manda —`cqmin` lo dejaría diminuto
+// en una hoja más ancha que alta— y el ancho se limita aparte para no tocar los márgenes.
 .word-prompt__image {
   display: block;
   max-width: 78cqw;
@@ -64,13 +51,9 @@
   flex: none;
 }
 
-// Qué palabra va a sonar. Va en el registro de las pistas —apagada y más
-// pequeña que todo lo demás— porque es el pie del enunciado y no el enunciado:
-// lo que hay que mirar es el dibujo y lo que hay que oír es el botón.
-//
-// Se equilibra en líneas y no se estira de lado a lado: hay significados de
-// varias palabras —«muchos / abundante»— y partidos por la mitad se leerían como
-// dos cosas distintas.
+// Qué palabra va a sonar. Va en el registro de las pistas porque es el pie del enunciado y no
+// el enunciado. Se equilibra en líneas y no se estira de lado a lado: hay significados de
+// varias palabras que partidos por la mitad se leerían como dos cosas distintas.
 .word-prompt__meaning {
   flex: none;
   margin: 0;

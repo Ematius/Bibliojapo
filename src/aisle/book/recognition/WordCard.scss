@@ -1,8 +1,5 @@
-// La palabra con el kana estudiado destacado.
-//
-// Misma estructura que la tarjeta del kana —lo grande arriba, la traducción
-// debajo y mucho aire alrededor—, porque es la misma idea a otra escala: allí se
-// presenta un carácter y aquí una palabra.
+// La palabra con el kana estudiado destacado. Misma estructura que la tarjeta del kana, porque
+// es la misma idea a otra escala: allí se presenta un carácter y aquí una palabra.
 
 .word-card {
   width: 100%;
@@ -17,24 +14,21 @@
 
   &__word {
     margin: 0;
-    // Zen Kaku Gothic New, la misma con la que se ha aprendido a trazar el kana.
-    // Con la fuente de cabeceras la あ traería remates que su trazo no tiene, y
-    // reconocerla sería reconocer otra letra.
+    // La misma fuente con la que se ha aprendido a trazar el kana: con la de cabeceras la あ
+    // traería remates que su trazo no tiene, y reconocerla sería reconocer otra letra.
     font-family: var(--font-body);
-    // Atado al lado corto de la hoja: una palabra ocupa a lo ancho mucho más que
-    // un carácter suelto, así que parte de un tamaño bastante menor que el de la
-    // tarjeta del kana para que quepan tres o cuatro sin salirse.
+    // Atado al lado corto de la hoja. Parte de un tamaño bastante menor que el de la tarjeta
+    // del kana, para que quepan tres o cuatro caracteres sin salirse.
     font-size: clamp(1.6rem, 22cqmin, 5rem);
     font-weight: 500;
     line-height: 1.15;
-    // La palabra japonesa se lee seguida, pero un pelo de aire entre kana ayuda a
-    // verlos como piezas —que es justo lo que enseña esta hoja—.
+    // Un pelo de aire entre kana ayuda a verlos como piezas, que es lo que enseña esta hoja.
     letter-spacing: 0.04em;
     text-align: center;
   }
 
-  // Un kana de la palabra que todavía no se ha estudiado. Se ve, pero en segundo
-  // plano: está para que la palabra sea una palabra, no para leerlo.
+  // Un kana que todavía no se ha estudiado: se ve, pero en segundo plano. Está para que la
+  // palabra sea una palabra, no para leerlo.
   &__unit {
     color: var(--color-ink);
     opacity: 0.34;

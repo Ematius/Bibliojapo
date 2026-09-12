@@ -1,18 +1,14 @@
-// El panel de la cuenta: un carné de socio sobre la mesa.
+// El panel de la cuenta: un carné de socio sobre la mesa. Papel crema y filo de latón, y los
+// botones con la tinta de la barra: es la misma llamada a la acción que lo abrió.
 //
-// Papel crema y filo de latón, como las notas de la estantería, y los botones con
-// la tinta de la barra de navegación: es la misma llamada a la acción que lo
-// abrió, y así se reconoce como su continuación.
-//
-// Aquí van también las piezas que comparten el formulario y el carné —el
-// antetítulo, el título, los dos botones—: son partes del panel, no de uno de los
-// dos, y cada uno solo pone lo suyo.
+// Aquí van también las piezas que comparten el formulario y el carné: son partes del panel, no
+// de uno de los dos.
 
 .account-panel {
   position: fixed;
   inset: 0;
-  // Por encima de todo lo de la pantalla, incluido un libro abierto: el panel
-  // es un paso de en medio y tiene que poder salir sobre cualquier cosa.
+  // Por encima de todo, incluido un libro abierto: el panel es un paso de en medio y tiene
+  // que poder salir sobre cualquier cosa.
   z-index: 10;
   display: grid;
   place-items: center;
@@ -26,8 +22,7 @@
     inset: 0;
     padding: 0;
     border: none;
-    // Tira al fondo cálido de la biblioteca y no a negro, igual que el velo del
-    // tomo: oscurecer con negro apaga las lámparas.
+    // Tira al fondo cálido de la biblioteca y no a negro, igual que el velo del tomo.
     background: rgba(var(--rgb-bg), 0.6);
     cursor: pointer;
   }
@@ -82,7 +77,7 @@
     font-size: 1.625rem;
     font-weight: 700;
     line-height: 1.2;
-    // Deja sitio al aspa de cerrar, que está en la misma altura.
+    // Deja sitio al aspa de cerrar, que está a la misma altura.
     padding-right: 2rem;
   }
 
@@ -94,8 +89,8 @@
     text-wrap: pretty;
   }
 
-  // Los dos botones del panel. El principal es el mismo de la barra —la tinta
-  // negra que abrió el panel—, y el secundario, su versión en hueco.
+  // Los dos botones del panel: el principal es el mismo de la barra, y el secundario su
+  // versión en hueco.
   &__primary,
   &__secondary {
     width: 100%;
@@ -136,8 +131,8 @@
     outline-offset: 3px;
   }
 
-  // La nota de que la cuenta todavía es de prueba. Al pie y en voz baja: es
-  // honesta, no una alarma.
+  // La nota de que la cuenta todavía es de prueba. Al pie y en voz baja: es honesta, no una
+  // alarma.
   &__trial {
     margin: 1.5rem 0 0;
     padding-top: 1rem;
@@ -148,8 +143,6 @@
     text-align: center;
   }
 }
-
-// ── Crear la cuenta o entrar ────────────────────────────────────────────────
 
 .account-form {
   &__fields {
@@ -199,7 +192,6 @@
     line-height: 1.45;
   }
 
-  // «o», entre dos rayas.
   &__or {
     display: flex;
     align-items: center;
@@ -223,8 +215,8 @@
     text-align: center;
   }
 
-  // Parece un enlace y es un botón: no lleva a ninguna parte, cambia el
-  // formulario que se tiene delante.
+  // Parece un enlace y es un botón: no lleva a ninguna parte, cambia el formulario que se
+  // tiene delante.
   &__switch-button {
     padding: 0;
     border: none;
@@ -242,8 +234,6 @@
     }
   }
 }
-
-// ── El carné de quien ya tiene cuenta ───────────────────────────────────────
 
 .account-profile {
   &__email {

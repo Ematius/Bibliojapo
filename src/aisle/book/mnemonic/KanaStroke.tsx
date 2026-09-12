@@ -6,22 +6,15 @@ interface KanaStrokeProps {
   kana: Kana
 }
 
-// La capa mnemotécnica: la ilustración con el kana dibujándose encima.
+// La ilustración con el kana dibujándose encima. Aquí SOLO está el markup: page-flip clona
+// los nodos, así que un `ref` de React apuntaría a la copia oculta y GSAP animaría algo que
+// nadie ve. La timeline se engancha desde VolumeReader — ver `kanaStrokeAnimation.ts`.
 //
-// Aquí SOLO está el markup. La animación no vive en este componente, y no es un
-// descuido: page-flip clona los nodos de la plantilla para meterlos en su propia
-// estructura, así que un `ref` de React apuntaría a la copia oculta y GSAP
-// acabaría animando algo que nadie ve. La timeline se engancha a los nodos ya
-// clonados desde VolumeReader — ver `kanaStrokeAnimation.ts`.
+// Los trazos salen desnudos, sin medidas ni líneas discontinuas: de eso se encarga
+// DrawSVGPlugin.
 //
-// Los trazos salen aquí desnudos: sin medidas ni líneas discontinuas. De cuánto
-// mide cada camino y de irlo descubriendo se encarga DrawSVGPlugin, que se lo
-// pregunta al navegador — ver `kanaStrokeAnimation.ts`.
-//
-// ── Dónde cae el kana ──────────────────────────────────────────────────────
-// Centrado sobre el DIBUJO y del mismo tamaño relativo en todas las hojas. No hay
-// un encaje por kana: la regla es una, y lo que se ajusta es la ilustración, que
-// se dibuja con su motivo en el centro. Ver `KanaStroke.scss`.
+// El kana va centrado sobre el DIBUJO y del mismo tamaño relativo en todas las hojas. No hay
+// encaje por kana: lo que se ajusta es la ilustración.
 export function KanaStroke({ kana }: KanaStrokeProps) {
   const clipId = `kana-silhouette-${kana.id}`
 
@@ -48,8 +41,7 @@ export function KanaStroke({ kana }: KanaStrokeProps) {
             className="kana-stroke__glyph"
             viewBox={kana.strokeViewBox}
             preserveAspectRatio="xMidYMid meet"
-            // El kana ya está escrito al lado, en el texto de la página: para un
-            // lector de pantalla esto es decoración repetida.
+            // El kana ya está escrito al lado, en el texto de la página.
             aria-hidden="true"
           >
             <defs>

@@ -1,12 +1,8 @@
-// El tomo abriéndose, y el libro abierto que queda al final.
-//
-// La apertura no es una animación calculada sino cinco fotogramas pintados que
-// se encadenan. Es a propósito: un libro al abrirse dobla las tapas, arquea el
-// bloque de hojas y cambia de sombra a la vez, y eso no sale de rotar planos.
-// Pintado ya viene resuelto, y encadenarlo cuesta cinco fundidos.
+// La apertura no es una animación calculada sino cinco fotogramas pintados que se
+// encadenan: un libro al abrirse dobla las tapas, arquea el bloque de hojas y cambia de
+// sombra a la vez, y eso no sale de rotar planos.
 
-// En orden de apertura. El último no se va: es el libro abierto sobre el que se
-// lee, así que se queda de fondo mientras dura la lectura.
+// En orden de apertura. El último no se va: es el libro abierto sobre el que se lee.
 export const OPENING_FRAMES = [
   '/images/hallways/books/libro-abierto-10.webp',
   '/images/hallways/books/libro-abierto-25.webp',
@@ -15,31 +11,24 @@ export const OPENING_FRAMES = [
   '/images/hallways/books/libro-abierto-100.webp',
 ]
 
-// Proporción del fotograma final (1448 × 1086). Es la que manda sobre la caja,
-// porque es el único que se queda fijo en pantalla. Los cinco vienen en el mismo
-// lienzo y se ajustan dentro con `contain`; lo que hace que el libro se vea
-// estrecho al principio y se ensanche al abrirse es el propio dibujo, que en los
-// primeros ocupa menos lienzo.
+// La del fotograma FINAL (1448 × 1086), que es el único que se queda fijo en pantalla. Los
+// cinco vienen en el mismo lienzo y se ajustan con `contain`: que el libro se vea estrecho
+// al principio es cosa del dibujo, que ocupa menos lienzo.
 export const OPEN_FRAME_RATIO = 1448 / 1086
 
-// Hueco de papel dentro del fotograma final, en fracciones de la imagen. Medido
-// sobre el propio archivo: la página izquierda va de x 195 a 692 y la derecha de
-// 751 a 1255, con el lomo centrado en x 722.
+// El hueco de papel dentro del fotograma final, en fracciones de la imagen.
 //
-// En este dibujo las páginas NO son rectángulos. Por fuera el papel empieza en
-// y 145, pero hacia el lomo se hunde y no empieza hasta y 226; por abajo pasa de
-// y 808 a 860. Las hojas del lector son rectas, así que el hueco es el rectángulo
-// que cabe DENTRO de las dos páginas: arriba manda el lomo y abajo el canto.
-// Pasarse de ahí sacaría la esquina de la hoja por encima del lomo, sobre el
-// fondo del pasillo.
+// En este dibujo las páginas NO son rectángulos: hacia el lomo el papel se hunde. Las hojas
+// del lector son rectas, así que el hueco es el rectángulo que cabe DENTRO de las dos
+// páginas —arriba manda el lomo, abajo el canto—; pasarse sacaría la esquina de la hoja por
+// encima del lomo, sobre el fondo del pasillo.
 //
-// Y encima va un poco METIDO respecto a esa medida —unos píxeles por cada lado—
-// para que asome siempre el papel dibujado y las dos capas no se corten entre
-// sí. Como los dos son del mismo crema, la costura no se ve.
+// Va además unos píxeles METIDO para que asome siempre el papel dibujado y las dos capas no
+// se corten entre sí.
 //
-// El hueco va centrado en el LOMO (x 722) y no en el dibujo: page-flip pone las
-// dos hojas del mismo ancho, así que el pliegue entre ellas cae siempre en el
-// centro del hueco, y tiene que caer sobre el lomo pintado.
+// Centrado en el LOMO (x 722) y no en el dibujo: page-flip pone las dos hojas del mismo
+// ancho, así que el pliegue cae siempre en el centro del hueco y tiene que caer sobre el
+// lomo pintado.
 export const PAPER_INSET = {
   left: 215 / 1448,
   top: 236 / 1086,
@@ -48,40 +37,56 @@ export const PAPER_INSET = {
 }
 
 export const OPENING = {
-  // Alto del libro abierto, en fracción del stage. Sale bastante mayor que el
-  // alto de la portada (`focusHeight`): al abrirse el libro gana cuerpo, y además
-  // en este dibujo las páginas son curvas y el hueco rectangular del lector se
-  // queda en la mitad del lienzo —ver `PAPER_INSET`—. Con menos, las hojas salían
-  // apelmazadas.
+  // Alto del libro abierto, en fracción del stage. Sale bastante mayor que `focusHeight`:
+  // al abrirse el libro gana cuerpo y el hueco rectangular se queda en la mitad del lienzo.
+  // El tope es la pantalla — subiéndolo mucho más, la encuadernación empieza a cortarse.
+  // No es el libro lo que mide esto sino su LIENZO, y el libro pintado ocupa bastante menos,
+  // así que apurar aquí es lo único que lo agranda: en un móvil de lado no hay otro sitio de
+  // donde sacar tamaño, porque el libro es 1,33 de ancho y la pantalla 2,22.
+  height: 0.98,
+  // Alto mínimo del PAPEL, en píxeles, por debajo del cual un ejercicio no cabe: el examen
+  // parte la hoja en dos pruebas, y cada una necesita título, botón y cuatro tarjetas con el
+  // kana legible. Va en píxeles y no en fracción porque es lo que pide un ojo, no la pantalla.
   //
-  // El tope es la pantalla: el dibujo ocupa del 10 % al 91 % del alto del lienzo,
-  // y en una ventana más apaisada que la escena el stage se recorta por arriba y
-  // por abajo. Subiéndolo mucho más, la encuadernación empieza a cortarse.
-  height: 0.9,
-  // Lo que tarda cada fundido. Cinco seguidos son un segundo: el gesto de abrir
-  // un libro entero, no cinco pasos que haya que mirar de uno en uno.
+  // En un móvil de lado el papel se queda en 210 px y el contenido se monta encima de sí
+  // mismo. Para darle alto hay que agrandar el LIBRO, aunque sus tapas se salgan por arriba y
+  // por abajo — es acercarse a leer, no un fallo de encuadre.
+  minPaperHeight: 340,
+  // Cinco fundidos seguidos son un segundo: el gesto de abrir un libro entero, no cinco
+  // pasos que haya que mirar de uno en uno.
   frameSeconds: 0.2,
-  // Sin curva: los fotogramas ya traen dentro el frenado del movimiento, y
-  // acelerar además el fundido los pisaría.
+  // Sin curva: los fotogramas ya traen dentro el frenado, y acelerar el fundido lo pisaría.
   ease: 'none',
 }
 
 export interface OpenBookLayout {
   width: number
   height: number
+  // Si el libro entra de ancho en la ventana. Cuando no, no se abre: se pide girar la
+  // pantalla. Ver `RotateNotice`.
+  fits: boolean
   paper: { left: number; top: number; width: number; height: number }
 }
 
-// Medidas del libro abierto en píxeles, a partir del alto del stage. Vive aquí y
-// no en el componente porque la usan dos: el que pinta el libro y el que coloca
-// las hojas dentro, y tienen que salir del mismo sitio o no encajan.
-export function openBookLayout(stageHeight: number): OpenBookLayout {
-  const height = OPENING.height * stageHeight
+// Vive aquí y no en el componente porque la usan dos —el que pinta el libro y el que coloca
+// las hojas dentro— y tienen que salir del mismo sitio o no encajan.
+export function openBookLayout(viewHeight: number, viewWidth: number): OpenBookLayout {
+  const byCanvas = OPENING.height * viewHeight
+  // Solo crece si el papel se queda corto, así que en una pantalla holgada esto no actúa y el
+  // libro se sigue viendo entero.
+  const needed =
+    PAPER_INSET.height * byCanvas >= OPENING.minPaperHeight
+      ? byCanvas
+      : OPENING.minPaperHeight / PAPER_INSET.height
+
+  // El ancho sigue mandando sobre el alto: un libro que no cabe de lado no se lee.
+  const height = Math.min(needed, viewWidth / OPEN_FRAME_RATIO)
   const width = height * OPEN_FRAME_RATIO
 
   return {
     width,
     height,
+    fits: width <= viewWidth,
     paper: {
       left: PAPER_INSET.left * width,
       top: PAPER_INSET.top * height,

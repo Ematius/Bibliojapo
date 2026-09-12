@@ -2,22 +2,20 @@ import { useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ASSETS } from '../entrance/libraryEntranceConfig'
 import { AisleSigns } from './AisleSigns'
+import { HallPanArrows } from './HallPanArrows'
 import { useAisleSweep } from './useAisleSweep'
+import { useScenePan } from '../shared/useScenePan'
 import { SiteNav } from '../shared/SiteNav'
 import './LibraryHall.scss'
 
-// Vestíbulo de la biblioteca: el centro de la navegación.
-//
-// Es la pantalla a la que se vuelve una y otra vez —al salir de un pasillo, al
-// pulsar «Pasillos» en la barra—, así que no lleva ninguna animación de entrada
-// que haya que esperar. La escena aparece ya montada.
-//
-// Muestra la misma ilustración del interior con la que termina la secuencia de
-// la puerta y en la misma posición, de modo que el salto de una pantalla a otra
-// no se percibe.
+// Vestíbulo: el centro de la navegación. Se vuelve a él una y otra vez, así que no
+// lleva animación de entrada que haya que esperar. Muestra la misma ilustración con la
+// que termina la secuencia de la puerta, en la misma posición, para que no se note el
+// salto.
 export function LibraryHall() {
   const stageRef = useRef<HTMLDivElement>(null)
   const { sweepRef, sweepToAisle } = useAisleSweep(stageRef)
+  const { reach, panBy } = useScenePan(stageRef)
 
   return (
     <main className="library-hall">
@@ -26,6 +24,8 @@ export function LibraryHall() {
 
         <AisleSigns onSelect={sweepToAisle} />
       </div>
+
+      <HallPanArrows reach={reach} onPan={panBy} />
 
       <SiteNav />
 

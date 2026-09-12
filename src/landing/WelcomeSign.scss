@@ -1,25 +1,18 @@
 // El cartel de bienvenida en reposo: un relieve fantasma sobre el paisaje.
 //
-// Casi no se ve a propósito. Lo que tiene que llamar la atención no es el
-// cartel, es el resplandor que late por detrás: se ve una luz cálida entre los
-// árboles, y quien se acerca descubre que allí hay algo asomándose.
+// Casi no se ve a propósito. Lo que llama la atención no es el cartel sino el resplandor que
+// late por detrás. Señalarlo no lo enseña: solo aviva la luz. El cartel aparece de una única
+// manera, pulsándolo.
 //
-// Señalarlo no lo enseña — solo aviva la luz. El cartel aparece de una única
-// manera: pulsándolo, y montándose a trozos con su animación.
-//
-// Aquí vive solo el ASPECTO. Dónde se coloca lo dice quien lo usa, con su
-// propia clase: ver `.parallax-landing__welcome-sign`.
+// Aquí vive solo el ASPECTO; dónde se coloca lo dice quien lo usa, con su propia clase.
 .welcome-sign {
-  // Cuánto se ve el cartel quieto y cuánto al señalarlo. Son de esta pieza y de
-  // ninguna otra, así que se quedan aquí en vez de subir a los tokens globales.
-  // Si el fantasma resulta demasiado invisible, este es el número que se toca.
+  // Cuánto se ve el cartel quieto. Si el fantasma resulta demasiado invisible, este es el
+  // número que se toca.
   --sign-ghost: 0.14;
-  // Lo que tarda un ciclo completo del latido. Muy lento a propósito: un brillo
-  // que parpadea deprisa se lee como un aviso, y esto es una invitación.
+  // El latido va muy lento a propósito: un brillo que parpadea deprisa se lee como un aviso.
   --sign-breath: 2000ms;
-  // Y lo que tarda el cartel en aparecerse y volver a irse. Va más lento que el
-  // latido de la luz y a propósito no es múltiplo suyo: los dos ciclos se
-  // desacompasan, y eso es lo que impide que se lea como un parpadeo mecánico.
+  // Lo que tarda el cartel en aparecerse y volver a irse. A propósito NO es múltiplo del
+  // latido: los dos ciclos se desacompasan, y eso impide que se lea como algo mecánico.
   --sign-apparition: 4000ms;
 
   // Reset del botón: aquí no se quiere nada de lo que el navegador pinta solo.
@@ -30,23 +23,18 @@
   border: 0;
   background: none;
   cursor: pointer;
-  // El destello gris de Android al tocar delataría la caja rectangular del
-  // botón, que es justo lo que no debe verse.
+  // El destello gris de Android al tocar delataría la caja rectangular del botón.
   -webkit-tap-highlight-color: transparent;
 
-  // El resplandor. Va en un pseudo-elemento y no en la imagen porque lo que
-  // late es la luz, no la madera: así el latido anima solo `opacity` y
-  // `transform` de una capa vacía, sin obligar a repintar la ilustración en
-  // cada frame.
-  //
-  // Es un degradado radial y no una sombra con `filter`: desenfocar por filtro
-  // en algo que se anima sin parar es el jank que este proyecto ya conoce.
+  // El resplandor va en un pseudo-elemento y no en la imagen porque lo que late es la luz: así
+  // el latido anima solo `opacity` y `transform` de una capa vacía, sin repintar la ilustración
+  // en cada frame. Y es un degradado radial y no una sombra con `filter`, que desenfocando algo
+  // que se anima sin parar da el jank de siempre.
   &::before {
     content: '';
     position: absolute;
-    // Se desborda del cartel a propósito: la luz tiene que salirse por los
-    // bordes. Contenida dentro se leería como un rectángulo iluminado en vez de
-    // como algo que brilla desde dentro.
+    // Se desborda a propósito: contenida dentro, la luz se leería como un rectángulo iluminado
+    // en vez de como algo que brilla desde dentro.
     inset: -12%;
     background: radial-gradient(
       ellipse at center,
@@ -57,18 +45,13 @@
     animation: welcome-sign-breath var(--sign-breath) ease-in-out infinite;
   }
 
-  // `position` para que se pinte por encima del resplandor: entre dos elementos
-  // posicionados manda el orden del DOM, y el pseudo-elemento va antes.
+  // `position` para que se pinte por encima del resplandor: entre dos elementos posicionados
+  // manda el orden del DOM, y el pseudo-elemento va antes.
   //
-  // La opacidad declarada aquí es la del fantasma, no la que se ve: mientras la
-  // aparición corre, manda ella —una animación gana a la cascada normal—. Esta
-  // es la que queda al pararla.
-  //
-  // SIN `transition` sobre la opacidad, y es importante: la aparición en
-  // cuadrícula termina poniendo esta imagen opaca y desmontando la rejilla en
-  // el mismo instante. Con una transición de por medio la imagen tardaría en
-  // llegar a opaca, y durante ese rato no habría ni rejilla ni cartel: el
-  // cartel se vería desaparecer y volver justo después de montarse.
+  // La opacidad de aquí es la del fantasma, no la que se ve: mientras la aparición corre manda
+  // ella. Y SIN `transition` sobre la opacidad: la aparición en cuadrícula pone esta imagen
+  // opaca y desmonta la rejilla en el mismo instante, así que con una transición de por medio
+  // habría un rato sin rejilla y sin cartel.
   &__image {
     position: relative;
     display: block;
@@ -80,53 +63,41 @@
     user-select: none;
   }
 
-  // Señalarlo enciende la luz, y solo la luz. El cartel NO se enseña aquí: si
-  // el hover lo mostrara entero, la aparición en cuadrícula llegaría tarde
-  // —enseñaría algo que ya se está viendo— y dejaría de tener sentido. El
-  // cartel aparece de una sola manera: pulsándolo, y con su animación.
+  // Señalarlo enciende la luz, y SOLO la luz: si el hover enseñara el cartel entero, la
+  // aparición en cuadrícula llegaría tarde y dejaría de tener sentido.
   //
-  // `animation: none` es lo que hace el efecto: al parar el latido, el
-  // resplandor se queda en su valor de reposo, que es el máximo. Y es
-  // imprescindible, no un adorno — mientras una animación CSS corre, manda ella
-  // sobre la opacidad por encima de cualquier otra declaración.
+  // `animation: none` es lo que hace el efecto: al parar el latido, el resplandor se queda en
+  // su valor de reposo, que es el máximo. Es imprescindible, porque mientras una animación CSS
+  // corre manda ella sobre la opacidad.
   //
-  // `:focus-visible` y no `:focus` para no dejarlo encendido después de
-  // pulsarlo con el ratón; `:active` es para el táctil, donde no hay hover que
-  // valga y la luz responde igual mientras el dedo aprieta.
+  // `:focus-visible` y no `:focus` para no dejarlo encendido tras pulsarlo con el ratón;
+  // `:active` es para el táctil, donde no hay hover.
   &:hover::before,
   &:focus-visible::before,
   &:active::before {
     animation: none;
   }
 
-  // Aquí NO hay regla para el cartel ya revelado, y es a propósito: de dejarlo
-  // opaco se encarga la animación, escribiendo el estilo directamente sobre la
-  // imagen.
+  // Aquí NO hay regla para el cartel ya revelado, y es a propósito: de dejarlo opaco se
+  // encarga la animación, escribiendo el estilo sobre la imagen.
   //
-  // Hubo una, y parpadeaba. Al desaparecer, la animación suelta lo que había
-  // escrito y avisa a React de que ya no está revelado, pero React no
-  // re-renderiza en el mismo frame: pinta antes. Con una regla aquí quedaba un
-  // frame con la clase de revelado todavía puesta y sin el estilo que la
-  // tapaba, y el cartel reaparecía entero durante un suspiro justo después de
-  // irse. Dos sitios mandando sobre la misma opacidad; ahora manda uno.
+  // Añadir una aquí hace que el cartel parpadee al irse: la animación suelta lo que escribió y
+  // avisa a React, pero React pinta antes de re-renderizar, así que queda un frame con la clase
+  // de revelado puesta y sin el estilo que la tapaba.
 
-  // La capa donde se monta la cuadrícula mientras dura la aparición. Está vacía
-  // el resto del tiempo, y no recibe pulsaciones nunca: cubre el cartel entero,
-  // así que si las recibiera se las quitaría al botón que hay debajo.
+  // La capa donde se monta la cuadrícula. No recibe pulsaciones nunca: cubre el cartel entero,
+  // así que se las quitaría al botón que hay debajo.
   &__layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
   }
 
-  // Cada cuadrado de la cuadrícula. Posición, tamaño y encuadre del fondo los
-  // escribe la animación, que es la única que sabe cuántos caben; aquí queda
-  // solo lo que comparten todos.
+  // Cada cuadrado. Posición, tamaño y encuadre del fondo los escribe la animación, que es la
+  // única que sabe cuántos caben.
   //
-  // Sin color de respaldo detrás de la imagen, a diferencia de lo que se hace
-  // cuando esta técnica cubre una pantalla entera: el cartel es una silueta
-  // recortada, y un color de fondo por celda lo convertiría en un rectángulo
-  // macizo mientras dura la aparición.
+  // Sin color de respaldo detrás de la imagen: el cartel es una silueta recortada, y un color
+  // por celda lo convertiría en un rectángulo macizo mientras dura la aparición.
   &__cell {
     position: absolute;
     background-repeat: no-repeat;
@@ -135,9 +106,8 @@
   }
 }
 
-// Un latido lento: la luz respira y crece un poco, como una lámpara detrás de
-// una ventana. Es un loop decorativo, que es justo para lo que este proyecto
-// permite keyframes CSS en vez de GSAP.
+// Un latido lento, como una lámpara detrás de una ventana. Es un loop decorativo, que es para
+// lo que este proyecto permite keyframes CSS en vez de GSAP.
 @keyframes welcome-sign-breath {
   0%,
   100% {
@@ -151,9 +121,8 @@
   }
 }
 
-// La aparición: el cartel se asoma hasta el fantasma y se vuelve a ir del todo.
-// Que llegue a desaparecer es lo que hace que se mire — algo que estaba y ya no
-// está tira más de la vista que algo que siempre está a medias.
+// La aparición: el cartel se asoma hasta el fantasma y se vuelve a ir del todo. Que llegue a
+// desaparecer es lo que hace que se mire.
 @keyframes welcome-sign-apparition {
   0%,
   100% {
@@ -165,10 +134,8 @@
   }
 }
 
-// Sin latido ni aparición para quien ha pedido que las cosas no se muevan.
-// Ninguna de las dos piezas desaparece: se quedan quietas en su valor de
-// reposo —la luz encendida y el cartel en su fantasma—, así que el sitio sigue
-// pareciendo pulsable aunque no se mueva nada.
+// Sin latido ni aparición con «reducir movimiento». Ninguna pieza desaparece: se quedan en su
+// valor de reposo, así que el sitio sigue pareciendo pulsable.
 @media (prefers-reduced-motion: reduce) {
   .welcome-sign::before,
   .welcome-sign__image {

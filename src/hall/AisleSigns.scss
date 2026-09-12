@@ -1,7 +1,5 @@
-// Capa de carteles colgados delante de los arcos del interior.
-// Se sitúa justo encima del interior (z-index 1) y por debajo de la fachada
-// (z-index 4), de modo que los carteles permanecen ocultos mientras la fachada
-// aún cubre la escena.
+// Los carteles colgados delante de los arcos. Van justo encima del interior y por debajo de
+// la fachada, de modo que siguen ocultos mientras la fachada aún cubre la escena.
 
 .aisle-signs {
   position: absolute;
@@ -20,8 +18,7 @@
     border: 0;
     background: none;
     cursor: pointer;
-    // El cartel pivota desde la argolla de la cadena, en el centro de su borde
-    // superior, igual que un cartel colgado de verdad.
+    // Pivota desde la argolla de la cadena, igual que un cartel colgado de verdad.
     transform-origin: 50% 0%;
     transition: filter var(--duration-fast) ease-out;
   }
@@ -33,12 +30,9 @@
     user-select: none;
   }
 
-  // Balanceo en hover: keyframes CSS, no GSAP. GSAP se reserva para las
-  // transiciones de entrada/salida; los estados hover van en CSS.
-  //
-  // El balanceo se amortigua y para, como un cartel de verdad al que le das un
-  // toque. Además de quedar mejor, deja el cartel quieto para poder pulsarlo:
-  // oscilando sin parar es un blanco móvil.
+  // Balanceo en hover con keyframes CSS y no GSAP: GSAP se reserva para las entradas y
+  // salidas. Se amortigua y para, que además de quedar mejor deja el cartel quieto para poder
+  // pulsarlo: oscilando sin parar es un blanco móvil.
   &__sign:hover,
   &__sign:focus-visible {
     filter: brightness(1.09);
@@ -81,8 +75,8 @@
   }
 }
 
-// Sin balanceo si el sistema pide movimiento reducido: el cartel sigue
-// respondiendo al ratón, pero solo con el cambio de luz.
+// Sin balanceo con «reducir movimiento»: el cartel sigue respondiendo al ratón, pero solo con
+// el cambio de luz.
 @media (prefers-reduced-motion: reduce) {
   .aisle-signs__sign:hover,
   .aisle-signs__sign:focus-visible {

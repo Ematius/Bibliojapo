@@ -1,20 +1,12 @@
-// Los fallos que puede devolver el servidor, con nombre.
-//
-// Forman parte del CONTRATO con el backend, igual que las funciones de esta
-// carpeta: la pantalla decide qué decir según el código, así que el día que llegue
-// el servidor de verdad tiene que devolver estos mismos códigos —o quien lo llame
-// traducir los suyos a estos—. Firebase y Nest tienen los suyos propios; aquí se
-// eligieron los que la app necesita distinguir, no los de ninguno de los dos.
+// Parte del contrato: el día que haya backend, sus fallos se traducen a estos
+// códigos, porque son los que las pantallas distinguen para decidir qué decir.
 export type ApiErrorCode =
-  // Sin conexión, o el servidor no ha contestado.
   | 'network'
-  // Hace falta una cuenta y no hay sesión.
+  // `unauthorized` es «hace falta cuenta»; `forbidden`, «hay cuenta pero el tomo
+  // todavía no se ha ganado».
   | 'unauthorized'
-  // Hay sesión, pero no da derecho a eso: un tomo que todavía no se ha ganado.
   | 'forbidden'
-  // No existe, o todavía no está escrito.
   | 'not-found'
-  // Fallos del formulario de cuenta.
   | 'missing-name'
   | 'invalid-email'
   | 'weak-password'
@@ -31,9 +23,8 @@ export class ApiError extends Error {
   }
 }
 
-// El código de cualquier cosa que se haya lanzado. Lo que no sea un `ApiError`
-// —un fallo de programación, un JSON roto— se trata como un fallo de red: para
-// quien usa la app es lo mismo, algo no ha llegado y se puede reintentar.
+// Lo que no sea un `ApiError` —un fallo de programación, un JSON roto— se trata
+// como fallo de red: para quien usa la app es lo mismo, y se puede reintentar.
 export function apiErrorCode(error: unknown): ApiErrorCode {
   return error instanceof ApiError ? error.code : 'network'
 }

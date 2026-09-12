@@ -1,6 +1,4 @@
-// Pasillo de la biblioteca, el mismo para las cuatro secciones. De momento solo
-// la ilustración de fondo y la barra — los tomos de la estantería llegan más
-// adelante.
+// Pasillo de la biblioteca, el mismo para las cuatro secciones.
 
 @use '../styles/stage' as *;
 
@@ -11,24 +9,22 @@
   overflow: hidden;
   background: var(--color-bg);
 
-  // La caja contra la que se encuadra la escena. Es la ventana de verdad: `100vw`
-  // cuenta además el hueco que `html` reserva para la barra de scroll. Ver
-  // `framed-stage` en `styles/_stage.scss`.
-  //
-  // De paso, es la caja en la que se centra el libro abierto, que va `fixed`: con
-  // esto queda centrado en lo que se ve y no en la ventana con su hueco.
+  // La caja contra la que se encuadra la escena. Es la ventana de verdad: `100vw` cuenta
+  // además el hueco que `html` reserva para la barra de scroll. Es también la caja en la que
+  // se centra el libro abierto, que va `fixed`.
   container-type: size;
 
-  // El encuadre, que es lo que permite colocar los tomos en fracciones de la
-  // IMAGEN y no de la ventana, de modo que se queden sobre su balda en cualquier
-  // pantalla.
-  //
-  // Aquí NO vale el del vestíbulo y la entrada, que recortan desde el centro del
-  // dibujo: la estantería no está en el centro, y en una pantalla estrecha el
-  // recorte se llevaba su mitad derecha. Este encuadra por la zona de las baldas,
-  // que llega en variables desde el componente. Ver `styles/_stage.scss`.
+  // El encuadre es lo que permite colocar los tomos en fracciones de la IMAGEN y no de la
+  // ventana. Aquí NO vale el del vestíbulo, que recorta desde el centro del dibujo: la
+  // estantería no está en el centro, y en una pantalla estrecha el recorte se llevaba su mitad
+  // derecha. Este encuadra por la zona de las baldas.
   &__stage {
     @include framed-stage;
+
+    // El dedo recorre la escena, así que el navegador no puede quedarse con el gesto.
+    // `pinch-zoom` y no `none`: se toma el arrastre de un dedo, y ampliar con dos sigue
+    // funcionando.
+    touch-action: pinch-zoom;
   }
 
   &__scene {

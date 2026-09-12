@@ -14,43 +14,26 @@
   --color-brass-glow: #f0c96a;
   --color-amber: #e8932a;
 
-  /* Luz cálida de lámpara: el resplandor que sale del interior de la
-     biblioteca. Describe la luz del edificio, no un detalle de una pantalla
-     concreta, así que sirve para cualquier sitio donde haya que iluminar algo
-     desde dentro; hoy la usa la apertura de puertas y mañana valdrá para las
-     linternas de un pasillo.
-
-     Van como tripletas RGB y no como color cerrado porque cada degradado las
-     pinta con una opacidad distinta —de 0 a 0.9 según el tramo—, y un token
-     por cada alfa serían seis nombres para un solo tono. Se escriben así:
-       rgba(var(--rgb-lamplight), 0.9)
-     El tono de borde solo se usa con alfa 0: existe para que el degradado se
-     apague hacia un crema y no hacia un gris. */
+  /* Luz cálida de lámpara. Tripletas RGB y no colores cerrados porque cada degradado las
+     pinta con una opacidad distinta: rgba(var(--rgb-lamplight), 0.9). El tono de borde solo
+     se usa con alfa 0, para que el degradado se apague hacia un crema y no hacia un gris. */
   --rgb-lamplight: 255, 232, 188;
   --rgb-lamplight-mid: 233, 183, 110;
   --rgb-lamplight-edge: 244, 225, 183;
 
-  /* Realce al pasar el puntero por encima de un elemento claro apoyado sobre
-     una ilustración. Blanco puro a propósito: cualquier tono de la paleta se
-     confundiría con el fondo pintado. */
+  /* Realce al pasar el puntero sobre un elemento claro apoyado en una ilustración. Blanco
+     puro a propósito: cualquier tono de la paleta se confundiría con el fondo pintado. */
   --color-highlight: #ffffff;
 
   /* Papel — páginas, fondo de contenido */
   --color-cream: #f5edd8;
   --color-parchment: #e8d9b8;
 
-  /* Papel del tomo abierto. Los dos valores están MEDIDOS sobre la ilustración
-     del libro (libro-abierto-100.webp), no elegidos a ojo: es lo que hace que la
-     hoja que se pasa y la hoja pintada sean del mismo papel y no se vea la
-     costura entre las dos.
-       page       la cresta, en el centro de la página, donde más luz da
-       page-fold  el borde, donde el papel se hunde hacia la encuadernación
-     La sombra tira a ámbar y no a gris a propósito: es papel viejo bajo una
-     lámpara cálida, y oscurecerlo con negro lo apaga.
-     SI SE CAMBIA EL RENDER hay que volver a medirlos, y de paso volver a
-     recortar papel-tomo: un dibujo nuevo del papel deja estos dos valores
-     desfasados, y una hoja del lector más clara que la pintada delata la costura
-     entre las dos. */
+  /* Papel del tomo abierto, MEDIDO sobre libro-abierto-100.webp y no elegido a ojo: es lo que
+     hace que la hoja que se pasa y la pintada sean del mismo papel. `page` es la cresta y
+     `page-fold` el borde donde se hunde hacia la encuadernación.
+     SI SE CAMBIA EL RENDER hay que volver a medirlos y a recortar papel-tomo: una hoja del
+     lector más clara que la pintada delata la costura. */
   --color-page: #f9f3e8;
   --color-page-fold: #e7d7c0;
   --rgb-page-fold: 231, 215, 192;
@@ -59,11 +42,8 @@
   --color-ivy: #6b8c5a;
   --color-ivy-dark: #4a6340;
 
-  /* Aviso de fallo, para cuando el ejercicio necesita algo más que la tinta
-     oscura de siempre —un arrastre a la casilla equivocada, un cristal que se
-     rompe—. No es un rojo de pantalla: tira a ladrillo, la misma familia cálida
-     que el resto de la paleta, así que sigue leyéndose como parte del libro y
-     no como una alerta de sistema pegada encima. */
+  /* Aviso de fallo. No es un rojo de pantalla: tira a ladrillo, la misma familia cálida que
+     el resto de la paleta, para que no se lea como una alerta de sistema pegada encima. */
   --color-error: #a8432f;
   --color-error-deep: #7a2f1f;
 
@@ -73,8 +53,8 @@
 
   /* Fondo general — lo que hay fuera/detrás de la biblioteca */
   --color-bg: #1a1208;
-  /* El mismo fondo en componentes, para poder velar una escena sin que el velo
-     tire a gris: oscurecer con negro apaga la luz cálida de la biblioteca. */
+  /* El mismo fondo en componentes, para velar una escena sin que el velo tire a gris:
+     oscurecer con negro apaga la luz cálida de la biblioteca. */
   --rgb-bg: 26, 18, 8;
 
   /* Cielo — fondo bajo las capas de la landing */
@@ -100,10 +80,8 @@
 
   /* Tipografía */
   --font-display: 'Shippori Mincho', serif;
-  // Reservada para el logotipo, que todavía no existe. NO se está descargando:
-  // index.html solo pide las dos familias que algún componente usa. Al aplicarla
-  // por primera vez hay que volver a añadir Cinzel allí, o saldrá la serif del
-  // sistema.
+  // Reservada para el logotipo. NO se está descargando: index.html solo pide las dos familias
+  // que algún componente usa. Al aplicarla hay que volver a añadir Cinzel allí.
   --font-roman: 'Cinzel', serif;
   --font-body: 'Zen Kaku Gothic New', system-ui, sans-serif;
 
@@ -113,8 +91,7 @@
   --duration-door: 1700ms;
   --duration-fast: 280ms;
   --duration-slow: 900ms;
-  /* Latido de las pantallas de espera. Lento a propósito: una espera que
-     parpadea deprisa se lee como una alarma. */
+  /* Latido de las esperas. Lento a propósito: parpadear deprisa se lee como una alarma. */
   --duration-pulse: 1600ms;
 
   /* Layout */
@@ -126,21 +103,15 @@
   --radius-badge: 0.75rem; /* distintivos cuadrados pequeños */
   --radius-pill: 999px;
 
-  /* ── De una sola pantalla ────────────────────────────────────────────────
-     Lo de abajo describe un detalle concreto de una pantalla, no una decisión
-     de la identidad visual. Vive aquí igualmente para que no queden números
-     sueltos por los SCSS, pero se anota de dónde es: si esa pantalla
-     desaparece, el token se va con ella.
+  /* De una sola pantalla.
+     Un detalle concreto de una pantalla, no una decisión de identidad visual. Vive aquí para
+     que no queden números sueltos por los SCSS, pero se anota de dónde es. Si alguno acaba
+     usándose en un segundo sitio, súbelo al bloque temático que le toque. */
 
-     Si alguno acaba usándose en un segundo sitio, súbelo al bloque temático
-     que le toque y quítalo de aquí — que se quede en esta lista sería decir
-     que es exclusivo cuando ya no lo es. */
-
-  /* Entrada (src/entrance) — sombra del bisel en el canto de cada hoja de
-     puerta, la que las despega entre sí al abrirse. */
+  /* Entrada — sombra del bisel en el canto de cada hoja, la que las despega al abrirse. */
   --color-door-shade: rgba(0, 0, 0, 0.18);
 
-  /* Vestíbulo (src/hall) — balanceo del cartel al pasar el puntero. Una sola
-     pasada que se amortigua: oscilando sin parar sería un blanco móvil. */
+  /* Vestíbulo — balanceo del cartel al pasar el puntero. Una sola pasada que se amortigua:
+     oscilando sin parar sería un blanco móvil. */
   --duration-sign-sway: 1200ms;
 }

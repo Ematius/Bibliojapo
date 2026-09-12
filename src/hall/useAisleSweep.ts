@@ -5,12 +5,7 @@ import { aisleRoute, findAisle } from '../shared/aisles'
 import type { AisleSign } from './aisleSignsConfig'
 import { AISLE_SWEEP } from './aisleSweepConfig'
 
-// Barrido lateral de la entrada al pasillo.
-//
-// La ilustración del pasillo entra deslizándose por encima de la entrada y solo
-// se cambia de ruta cuando ya cubre la pantalla entera. Así el montaje del
-// componente del pasillo, que muestra esa misma imagen en la misma posición,
-// no se nota: no hay parpadeo ni fondo vacío entre una vista y otra.
+// La ilustración del pasillo entra deslizándose por encima de la entrada.
 export function useAisleSweep(stageRef: RefObject<HTMLDivElement | null>) {
   const navigate = useNavigate()
   const sweepRef = useRef<HTMLImageElement>(null)
@@ -27,21 +22,24 @@ export function useAisleSweep(stageRef: RefObject<HTMLDivElement | null>) {
       sweepEl.src = aisle.scene
 
       const tl = gsap.timeline({
-        // Se cambia de ruta con el pasillo ya cubriendo la pantalla entera, de
-        // modo que el montaje del componente de destino —que muestra esa misma
-        // ilustración en la misma posición— no se nota.
+        // Se cambia de ruta con el pasillo ya cubriendo la pantalla entera: el componente
+        // de destino muestra esa misma ilustración en la misma posición, así que no se nota.
         onComplete: () => navigate(aisleRoute(aisle.id)),
       })
 
       tl.set(sweepEl, { xPercent: -100, autoAlpha: 1 })
 
-      // La escena actual acompaña el movimiento, como si la cámara girase hacia
-      // el pasillo elegido. Se anima `x` en píxeles y no `xPercent` porque el
-      // stage ya usa xPercent para centrarse; tocarlo lo descolocaría.
+      // Se anima `x` en píxeles y no `xPercent` porque el stage ya usa xPercent para
+      // centrarse; tocarlo lo descolocaría.
+      //
+      // Se suma a la `x` que haya: la escena se puede haber recorrido a mano antes de
+      // elegir pasillo, y un destino absoluto la traería de vuelta de un latigazo.
       tl.to(
         stageEl,
         {
-          x: () => window.innerWidth * AISLE_SWEEP.stageDriftRatio,
+          x: (_index, target: Element) =>
+            (gsap.getProperty(target, 'x') as number) +
+            window.innerWidth * AISLE_SWEEP.stageDriftRatio,
           duration: AISLE_SWEEP.durationSeconds,
           ease: AISLE_SWEEP.ease,
         },

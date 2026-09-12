@@ -1,10 +1,5 @@
-// La plana que anuncia el examen final: a la derecha qué es, a la izquierda lo
-// que entra.
-//
-// Se parece a la portada del tomo a propósito —mismo antetítulo en voz baja,
-// mismo título en mincho, mismo texto en voz baja debajo—: son las dos planas del
-// libro donde no hay nada que hacer, solo que leer, y conviene que se reconozcan
-// como pareja. Una abre y la otra cierra.
+// La plana que anuncia el examen final. Se parece a la portada del tomo a propósito: son las
+// dos planas del libro donde no hay nada que hacer, y conviene que se reconozcan como pareja.
 
 .final-notice {
   width: 100%;
@@ -43,8 +38,7 @@
     text-wrap: pretty;
   }
 
-  // Lo que se gana. Al pie y en pequeño: se enseña el premio sin celebrarlo
-  // todavía, que para eso hace falta aprobar.
+  // Lo que se gana. Al pie y en pequeño: se enseña el premio sin celebrarlo todavía.
   &__prize {
     margin-top: auto;
     padding-top: 1.4cqh;
@@ -55,8 +49,8 @@
     gap: 0.8em;
   }
 
-  // Apagado: es el sello que se va a ganar, no uno ganado. Verlo a todo color
-  // aquí le quitaría el momento al de verdad.
+  // Apagado: es el sello que se va a ganar, no uno ganado. A todo color le quitaría el momento
+  // al de verdad.
   &__seal {
     width: 18cqmin;
     max-width: 3.4rem;
@@ -72,7 +66,6 @@
   }
 }
 
-// Lo que entra en el examen.
 .final-scope {
   width: 100%;
   flex: 1;
@@ -83,8 +76,8 @@
   justify-content: center;
   gap: 3cqh;
 
-  // La misma fila de la portada, con el mismo subrayado de latón: es la misma
-  // lista con la que se abrió el libro.
+  // La misma fila de la portada, con el mismo subrayado de latón: es la lista con la que se
+  // abrió el libro.
   &__kana {
     margin: 0;
     display: flex;

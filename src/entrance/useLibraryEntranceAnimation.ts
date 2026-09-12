@@ -48,17 +48,15 @@ function waitForNextFrames(count = 2): Promise<void> {
   })
 }
 
-// `onEnterComplete` se dispara una sola vez, cuando la secuencia llega al final
-// y el usuario ya está dentro. La puerta es un umbral, no un destino: quien la
-// cruza sigue camino, y es quien llama a este hook el que decide a dónde.
+// `onEnterComplete` se dispara una sola vez, al llegar al final de la secuencia. La
+// puerta es un umbral, no un destino: a dónde se sigue lo decide quien llama.
 export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterComplete: () => void) {
   const [isReady, setIsReady] = useState(false)
   const enterActionRef = useRef<() => void>(() => {})
   const readyRef = useRef(false)
 
-  // En un ref para que el efecto no dependa de la identidad de la función: si
-  // dependiera, cada render con una lambda nueva desmontaría y volvería a montar
-  // toda la animación.
+  // En un ref para que el efecto no dependa de la identidad de la función: si dependiera,
+  // cada render con una lambda nueva remontaría la animación entera.
   const onEnterCompleteRef = useRef(onEnterComplete)
   onEnterCompleteRef.current = onEnterComplete
   const hasEnteredRef = useRef(false)
@@ -68,13 +66,11 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
     enterActionRef.current()
   }, [])
 
-  // Tiene que ser un efecto de layout, no un useEffect normal: al fijar la
-  // sección, ScrollTrigger la envuelve en un .pin-spacer y deja de ser hija del
-  // nodo que React registró. Si React la desmonta en ese estado, su removeChild
-  // falla y el árbol se queda a medias — la puerta se queda pintada y la ruta
-  // nueva no llega a montarse. Los cleanups de useEffect corren después de
-  // quitar los nodos, así que el revert llegaría tarde; los de useLayoutEffect
-  // corren antes, que es justo lo que hace falta para deshacer el pin a tiempo.
+  // Tiene que ser de LAYOUT y no un `useEffect`: al fijar la sección, ScrollTrigger la
+  // envuelve en un `.pin-spacer` y deja de ser hija del nodo que React registró. Si React
+  // la desmonta así, su `removeChild` falla y el árbol se queda a medias —la puerta
+  // pintada y la ruta nueva sin montar—. Los cleanups de `useEffect` corren DESPUÉS de
+  // quitar los nodos; los de layout, antes, que es cuando hay que deshacer el pin.
   useLayoutEffect(() => {
     const {
       sectionRef,
@@ -96,8 +92,8 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       enterButtonRef,
     } = refs
 
-    // Se pregunta una vez y se guarda: la entrada monta su animación en varios
-    // tramos y todos tienen que decidir lo mismo.
+    // Se pregunta una vez y se guarda: la entrada monta la animación en varios tramos y
+    // todos tienen que decidir lo mismo.
     const wantsStillness = prefersReducedMotion()
 
     let particles: LibraryParticles | null = null
@@ -132,15 +128,13 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       fitDoorImageToContainer(doorLeftImgEl, doorLeftEl)
       fitDoorImageToContainer(doorRightImgEl, doorRightEl)
 
-      // El ajuste de arriba escribe medidas en píxeles sobre la <img>, así que
-      // hay que rehacerlo cada vez que su contenedor cambia de tamaño. Se
-      // observa el contenedor y no la ventana: así también se recalcula al
-      // cambiar las medidas del PORTAL en caliente, que con un listener de
-      // resize no se veía hasta recargar la página entera.
+      // El ajuste escribe medidas en píxeles sobre la <img>, así que hay que rehacerlo
+      // cuando su contenedor cambia de tamaño. Se observa el contenedor y no la ventana:
+      // así también se recalcula al tocar PORTAL en caliente.
       //
-      // Se empieza a observar aquí y no antes porque el ResizeObserver entrega
-      // una primera medición nada más observar: hacerlo con las imágenes sin
-      // cargar mediría una silueta todavía sin dimensiones.
+      // Se empieza a observar aquí y no antes porque el ResizeObserver entrega una primera
+      // medición nada más observar, y con las imágenes sin cargar mediría una silueta sin
+      // dimensiones.
       doorResizeObserver = new ResizeObserver(() => {
         fitDoorImageToContainer(doorLeftImgEl, doorLeftEl)
         fitDoorImageToContainer(doorRightImgEl, doorRightEl)
@@ -174,10 +168,8 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
           return
         }
 
-        // Deriva del cielo. Va suelta y no dentro de la timeline de las puertas:
-        // tiene que seguir viva con la entrada cerrada y abierta por igual, y su
-        // ritmo no depende de por dónde vaya el scroll. El contexto de GSAP se
-        // encarga de revertirla al desmontar, como al resto.
+        // Va suelta y no dentro de la timeline de las puertas: tiene que seguir viva con la
+        // entrada cerrada y abierta por igual. El contexto de GSAP la revierte al desmontar.
         const sky = config.facade.sky
         gsap.fromTo(
           skyRef.current,
@@ -200,10 +192,9 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
         const syncParticles = () => particles?.setGlobalOpacity(particlesProxy.value)
 
         const tl = gsap.timeline({
-          // Con scrub la timeline persigue al scroll, así que este onComplete
-          // salta cuando el recorrido llega de verdad al final, no cuando el
-          // scroll toca el límite. El guard evita que se repita si el usuario
-          // sube y vuelve a bajar antes de que la ruta cambie.
+          // Con scrub la timeline persigue al scroll, así que esto salta cuando el recorrido
+          // llega de verdad al final, no cuando el scroll toca el límite. El guard evita que
+          // se repita si se sube y se vuelve a bajar antes de que cambie la ruta.
           onComplete: () => {
             if (hasEnteredRef.current) return
             hasEnteredRef.current = true
@@ -225,11 +216,9 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
           },
         })
 
-        // Fase 1 — puertas cerradas: asentamiento mínimo, nada brusco.
         tl.to(glowRef.current, { opacity: config.glow.closed, duration: closedEnd - closedStart, ease: 'none' }, closedStart)
         tl.to(particlesProxy, { value: 0.02, duration: closedEnd - closedStart, ease: 'none', onUpdate: syncParticles }, closedStart)
 
-        // Fase 2 — apertura de las puertas hacia dentro.
         const openingDuration = openingEnd - openingStart
         tl.to(doorLeftRef.current, { rotateY: config.doors.leftRotationOpen, duration: openingDuration, ease: 'power1.inOut' }, openingStart)
         tl.to(doorRightRef.current, { rotateY: config.doors.rightRotationOpen, duration: openingDuration, ease: 'power1.inOut' }, openingStart)
@@ -243,13 +232,11 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
         tl.to(spillRef.current, { opacity: config.lightSpill.max * 0.4, duration: openingDuration, ease: 'none' }, openingStart)
         tl.to(particlesProxy, { value: 0.5, duration: openingDuration, ease: 'none', onUpdate: syncParticles }, openingStart)
 
-        // Fase 3 — puertas abiertas, luz cálida e interior visible.
         const openDuration = openEnd - openStart
         tl.to(glowRef.current, { opacity: config.glow.open, duration: openDuration, ease: 'none' }, openStart)
         tl.to(spillRef.current, { opacity: config.lightSpill.max, duration: openDuration, ease: 'none' }, openStart)
         tl.to(particlesProxy, { value: 1, duration: openDuration, ease: 'none', onUpdate: syncParticles }, openStart)
 
-        // Fase 4 — la cámara avanza a través del hueco.
         const pushDuration = pushEnd - pushStart
         tl.to(
           facadeGroupRef.current,

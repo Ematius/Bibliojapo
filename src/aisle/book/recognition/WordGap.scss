@@ -1,8 +1,6 @@
-// La palabra con el hueco que hay que rellenar en romaji.
-//
-// El hueco tiene que leerse como parte de la palabra, no como un formulario: el
-// campo va sin caja, sin fondo y con la misma letra que el resto, y lo único que
-// lo distingue es la línea de debajo — la raya de un ejercicio de papel.
+// La palabra con el hueco que hay que rellenar en rōmaji. El hueco tiene que leerse como
+// parte de la palabra y no como un formulario: sin caja, sin fondo y con la misma letra que el
+// resto; lo único que lo distingue es la línea de debajo, la raya de un ejercicio de papel.
 
 .word-gap {
   width: 100%;
@@ -15,7 +13,6 @@
   justify-content: center;
   gap: 2cqh;
 
-  // La palabra en romaji, con el hueco dentro.
   &__reading {
     margin: 0;
     display: flex;
@@ -24,8 +21,7 @@
     font-family: var(--font-display);
     font-size: clamp(1.4rem, 18cqmin, 4rem);
     line-height: 1.15;
-    // Las letras de una transcripción se leen sueltas, no como una palabra
-    // española. Es lo mismo que hace el romaji de la tarjeta del kana.
+    // Las letras de una transcripción se leen sueltas, no como una palabra española.
     letter-spacing: 0.1em;
   }
 
@@ -33,14 +29,11 @@
     color: var(--color-ink);
   }
 
-  // El hueco.
-  //
-  // Hereda tamaño y familia del renglón, así que lo escrito cae exactamente sobre
-  // la línea del resto de la palabra en vez de flotar dentro de una caja.
+  // El hueco. Hereda tamaño y familia del renglón, así que lo escrito cae exactamente sobre la
+  // línea del resto de la palabra en vez de flotar dentro de una caja.
   &__input {
-    // El ancho NO sale del contenido: un campo que crece al teclear movería la
-    // palabra entera de sitio justo mientras se está escribiendo. Fijo, y del
-    // tamaño de la letra que se espera.
+    // El ancho NO sale del contenido: un campo que crece al teclear movería la palabra entera
+    // de sitio justo mientras se está escribiendo.
     width: 1.6ch;
     padding: 0;
     border: none;
@@ -59,21 +52,16 @@
     }
   }
 
-  // Acertado. La hiedra es el único verde de la paleta y sobre el papel crema se
-  // lee sin desentonar; el latón, que sería lo primero que uno pensaría, queda
-  // casi del mismo tono que la hoja y no se distinguiría.
+  // Acertado. La hiedra es el único verde de la paleta y sobre papel crema se lee sin
+  // desentonar; el latón quedaría casi del mismo tono que la hoja.
   &__input--right {
     border-bottom-color: var(--color-ivy-dark);
     color: var(--color-ivy-dark);
   }
 
-  // Fallado. No se pinta de rojo, y no es un olvido: la paleta del libro no tiene
-  // color de error, y meter uno nuevo por esto sería colar en la biblioteca un
-  // tono que no es suyo. La raya se marca en tinta plena y lo que explica el fallo
-  // es el aviso de debajo, que además es lo único que puede decir POR QUÉ.
-  //
-  // No se borra lo escrito ni se bloquea nada: se marca y se sigue probando, que
-  // es lo que hace alguien aprendiendo.
+  // Fallado. No se pinta de rojo: la raya se marca en tinta plena y lo que explica el fallo es
+  // el aviso de debajo, que además es lo único que puede decir POR QUÉ. No se borra lo escrito
+  // ni se bloquea nada: se marca y se sigue probando.
   &__input--wrong {
     border-bottom-color: var(--color-ink);
   }
@@ -87,15 +75,12 @@
     text-wrap: balance;
   }
 
-  // El dictado completo: TODOS los huecos vacíos a la vez, sin un solo kana de
-  // por medio que marque dónde acaba uno y empieza el siguiente. Ahí la raya de
-  // debajo no basta —los huecos se leían como una sola tira—, así que cada uno
-  // pasa a ser su propia casilla, separada de sus vecinas por el hueco entre
-  // ellas y no por una raya compartida.
+  // El dictado completo: TODOS los huecos vacíos a la vez, sin un kana de por medio que marque
+  // dónde acaba uno y empieza el siguiente. Ahí la raya no basta —se leían como una sola tira—,
+  // así que cada hueco pasa a ser su propia casilla.
   &--dictation {
     .word-gap__reading {
-      // El espacio ES la separación: sin él, dos casillas pegadas volverían a
-      // leerse como una sola.
+      // El espacio ES la separación: sin él, dos casillas pegadas volverían a leerse como una.
       gap: 0.5em;
     }
 
@@ -121,8 +106,8 @@
     }
   }
 
-  // El aviso de acierto o fallo. Reserva su hueco para que la palabra no dé un
-  // salto cada vez que se escribe una letra.
+  // El aviso de acierto o fallo. Reserva su hueco para que la palabra no dé un salto cada vez
+  // que se escribe una letra.
   &__result {
     flex: none;
     margin: 0;

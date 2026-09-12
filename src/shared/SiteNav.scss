@@ -2,30 +2,26 @@
 // La portada del valle no la lleva.
 
 .site-nav {
-  // Separación respecto a las esquinas de la pantalla. Un solo valor para que
-  // el aire de arriba y el de la izquierda sean siempre el mismo.
+  // Un solo valor para que el aire de arriba y el de la izquierda sean siempre el mismo.
   --nav-inset: 1.5rem;
 
   position: absolute;
   top: var(--nav-inset);
   left: var(--nav-inset);
-  // La escena va antes en el DOM, pero sus capas están posicionadas en absoluto:
-  // sin apilado explícito la barra quedaría a merced de ese orden.
+  // La escena va antes en el DOM, pero sus capas están posicionadas en absoluto: sin apilado
+  // explícito la barra quedaría a merced de ese orden.
   z-index: 1;
   display: flex;
   align-items: center;
   gap: 1.75rem;
-  // Asimétrico a propósito: el distintivo del logotipo y el botón ya traen su
-  // propio cuerpo, así que por los lados basta con el aire que deja el padding
-  // vertical. Solo la izquierda pide un poco más para que el kanji no quede
-  // pegado al borde.
+  // Asimétrico a propósito: el distintivo y el botón ya traen su propio cuerpo, y solo la
+  // izquierda pide un poco más para que el kanji no quede pegado al borde.
   padding: 0.5rem 0.5rem 0.5rem 0.625rem;
   border: 1px solid var(--color-glass-edge);
   border-radius: var(--radius-float);
   background: var(--color-glass);
-  // La escena de debajo es muy contrastada —cielo, montaña, flores— y el texto
-  // en negro se perdería sobre ella. El desenfoque la aplana lo justo para que
-  // la barra tenga sobre qué apoyarse sin taparla del todo.
+  // La escena de debajo es muy contrastada y el texto en negro se perdería. El desenfoque la
+  // aplana lo justo para que la barra tenga sobre qué apoyarse sin taparla.
   backdrop-filter: blur(0.75rem);
   box-shadow: var(--shadow-float);
 
@@ -33,8 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    // Cuadrado: el kanji necesita la misma caja a lo alto que a lo ancho para
-    // quedar centrado de verdad.
+    // Cuadrado: el kanji necesita la misma caja a lo alto que a lo ancho para quedar centrado.
     width: 2.5rem;
     height: 2.5rem;
     border-radius: var(--radius-badge);
@@ -42,8 +37,8 @@
     color: var(--color-on-nav-ink);
     font-family: var(--font-display);
     font-size: 1.375rem;
-    // Un kanji no tiene ascendentes ni descendentes que compensar; con el
-    // interlineado normal la caja de línea lo desplaza dentro del distintivo.
+    // Un kanji no tiene ascendentes ni descendentes que compensar, y con el interlineado
+    // normal la caja de línea lo desplaza dentro del distintivo.
     line-height: 1;
     text-decoration: none;
     user-select: none;
@@ -76,8 +71,8 @@
     opacity: 0.6;
   }
 
-  // Sección todavía sin pantalla. Se atenúa apenas lo justo para que no invite
-  // a pulsarla, sin llegar a leerse como texto desactivado.
+  // Sección todavía sin pantalla. Se atenúa lo justo para que no invite a pulsarla, sin
+  // llegar a leerse como texto desactivado.
   &__link--pending {
     opacity: 0.55;
     cursor: default;
@@ -99,8 +94,8 @@
     white-space: nowrap;
     cursor: pointer;
     transition: opacity var(--duration-fast) ease;
-    // Con sesión lleva el nombre de quien está dentro, y un nombre largo no
-    // puede estirar la barra hasta comerse la pantalla.
+    // Con sesión lleva el nombre de quien está dentro, y un nombre largo no puede estirar la
+    // barra hasta comerse la pantalla.
     max-width: 12rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -110,26 +105,119 @@
     opacity: 0.85;
   }
 
-  // El foco se marca sobre el fondo claro de la barra, no sobre la escena, así
-  // que el contorno va en la tinta oscura y no en el latón que usan las
-  // pantallas de dentro de la biblioteca.
+  &__burger {
+    display: none;
+    // Del tamaño del distintivo: son los dos extremos de la barra y desiguales la descuadran.
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3125rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-badge);
+    background: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  &__burger-line {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-nav-ink);
+    // Con transición y no con GSAP: no es una entrada ni una salida, es un botón que cambia
+    // de estado.
+    transition:
+      transform var(--duration-fast) ease,
+      opacity var(--duration-fast) ease;
+  }
+
+  // El desplazamiento es el hueco que deja el trazo apagado —línea más separación—, así que
+  // va en las mismas unidades y no en un número ajustado a ojo.
+  &__burger[aria-expanded='true'] &__burger-line:nth-child(1) {
+    transform: translateY(calc(2px + 0.3125rem)) rotate(45deg);
+  }
+
+  &__burger[aria-expanded='true'] &__burger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  &__burger[aria-expanded='true'] &__burger-line:nth-child(3) {
+    transform: translateY(calc(-2px - 0.3125rem)) rotate(-45deg);
+  }
+
+  // Nace cerrado desde aquí y no esperando a GSAP: con el panel visible en el primer pintado
+  // se vería un menú abierto durante un fotograma. Con `visibility` y no `display`, que no se
+  // puede animar.
+  &__menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-glass-edge);
+    border-radius: var(--radius-float);
+    background: var(--color-glass);
+    backdrop-filter: blur(0.75rem);
+    box-shadow: var(--shadow-float);
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: top center;
+  }
+
+  &__menu-list {
+    display: flex;
+    flex-direction: column;
+    // Sin `gap`: dejaría huecos muertos entre dos zonas que sí responden.
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // La fila entera, porque en una pantalla táctil apuntar a la palabra exacta es mucho pedir.
+  &__menu &__link {
+    display: block;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-badge);
+    font-size: 1rem;
+  }
+
+  // El foco se marca sobre el fondo claro de la barra, no sobre la escena: el contorno va en
+  // tinta oscura y no en el latón que usan las pantallas de dentro.
   &__logo:focus-visible,
   &__link:focus-visible,
-  &__cta:focus-visible {
+  &__cta:focus-visible,
+  &__burger:focus-visible {
     outline: 2px solid var(--color-nav-ink);
     outline-offset: 3px;
   }
 }
 
-// Por debajo de este ancho no caben las cuatro secciones más el botón sin que
-// la barra se coma la pantalla entera. Se dejan el logotipo y la llamada a la
-// acción; el menú desplegable para móvil queda pendiente.
-@media (max-width: 48rem) {
+// Por debajo de este ancho no caben las secciones más el botón sin que la barra se coma la
+// pantalla. Pasan al menú; el logotipo y la llamada a la acción se quedan.
+//
+// También por alto: un móvil de lado es ancho de sobra pero solo tiene 412 px de alto, y ahí
+// la barra entera se come la escena — que es donde se está leyendo.
+@media (max-width: 48rem), (max-height: 34rem) {
   .site-nav {
     --nav-inset: 1rem;
+
+    gap: 0.5rem;
   }
 
   .site-nav__links {
     display: none;
+  }
+
+  .site-nav__burger {
+    display: flex;
+  }
+
+  .site-nav__menu {
+    display: block;
   }
 }

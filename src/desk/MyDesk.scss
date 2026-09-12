@@ -1,42 +1,32 @@
-// Mi escritorio: la mesa propia, con lo que se ha ganado encima.
+// Mi escritorio. La escena la pone `DeskScene` y los objetos se posan encima; aquí solo queda
+// lo que se dice con palabras.
 //
-// Todavía no tiene la escena puesta —llega en su propio paso—, así que se
-// sostiene sola con el fondo cálido de la casa y el papel de siempre: la tarjeta
-// de la invitación es el mismo carné del panel de cuenta, y así se reconoce como
-// su continuación cuando manda a crearla.
-//
-// El texto de la pantalla va sobre el fondo oscuro, no sobre papel: de ahí que lo
-// secundario tire a piedra y no a `--color-ink-soft`, que es tinta y sobre este
-// fondo no se leería.
+// La tarjeta de la invitación es el mismo carné del panel de cuenta, y así se reconoce como su
+// continuación. Los avisos van sobre la MADERA y no sobre papel: de ahí que tiren a piedra y
+// no a `--color-ink-soft`, que es tinta y ahí no se leería.
 
 .my-desk {
   position: relative;
-  // La barra se posiciona en absoluto contra el primer ancestro colocado; sin el
-  // relative de arriba se iría a la ventana y dejaría de acompañar a la pantalla.
-  // Lo mismo vale para la escena, que se encuadra contra esta caja.
-  //
-  // Alto exacto y no mínimo, como el resto de escenas: esto ya no es un documento
-  // que crece, es una habitación. Lo que sobra de ilustración se recorta aquí.
+  // La barra se posiciona contra el primer ancestro colocado; sin el relative se iría a la
+  // ventana. Alto exacto y no mínimo, como el resto de escenas: esto no es un documento que
+  // crece, es una habitación.
   height: calc(var(--vh) * 100);
   overflow: hidden;
-  // El fondo de la casa asoma solo si la escena no llega a cubrir; mientras
-  // cubra, no se ve.
+  // El fondo de la casa asoma solo si la escena no llega a cubrir.
   background: var(--color-bg);
   color: var(--color-cream);
   font-family: var(--font-body);
 
-  // Lo que se dice con palabras, por encima de la mesa. Colocado a propósito: la
-  // escena va en absoluto, y sin esto se pintaría encima del texto.
+  // Lo que se dice con palabras, por encima de la mesa: la escena va en absoluto, y sin esto
+  // se pintaría encima del texto.
   &__content {
     position: relative;
-    // Arriba cabe la barra entera —su separación, su cuerpo y el aire de debajo—
-    // antes de que empiece el título.
+    // Arriba cabe la barra entera: su separación, su cuerpo y el aire de debajo.
     padding: 7.5rem 1.5rem 4rem;
   }
 
-  // Lo que se dice mientras no hay tomos que enseñar: que están llegando, que no
-  // han llegado, o que todavía no hay ninguno. Los tres casos son la misma voz
-  // tranquila, así que comparten aspecto.
+  // Un aviso suelto: que los tomos están llegando, que no han llegado, o que la puerta que se
+  // acaba de pulsar todavía no lleva a ningún sitio. Los tres son la misma voz tranquila.
   &__note {
     max-width: 34rem;
     margin: 0 auto;
@@ -46,9 +36,8 @@
     text-wrap: pretty;
   }
 
-  // ── La invitación a crear la cuenta ──────────────────────────────────────
-  // Papel crema con filo de latón: es el carné del panel puesto sobre la mesa,
-  // y pulsarlo abre exactamente esa tarjeta.
+  // La invitación a crear la cuenta: papel crema con filo de latón, el carné del panel puesto
+  // sobre la mesa.
   &__invite {
     max-width: 30rem;
     margin: 0 auto;
@@ -64,11 +53,8 @@
     color: var(--color-ink-soft);
   }
 
-  // Las dos vías, una al lado de la otra. La separación de arriba vive aquí y no
-  // en el botón: el botón dice cómo se ve, y dónde va lo dice quien lo pone.
-  //
-  // En columna por debajo de cierto ancho, que es donde dos botones de píldora
-  // dejan de caber en una línea sin partirse.
+  // Las dos vías, una al lado de la otra. La separación de arriba vive aquí y no en el botón.
+  // En columna por debajo del ancho donde dos botones de píldora dejan de caber en una línea.
   &__ways {
     display: flex;
     flex-wrap: wrap;
@@ -99,58 +85,19 @@
     }
   }
 
-  // La segunda vía, apagada. Las dos llevan al mismo panel, pero solo una es la
-  // que se espera de quien llega aquí por primera vez: con las dos igual de
-  // fuertes, hay que pararse a leer para saber cuál es la suya.
+  // La segunda vía, apagada. Las dos llevan al mismo panel, pero con las dos igual de fuertes
+  // hay que pararse a leer para saber cuál es la que se espera.
   &__cta--quiet {
     background: none;
     color: var(--color-ink-soft);
     font-weight: 400;
     text-decoration: underline;
   }
-
-  // ── Los tomos ganados ────────────────────────────────────────────────────
-  // Una rejilla y no una fila: la colección va a crecer hasta doce o dieciséis
-  // tomos, y en fila el último acabaría fuera de la pantalla.
-  &__volumes {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-    gap: 1.25rem;
-    max-width: 60rem;
-    margin: 0 auto;
-    padding: 0;
-    list-style: none;
-  }
-
-  // Cada tomo, de canto sobre la balda. Alto y estrecho porque es un lomo: el
-  // día que haya tapa dibujada se cambia el relleno por ella y la proporción ya
-  // está puesta. Ver «Las tapas y los lomos son de cada tomo» en CLAUDE.md.
-  &__volume {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 3 / 4;
-    padding: 1rem;
-    border: 1px solid var(--color-brass);
-    border-radius: var(--radius-badge);
-    background: linear-gradient(
-      160deg,
-      var(--color-wood-dark),
-      var(--color-wood-deep)
-    );
-    box-shadow: var(--shadow-float);
-    color: var(--color-brass-glow);
-    font-family: var(--font-display);
-    font-size: 1.0625rem;
-    font-weight: 700;
-    text-align: center;
-  }
 }
 
 @media (max-width: 48rem) {
-  // El padding vive en el contenido, no en la pantalla: la pantalla es ahora la
-  // caja de la escena y no lleva ninguno.
+  // El padding vive en el contenido: la pantalla es ahora la caja de la escena.
   .my-desk__content {
-    // La barra sube al reducirse su separación, y el título con ella.
     padding-top: 6rem;
   }
 }

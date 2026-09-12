@@ -1,68 +1,54 @@
-// La tarjeta de presentación del kana: forma, lectura y sonido.
-//
-// Todo va centrado y con mucho aire alrededor. La hoja anterior está llena —un
-// dibujo, una historia, tres pasos de trazado—, y esta tiene que leerse como lo
-// contrario: aquí solo está el carácter, y el vacío es parte del ejercicio.
+// La tarjeta de presentación del kana: forma, lectura y sonido. Todo centrado y con mucho
+// aire: la hoja anterior está llena, y esta tiene que leerse como lo contrario.
 
 .kana-card {
   width: 100%;
 
-  // Se queda con el alto que sobre en la hoja y puede encogerse. Sin el
-  // `min-height: 0` el carácter se negaría a bajar de su tamaño natural y
-  // empujaría el folio fuera de la página.
+  // Sin el `min-height: 0` el carácter se negaría a bajar de su tamaño natural y empujaría el
+  // folio fuera de la página.
   flex: 1;
   min-height: 0;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  // El kana se planta en el medio de la hoja, no arriba: es lo único que hay
-  // que mirar, y centrado es como se mira una tarjeta.
+  // El kana se planta en el medio de la hoja: es lo único que hay que mirar.
   justify-content: center;
   gap: 1cqh;
 
   // El carácter, que es toda la página.
   //
-  // ── Por qué NO va en la fuente de cabeceras ──────────────────────────────
-  // `--font-display` es Shippori Mincho, una mincho: lleva los remates y el
-  // grosor desigual de una tipografía de imprenta. La silueta con la que se
-  // anima el trazo en la hoja anterior está sacada de Zen Kaku Gothic New,
-  // elegida justo por lo contrario —trazo uniforme y sin remates—.
-  //
-  // Enseñar aquí una あ con remates sería enseñar una letra distinta de la que
-  // se acaba de aprender a dibujar, y en material de estudio eso confunde: el
-  // que copia no sabría cuál de las dos formas es la buena. Así que la tarjeta
-  // usa la MISMA fuente que la silueta.
+  // NO va en la fuente de cabeceras: `--font-display` es una mincho, con remates y grosor
+  // desigual, y la silueta con la que se anima el trazo sale de Zen Kaku Gothic New, elegida
+  // justo por lo contrario. Enseñar aquí una あ con remates sería enseñar una letra distinta de
+  // la que se acaba de aprender a dibujar.
   &__character {
     margin: 0;
     font-family: var(--font-body);
-    // Atado a `cqmin` —el lado corto de la hoja— y no a la altura: es lo que
-    // impide que el carácter se salga por los lados en un libro achatado.
+    // Atado a `cqmin` —el lado corto de la hoja— y no a la altura: es lo que impide que el
+    // carácter se salga por los lados en un libro achatado.
     font-size: clamp(2.5rem, 42cqmin, 9rem);
     font-weight: 500;
     line-height: 1;
   }
 
-  // La lectura, debajo y en voz baja. Pegada al carácter a propósito: no es otro
-  // dato, es el mismo dicho en otro alfabeto.
+  // La lectura, debajo y en voz baja. Pegada al carácter a propósito: no es otro dato, es el
+  // mismo dicho en otro alfabeto.
   &__romaji {
     margin: 0;
     color: var(--color-ink-soft);
     font-family: var(--font-display);
     font-size: clamp(0.7rem, 7cqmin, 1.6rem);
-    // Separadas, las letras se leen como una transcripción y no como una
-    // palabra española.
+    // Separadas, las letras se leen como una transcripción y no como una palabra española.
     letter-spacing: 0.22em;
-    // La separación se reparte a los dos lados, así que sin esto el bloque
-    // queda descentrado justo por lo que sobra a la derecha.
+    // La separación se reparte a los dos lados: sin esto el bloque queda descentrado por lo
+    // que sobra a la derecha.
     text-indent: 0.22em;
   }
 
-  // El botón que suena. Cómo se ve lo pone `BookButton.scss`; aquí solo dónde va.
-  //
-  // El hueco va aquí y no en el `gap` del contenedor porque no es el mismo hueco:
-  // entre el carácter y su lectura hay que separar poco —son la misma cosa— y del
-  // sonido hay que separarse bastante más.
+  // El botón que suena. El hueco va aquí y no en el `gap` del contenedor porque no es el mismo
+  // hueco: del carácter a su lectura hay que separar poco —son la misma cosa— y del sonido
+  // bastante más.
   &__listen {
     margin-top: 5cqh;
   }

@@ -1,29 +1,14 @@
-// El encuadre de una escena pintada: la ilustración cubriendo la ventana sin
-// deformarse.
+// El encuadre de una escena pintada: la ilustración cubre la ventana sin deformarse y lo que
+// sobra se recorta desde el centro.
 //
-// ── QUÉ HACE ───────────────────────────────────────────────────────────────
-// La caja conserva la proporción del dibujo y se hace tan grande como haga
-// falta para que no quede hueco por ningún lado: en pantallas más anchas que la
-// ilustración sobra por arriba y abajo, y en las más estrechas por los lados.
-// Lo que sobra se recorta desde el centro, así que el punto de interés del
-// dibujo se queda donde está.
+// Es también el sistema de coordenadas de todo lo que se coloca ENCIMA —un tomo en su balda,
+// un cartel colgado—, porque esas medidas van en fracciones del DIBUJO, no de la ventana.
 //
-// Es también el sistema de coordenadas de todo lo que se coloca ENCIMA de la
-// escena —un tomo en su balda, un cartel colgado— porque esas medidas van en
-// fracciones del dibujo, no de la ventana. Ver `shelfConfig.ts`.
+// Es un mixin y no una clase para que salga el aspecto y no la colocación: cada pantalla
+// sigue teniendo su propia clase BEM y ninguna hereda el nombre de otra.
 //
-// ── POR QUÉ ES UN MIXIN Y NO UNA CLASE ─────────────────────────────────────
-// El bloque estaba escrito tres veces —entrada, vestíbulo y pasillo— con los
-// mismos siete valores, y una de las tres había derivado: usaba `var(--vh, 1vh)`
-// mientras las otras dos usaban `var(--vh)`. Tres copias es la señal de que hay
-// una pieza común.
-//
-// Sale el aspecto, no la colocación: cada pantalla sigue teniendo su propia
-// clase BEM —`.library-hall__stage`, `.library-aisle__stage`— y esto solo dice
-// cómo se encuadra. Así ninguna hereda el nombre de otra.
-//
-// El fallback de `--vh` se queda: `useVh` lo escribe en el primer efecto, y sin
-// él el primer fotograma de la primera carga se calcularía con la variable vacía.
+// El fallback de `--vh` se queda: `useVh` lo escribe en el primer efecto, y sin él el primer
+// fotograma de la primera carga se calcularía con la variable vacía.
 @mixin scene-stage($width: 1672, $height: 941) {
   position: absolute;
   top: 50%;
@@ -36,45 +21,27 @@
 
 // El mismo encuadre, pero con una ZONA que no se puede recortar nunca.
 //
-// ── QUÉ CAMBIA RESPECTO AL DE ARRIBA ───────────────────────────────────────
-// `scene-stage` cubre la ventana y recorta lo que sobre desde el centro del
-// DIBUJO. Sirve mientras lo importante está en el centro; en el pasillo no lo
-// está —la estantería cae a la derecha— y en una pantalla estrecha el recorte se
-// llevaba medio mueble.
+// `scene-stage` recorta desde el centro del DIBUJO, que sirve mientras lo importante esté en
+// el centro. En el pasillo no lo está —la estantería cae a la derecha— y en una pantalla
+// estrecha el recorte se llevaba medio mueble. Aquí la escena se encoge si la zona no cabe, y
+// el recorte se centra en la zona. Si al encoger deja de cubrir la ventana asoma el fondo:
+// sería la señal de que hace falta otra ilustración.
 //
-// Aquí se cubre igual, pero con dos condiciones encima: la escena se encoge si la
-// zona no cabe, y el recorte se centra en la zona en vez de en el dibujo. Si al
-// encogerse la escena deja de cubrir la ventana, lo que asoma por los lados es el
-// fondo — no pasa en ninguna pantalla real con la zona del pasillo, y sería la
-// señal de que hace falta otra ilustración.
+// La zona llega en cuatro variables de quien usa el mixin, en fracciones del dibujo. Son
+// contenido —se miden sobre la ilustración— así que no pueden vivir aquí; los valores por
+// defecto describen el dibujo entero centrado.
 //
-// ── DE DÓNDE SALE LA ZONA ──────────────────────────────────────────────────
-// De cuatro variables que pone quien usa el mixin, en fracciones del dibujo: lo
-// que mide y dónde está su centro. Son contenido —se miden sobre la ilustración,
-// en `shelfGrid.ts`— así que no pueden vivir aquí.
+// Se mide contra la caja del PADRE, en `cqw`/`cqh`, así que quien lo use tiene que declararla
+// `container-type: size`. No vale `100vw`: `html` reserva siempre el hueco de la barra de
+// scroll y esos 15 px cuentan en `vw` pero no en el ancho disponible. Tampoco los
+// porcentajes, que sacarían el alto de una cuenta hecha sobre el ancho.
 //
-// Los valores por defecto describen el dibujo entero centrado, que es el encuadre
-// de `scene-stage`: sin variables, esto no protege nada, pero tampoco rompe la
-// escena.
-//
-// ── CONTRA QUÉ SE MIDE ─────────────────────────────────────────────────────
-// Contra la caja del padre, en unidades de contenedor (`cqw`/`cqh`), así que
-// quien lo use tiene que declararla `container-type: size`.
-//
-// No vale `100vw`: `html` reserva siempre el hueco de la barra de scroll
-// —`scrollbar-gutter: stable`, en `base.scss`— y esos 15 px cuentan en `vw` pero
-// no en el ancho disponible. Encuadrando por `vw`, todo quedaba medio hueco
-// descentrado. Tampoco valen los porcentajes: el alto saldría de una cuenta hecha
-// sobre el ancho.
-//
-// ── POR QUÉ NO HAY `transform` ─────────────────────────────────────────────
-// La escena ya no está centrada en la ventana, así que su sitio se dice con `left`
-// y `top` y no con un desplazamiento de media caja. Los dos van con `clamp` para
-// que la zona quede centrada MIENTRAS no se vea el borde del dibujo: en cuanto
-// centrarla dejaría hueco por un lado, la escena se queda pegada a ese borde.
+// No hay `transform` porque la escena ya no está centrada: su sitio se dice con `left` y
+// `top`, los dos con `clamp`, para que la zona quede centrada MIENTRAS no se vea el borde del
+// dibujo.
 @mixin framed-stage($width: 1672, $height: 941) {
-  // Lo que mediría la escena cubriendo la ventana, y lo que mide dejando la zona
-  // justa dentro. Manda la menor: cubrir mientras se pueda, y encoger si no.
+  // Lo que mediría cubriendo la ventana, y lo que mide dejando la zona justa dentro. Manda la
+  // menor: cubrir mientras se pueda, y encoger si no.
   --stage-cover: max(100cqw, calc(100cqh * #{$width} / #{$height}));
   --stage-fit: min(
     calc(100cqw / var(--frame-width, 1)),
@@ -83,8 +50,8 @@
   --stage-width: min(var(--stage-cover), var(--stage-fit));
   --stage-height: calc(var(--stage-width) * #{$height} / #{$width});
 
-  // Cuánto sobra de escena por cada eje. Negativo mientras la escena sea mayor que
-  // la ventana, que es lo normal: es lo que hay para desplazarla.
+  // Cuánto sobra por cada eje. Negativo mientras la escena sea mayor que la ventana, que es
+  // lo normal: es lo que hay para desplazarla.
   --stage-slack-x: calc(100cqw - var(--stage-width));
   --stage-slack-y: calc(100cqh - var(--stage-height));
 

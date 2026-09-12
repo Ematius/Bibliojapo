@@ -1,46 +1,35 @@
-// Un tomo de la estantería, montado con volumen real.
-//
-// El truco entero está en que el lomo y la tapa son dos planos perpendiculares
-// en el espacio, no un dibujo del libro. Por eso el giro se puede animar en
+// Un tomo de la estantería, montado con volumen real: el lomo y la tapa son dos planos
+// perpendiculares en el espacio, no un dibujo del libro. Por eso el giro se puede animar en
 // cualquier ángulo y sigue leyéndose como un objeto.
 
 .shelf-volume {
   position: absolute;
-  // left y top marcan el centro del LOMO y la balda sobre la que se apoya. El
-  // ancla es el lomo y no el conjunto porque es la parte que toca la madera: la
-  // tapa se abre hacia atrás desde ahí, igual que en un estante de verdad.
+  // El ancla es el LOMO y no el conjunto porque es la parte que toca la madera: la tapa se
+  // abre hacia atrás desde ahí, igual que en un estante de verdad.
   left: calc(var(--volume-x) * 100%);
   top: calc(var(--volume-base-y) * 100%);
-  // El alto de base es el del tomo ADELANTADO, no el que tiene en la balda, y
-  // en el estante se encoge con una escala menor que 1.
-  //
-  // Va al revés de lo natural a propósito. El navegador rasteriza una caja con
-  // transformación 3D al tamaño que tiene antes de escalarla: naciendo pequeña
-  // y agrandándose seis veces, el tomo llegaba al lector hecho un mosaico. Al
-  // revés se dibuja una vez a tamaño grande y encogerlo no le quita nitidez.
+  // El alto de base es el del tomo ADELANTADO, no el que tiene en la balda, y en el estante se
+  // encoge con una escala menor que 1. Va al revés de lo natural a propósito: el navegador
+  // rasteriza una caja 3D al tamaño que tiene antes de escalarla, así que naciendo pequeña y
+  // agrandándose seis veces el tomo llegaba al lector hecho un mosaico.
   height: calc(var(--volume-focus-height) * 100%);
-  // El botón mide lo que el lomo. La tapa asoma fuera de esa caja al girar, de
-  // ahí que no haya overflow recortando nada.
+  // El botón mide lo que el lomo. La tapa asoma fuera de esa caja al girar: nada la recorta.
   aspect-ratio: var(--spine-ratio);
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
   transform: translate(-50%, -100%);
-  // En la balda, por DEBAJO del velo (2): cuando otro tomo sale, este se apaga
-  // con el resto del pasillo y deja de recibir pulsaciones. Con un solo tomo daba
-  // igual; con doce, los que se quedaban en la balda se pintaban por encima del
-  // que se tenía en la mano.
+  // En la balda, por DEBAJO del velo: cuando otro tomo sale, este se apaga con el resto del
+  // pasillo. Con doce, los que se quedaban en la balda se pintaban por encima del que se tenía
+  // en la mano.
   z-index: 1;
-  // Al volver a la balda no baja de golpe: sigue arriba lo que dura el viaje de
-  // vuelta y solo entonces se hunde. Sin esta espera, el tomo se metía bajo el
-  // velo a medio vuelo y se apagaba antes de llegar.
+  // Al volver no baja de golpe: sigue arriba lo que dura el viaje de vuelta. Sin esta espera,
+  // el tomo se metía bajo el velo a medio vuelo y se apagaba antes de llegar.
   transition: z-index 0s linear calc(var(--volume-pull-seconds) * 1s);
 
-  // Fuera de la balda, por encima del velo (2) y por debajo del libro abierto
-  // (4), que es el orden en que se tapan: el velo apaga el pasillo, el tomo se
-  // destaca sobre él, y el libro pintado acaba tapando al tomo. Sube al instante:
-  // la espera de arriba es solo para bajar.
+  // Fuera de la balda, por encima del velo y por debajo del libro abierto, que es el orden en
+  // que se tapan. Sube al instante: la espera de arriba es solo para bajar.
   &:not(&--shelf) {
     z-index: 3;
     transition: none;
@@ -51,16 +40,14 @@
     outline-offset: 6px;
   }
 
-  // La caja que gira. La perspectiva va aquí dentro, en el propio transform, y
-  // no como propiedad heredada de un ancestro: así el tomo puede escalarse y
-  // desplazarse sin que la fuga se deforme con él.
+  // La caja que gira. La perspectiva va en el propio transform y no heredada de un ancestro:
+  // así el tomo puede escalarse y desplazarse sin que la fuga se deforme con él.
   &__box {
     position: absolute;
     inset: 0;
     transform-style: preserve-3d;
-    // Punto de partida antes de que GSAP tome el control. Coincide con
-    // `restDeg` de shelfConfig.ts, y es el estado definitivo cuando el sistema
-    // pide movimiento reducido y la animación no llega a arrancar.
+    // Punto de partida antes de que GSAP tome el control. Coincide con `restDeg` de
+    // shelfConfig.ts, y es el estado definitivo con «reducir movimiento».
     transform: perspective(1600px) rotateY(-10deg);
   }
 
@@ -68,11 +55,9 @@
     position: absolute;
     top: 0;
     height: 100%;
-    // Cada cara se ve solo por fuera. Ahora que el tomo es una caja cerrada de
-    // cuatro caras, ninguna debería enseñar su revés: son el interior del
-    // libro. Sin esto, con el canto de frente se veía el reverso del lomo por
-    // detrás, colándose por los márgenes transparentes del render y pareciendo
-    // dos aletas doradas a los lados del bloque de hojas.
+    // Cada cara se ve solo por fuera: ninguna debería enseñar su revés, que es el interior del
+    // libro. Sin esto, con el canto de frente se veía el reverso del lomo colándose por los
+    // márgenes transparentes del render, como dos aletas doradas.
     backface-visibility: hidden;
 
     img {
@@ -80,21 +65,17 @@
       width: 100%;
       height: 100%;
       user-select: none;
-      // El encendido de un tomo que se acaba de ganar: se hace de luz poco a
-      // poco, como una lámpara, en vez de aparecer de golpe.
+      // El encendido de un tomo recién ganado: se hace de luz poco a poco, como una lámpara.
       transition: filter var(--duration-slow) ease;
     }
 
     // La tapa pintada de tres cuartos, encima de la plana.
     //
-    // El selector va compuesto a propósito: tiene que ganar en especificidad a
-    // la regla `img` de justo arriba, que si no le impondría el ancho de la cara
-    // y le recortaría precisamente el bloque de hojas, que es lo único que la
-    // hace distinta.
+    // El selector va compuesto a propósito: tiene que ganar en especificidad a la regla `img`
+    // de arriba, que si no le recortaría el bloque de hojas, que es lo único que la distingue.
     //
-    // Se ancla por la DERECHA porque ese borde es el mismo en las dos imágenes
-    // —la arista del lomo— y lo que sobra por la izquierda es el canto. Así las
-    // dos tapas quedan superpuestas al píxel y el fundido no desplaza nada.
+    // Se ancla por la DERECHA porque ese borde es el mismo en las dos imágenes —la arista del
+    // lomo— y lo que sobra por la izquierda es el canto: así el fundido no desplaza nada.
     img.shelf-volume__turned {
       position: absolute;
       top: 0;
@@ -110,32 +91,26 @@
     width: 100%;
   }
 
-  // Las dos tapas cuelgan una de cada arista del lomo y se hunden hacia el fondo
-  // del estante. Su ancho sale de las dos proporciones: la caja mide el grosor
-  // del libro, y una tapa es tantas veces más ancha como lo sea su proporción
-  // frente a la del lomo. Así la geometría la fijan los renders y no un número
-  // puesto a ojo.
+  // Las dos tapas cuelgan de las aristas del lomo. Su ancho sale de las dos proporciones, así
+  // que la geometría la fijan los renders y no un número puesto a ojo.
   &__face--back,
   &__face--cover {
     width: calc(var(--cover-ratio) / var(--spine-ratio) * 100%);
   }
 
-  // La contra, articulada en la arista DERECHA. Es la que asoma con el tomo de
-  // tres cuartos en la balda, y la única que se ve mientras el libro está
-  // colocado.
+  // La contra, articulada en la arista DERECHA: es la que asoma con el tomo de tres cuartos y
+  // la única que se ve mientras el libro está colocado.
   &__face--back {
     left: 100%;
     transform-origin: left center;
     transform: rotateY(90deg);
   }
 
-  // La portada, articulada en la arista IZQUIERDA, mirando al fondo del estante.
-  // Solo aparece cuando el tomo se gira hacia el lector, y entonces el lomo le
+  // La portada, articulada en la arista IZQUIERDA. Al girarse hacia el lector, el lomo le
   // queda a la derecha, que es como se sostiene un tomo japonés.
   //
-  // Lleva preserve-3d porque el canto cuelga de ella: es la forma de colocarlo a
-  // la profundidad correcta sin recurrir a un translateZ, que necesitaría una
-  // medida en píxeles y aquí todo va en proporciones.
+  // Lleva preserve-3d porque el canto cuelga de ella: es la forma de colocarlo a la
+  // profundidad correcta sin un translateZ, que pediría una medida en píxeles.
   &__face--cover {
     right: 100%;
     transform-origin: right center;
@@ -143,53 +118,38 @@
     transform-style: preserve-3d;
   }
 
-  // El canto, colgado de la arista libre de la portada y girado otro cuarto de
-  // vuelta: acaba paralelo al lomo y al fondo de todo, que es justo donde está
-  // el filo de las hojas. Con él la caja queda cerrada por sus cuatro lados.
-  //
-  // Su ancho es el grosor del libro, esta vez medido contra la tapa porque es de
-  // ella de quien cuelga.
+  // El canto, colgado de la arista libre de la portada y girado otro cuarto de vuelta: acaba
+  // paralelo al lomo y al fondo, que es donde está el filo de las hojas. Su ancho es el grosor
+  // del libro, medido contra la tapa porque es de ella de quien cuelga.
   &__face--edge {
     right: 100%;
     width: calc(var(--spine-ratio) / var(--cover-ratio) * 100%);
     transform-origin: right center;
     transform: rotateY(-90deg);
 
-    // El render del canto viene con mucho aire alrededor: el libro ocupa solo
-    // el 36,8% del ancho del lienzo (377 px de 1024) y el 96,3% del alto, bien
-    // centrado. Los otros renders vienen recortados a la silueta, así que sin
-    // esto el bloque de hojas salía tres veces más estrecho que el grosor real
-    // del tomo, con el pasillo asomando por los huecos.
-    //
-    // Se corrige aquí y no recortando el archivo para no tocar una imagen con
-    // la que todavía estás probando. Si cambias el render con otro encuadre,
-    // estos dos números son los que hay que volver a medir.
+    // El render del canto viene con mucho aire alrededor —el libro ocupa el 36,8 % del ancho
+    // del lienzo—, mientras que los demás vienen recortados a la silueta. Sin esto el bloque de
+    // hojas salía tres veces más estrecho, con el pasillo asomando por los huecos. Si cambia el
+    // render, estos dos números hay que volver a medirlos.
     img {
       transform: scale(2.716, 1.038);
     }
   }
 
-  // ── Los tomos que todavía no se pueden coger ──────────────────────────────
-  // Apagados: en sombra, como libros a los que no llega la luz de las lámparas.
-  // Siguen enteros y a la vista —la colección se ve completa desde el primer
-  // día—, pero se distingue de un vistazo cuáles se han ganado.
+  // Los tomos que todavía no se pueden coger van apagados, pero enteros y a la vista: la
+  // colección se ve completa desde el primer día.
   //
-  // El filtro va sobre las imágenes y no sobre la caja: la caja es lo que GSAP
-  // gira, y un filtro en un elemento que se anima obliga a repintarlo en cada
-  // fotograma. Las imágenes no se animan nunca; giran porque gira su padre.
+  // El filtro va sobre las IMÁGENES y no sobre la caja: la caja es lo que GSAP gira, y un
+  // filtro en un elemento que se anima obliga a repintarlo en cada fotograma.
   //
-  // `pending` se ve igual que cerrado: mientras no se sabe, se da por cerrado.
-  // Un tomo que se enciende al saberse queda bien; uno que se apaga, no.
-  //
-  // A 0,38 de brillo el oro se iba del todo y los tomos se leían como manchas
-  // negras; a esto el dibujo de cada tapa se sigue adivinando en la sombra.
+  // `pending` se ve igual que cerrado: un tomo que se enciende al saberse queda bien; uno que
+  // se apaga, no. Por debajo de 0,38 de brillo el oro se va y se leen como manchas negras.
   &--locked &__face img,
   &--pending &__face img {
     filter: brightness(0.55) saturate(0.45);
   }
 
-  // Ganado, pero sin cuenta donde guardar la insignia: a media luz. Ya es tuyo;
-  // solo falta dónde apuntarlo.
+  // Ganado, pero sin cuenta donde guardar la insignia: a media luz.
   &--needsAccount &__face img {
     filter: brightness(0.8) saturate(0.8);
   }

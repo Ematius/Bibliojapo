@@ -6,22 +6,17 @@
 .kana-stroke {
   width: 100%;
 
-  // Se queda con el alto que sobre en la hoja y se encoge si hace falta: sin el
-  // `min-height: 0` la ilustración se negaría a bajar de su tamaño natural y se
-  // saldría de la página.
+  // Se queda con el alto que sobre y se encoge si hace falta: sin el `min-height: 0` la
+  // ilustración se negaría a bajar de su tamaño natural y se saldría de la página.
   flex: 1;
   min-height: 0;
 
-  // El dibujo arriba y el botón debajo, con el dibujo quedándose lo que sobra.
   display: flex;
   flex-direction: column;
   gap: 2cqh;
 
-  // El hueco del dibujo: todo el alto que sobra después del botón. Es el que se
-  // encoge; el botón mantiene su tamaño.
-  //
-  // Es contenedor de consulta para que el dibujo pueda medirse contra él —ver
-  // `&__image`—, y centra lo que lleva dentro en los dos ejes.
+  // El hueco del dibujo: todo el alto que sobra después del botón. Es contenedor de consulta
+  // para que el dibujo pueda medirse contra él.
   &__figure {
     flex: 1;
     min-height: 0;
@@ -32,26 +27,20 @@
     justify-content: center;
   }
 
-  // La caja del dibujo, ceñida a él: la pone el tamaño de la imagen, no el del
-  // hueco. Es el sistema de referencia del kana, así que el kana cae siempre en el
-  // mismo sitio del DIBUJO, sea la hoja alta o cuadrada.
+  // La caja del dibujo, ceñida a él: la pone el tamaño de la imagen, no el del hueco. Es el
+  // sistema de referencia del kana, así que este cae siempre en el mismo sitio del DIBUJO.
   //
-  // El tamaño del kana vive aquí, y es UNO para todos: `--glyph-size` es la parte
-  // del dibujo que ocupa, en cada eje, la caja donde se planta. El kana entra en
-  // ella sin deformarse y centrado, así que ocupa ese porcentaje por su lado más
-  // largo y algo menos por el otro. Es el número a mover si todos se ven grandes o
-  // pequeños; que caiga sobre el motivo es cosa de la ilustración, que va con el
-  // motivo en el centro.
+  // `--glyph-size` es la parte del dibujo que ocupa el kana, y es UNO para todos. Es el número
+  // a mover si todos se ven grandes o pequeños; que caiga sobre el motivo es cosa de la
+  // ilustración, que va con el motivo en el centro.
   &__frame {
     --glyph-size: 60%;
 
     position: relative;
   }
 
-  // Encajada sin deformarse y sin agrandarse: los topes van en unidades del hueco
-  // y no en %, porque un % de alto dentro de una caja que se ciñe a su contenido
-  // no tiene contra qué medirse. Con los dos topes y el tamaño en `auto`, el
-  // navegador reduce la imagen conservando su proporción hasta que cabe.
+  // Los topes van en unidades del hueco y no en %, porque un % de alto dentro de una caja que
+  // se ciñe a su contenido no tiene contra qué medirse.
   &__image {
     display: block;
     width: auto;
@@ -60,12 +49,10 @@
     max-height: 100cqh;
   }
 
-  // El kana, en el centro de la caja del dibujo.
-  //
-  // El ancho y el alto van ESCRITOS, no deducidos de los márgenes. Un SVG es un
-  // elemento reemplazado, y con posición absoluta y alto `auto` el navegador saca
-  // el alto de su proporción e ignora el margen de abajo: el kana se salía por
-  // debajo del dibujo y tapaba el botón.
+  // El kana, en el centro de la caja del dibujo. El ancho y el alto van ESCRITOS, no deducidos
+  // de los márgenes: un SVG es un elemento reemplazado, y con posición absoluta y alto `auto`
+  // el navegador saca el alto de su proporción e ignora el margen de abajo — el kana se salía
+  // por debajo del dibujo y tapaba el botón.
   &__glyph {
     position: absolute;
     top: calc((100% - var(--glyph-size)) / 2);
@@ -73,11 +60,9 @@
     width: var(--glyph-size);
     height: var(--glyph-size);
     overflow: visible;
-    // Transparente al puntero. Es decoración —ni se pulsa ni se lee, por eso va
-    // `aria-hidden`—, y los trazos, con su brocha gorda, pintan más allá de la
-    // caja. Cuando esa caja se salía por abajo tapaba el botón «Animar»: el clic se
-    // lo llevaba el SVG y page-flip lo tomaba por un clic en la hoja, así que
-    // pasaba página en vez de animar.
+    // Transparente al puntero: es decoración, y los trazos, con su brocha gorda, pintan más
+    // allá de la caja. Cuando esa caja se salía por abajo tapaba el botón «Animar», y page-flip
+    // tomaba el clic por un clic en la hoja y pasaba página.
     pointer-events: none;
   }
 
@@ -87,44 +72,30 @@
     stroke-linecap: round;
     stroke-linejoin: round;
 
-    // El grosor del pincel, en unidades del lienzo del glifo (unos 743 de ancho).
-    // No es lo que se ve: el recorte por la silueta se queda solo con la parte
-    // que cae dentro de la letra, y es ese recorte el que le da al trazo su forma.
+    // El grosor del pincel, en unidades del lienzo del glifo. No es lo que se ve: el recorte
+    // por la silueta se queda solo con la parte que cae dentro de la letra.
     //
-    // Este número va emparejado con el número de puntos de cada trazo, y los dos
-    // se compensan. Un pincel gordo cubre la letra con pocos puntos, pero asoma
-    // por los trazos vecinos allí donde dos pasan cerca —en あ, el bucle rozando
-    // la vertical—. Uno fino no puede invadir nada, a cambio de exigir un camino
-    // bien pegado al centro de la forma, que es de dónde salen los 39 puntos del
-    // tercer trazo.
-    //
-    // Al subirlo hay que comprobar dos cosas: que no queden calvas sin pintar, y
-    // que ningún trazo pinte encima de otro.
+    // Va emparejado con el número de puntos de cada trazo, y los dos se compensan: un pincel
+    // gordo cubre la letra con pocos puntos pero asoma donde dos trazos pasan cerca; uno fino
+    // exige un camino bien pegado al centro de la forma. Al subirlo hay que comprobar que no
+    // queden calvas y que ningún trazo pinte encima de otro.
     stroke-width: 70;
-    // Nada de `non-scaling-stroke` aquí: la brocha tiene que escalar EXACTAMENTE
-    // igual que la silueta que la recorta, o dejarían de encajar.
+    // Nada de `non-scaling-stroke`: la brocha tiene que escalar EXACTAMENTE igual que la
+    // silueta que la recorta, o dejarían de encajar.
 
-    // El trazo nace apagado y lo enciende la animación en su primer fotograma,
-    // ya recortado a cero. Es lo que evita ver el kana entero durante el
-    // fotograma que va entre pintar la hoja y arrancar GSAP.
-    //
-    // El recorte ya no se prepara aquí: de las líneas discontinuas se encarga
-    // DrawSVGPlugin, y lo que se escribiera en el CSS lo sobrescribiría igual.
+    // El trazo nace apagado y lo enciende la animación ya recortado a cero: es lo que evita
+    // ver el kana entero durante el fotograma que va entre pintar la hoja y arrancar GSAP. Del
+    // recorte se encarga DrawSVGPlugin, así que aquí no se prepara nada.
     opacity: 0;
   }
 
-  // El botón que escribe el kana. Cómo se ve lo pone `BookButton.scss`; aquí solo
-  // dónde va, que es lo único que cambia de una hoja a otra.
-  //
-  // La ilustración ocupa la hoja de lado a lado, así que el botón se centra
-  // debajo en vez de estirarse con ella.
+  // El botón que escribe el kana. Cómo se ve lo pone `BookButton.scss`; aquí solo dónde va.
   &__play {
     align-self: center;
   }
 
-  // Sin animación no hay nada que disparar: se enseña la asociación ya hecha, con
-  // el kana dibujado sobre la ilustración. Es la misma información, quieta —así
-  // que el trazo se enciende aquí y el botón sobra.
+  // Sin animación no hay nada que disparar: se enseña la asociación ya hecha, con el kana
+  // dibujado sobre la ilustración. Es la misma información, quieta.
   @media (prefers-reduced-motion: reduce) {
     &__path {
       opacity: 1;

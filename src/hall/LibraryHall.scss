@@ -1,6 +1,5 @@
-// Vestíbulo de la biblioteca. El encuadre reproduce exactamente el del stage de
-// la entrada (misma proporción, mismo centrado, mismo recorte) para que llegar
-// aquí desde la puerta no se note como un cambio de pantalla.
+// Vestíbulo. El encuadre reproduce exactamente el de la entrada para que llegar aquí desde la
+// puerta no se note como un cambio de pantalla.
 
 @use '../styles/stage' as *;
 
@@ -15,6 +14,11 @@
   // la puerta no se lee como un cambio de pantalla. Ver `styles/_stage.scss`.
   &__stage {
     @include scene-stage;
+
+    // El dedo recorre la escena, así que el navegador no puede quedarse con el gesto.
+    // `pinch-zoom` y no `none`: se toma el arrastre de un dedo, y ampliar con dos sigue
+    // funcionando.
+    touch-action: pinch-zoom;
   }
 
   &__interior {

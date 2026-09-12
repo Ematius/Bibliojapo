@@ -5,14 +5,22 @@ import { WelcomeSign } from './WelcomeSign'
 import {
   DROPS_LAYER_SRC,
   FOREGROUND_LAYER_SRC,
+  SCENE_FRAME,
   SCENE_LAYERS,
 } from './parallaxLandingConfig'
 import { useParallaxLandingAnimation } from './useParallaxLandingAnimation'
+import type { StyleWithVars } from '../shared/styleWithVars'
 import './ParallaxLanding.scss'
 
-// Landing de entrada: cuatro ilustraciones superpuestas que componen una sola
-// escena. El valle queda al fondo, la biblioteca en el plano medio, el prado de
-// flores delante y las gotas ascendiendo por encima de todo.
+// Sale del componente y no de la hoja de estilos porque es una medida del dibujo, no una
+// decisión de diseño.
+const FRAME_VARS: StyleWithVars = {
+  '--frame-width': String(SCENE_FRAME.width),
+  '--frame-height': String(SCENE_FRAME.height),
+  '--frame-center-x': String(SCENE_FRAME.x),
+  '--frame-center-y': String(SCENE_FRAME.y),
+}
+
 export function ParallaxLanding() {
   const sceneRef = useRef<HTMLDivElement>(null)
 
@@ -26,7 +34,7 @@ export function ParallaxLanding() {
           pantalla, y ese atributo no se puede deshacer desde dentro.
           No se pierde nada: cada ilustración lleva ya `alt=""`, que es lo que de
           verdad las declara decorativas. */}
-      <div className="parallax-landing__scene" ref={sceneRef}>
+      <div className="parallax-landing__scene" ref={sceneRef} style={FRAME_VARS}>
         {SCENE_LAYERS.map((layer) => (
           <img
             key={layer.id}
@@ -68,6 +76,13 @@ export function ParallaxLanding() {
           fetchPriority="high"
         />
 
+        {/* Las clases del prado le dan las dos cosas que necesita: la caja del dibujo
+            —su recorrido va en fracciones de la ilustración— y el barrido de cámara del
+            terreno que pisa. Fuera de esta capa camina por donde no hay camino. */}
+        <div className="parallax-landing__layer parallax-landing__layer--meadow parallax-landing__walker-layer">
+          <PathWalker />
+        </div>
+
         {/* La puerta, en una capa propia que lleva las clases de la biblioteca.
             Eso le da dos cosas de golpe: la misma caja que la ilustración del
             edificio, y el mismo barrido de cámara —la animación selecciona por esa
@@ -82,12 +97,8 @@ export function ParallaxLanding() {
         </div>
       </div>
 
-      {/* Fuera de la escena: la caminante no acompaña al barrido de cámara, su
-          recorrido va referido a la ventana y no a las capas. */}
-      <PathWalker />
-
-      {/* El cartel de bienvenida, también fuera de la escena y por lo mismo:
-          se queda quieto en su esquina mientras la cámara barre por debajo.
+      {/* El cartel de bienvenida, fuera de la escena: se queda quieto en su
+          esquina mientras la cámara barre por debajo.
 
           Va envuelto porque el cartel dice cómo se ve y el envoltorio dice
           dónde va — el mismo reparto que la puerta y su capa. */}

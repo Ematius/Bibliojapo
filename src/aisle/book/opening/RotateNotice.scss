@@ -1,0 +1,104 @@
+// El aviso que ocupa el sitio del tomo mientras la pantalla está de pie. Es el mismo papel
+// que la nota de la balda —crema, latón y tinta—, que es como habla esta biblioteca.
+
+.rotate-notice {
+  // `fixed` y centrado como el libro al que sustituye: dentro del stage quedaría centrado en
+  // la escena, que en el pasillo está descentrada. Ver `VolumeOpening.scss`.
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // El ancho lo pone el texto y no la pantalla, o en una tableta las dos líneas se estiran
+  // de borde a borde.
+  width: min(20rem, 80vw);
+  padding: 1.75rem 1.5rem;
+  border: 1px solid var(--color-brass);
+  border-radius: var(--radius-float);
+  background: var(--color-cream);
+  box-shadow: var(--shadow-float);
+  color: var(--color-ink);
+  text-align: center;
+
+  &__icon {
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-brass);
+  }
+
+  &__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  // El móvil del dibujo se tumba y vuelve, que es lo que se está pidiendo hacer. Bucle
+  // decorativo, de los que este proyecto sí deja en CSS.
+  &__phone {
+    transform-origin: 50% 50%;
+    animation: rotate-notice-turn 2.6s ease-in-out infinite;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+
+  &__text {
+    margin: 0.5rem 0 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  // La salida para quien no pueda girar: con el giro bloqueado, sin esto el tomo se queda
+  // fuera de la balda sin nada que hacer.
+  &__back {
+    margin-top: 1.25rem;
+    padding: 0.5rem 1.125rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  &__back:hover {
+    background: var(--color-parchment);
+  }
+
+  &__back:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+  }
+}
+
+@keyframes rotate-notice-turn {
+  0%,
+  35% {
+    transform: rotate(0deg);
+  }
+
+  65%,
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotate-notice__phone {
+    animation: none;
+  }
+}

@@ -7,25 +7,18 @@ interface ExamSheetProps {
   word: Word
   kana: Kana
   pool: string[]
-  // Si esta hoja es la que se lleva el sello. Hay UNA en todo el tomo: la última
-  // del examen final. El examen de cada lección usa esta misma hoja sin él.
+  // Hay UNA en todo el tomo: la última del examen final. El examen de cada lección usa esta
+  // misma hoja sin él.
   seal?: boolean
 }
 
-// La hoja que cierra el mini examen: colocar el kana en su palabra y, debajo,
-// escribir la lectura entera. Y el sello, que cae aquí cuando las tres pruebas
-// del examen —esta y la de la hoja de enfrente— están resueltas.
+// La hoja que cierra el examen: colocar el kana en su palabra y, debajo, escribir la lectura
+// entera. No es un ejercicio nuevo: es `KanaMatch` en modo `word` y `WordGap` en modo `all`.
 //
-// No es un ejercicio nuevo escrito desde cero, igual que `WordDrill` tampoco lo
-// era: es `KanaMatch` en su modo `word` y `WordGap` en su modo `all`, uno debajo
-// del otro. Los dos ya existen y ya están cableados.
-//
-// ── Por qué estas dos y no las del repaso ──────────────────────────────────
-// Porque se bastan solas. `KanaMatch` en modo `word` trae su propia pista —el
-// significado— y su propio botón de escuchar, y eso es justo lo que el dictado de
-// debajo necesita para no quedarse sin enunciado. En modo `build`, que es el que
-// usa `WordDrill`, no hay ni pista ni audio: el enunciado vive en la hoja de
-// enfrente, y en un examen la hoja de enfrente es otra pregunta, no una ayuda.
+// Estas dos y no las del repaso porque se bastan solas: `KanaMatch` en modo `word` trae su
+// propia pista y su propio botón de escuchar, que es lo que el dictado de debajo necesita
+// para no quedarse sin enunciado. En modo `build` el enunciado vive en la hoja de enfrente,
+// y en un examen la hoja de enfrente es otra pregunta, no una ayuda.
 export function ExamSheet({ word, kana, pool, seal = false }: ExamSheetProps) {
   return (
     <div className="exam-sheet">

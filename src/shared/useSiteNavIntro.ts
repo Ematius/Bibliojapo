@@ -3,12 +3,8 @@ import gsap from 'gsap'
 import { NAV_INTRO as intro } from './siteNavConfig'
 import { prefersReducedMotion } from './prefersReducedMotion'
 
-// Despliegue de la barra al entrar en una pantalla.
-//
-// `clipPath` con un inset que se abre de derecha a izquierda: la barra empieza
-// recortada a cero por su borde izquierdo y va destapándose hasta ocupar su
-// ancho. El contenido no se deforma en ningún momento, que es lo que pasaría
-// animando `scaleX`.
+// `clipPath` con un inset que se abre de derecha a izquierda. Con `scaleX` el
+// contenido de la barra se deformaría durante todo el despliegue.
 export function useSiteNavIntro(navRef: RefObject<HTMLElement | null>): void {
   useLayoutEffect(() => {
     const nav = navRef.current
@@ -31,9 +27,7 @@ export function useSiteNavIntro(navRef: RefObject<HTMLElement | null>): void {
           opacity: 1,
           duration: intro.durationSeconds,
           ease: intro.ease,
-          // Se limpian las propiedades al terminar: el clip-path residual
-          // recortaría el contorno de foco de los enlaces, y la barra ya no
-          // necesita ningún transform una vez colocada.
+          // El clip-path residual recortaría el contorno de foco de los enlaces.
           clearProps: 'clipPath,transform,opacity',
         },
       )

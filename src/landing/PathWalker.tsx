@@ -5,10 +5,8 @@ import { PATH_WALK, PATH_WALK_IMAGE } from './pathWalkerConfig'
 import { usePathWalkerLoop } from './usePathWalkerLoop'
 import './PathWalker.scss'
 
-// El recorrido llega al CSS ya reducido a un punto de partida y un delta, que es
-// lo que el transform necesita. Calcularlo aquí y no en el SCSS deja la config
-// en fracciones legibles —«dónde empieza» y «dónde acaba»— en vez de obligar a
-// escribir la resta a mano cada vez que se recoloca el sendero.
+// El recorrido llega al CSS ya reducido a punto de partida y delta, que es lo que el
+// transform necesita, para que la config siga en fracciones legibles.
 const walkStyle: StyleWithVars = {
   '--walk-image': `url('${PATH_WALK_IMAGE}')`,
   '--walk-from-x': PATH_WALK.from.x,
@@ -16,15 +14,11 @@ const walkStyle: StyleWithVars = {
   '--walk-height': PATH_WALK.from.height,
   '--walk-dx': PATH_WALK.to.x - PATH_WALK.from.x,
   '--walk-dy': PATH_WALK.to.y - PATH_WALK.from.y,
-  // Escala final relativa a la inicial: la figura nace a tamaño `from.height` y
-  // encoge hasta este factor al llegar al fondo.
+  // Escala final relativa a la inicial: nace a `from.height` y encoge hasta aquí.
   '--walk-scale': PATH_WALK.to.height / PATH_WALK.from.height,
 }
 
-// Una figura caminando por el sendero de piedra hacia la biblioteca.
-//
-// Es lo único que se puede pulsar en el valle. No hay barra ni botones: la
-// portada se mira, y el único gesto posible es seguir el camino.
+// Es lo único que se puede pulsar en el valle.
 export function PathWalker() {
   const navigate = useNavigate()
   const groupRef = useRef<HTMLButtonElement>(null)

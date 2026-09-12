@@ -1,30 +1,15 @@
-// Capas de fondo de la escena, ordenadas de la más profunda a la más cercana.
-// El orden del array es también el orden de apilado en el DOM.
+// De la capa más profunda a la más cercana: el orden del array es el de apilado.
 export const SCENE_LAYERS = [
   { id: 'valley', src: '/images/Landing2/1.webp' },
   { id: 'library', src: '/images/Landing2/2.webp' },
   { id: 'meadow', src: '/images/Landing2/3.webp' },
 ] as const
 
-// ── AQUÍ SE COLOCA LA PUERTA ───────────────────────────────────────────────
-// La zona de la biblioteca que se puede pulsar para entrar, en fracciones
-// [0, 1] de la capa `library`.
+// La zona pulsable para entrar, en fracciones [0, 1] de la capa `library`: `x`/`y`
+// son su centro y `width`/`height` cuánto abarca, así que crece con la escena.
 //
-//   x, y            centro de la zona. 0.5 es el centro de la capa.
-//   width, height   cuánto abarca. Va en fracción, así que crece con la escena.
-//
-// Los cuatro números salen de mirar la ilustración: la puerta de madera está
-// bajo el pórtico dorado, hacia dos tercios del ancho. La zona es MÁS GRANDE que
-// la puerta pintada a propósito — abarca también el pórtico y el arranque de la
-// escalinata, que es donde la gente apunta cuando quiere entrar en una casa.
-// Ajustada al hueco exacto de la puerta serían unos 70 píxeles de ancho en una
-// pantalla normal, y menos aún en un móvil.
-//
-// Cuadra con el final del sendero: `PATH_WALK.to` deja a la caminante en
-// x = 0.655, justo al pie de esa escalinata.
-//
-// Si al pulsar no responde donde debe, estos cuatro valores son los que hay que
-// tocar. Con `SHOW_DOOR_ZONE` se ve dónde cae.
+// Es MÁS GRANDE que la puerta pintada a propósito: ajustada al hueco exacto serían
+// unos 70 píxeles de ancho, y menos en un móvil. Con `SHOW_DOOR_ZONE` se ve dónde cae.
 export const DOOR_ZONE = {
   x: 0.692,
   y: 0.637,
@@ -32,46 +17,46 @@ export const DOOR_ZONE = {
   height: 0.185,
 } as const
 
-// Pinta la zona de la puerta para poder ajustarla. Dejar en `false`: es una
-// ayuda de taller, no algo que deba verse en la portada.
+// La parte del dibujo que el recorte no puede llevarse nunca, en fracciones de la
+// ilustración. Va aparte de `DOOR_ZONE`: una es dónde se pulsa y la otra qué se mira.
+//
+// Subir el ancho tiene castigo: en cuanto la zona no cabe, `framed-stage` encoge la
+// escena para que quepa y asoma fondo por arriba y por abajo. El listón es la pantalla
+// más estrecha, donde el ancho útil es 15 px menor de lo que parece —`html` reserva ese
+// hueco para la barra de scroll—.
+export const SCENE_FRAME = {
+  x: 0.7,
+  y: 0.55,
+  width: 0.18,
+  height: 0.4,
+} as const
+
+// Ayuda de taller para ajustar la zona de la puerta. Dejar en `false`.
 export const SHOW_DOOR_ZONE = false
 
-// Las gotas van aparte del resto de capas porque su marcado es distinto: se
-// duplican para poder encadenar el ascenso en bucle.
+// Aparte del resto de capas: su marcado es distinto porque se duplican para
+// encadenar el ascenso en bucle.
 export const DROPS_LAYER_SRC = '/images/Landing2/4.webp'
 
-// Franja de flores en primer plano. Va la última de todas, incluso por delante
-// de las gotas, así que tampoco entra en el array de capas de fondo.
+// Va la última de todas, incluso por delante de las gotas.
 export const FOREGROUND_LAYER_SRC = '/images/Landing2/5.webp'
 
-// Cartel de bienvenida, arriba a la izquierda. No participa del barrido de
-// cámara: va referido a la ventana, igual que la caminante.
+// No participa del barrido de cámara: va referido a la ventana, como la caminante.
 export const WELCOME_SIGN_SRC = '/images/Landing2/presentacion-landing.webp'
 
-// Barrido lateral de cámara.
-//
-// El tiempo es único para todas las capas —una cámara arranca y para de golpe,
-// no plano a plano— y lo que cambia de una a otra es solo cuánto recorren: eso
-// es lo que se lee como profundidad. Si cada capa llevara su propia duración se
-// descorrelacionarían y volverían a parecer objetos moviéndose por su cuenta.
+// El tiempo es único para todas las capas —una cámara arranca y para de golpe— y lo
+// que cambia de una a otra es cuánto recorren: eso es lo que se lee como profundidad.
 export const CAMERA_PAN = {
   durationSeconds: 17,
   ease: 'sine.inOut',
 
-  // Recorrido total de cada capa, en porcentaje de su propio ancho, repartido a
-  // ambos lados de la posición de partida. Crece con la cercanía: el valle casi
-  // no se mueve y el primer plano de flores es el que más viaja.
-  //
-  // El signo marca la dirección: positivo va de izquierda a derecha y negativo
-  // al revés. El prado y el primer plano van enfrentados a propósito, para que
-  // se crucen en vez de acompañarse.
-  //
-  // La biblioteca comparte recorrido exacto con el prado: está apoyada en ese
-  // mismo terreno, así que cualquier diferencia entre ambas se vería como el
+  // Recorrido de cada capa, en porcentaje de su propio ancho y repartido a ambos
+  // lados del origen. El signo marca la dirección. La biblioteca comparte recorrido
+  // exacto con el prado: está apoyada en él, y cualquier diferencia se vería como el
   // edificio deslizándose sobre la ladera.
   //
-  // Ninguna amplitud puede pasar del margen que le da su `--layer-overscan` en
-  // el SCSS, o al desplazarse dejaría ver el borde de la imagen.
+  // Ninguna amplitud puede pasar del margen que le da su `--layer-overscan` en el
+  // SCSS, o al desplazarse dejaría ver el borde de la imagen.
   amplitude: {
     valley: 0.7,
     library: 3.2,
@@ -81,6 +66,5 @@ export const CAMERA_PAN = {
   },
 } as const
 
-// Lo que tarda un ciclo completo de gotas en recorrer la pantalla de abajo
-// arriba. Cuanto más alto, más lento y más flotante el ascenso.
+// Un ciclo completo de gotas de abajo arriba. Más alto, más lento.
 export const DROPS_RISE = { durationSeconds: 24 } as const

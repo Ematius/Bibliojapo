@@ -6,16 +6,11 @@ interface KanaCardProps {
   kana: Kana
 }
 
-// La presentación del kana: la forma, su lectura y su sonido.
+// El kana desnudo: la forma, su lectura y su sonido.
 //
-// Es el segundo ejercicio del temario, y va justo después del mnemotécnico: allí
-// se cuenta la historia que fija el carácter en la memoria, y aquí se ve el kana
-// desnudo, sin dibujo detrás, con lo único que hay que recordar de él.
-//
-// Aquí SOLO está el markup, igual que en KanaStroke y por el mismo motivo: estas
-// páginas las clona page-flip para meterlas en su estructura, así que un manejador
-// de React se quedaría enganchado a la copia que nadie ve. El sonido se cablea a
-// mano sobre el nodo clonado — ver `bookAudio.ts`.
+// Aquí SOLO está el markup, igual que en KanaStroke: page-flip clona estas páginas, así que
+// un manejador de React se quedaría en la copia que nadie ve. El sonido se cablea a mano
+// sobre el nodo clonado — ver `bookAudio.ts`.
 export function KanaCard({ kana }: KanaCardProps) {
   return (
     <div className="kana-card">

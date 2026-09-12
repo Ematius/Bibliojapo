@@ -1,14 +1,14 @@
-// La nota encima de un tomo cerrado: un papelito de biblioteca, como el tejuelo
-// que se pega en el lomo, que dice por qué ese libro todavía no sale.
+// La nota encima de un tomo cerrado: un papelito de biblioteca, como el tejuelo del lomo, que
+// dice por qué ese libro todavía no sale.
 
 .shelf-note {
   position: absolute;
-  // El punto de anclaje es el centro del lomo, justo encima del tomo. Las
-  // coordenadas van en fracciones del stage, igual que las del propio tomo.
+  // El anclaje es el centro del lomo. Las coordenadas van en fracciones del stage, igual que
+  // las del propio tomo.
   left: calc(var(--note-x) * 100%);
   top: calc(var(--note-y) * 100%);
-  // Por encima de los tomos (3) y por debajo del libro abierto (4): solo sale
-  // con el tomo en la balda, pero no debe tapar nunca un libro abierto.
+  // Por encima de los tomos y por debajo del libro abierto: solo sale con el tomo en la balda,
+  // pero no debe tapar nunca un libro abierto.
   z-index: 3;
   width: max-content;
   max-width: 14rem;
@@ -24,15 +24,13 @@
   line-height: 1.4;
   text-align: center;
   text-wrap: balance;
-  // Despegada un poco del tomo, para que no parezca pegada a él sino puesta
-  // encima. El centrado sobre el lomo no va aquí sino en GSAP —`xPercent` y
-  // `yPercent`—: en cuanto anima la nota reescribe el transform entero, y uno
-  // puesto por CSS se perdería al primer fotograma.
+  // Despegada un poco del tomo, para que no parezca pegada sino puesta encima. El centrado
+  // sobre el lomo no va aquí sino en GSAP: en cuanto anima la nota reescribe el transform
+  // entero, y uno puesto por CSS se perdería al primer fotograma.
   margin-top: -0.5rem;
   // Nace apagada: la saca GSAP.
   visibility: hidden;
   opacity: 0;
-  // No tapa el tomo de debajo: pulsar donde está la nota tiene que seguir
-  // llegando al libro.
+  // No tapa el tomo de debajo: pulsar donde está la nota tiene que seguir llegando al libro.
   pointer-events: none;
 }

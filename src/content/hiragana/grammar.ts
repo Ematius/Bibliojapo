@@ -1,15 +1,11 @@
-// La gramática del pasillo de hiragana, introducida solo cuando una frase la
-// necesita — nunca como bloque aparte. Ver «Gramática Just-In-Time» en
-// docs/estructura-aprendizaje.md.
 import type { Grammar } from '../types'
 
 export const GRAMMAR: Grammar[] = [
   {
     id: 'topic-wa',
-    // El mismo carácter que la palabra «diente» —ver `ha` en vocabulary.ts— y
-    // que el propio kana は. No es una coincidencia que haya que resolver: en
-    // ははいい, el primer は es la palabra «diente» y el segundo es esta misma
-    // partícula, y las dos se escriben igual y suenan distinto.
+    // El mismo carácter que la palabra «diente» y que el kana は: en ははいい el
+    // primero es la palabra y el segundo esta partícula. Se escriben igual y suenan
+    // distinto.
     character: 'は',
     romaji: 'wa',
     explanation:

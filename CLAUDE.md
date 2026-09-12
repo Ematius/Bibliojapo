@@ -339,6 +339,43 @@ Cada unidad de trabajo debe ser **la cosa más pequeña posible que tenga sentid
 
 ---
 
+## Comentarios — los justos
+
+**Un comentario se escribe solo cuando avisa de algo que muerde.** Una trampa que
+el código no puede enseñar por sí solo: una librería que se comporta al revés de
+lo que parece, una restricción externa, una decisión que alguien desharía por
+error creyendo que mejora algo.
+
+Todo lo demás lo dice el código, y mejor que la prosa: un nombre claro vale más
+que tres líneas explicándolo.
+
+### Lo que NO se comenta
+
+- **El qué.** Si el comentario repite lo que hace la línea de abajo, sobra.
+- **La historia.** «Antes esto estaba escrito cuatro veces», «hasta ahora lo hacía
+  el otro archivo». Eso es el `git log`, no el código: envejece mal y nadie lo
+  actualiza cuando cambia.
+- **La justificación larga de una decisión.** El porqué que ocupa un párrafo va a
+  este documento, no al archivo.
+- **Cabeceras decorativas** (`── Título ────`) y comentarios que ordenan el archivo
+  en secciones. Si un archivo necesita índice, es que hace demasiado.
+- **Lo obvio para quien sabe React, GSAP o CSS.** El proyecto no es un tutorial.
+
+### Cómo se escribe el que sí
+
+Corto —una o dos líneas—, pegado a lo que explica, y diciendo la consecuencia:
+qué pasa si alguien lo cambia. En español, como dice la tabla de arriba.
+
+```ts
+// page-flip solo deja pasar la pulsación sobre <button> y <a>; un <div>
+// con este aspecto pasaría página en vez de responder al clic.
+```
+
+El sitio de lo que no cabe en dos líneas es CLAUDE.md: ahí se lee entero y una
+sola vez, en vez de repetido por encima de cada archivo que lo toca.
+
+---
+
 ## Stack técnico
 
 ```

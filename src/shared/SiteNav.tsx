@@ -1,21 +1,88 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
 import { Link } from 'react-router-dom'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
 import { NAV_CTA_LABEL, NAV_LINKS, NAV_LOGO_KANJI } from './siteNavConfig'
+import { buildSiteNavMenuHide, buildSiteNavMenuReveal } from './siteNavMenuReveal'
+import { prefersReducedMotion } from './prefersReducedMotion'
 import { useSiteNavIntro } from './useSiteNavIntro'
 import './SiteNav.scss'
 
-// Barra de navegación de la app, de la biblioteca hacia dentro.
-//
-// No aparece en el valle de la portada: allí el único camino es el sendero de
-// piedra, y una barra encima competiría con él. Empieza en el vestíbulo y
-// acompaña al usuario a partir de ahí.
+// Se pintan en dos sitios —la barra y el menú—, y quien las contiene dice si van en
+// fila o en columna. Escritas dos veces, añadir una sección pediría acordarse de ambos.
+function NavSections({ onPick }: { onPick?: () => void }) {
+  return NAV_LINKS.map((link) => (
+    <li className="site-nav__item" key={link.id}>
+      {link.to ? (
+        <Link
+          className="site-nav__link"
+          to={link.to}
+          state={link.fromNav ? { fromNav: true } : undefined}
+          onClick={onPick}
+        >
+          {link.label}
+        </Link>
+      ) : (
+        // Un span y no un enlace desactivado: sin destino no hay nada que
+        // anunciar, así que no entra en el orden de tabulación.
+        <span className="site-nav__link site-nav__link--pending">{link.label}</span>
+      )}
+    </li>
+  ))
+}
+
+// No aparece en el valle de la portada: allí el único camino es el sendero.
 export function SiteNav() {
   const navRef = useRef<HTMLElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const session = useSession()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useSiteNavIntro(navRef)
+
+  // Se salta el montaje: el panel ya nace cerrado desde el CSS, y animarlo entonces
+  // enseñaría un menú abriéndose que nadie ha pedido.
+  const hasToggledRef = useRef(false)
+  useEffect(() => {
+    const menu = menuRef.current
+    if (!menu) return
+    if (!hasToggledRef.current) {
+      hasToggledRef.current = true
+      return
+    }
+
+    if (prefersReducedMotion()) {
+      gsap.set(menu, { autoAlpha: isMenuOpen ? 1 : 0, clipPath: 'none', y: 0 })
+      return
+    }
+
+    const tween = isMenuOpen ? buildSiteNavMenuReveal(menu) : buildSiteNavMenuHide(menu)
+    return () => {
+      tween.kill()
+    }
+  }, [isMenuOpen])
+
+  // Los escuchas solo existen mientras el menú está abierto.
+  useEffect(() => {
+    if (!isMenuOpen) return
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMenuOpen(false)
+    }
+
+    const closeOnOutside = (event: PointerEvent) => {
+      if (!navRef.current?.contains(event.target as Node)) setIsMenuOpen(false)
+    }
+
+    document.addEventListener('keydown', closeOnEscape)
+    document.addEventListener('pointerdown', closeOnOutside)
+
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape)
+      document.removeEventListener('pointerdown', closeOnOutside)
+    }
+  }, [isMenuOpen])
 
   return (
     <nav className="site-nav" ref={navRef} aria-label="Navegación principal">
@@ -26,22 +93,22 @@ export function SiteNav() {
       </Link>
 
       <ul className="site-nav__links">
-        {NAV_LINKS.map((link) => (
-          <li className="site-nav__item" key={link.id}>
-            {link.to ? (
-              <Link className="site-nav__link" to={link.to} state={link.fromNav ? { fromNav: true } : undefined}>
-                {link.label}
-              </Link>
-            ) : (
-              // Sección todavía sin pantalla: se muestra para que la estructura
-              // del sitio se lea completa, pero no lleva a ninguna parte. Es un
-              // span y no un enlace desactivado a propósito: sin destino no hay
-              // nada que anunciar, así que no entra en el orden de tabulación.
-              <span className="site-nav__link site-nav__link--pending">{link.label}</span>
-            )}
-          </li>
-        ))}
+        <NavSections />
       </ul>
+
+      <button
+        className="site-nav__burger"
+        type="button"
+        onClick={() => setIsMenuOpen((open) => !open)}
+        aria-expanded={isMenuOpen}
+        aria-controls="site-nav-menu"
+        aria-label={isMenuOpen ? 'Cerrar el menú' : 'Abrir el menú'}
+      >
+        {/* El aspa se hace moviendo los tres trazos, no cambiando de dibujo. */}
+        <span className="site-nav__burger-line" aria-hidden="true" />
+        <span className="site-nav__burger-line" aria-hidden="true" />
+        <span className="site-nav__burger-line" aria-hidden="true" />
+      </button>
 
       {/* Abre el panel de la cuenta. Sin sesión invita a crearla; con sesión
           lleva el nombre de quien está dentro y abre su carné. */}
@@ -53,6 +120,12 @@ export function SiteNav() {
       >
         {session.account ? session.account.name : NAV_CTA_LABEL}
       </button>
+
+      <div className="site-nav__menu" id="site-nav-menu" ref={menuRef}>
+        <ul className="site-nav__menu-list">
+          <NavSections onPick={() => setIsMenuOpen(false)} />
+        </ul>
+      </div>
     </nav>
   )
 }

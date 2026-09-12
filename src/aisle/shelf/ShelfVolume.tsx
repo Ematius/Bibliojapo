@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import gsap from 'gsap'
 import type { StyleWithVars } from '../../shared/styleWithVars'
 import type { VolumeAccess } from '../../api/volumes'
@@ -13,6 +14,7 @@ import { openBookLayout, type OpenBookLayout } from '../book/opening/openingConf
 import { useVolumePull, type VolumeStage } from './useVolumePull'
 import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
+import { RotateNotice } from '../book/opening/RotateNotice'
 import { VolumeReader } from '../book/reader/VolumeReader'
 import { VolumeStatus } from '../book/reader/VolumeStatus'
 import { useVolumeContent } from '../book/reader/useVolumeContent'
@@ -21,9 +23,9 @@ import { ShelfNote } from './ShelfNote'
 import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 import './ShelfVolume.scss'
 
-// `pending` mientras no se sabe todavía si el tomo se puede coger. Se ve igual
-// que uno cerrado, pero no responde: decir «se abre al sellar el anterior» a
-// alguien que quizá ya lo ha sellado sería mentirle.
+// `pending` mientras no se sabe si el tomo se puede coger. Se ve igual que uno cerrado
+// pero no responde: decir «se abre al sellar el anterior» a quien quizá ya lo selló sería
+// mentirle.
 export type ShelfAccess = VolumeAccess | 'pending'
 
 interface ShelfVolumeProps {
@@ -31,52 +33,34 @@ interface ShelfVolumeProps {
   access: ShelfAccess
 }
 
-// La pose que sigue a cada una. El recorrido es de ida: se coge el tomo, se le
-// da la vuelta, y de ahí se abre. Para volver está Escape, que es el gesto que ya
-// espera cualquiera para salir de algo que ocupa la pantalla.
+// La pose que sigue a cada una. El recorrido es de ida; para volver está Escape.
 const NEXT_STAGE: Record<VolumeStage, VolumeStage> = {
   shelf: 'spine',
   spine: 'cover',
   cover: 'edge',
   edge: 'open',
   open: 'open',
-  // Mientras se cierra el tomo no se puede pulsar —está apagado—, pero la tabla
-  // tiene que cubrir todas las poses.
+  // Mientras se cierra no se puede pulsar, pero la tabla tiene que cubrir todas las poses.
   closing: 'closing',
 }
 
-// Las poses que no esperan a nadie.
-//
-// Las cuatro poses del recorrido siguen ahí, pero se recorren de dos en dos: una
-// pulsación deja el tomo con la portada de cara y la siguiente lo abre. Estas dos
-// son las que quedan a mitad de cada par, así que en cuanto su giro termina
-// encadenan con el siguiente por su cuenta.
-//
-// Cuatro paradas para llegar a un libro cansaban; cuatro giros, no. Lo que se
-// quitó de en medio son las pulsaciones, no el movimiento.
+// Las poses que no esperan a nadie: las cuatro del recorrido se recorren de dos en dos,
+// así que estas dos encadenan con la siguiente en cuanto su giro termina. Cuatro paradas
+// para llegar a un libro cansaban; cuatro giros, no.
 const RELAY_STAGES = new Set<VolumeStage>(['spine', 'edge'])
 
-// Un tomo de la estantería, montado como un objeto con volumen y no como una
-// estampa.
-//
-// El lomo y la tapa son dos planos perpendiculares que forman la esquina del
-// libro. En la balda el conjunto está girado de tres cuartos; al pulsarlo se
-// adelanta girando hasta poner el lomo de frente y sigue solo hasta enseñar la
-// portada, y otra pulsación lo pone de canto y lo abre — dos pulsaciones, cuatro
-// giros. La tapa no hay que esconderla en ningún momento: al
-// girar se pone de perfil ella sola, que es justo lo que hace un libro de
-// verdad.
+// Un tomo montado como un objeto con volumen y no como una estampa: lomo y tapa son dos
+// planos perpendiculares que forman la esquina del libro. La tapa no hay que esconderla en
+// ningún momento — al girar se pone de perfil ella sola.
 export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   const [stage, setStage] = useState<VolumeStage>('shelf')
   const [layout, setLayout] = useState<OpenBookLayout | null>(null)
-  // La apertura tiene dos momentos: el libro abriéndose y el libro ya abierto.
-  // Las hojas del lector no se montan hasta el segundo, porque antes no hay
-  // hueco de papel donde ponerlas — todavía se está formando.
+  // Las hojas del lector no se montan hasta que el libro está abierto del todo: antes no
+  // hay hueco de papel donde ponerlas.
   const [opened, setOpened] = useState(false)
-  // La nota que explica por qué un tomo no sale. Null cuando no hay nada que
-  // decir. Va en un objeto y no como texto suelto para que pulsar dos veces
-  // seguidas cuente como dos notas: con el mismo texto, React no vería cambio y
-  // la cuenta atrás no se reiniciaría.
+  // La nota que explica por qué un tomo no sale. Va en un objeto y no como texto suelto
+  // para que pulsar dos veces cuente como dos notas: con el mismo texto React no vería
+  // cambio y la cuenta atrás no se reiniciaría.
   const [note, setNote] = useState<{ text: string } | null>(null)
   const rootRef = useRef<HTMLButtonElement>(null)
   const boxRef = useRef<HTMLSpanElement>(null)
@@ -85,11 +69,10 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
 
   useVolumePull({ rootRef, boxRef, turnedRef, volume, stage })
 
-  // Las hojas se piden en cuanto el tomo sale de la balda. Ver `useVolumeContent`.
   const { load, retry } = useVolumeContent(volume.blockId, stage !== 'shelf')
 
-  // La nota se va sola al rato. Cada nota nueva reinicia la cuenta, así que
-  // pulsar dos veces seguidas no la hace desaparecer antes de tiempo.
+  // Cada nota nueva reinicia la cuenta, así que pulsar dos veces seguidas no la hace
+  // desaparecer antes de tiempo.
   useEffect(() => {
     if (!note) return
 
@@ -102,60 +85,82 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   // Si el tomo se desmonta a medio tirón, el tirón se para con él.
   useEffect(() => () => stopNudgeRef.current?.(), [])
 
-  // Medidas del libro abierto, tomadas de la ventana. Se miden aquí y no dentro
-  // del libro porque es el tomo quien conoce su sitio en la escena.
+  // Medidas del libro abierto. De la VENTANA y no del stage: el libro se pone delante de
+  // la escena y se centra en la pantalla, así que lo que no puede desbordar es la ventana.
+  // La caja del pasillo es la que mide `--vh`.
   //
-  // De la ventana y no del stage: el libro abierto se pone DELANTE de la escena y
-  // se centra en la pantalla —ver `VolumeOpening.scss`—, así que lo que no puede
-  // desbordar es la ventana. La caja del pasillo es la que mide `--vh`.
+  // Se vuelve a medir al cambiar de tamaño, y no solo al abrir: girar el móvil es
+  // justamente lo que se le pide a quien no tiene sitio para el libro, y con la medida de
+  // antes seguiría sin caber después de girar.
   useLayoutEffect(() => {
     const stageEl = rootRef.current?.offsetParent as HTMLElement | null
     const viewEl = stageEl?.parentElement
     if (!viewEl) return
 
-    setLayout(openBookLayout(viewEl.clientHeight))
+    // Contra la ventana de verdad y no solo contra la caja del pasillo, que mide `--vh` y
+    // ese valor se queda sin actualizar cuando cambia el alto sin cambiar el ancho —abrir
+    // las herramientas del navegador abajo, por ejemplo—. Con el alto viejo el libro se
+    // calculaba mayor que la pantalla y se salía por arriba y por abajo.
+    //
+    // Y la MENOR de las dos, no siempre la ventana: en un móvil la barra de URL entra y
+    // sale, y con la ventana a secas el libro cambiaría de tamaño a mitad de lectura. Ese
+    // es justo el vaivén que `--vh` evita.
+    //
+    // Si cabe o no se decide midiendo y no por el tipo de aparato: una ventana estrecha en
+    // un escritorio tiene el mismo problema que un móvil de pie.
+    const measure = () => {
+      const view = document.documentElement
+      setLayout(
+        openBookLayout(
+          Math.min(viewEl.clientHeight, view.clientHeight),
+          Math.min(viewEl.clientWidth, view.clientWidth),
+        ),
+      )
+    }
+
+    measure()
+
+    const observer = new ResizeObserver(measure)
+    observer.observe(viewEl)
+    // La caja del pasillo no cambia de alto con la ventana —la fija `--vh`—, así que su
+    // observador no se entera de este caso.
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
   }, [stage])
 
-  // Único camino para cambiar de pose. Al salir de `open` el libro se cierra del
-  // todo, para que la próxima vez vuelva a abrirse desde el primer fotograma y
-  // no a medio camino. Va aquí y no en un efecto porque es el gesto el que
-  // cierra el libro, no el render.
+  // Único camino para cambiar de pose. Al salir de `open` el libro se cierra del todo para
+  // que la próxima vez vuelva a abrirse desde el primer fotograma. Va aquí y no en un
+  // efecto porque es el gesto el que cierra el libro, no el render.
   const goTo = useCallback((next: VolumeStage) => {
     setStage(next)
     if (next !== 'open' && next !== 'closing') setOpened(false)
   }, [])
 
-  // Guardar el tomo. Desde el libro del todo abierto no se vuelve de golpe a la
-  // balda: primero se cierra, y solo cuando ha terminado arranca la vuelta al
-  // estante. Desde cualquier otra pose no hay nada que plegar y se va directo.
-  //
-  // Se exige `opened` y no solo la etapa: si se pulsa fuera con el libro aún
-  // abriéndose, no hay una apertura completa que deshacer, y rebobinar a medias
-  // dejaría al tomo reapareciendo a destiempo.
+  // Desde el libro abierto no se vuelve de golpe a la balda: primero se cierra. Se exige
+  // `opened` y no solo la etapa porque si se pulsa fuera con el libro aún abriéndose no hay
+  // una apertura completa que deshacer, y rebobinar a medias dejaría al tomo reapareciendo
+  // a destiempo.
   const dismiss = useCallback(() => {
     if (stage === 'open' && opened) setStage('closing')
     else goTo('shelf')
   }, [stage, opened, goTo])
 
-  // El segundo giro de cada par, que sale solo.
+  // El segundo giro de cada par, que sale solo. Se programa al llegar a la pose de paso y
+  // se cancela con ella, así que pulsar a media animación adelanta el giro y desactiva el
+  // relevo pendiente.
   //
-  // Se programa al llegar a la pose de paso y se cancela con ella: el efecto se
-  // limpia en cada cambio de pose, así que pulsar a media animación adelanta el
-  // giro y de camino desactiva el relevo que estaba pendiente. Ese es justo el
-  // comportamiento de antes —pulsar salta a la pose siguiente—, que aquí sigue
-  // valiendo sin tocar nada.
-  //
-  // El temporizador es de GSAP y no del navegador a propósito: corre en el mismo
-  // reloj que el giro que está esperando, así que si el reloj se para —pestaña en
-  // segundo plano— el relevo se para con él en vez de dispararse a destiempo.
+  // El temporizador es de GSAP y no del navegador: corre en el mismo reloj que el giro que
+  // espera, así que con la pestaña en segundo plano se para con él en vez de dispararse a
+  // destiempo.
   useEffect(() => {
     if (!RELAY_STAGES.has(stage)) return
 
-    // El relevo no espera al giro entero: entra mientras remata, o entre los dos
-    // se colaba una pausa. Ver `relayOverlapSeconds`.
-    //
-    // Con «reducir movimiento» las poses son instantáneas, así que cualquier
-    // espera dejaría el tomo plantado en una pose que solo existe de paso.
+    // El relevo no espera al giro entero: entra mientras remata, o se colaba una pausa. Con
+    // «reducir movimiento» las poses son instantáneas y cualquier espera dejaría el tomo
+    // plantado en una pose que solo existe de paso.
     const wait = prefersReducedMotion()
       ? 0
       : Math.max(0, VOLUME_PULL.durationSeconds - VOLUME_PULL.relayOverlapSeconds)
@@ -166,9 +171,8 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     }
   }, [stage, goTo])
 
-  // Escape devuelve el tomo a su balda desde cualquier pose. Solo se escucha
-  // mientras está fuera del estante, para no dejar un listener global puesto por
-  // una pantalla que no lo necesita.
+  // Escape devuelve el tomo a su balda. Solo se escucha mientras está fuera del estante,
+  // para no dejar un listener global puesto por una pantalla que no lo necesita.
   useEffect(() => {
     if (stage === 'shelf') return
 
@@ -180,8 +184,8 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [stage, dismiss])
 
-  // Pulsar el tomo. Fuera de la balda, o si se puede coger, sigue el recorrido de
-  // siempre; en la balda y cerrado, se resiste y dice por qué.
+  // Fuera de la balda, o si se puede coger, sigue el recorrido; en la balda y cerrado, se
+  // resiste y dice por qué.
   const onPress = () => {
     if (stage !== 'shelf' || access === 'open') {
       goTo(NEXT_STAGE[stage])
@@ -191,8 +195,8 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     // Aún no se sabe cómo está: no se promete nada.
     if (access === 'pending') return
 
-    // Ganado pero sin sitio donde guardar la insignia. No hace falta tirón ni
-    // nota: lo que hay que hacer es crear la cuenta, y el panel ya lo explica.
+    // Ganado pero sin sitio donde guardar la insignia: no hace falta tirón ni nota, lo que
+    // hay que hacer es crear la cuenta.
     if (access === 'needsAccount') {
       openAccountPanel(
         `Has sellado el tomo ${volume.number - 1}. Crea tu cuenta para guardar su ` +
@@ -223,12 +227,8 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     '--spine-ratio': shape.spineRatio,
   }
 
-  // Lo que promete el botón es dónde acaba la pulsación, no el giro que arranca:
-  // desde la portada, pulsar ya no gira el tomo y se queda ahí — lo abre, porque
-  // el giro de canto viene encadenado detrás.
-  //
-  // En la balda depende de si se puede coger: un tomo cerrado no promete «coger»,
-  // dice qué le falta.
+  // Lo que promete el botón es dónde acaba la pulsación, no el giro que arranca: desde la
+  // portada, pulsar abre, porque el giro de canto viene encadenado detrás.
   const shelfLabel = {
     open: `Coger ${volume.label}`,
     pending: volume.label,
@@ -255,7 +255,16 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
       {/* Sigue montado mientras se cierra: es la misma línea de tiempo
           rebobinando, y desmontarlo aquí sería quitar de en medio justo lo que
           tiene que verse plegarse. */}
-      {(stage === 'open' || stage === 'closing') && layout ? (
+      {/* Colgados del body y no del stage ni del pasillo: los dos se centran con
+          `position: fixed`, y ahí dentro el bloque contenedor sería el stage —que lleva
+          transform desde que se recorre con el dedo— o la caja del pasillo, que mide `--vh`
+          y puede ser más alta que la pantalla. En el body se centran en lo que se ve. */}
+      {(stage === 'open' || stage === 'closing') && layout && !layout.fits
+        ? createPortal(<RotateNotice onDismiss={dismiss} />, document.body)
+        : null}
+
+      {(stage === 'open' || stage === 'closing') && layout?.fits
+        ? createPortal(
         <VolumeOpening
           layout={layout}
           closing={stage === 'closing'}
@@ -275,8 +284,10 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
               <VolumeStatus load={load} onRetry={retry} />
             )
           ) : null}
-        </VolumeOpening>
-      ) : null}
+        </VolumeOpening>,
+            document.body,
+          )
+        : null}
 
       <ShelfNote volume={volume} message={note?.text ?? null} />
 
@@ -288,11 +299,14 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
         onClick={onPress}
         aria-label={label}
         aria-disabled={access === 'pending' ? true : undefined}
-        // Con el libro abierto el tomo sigue montado —es quien guarda la pose y
-        // las referencias— pero deja de ser alcanzable: el que manda entonces es
-        // el lector.
+        // Con el libro abierto el tomo sigue montado —guarda la pose y las referencias— pero
+        // deja de ser alcanzable: el que manda es el lector.
         aria-hidden={stage === 'open' || stage === 'closing'}
         tabIndex={stage === 'open' || stage === 'closing' ? -1 : undefined}
+        // Fuera de la balda el tomo se pinta por encima del velo, así que tiene que frenar
+        // el recorrido igual que él. En la balda no: ahí el dedo arrastra el pasillo. Ver
+        // `useScenePan`.
+        data-no-pan={stage === 'shelf' ? undefined : ''}
       >
       <span className="shelf-volume__box" ref={boxRef}>
         {/* Las cuatro caras del tomo, de la más lejana a la más cercana: cuando
