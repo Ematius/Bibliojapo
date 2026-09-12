@@ -57,6 +57,20 @@ export function WordPrompt({ word }: WordPromptProps) {
           Escuchar
         </BookButton>
       ) : null}
+
+      {/* QUÉ palabra va a sonar, dicho en español.
+
+          Sin esto, dos palabras que se parecen al oído son la misma para quien
+          empieza: あお y あう se distinguen por la última vocal, y quien lleva
+          seis kana aprendidos no oye esa diferencia todavía. El dibujo debería
+          resolverlo, pero «encontrarse» no se dibuja tan claro como una casa, y
+          entonces la hoja no se puede contestar — no por no saber la palabra,
+          sino por no saber cuál se está pidiendo.
+
+          Y no destripa nada, por lo mismo que ya asumía el `aria-label` del
+          color: lo que se pide escribir es あおい, no la traducción. Esto se
+          limita a hacer visible lo que un lector de pantalla ya decía. */}
+      <p className="word-prompt__meaning">cómo se dice «{word.meaning}»</p>
     </div>
   )
 }

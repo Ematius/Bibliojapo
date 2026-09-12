@@ -63,3 +63,22 @@
 .word-prompt__listen {
   flex: none;
 }
+
+// Qué palabra va a sonar. Va en el registro de las pistas —apagada y más
+// pequeña que todo lo demás— porque es el pie del enunciado y no el enunciado:
+// lo que hay que mirar es el dibujo y lo que hay que oír es el botón.
+//
+// Se equilibra en líneas y no se estira de lado a lado: hay significados de
+// varias palabras —«muchos / abundante»— y partidos por la mitad se leerían como
+// dos cosas distintas.
+.word-prompt__meaning {
+  flex: none;
+  margin: 0;
+  max-width: 80cqw;
+  color: var(--color-ink-soft);
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 5cqmin, 1.35rem);
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+}
