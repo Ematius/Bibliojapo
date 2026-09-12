@@ -3,8 +3,22 @@ import { findAisle } from '../shared/aisles'
 import { SiteNav } from '../shared/SiteNav'
 import { ShelfVolume } from './shelf/ShelfVolume'
 import { SHELF_VOLUMES } from './shelf/shelfConfig'
+import { SHELF_GRID } from './shelf/shelfGrid'
 import { useVolumeAccess } from './shelf/useVolumeAccess'
+import type { StyleWithVars } from '../shared/styleWithVars'
 import './LibraryAisle.scss'
+
+// La zona que el encuadre tiene que respetar, tal como la pide el CSS: lo que
+// mide y dónde está su centro. Se deriva de los cuatro bordes medidos sobre la
+// ilustración —no se vuelve a escribir— y sale del componente y no de la hoja de
+// estilos porque es una medida del dibujo, no una decisión de diseño.
+const { frame } = SHELF_GRID
+const FRAME_VARS: StyleWithVars = {
+  '--frame-width': String(frame.right - frame.left),
+  '--frame-height': String(frame.bottom - frame.top),
+  '--frame-center-x': String((frame.left + frame.right) / 2),
+  '--frame-center-y': String((frame.top + frame.bottom) / 2),
+}
 
 // Pasillo de la biblioteca: la estantería de una sección.
 //
@@ -31,7 +45,7 @@ export function LibraryAisle() {
           conserva la proporción de la ilustración, así que un tomo colocado
           sobre una balda sigue sobre esa balda en cualquier monitor. Referido a
           la ventana se despegaría de la madera en cuanto la escena se recortara. */}
-      <div className="library-aisle__stage">
+      <div className="library-aisle__stage" style={FRAME_VARS}>
         <img className="library-aisle__scene" src={aisle.scene} alt="" draggable="false" />
 
         {SHELF_VOLUMES.map((volume) => (

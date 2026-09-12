@@ -33,3 +33,66 @@
   transform: translate(-50%, -50%);
   overflow: hidden;
 }
+
+// El mismo encuadre, pero con una ZONA que no se puede recortar nunca.
+//
+// ── QUÉ CAMBIA RESPECTO AL DE ARRIBA ───────────────────────────────────────
+// `scene-stage` cubre la ventana y recorta lo que sobre desde el centro del
+// DIBUJO. Sirve mientras lo importante está en el centro; en el pasillo no lo
+// está —la estantería cae a la derecha— y en una pantalla estrecha el recorte se
+// llevaba medio mueble.
+//
+// Aquí se cubre igual, pero con dos condiciones encima: la escena se encoge si la
+// zona no cabe, y el recorte se centra en la zona en vez de en el dibujo. Si al
+// encogerse la escena deja de cubrir la ventana, lo que asoma por los lados es el
+// fondo — no pasa en ninguna pantalla real con la zona del pasillo, y sería la
+// señal de que hace falta otra ilustración.
+//
+// ── DE DÓNDE SALE LA ZONA ──────────────────────────────────────────────────
+// De cuatro variables que pone quien usa el mixin, en fracciones del dibujo: lo
+// que mide y dónde está su centro. Son contenido —se miden sobre la ilustración,
+// en `shelfGrid.ts`— así que no pueden vivir aquí.
+//
+// Los valores por defecto describen el dibujo entero centrado, que es el encuadre
+// de `scene-stage`: sin variables, esto no protege nada, pero tampoco rompe la
+// escena.
+//
+// ── POR QUÉ NO HAY `transform` ─────────────────────────────────────────────
+// La escena ya no está centrada en la ventana, así que su sitio se dice con `left`
+// y `top` y no con un desplazamiento de media caja. Los dos van con `clamp` para
+// que la zona quede centrada MIENTRAS no se vea el borde del dibujo: en cuanto
+// centrarla dejaría hueco por un lado, la escena se queda pegada a ese borde.
+@mixin framed-stage($width: 1672, $height: 941) {
+  // Alto de la ventana, que se repite en todas las cuentas de abajo.
+  --stage-vh: calc(var(--vh, 1vh) * 100);
+
+  // Lo que mediría la escena cubriendo la ventana, y lo que mide dejando la zona
+  // justa dentro. Manda la menor: cubrir mientras se pueda, y encoger si no.
+  --stage-cover: max(100vw, calc(var(--stage-vh) * #{$width} / #{$height}));
+  --stage-fit: min(
+    calc(100vw / var(--frame-width, 1)),
+    calc(var(--stage-vh) * #{$width} / #{$height} / var(--frame-height, 1))
+  );
+  --stage-width: min(var(--stage-cover), var(--stage-fit));
+  --stage-height: calc(var(--stage-width) * #{$height} / #{$width});
+
+  // Cuánto sobra de escena por cada eje. Negativo mientras la escena sea mayor que
+  // la ventana, que es lo normal: es lo que hay para desplazarla.
+  --stage-slack-x: calc(100vw - var(--stage-width));
+  --stage-slack-y: calc(var(--stage-vh) - var(--stage-height));
+
+  position: absolute;
+  left: clamp(
+    min(0px, var(--stage-slack-x)),
+    calc(50vw - var(--frame-center-x, 0.5) * var(--stage-width)),
+    max(0px, var(--stage-slack-x))
+  );
+  top: clamp(
+    min(0px, var(--stage-slack-y)),
+    calc(var(--stage-vh) / 2 - var(--frame-center-y, 0.5) * var(--stage-height)),
+    max(0px, var(--stage-slack-y))
+  );
+  width: var(--stage-width);
+  height: var(--stage-height);
+  overflow: hidden;
+}

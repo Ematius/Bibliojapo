@@ -11,11 +11,16 @@
   overflow: hidden;
   background: var(--color-bg);
 
-  // Mismo encuadre que el vestíbulo y la entrada. Es lo que permite colocar los
-  // tomos en fracciones de la IMAGEN y no de la ventana, de modo que se queden
-  // sobre su balda en cualquier pantalla. Ver `styles/_stage.scss`.
+  // El encuadre, que es lo que permite colocar los tomos en fracciones de la
+  // IMAGEN y no de la ventana, de modo que se queden sobre su balda en cualquier
+  // pantalla.
+  //
+  // Aquí NO vale el del vestíbulo y la entrada, que recortan desde el centro del
+  // dibujo: la estantería no está en el centro, y en una pantalla estrecha el
+  // recorte se llevaba su mitad derecha. Este encuadra por la zona de las baldas,
+  // que llega en variables desde el componente. Ver `styles/_stage.scss`.
   &__stage {
-    @include scene-stage;
+    @include framed-stage;
   }
 
   &__scene {
