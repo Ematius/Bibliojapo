@@ -1,0 +1,67 @@
+// La colocación de un objeto sobre la mesa.
+//
+// Las tres medidas llegan como variables desde `deskSpots.ts`, en fracciones de la
+// ILUSTRACIÓN. Aquí se convierten en porcentajes de la escena, que es la caja que
+// las contiene: por eso el objeto sigue sobre su trozo de madera aunque la escena
+// se recorte. Ver `DeskScene.scss`.
+.desk-object {
+  position: absolute;
+  // `top` marca dónde TOCA la madera y el desplazamiento sube el objeto entero por
+  // encima de esa línea. Con `bottom` habría que restar la fracción a uno y se lee
+  // peor; el resultado es el mismo.
+  top: calc(var(--spot-base-y) * 100%);
+  left: calc(var(--spot-x) * 100%);
+  width: calc(var(--spot-width) * 100%);
+  transform: translate(-50%, -100%);
+  // Un botón trae de fábrica marco, fondo y relleno propios, y aquí lo que se ve
+  // es solo el dibujo.
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  // El objeto se levanta un punto al apuntarlo. Es una transición y no un timeline
+  // de GSAP a propósito: GSAP es para las entradas y salidas de la escena, no para
+  // un estado que se enciende y se apaga con el ratón.
+  transition: transform var(--duration-fast) var(--ease-book);
+
+  &:hover,
+  &:focus-visible {
+    transform: translate(-50%, -100%) translateY(-0.4rem);
+  }
+
+  // El foco tiene que verse sobre la madera, que es oscura y con vetas.
+  &:focus-visible {
+    outline: 2px solid var(--color-brass-glow);
+    outline-offset: 4px;
+  }
+
+  // Sin movimiento, el objeto sigue respondiendo: lo que se quita es el salto, no
+  // la señal de que está apuntado.
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover,
+    &:focus-visible {
+      transform: translate(-50%, -100%);
+    }
+  }
+}
+
+// El dibujo recortado. Su alto sale de su propia proporción: el sitio solo dice
+// cuánto ocupa a lo ancho, igual que un tomo saca su grosor de su render.
+.desk-object__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+// Ayuda de taller: el rectángulo que de verdad se pulsa.
+//
+// No coincide con la silueta del objeto —un botón es una caja, y el dibujo tiene
+// esquinas transparentes—, así que esto enseña dónde responde y dónde no. Con los
+// objetos separados como están no molesta; si algún día se juntan, es lo primero
+// que hay que mirar. Se enciende con `SHOW_DESK_SPOTS`.
+.desk-object--marked {
+  outline: 1px dashed var(--color-brass);
+}
