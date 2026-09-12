@@ -69,6 +69,14 @@ export const VOCABULARY: Word[] = [
     // el diente, que se pronuncia «ha» y no «wa».
     units: [{ kana: 'は', romaji: 'ha' }],
     meaning: 'diente',
+    // El mismo archivo que el kana: la palabra は es un solo carácter y suena
+    // exactamente igual, así que grabarla aparte sería tener dos copias del
+    // mismo sonido que habría que cambiar a la vez.
+    audio: '/audio/hiragana/b1/ha.wav',
+    image: '/images/hiragana/imagesSupport/ha-diente.webp',
+    imageAlt:
+      'Una niña sonriendo con la boca muy abierta, con una flecha roja que ' +
+      'señala uno de los dientes de arriba',
   },
   {
     id: 'haha',
