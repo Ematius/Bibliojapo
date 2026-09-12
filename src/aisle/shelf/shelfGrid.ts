@@ -118,9 +118,15 @@ export const SHELF_GRID = {
   // Medido igual que lo demás, por luminancia: la ménsula izquierda empieza en
   // x 785 y la derecha acaba en x 1181; por arriba, la moldura del techo del
   // mueble empieza en y 182, y por abajo el canto de la última balda acaba en
-  // y 729. Los números llevan un poco de aire respecto a eso, para que en la
-  // pantalla más justa la ménsula no quede pegada al borde.
-  frame: { left: 0.46, top: 0.18, right: 0.716, bottom: 0.786 } as const satisfies Area,
+  // y 729.
+  //
+  // A los lados va justo, sin aire, y arriba y abajo con un poco. No es simetría:
+  // cuanto más ancha es la zona, antes deja la escena de cubrir la pantalla en un
+  // móvil —16 px de aire por lado bastaban para dejar una franja de fondo de 20 px
+  // arriba—, y lo que se pega al borde es una ménsula, que se lee como la
+  // estantería siguiendo fuera de pantalla. El aire de arriba y abajo no cuesta
+  // nada: en vertical solo aprieta en pantallas muy apaisadas, donde sobra sitio.
+  frame: { left: 0.469, top: 0.18, right: 0.707, bottom: 0.786 } as const satisfies Area,
 
   // ── AQUÍ SE AJUSTA EL TAMAÑO Y EL REPARTO DE LOS TOMOS ───────────────────
 
