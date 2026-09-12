@@ -24,9 +24,9 @@ servidor simulado: los doce tomos en la balda, el sello que da la insignia, la
 cuenta que la guarda. Ver «La capa `api/`».
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
-**Backend:** Todavía no, a propósito. El front se termina entero contra
-`src/api/mockServer.ts`, y con él hecho se decide entre un backend propio con Nest
-o Firebase sabiendo exactamente qué datos hacen falta. Ver la fase 4.
+**Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
+`src/api/mockServer.ts` y después se sustituye por Supabase sin tocar un
+componente. Ver «Supabase — las reglas que no se negocian» y la fase 4.
 
 ---
 
@@ -48,15 +48,52 @@ todavía no están tomadas en la anterior.
    ANTES que el responsive porque es la pieza que lo vuelve abordable: ningún
    ajuste de tomos arregla un mueble que se sale de la pantalla.
 3. **Responsive.**
-4. **Progresión y cuentas.** El FRONT se adelantó a propósito (11-09-2026) y ya
-   está, contra un servidor simulado —ver «La capa `api/`»—: hacer el backend
-   antes que las cuentas habría obligado a reabrir la base de datos al llegar a
-   ellas. Quedan las dos decisiones grandes: el backend, que ahora se toma viendo
-   qué datos pide el front, y la pasarela de pago, que todavía no tiene front.
-   Los ejercicios ya avisan al acertar (`parts/solved.ts`), y de ese aviso sale el
-   sello que da la insignia.
-5. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
-   completar el contenido mientras ya se usa.
+4. **Supabase de verdad, en el plan gratuito.** El FRONT de la progresión y las
+   cuentas se adelantó a propósito (11-09-2026) y ya está, contra el servidor
+   simulado —ver «La capa `api/`»—: hacer el backend antes que las cuentas habría
+   obligado a reabrir la base de datos al llegar a ellas. Los ejercicios ya avisan
+   al acertar (`parts/solved.ts`), y de ese aviso sale el sello que da la insignia.
+   Queda enchufarlo: el esquema, las políticas de RLS, el login con Google, y
+   reescribir por dentro `account.ts`, `progress.ts` y `volumes.ts`. **Cuesta 0 €**
+   —el plan gratuito cubre esto de sobra— y por eso no espera al final.
+
+   **La cuenta ya está hecha y aquí no se rehace.** El formulario con sus dos vías,
+   el panel, el carné y los errores con nombre están escritos contra el simulado, en
+   `src/account/`. El criterio de qué se adelantó y qué no es siempre el mismo: **lo
+   que se puede ver y probar sin servidor de verdad va antes** —así la pantalla se
+   diseña mirándola, no imaginándola—, y lo que llega desde FUERA de la app nace en
+   esta fase, porque no hay nada que simular. Nacen aquí cuatro cosas, y las cuatro
+   son rutas a las que se entra desde fuera: la ida y vuelta real a Google, el correo
+   de confirmación, «he olvidado mi contraseña» y borrar la cuenta.
+
+   **Las dos vías de entrada se quedan** —correo y Google—, y traen una decisión que
+   hay que tomar a conciencia, no por omisión: quien creó su cuenta con un correo y
+   una contraseña y meses después pulsa «Continuar con Google» con ESE MISMO correo,
+   o acaba con dos cuentas separadas o con una sola con dos formas de entrar. Si son
+   dos, entra y ve sus insignias desaparecidas: para esa persona, la app le ha
+   perdido el progreso. Es un ajuste de Supabase, no código nuestro. Y dentro de la
+   fase, **Google primero**: valida el flujo entero sin plantillas de correo de por
+   medio.
+5. **El contenido de pago servido, y con él el tomo 2.** Bucket privado y URLs
+   firmadas de vida corta. Va pegado a la fase anterior porque el tomo 2 es el
+   primero que hay que proteger: escrito «como el tomo 1» habría que escribirlo dos
+   veces. Ver «El contenido de pago no puede vivir en `content/`».
+6. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
+   completar el contenido mientras ya se usa. **Todavía gratis y sin pasarela**:
+   Supabase Free y Vercel Hobby valen mientras no se cobre, y aquí es donde se
+   rompen las cosas de verdad — mejor romperlas antes de que haya dinero de por
+   medio.
+7. **Pagos, y con ellos el gasto.** Stripe, el webhook verificado por firma, y el
+   estado de la suscripción como dato del servidor que alimenta `VolumeGate`. Es lo
+   ÚNICO que obliga a pagar Vercel Pro —Hobby prohíbe el uso comercial— y Supabase
+   Pro, y lo único que arrastra papeleo fiscal: vender a particulares de la UE
+   obliga a declarar el IVA del país del comprador. Por eso va al final, solo.
+
+**La frontera está entre la 6 y la 7.** Todo lo anterior cuesta 0 €; el día que se
+activa Stripe empiezan unos 41 €/mes fijos, que a 3,50 €/mes cubren unos 15
+suscriptores. Aplazar el GASTO es correcto; aplazar la INTEGRACIÓN no, porque las
+políticas de RLS y las URLs firmadas cambian cómo se piden los datos, y descubrirlo
+al final obliga a reabrir pantallas ya cerradas.
 
 ### El modelo
 
@@ -92,7 +129,7 @@ y por eso lo que falta tiene que leerse siempre como «todavía no», nunca como
 
 Todo lo que un día hablará con el backend vive en `src/api/`, y **es lo único que
 cambia el día que llegue**. Las pantallas no saben si detrás hay un servidor
-simulado, Firebase o Nest.
+simulado o Supabase.
 
 ```text
 api/
@@ -125,6 +162,36 @@ la **insignia** del anterior, que da el servidor al recibir el sello del examen
 final. Sin cuenta, el sello se queda en el navegador y el tomo siguiente pide
 crearla en vez de abrirse. El diseño de la insignia está sin pulir: de momento es
 el sello en el carné.
+
+### Supabase — las reglas que no se negocian
+
+**Por qué Supabase y no Firebase ni Nest.** El temario es todo referencias
+cruzadas —un bloque guarda ids de kana, de palabras y de frases, nunca copias—, y
+eso es una base relacional: `types.ts` pasa a ser el esquema de las tablas casi tal
+cual. Firestore obligaría a duplicar los datos dentro de cada bloque, que es justo
+lo que prohíbe «Un bloque guarda referencias, no copias». Nest saldría más barato
+en factura y mucho más caro en tiempo: habría que escribir y mantener el login, el
+restablecimiento de contraseña y los permisos que Supabase ya trae. Y como es
+Postgres estándar, el día que Nest compense, la base se lleva entera.
+
+En Supabase la seguridad **no está en esconder la clave**: está en las políticas de
+la base de datos. De ahí estas reglas, que valen desde la primera línea:
+
+- **En el front, solo la clave `anon`.** Viaja en el bundle y es pública por
+  diseño. La `service_role` **jamás** llega al navegador: salta todas las políticas.
+- **RLS activada en todas las tablas, sin excepción.** Sin ella, cualquiera con la
+  clave `anon` se lee la tabla entera. Es *el* fallo clásico de Supabase.
+- **Cada usuario solo ve sus filas** (`auth.uid() = user_id`).
+- **Lo que da acceso no lo escribe el cliente.** Insignias y estado de suscripción
+  se escriben desde el servidor —función de Postgres o Edge Function—. Si el
+  navegador pudiera escribir `unlocked`, el catálogo se regala desde la consola.
+  Es la misma regla que ya lleva escrita `VolumeGate`.
+- **El contenido de pago, en bucket privado**, servido con URL firmada de vida
+  corta y solo si el servidor ve el derecho.
+- **El webhook de Stripe se verifica por firma.** Si no, cualquiera manda un
+  «pagado» falso.
+- **Borrar la cuenta es obligatorio**, no una cortesía: lo exige el RGPD en cuanto
+  se cobre en Europa. Va en el panel, junto a cerrar sesión.
 
 ---
 
@@ -199,12 +266,17 @@ Cada unidad de trabajo debe ser **la cosa más pequeña posible que tenga sentid
 ## Stack técnico
 
 ```
-React 18     — UI
-Vite 5       — build tool
-SCSS (Sass)  — estilos, sin CSS-in-JS
-GSAP 3       — todas las animaciones de entrada/salida/transición (obligatorio)
-page-flip    — física de paso de páginas estilo manga
+React 19          — UI
+Vite 8            — build tool
+react-router-dom  — las rutas del recorrido
+SCSS (Sass)       — estilos, sin CSS-in-JS
+GSAP 3            — todas las animaciones de entrada/salida/transición (obligatorio)
+page-flip         — física de paso de páginas estilo manga
 ```
+
+Del día del backend en adelante se le suma `@supabase/supabase-js`, y **es la única
+dependencia que hace falta**: el login con Google lo resuelve Supabase por
+redirección, sin SDK de Google. Ver la fase 4.
 
 ---
 
