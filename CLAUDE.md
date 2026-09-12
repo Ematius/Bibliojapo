@@ -49,27 +49,34 @@ todavía no están tomadas en la anterior.
    ajuste de tomos arregla un mueble que se sale de la pantalla. El encuadre se
    escribe aquí, pero **no se da por cerrado hasta la fase 4**: hasta que no se
    prueba en anchos de verdad, no se sabe si el mueble cabe.
-3. **Mi biblioteca, y con ella la cuenta de verdad.** Van juntas porque son la
-   misma cosa por sus dos caras: Mi biblioteca es lo que se ENSEÑA de una cuenta
+3. **Mi escritorio, y con él la cuenta de verdad.** Van juntas porque son la
+   misma cosa por sus dos caras: Mi escritorio es lo que se ENSEÑA de una cuenta
    —los tomos cerrados, su chuleta y los juegos que abren—, y sin nada que enseñar
    una cuenta es un formulario que no lleva a ningún sitio.
 
-   **Dentro de la fase, la sala va PRIMERO**, contra el servidor simulado. No
+   **Dentro de la fase, el escritorio va PRIMERO**, contra el servidor simulado. No
    espera a Supabase por el criterio de siempre —lo que se puede ver y probar sin
    servidor de verdad va antes—: la cuenta simulada ya existe y ya da insignias,
-   así que la sala se diseña mirándola. Y al revés sería peor, porque es esta
-   pantalla la que decide QUÉ hay que guardar —cuándo se cerró cada tomo, las
-   marcas de los juegos—, y montar el esquema antes obligaría a reabrir la base de
-   datos en cuanto la sala pidiera un dato más. Es el mismo error que ya se evitó
-   una vez adelantando el front de las cuentas al backend.
+   así que la pantalla se diseña mirándola. Y al revés sería peor, porque es ella
+   la que decide QUÉ hay que guardar —cuándo se cerró cada tomo, las marcas de los
+   juegos—, y montar el esquema antes obligaría a reabrir la base de datos en
+   cuanto pidiera un dato más. Es el mismo error que ya se evitó una vez
+   adelantando el front de las cuentas al backend.
 
-   **La sala son tres piezas, en este orden:** el mueble —la estantería personal,
-   con hueco marcado para lo que falta, que se lee como «todavía no» y nunca como
-   vacío—, la chuleta de cada tomo cerrado, y el primer minijuego. Vive en
-   `src/collection/`, y hoy existe ya la pantalla con sus datos: lo que falta es
-   el sitio. El diseño de la sala —qué se ve y en qué orden— se decide al empezar
-   la fase; aquí solo están las reglas que no dependen de esa decisión:
+   **La mesa se va poblando, y eso ES el progreso.** No hay estantería personal:
+   repetir el mueble del pasillo enseñaría dos veces lo mismo. En su lugar, una
+   mesa vista desde el asiento con OBJETOS encima, y cada objeto es una puerta —la
+   hoja de estudio abre las chuletas, la caja abre los juegos, el carné abre la
+   cuenta—. Un objeto aparece cuando se gana lo que representa, así que la mesa
+   empieza casi desnuda y se llena sola: ni barras, ni «3 de 12», y lo siguiente
+   que se invente es un objeto más sobre la madera.
 
+   Vive en `src/desk/`, con su escena en `public/images/desk/`. Reglas:
+
+   - **La mesa se pinta VACÍA y los objetos van encima desde el DOM**, igual que
+     los tomos sobre la balda del pasillo. Pintados no se pueden pulsar, ni
+     animar, ni hacer aparecer cuando toca. Solo se pinta el adorno que nunca es
+     puerta ni cambia nunca.
    - **La chuleta se genera del bloque, nunca se escribe a mano.** Es hermana de
      `buildVolumePages`: un tomo nuevo trae su chuleta sin que nadie la redacte.
    - **La chuleta sale del paquete de `fetchVolume`, no de `content/`.** Si leyera
@@ -110,10 +117,39 @@ todavía no están tomadas en la anterior.
    perdido el progreso. Es un ajuste de Supabase, no código nuestro. Y dentro de la
    fase, **Google primero**: valida el flujo entero sin plantillas de correo de por
    medio.
-4. **Responsive.** Va DESPUÉS de Mi biblioteca, no antes: es la última pantalla
+4. **Responsive.** Va DESPUÉS de Mi escritorio, no antes: es la última pantalla
    grande que falta, y ajustar anchos mientras aún no existe obliga a hacer el
-   trabajo dos veces —una ahora y otra el día que la sala no quepa—. Aquí se cierra
-   también el encuadre de la fase 2, que no se puede dar por bueno sin probarlo.
+   trabajo dos veces —una ahora y otra el día que el escritorio no quepa—. Aquí
+   se cierra también el encuadre de la fase 2, que no se puede dar por bueno sin
+   probarlo.
+
+   **La escena se RECORRE, no se rehace.** En un móvil en vertical la escena cubre
+   por altura y sobra ancho. Encogerla hasta que quepa entera deja los tomos en
+   22 px —ilegibles—; dejándola grande miden 84 px. Así que en pantallas estrechas
+   la escena se panea de izquierda a derecha en vez de recomponer cada pantalla o
+   repintar las ilustraciones en vertical. Solo en horizontal: en vertical el alto
+   encaja justo, y moverse en los dos ejes solo haría falta si además se ampliara
+   la escena, que es otra decisión.
+
+   Cuatro condiciones, y la última no es un detalle:
+
+   - **El dedo manda; la flecha solo avisa.** En un móvil se arrastra, no se buscan
+     flechas. Van a los lados, semitransparentes, como pista de que hay más escena
+     — y se pulsan también, pero el control principal es el arrastre.
+   - **Se aterriza SIEMPRE sobre lo importante**: la estantería en el pasillo, la
+     mesa en el escritorio. Contenido esencial detrás de un gesto que hay que
+     descubrir es contenido perdido.
+   - **Con un libro abierto no hay paneo.** Ahí manda `StPageFlip`, y los gestos y
+     los cambios de tamaño le interrumpen el pase de página — ver «Errores
+     conocidos».
+   - **El escritorio NO lo lleva.** Sobre la mesa hay tres objetos: en vertical
+     caben en columna, y recolocarlos es más barato y se entiende mejor que
+     obligar a recorrer la mesa para descubrir que existe la caja de juegos. El
+     paneo es para escenas que de verdad hay que recorrer.
+
+   Esto cambia la fase 2: con paneo, el mueble ya no tiene que CABER, basta con
+   poder alcanzarlo. `framed-stage` deja de ser «encoge la escena hasta que la zona
+   entre» y pasa a decir solo dónde se aterriza.
 5. **El contenido de pago servido, y con él el tomo 2.** Bucket privado y URLs
    firmadas de vida corta. Va pegado a la fase 3 —la de Supabase— porque el tomo 2
    es el primero que hay que proteger: escrito «como el tomo 1» habría que
@@ -430,8 +466,8 @@ src/
       drill/        ← dos preguntas en una hoja
       exam/         ← el examen de cada lección, el examen final y su sello
   account/          ← la cuenta: el panel para crearla o entrar, y el carné
-  collection/       ← Mi biblioteca: lo ganado. Hoy solo la pantalla con sus datos;
-                      el mueble, las chuletas y los juegos son la fase 3
+  desk/             ← Mi escritorio: la mesa propia. Hoy solo la pantalla con sus
+                      datos; la escena y sus objetos son la fase 3
   api/              ← excepción justificada: todo lo que habla con el servidor, y
                       el servidor simulado. Es la única carpeta que cambia el día
                       del backend — ver «La capa `api/`»
