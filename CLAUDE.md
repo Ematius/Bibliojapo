@@ -26,7 +26,7 @@ cuenta que la guarda. Ver «La capa `api/`».
 **Despliegue:** Vercel (equipo: ematius' projects).
 **Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
 `src/api/mockServer.ts` y después se sustituye por Supabase sin tocar un
-componente. Ver «Supabase — las reglas que no se negocian» y la fase 4.
+componente. Ver «Supabase — las reglas que no se negocian» y la fase 3.
 
 ---
 
@@ -46,13 +46,49 @@ todavía no están tomadas en la anterior.
    pantallas estrechas el recorte se come el mueble entero. Hay que encuadrar por
    la estantería, de modo que siempre quepa y la ilustración haga de relleno. Va
    ANTES que el responsive porque es la pieza que lo vuelve abordable: ningún
-   ajuste de tomos arregla un mueble que se sale de la pantalla.
-3. **Responsive.**
-4. **Supabase de verdad, en el plan gratuito.** El FRONT de la progresión y las
-   cuentas se adelantó a propósito (11-09-2026) y ya está, contra el servidor
-   simulado —ver «La capa `api/`»—: hacer el backend antes que las cuentas habría
-   obligado a reabrir la base de datos al llegar a ellas. Los ejercicios ya avisan
-   al acertar (`parts/solved.ts`), y de ese aviso sale el sello que da la insignia.
+   ajuste de tomos arregla un mueble que se sale de la pantalla. El encuadre se
+   escribe aquí, pero **no se da por cerrado hasta la fase 4**: hasta que no se
+   prueba en anchos de verdad, no se sabe si el mueble cabe.
+3. **Mi biblioteca, y con ella la cuenta de verdad.** Van juntas porque son la
+   misma cosa por sus dos caras: Mi biblioteca es lo que se ENSEÑA de una cuenta
+   —los tomos cerrados, su chuleta y los juegos que abren—, y sin nada que enseñar
+   una cuenta es un formulario que no lleva a ningún sitio.
+
+   **Dentro de la fase, la sala va PRIMERO**, contra el servidor simulado. No
+   espera a Supabase por el criterio de siempre —lo que se puede ver y probar sin
+   servidor de verdad va antes—: la cuenta simulada ya existe y ya da insignias,
+   así que la sala se diseña mirándola. Y al revés sería peor, porque es esta
+   pantalla la que decide QUÉ hay que guardar —cuándo se cerró cada tomo, las
+   marcas de los juegos—, y montar el esquema antes obligaría a reabrir la base de
+   datos en cuanto la sala pidiera un dato más. Es el mismo error que ya se evitó
+   una vez adelantando el front de las cuentas al backend.
+
+   **La sala son tres piezas, en este orden:** el mueble —la estantería personal,
+   con hueco marcado para lo que falta, que se lee como «todavía no» y nunca como
+   vacío—, la chuleta de cada tomo cerrado, y el primer minijuego. Vive en
+   `src/collection/`, y hoy existe ya la pantalla con sus datos: lo que falta es
+   el sitio. El diseño de la sala —qué se ve y en qué orden— se decide al empezar
+   la fase; aquí solo están las reglas que no dependen de esa decisión:
+
+   - **La chuleta se genera del bloque, nunca se escribe a mano.** Es hermana de
+     `buildVolumePages`: un tomo nuevo trae su chuleta sin que nadie la redacte.
+   - **La chuleta sale del paquete de `fetchVolume`, no de `content/`.** Si leyera
+     el temario por su cuenta, el tomo 2 —que es de pago— tendría que viajar en el
+     bundle. Ver «El contenido de pago no puede vivir en `content/`».
+   - **Un minijuego no enseña nada nuevo:** juega solo con kana ya estudiados, la
+     misma regla que los distractores de `parts/pickCards.ts`. Descartar tiene que
+     ser reconocer, nunca adivinar.
+   - **Un minijuego no da acceso.** Ni sellos ni insignias: deja marcas personales
+     y nada más. Si un juego abriera el tomo siguiente, el catálogo se regala.
+   - **Repasar no vuelve a sellar.** Lo ganado está ganado: reabrir un tomo cerrado
+     no quita ni añade insignias.
+
+   **Y con ella, Supabase de verdad, en el plan gratuito.** El FRONT de la
+   progresión y las cuentas se adelantó a propósito (11-09-2026) y ya está, contra
+   el servidor simulado —ver «La capa `api/`»—: hacer el backend antes que las
+   cuentas habría obligado a reabrir la base de datos al llegar a ellas. Los
+   ejercicios ya avisan al acertar (`parts/solved.ts`), y de ese aviso sale el
+   sello que da la insignia.
    Queda enchufarlo: el esquema, las políticas de RLS, el login con Google, y
    reescribir por dentro `account.ts`, `progress.ts` y `volumes.ts`. **Cuesta 0 €**
    —el plan gratuito cubre esto de sobra— y por eso no espera al final.
@@ -74,10 +110,14 @@ todavía no están tomadas en la anterior.
    perdido el progreso. Es un ajuste de Supabase, no código nuestro. Y dentro de la
    fase, **Google primero**: valida el flujo entero sin plantillas de correo de por
    medio.
+4. **Responsive.** Va DESPUÉS de Mi biblioteca, no antes: es la última pantalla
+   grande que falta, y ajustar anchos mientras aún no existe obliga a hacer el
+   trabajo dos veces —una ahora y otra el día que la sala no quepa—. Aquí se cierra
+   también el encuadre de la fase 2, que no se puede dar por bueno sin probarlo.
 5. **El contenido de pago servido, y con él el tomo 2.** Bucket privado y URLs
-   firmadas de vida corta. Va pegado a la fase anterior porque el tomo 2 es el
-   primero que hay que proteger: escrito «como el tomo 1» habría que escribirlo dos
-   veces. Ver «El contenido de pago no puede vivir en `content/`».
+   firmadas de vida corta. Va pegado a la fase 3 —la de Supabase— porque el tomo 2
+   es el primero que hay que proteger: escrito «como el tomo 1» habría que
+   escribirlo dos veces. Ver «El contenido de pago no puede vivir en `content/`».
 6. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
    completar el contenido mientras ya se usa. **Todavía gratis y sin pasarela**:
    Supabase Free y Vercel Hobby valen mientras no se cobre, y aquí es donde se
@@ -276,7 +316,7 @@ page-flip         — física de paso de páginas estilo manga
 
 Del día del backend en adelante se le suma `@supabase/supabase-js`, y **es la única
 dependencia que hace falta**: el login con Google lo resuelve Supabase por
-redirección, sin SDK de Google. Ver la fase 4.
+redirección, sin SDK de Google. Ver la fase 3.
 
 ---
 
@@ -390,6 +430,8 @@ src/
       drill/        ← dos preguntas en una hoja
       exam/         ← el examen de cada lección, el examen final y su sello
   account/          ← la cuenta: el panel para crearla o entrar, y el carné
+  collection/       ← Mi biblioteca: lo ganado. Hoy solo la pantalla con sus datos;
+                      el mueble, las chuletas y los juegos son la fase 3
   api/              ← excepción justificada: todo lo que habla con el servidor, y
                       el servidor simulado. Es la única carpeta que cambia el día
                       del backend — ver «La capa `api/`»
