@@ -52,6 +52,14 @@ interface Bay {
   to: number
 }
 
+// Un rectángulo de la ilustración, por sus cuatro bordes.
+interface Area {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
 export const SHELF_GRID = {
   // Proporción de la ilustración. Hace falta porque las medidas verticales y las
   // horizontales están en fracciones de lados distintos: para saber cuánto ocupa
@@ -97,6 +105,22 @@ export const SHELF_GRID = {
     { from: 0.484, to: 0.582 },
     { from: 0.597, to: 0.694 },
   ] as const satisfies readonly Bay[],
+
+  // Lo que tiene que caber SIEMPRE en pantalla: los dos vanos, con sus ménsulas de
+  // los extremos, en las cuatro baldas. El resto de la ilustración es relleno, y en
+  // una pantalla estrecha se recorta antes que esto.
+  //
+  // No es el mueble entero a propósito. Con el copete y el zócalo dentro, en un
+  // móvil en vertical los tomos se quedaban en 38 px y la escena no llegaba a
+  // cubrir la pantalla; con esto caben enteros y la ilustración sigue cubriéndolo
+  // todo.
+  //
+  // Medido igual que lo demás, por luminancia: la ménsula izquierda empieza en
+  // x 785 y la derecha acaba en x 1181; por arriba, la moldura del techo del
+  // mueble empieza en y 182, y por abajo el canto de la última balda acaba en
+  // y 729. Los números llevan un poco de aire respecto a eso, para que en la
+  // pantalla más justa la ménsula no quede pegada al borde.
+  frame: { left: 0.46, top: 0.18, right: 0.716, bottom: 0.786 } as const satisfies Area,
 
   // ── AQUÍ SE AJUSTA EL TAMAÑO Y EL REPARTO DE LOS TOMOS ───────────────────
 
