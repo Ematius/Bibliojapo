@@ -110,7 +110,19 @@ function mountOne(match: HTMLElement): (() => void) | null {
     // en la hoja de la palabra, «あ se lee aoi» sería sencillamente falso.
     const word = match.dataset.word ?? ''
     const reading = match.dataset.reading ?? ''
-    result.textContent = `Eso es: ${word} se lee «${reading}».`
+
+    // Una palabra se confirma por lo que SIGNIFICA; un kana suelto, por cómo se
+    // lee. El significado solo viaja cuando se ha reconstruido la palabra entera
+    // —ver `KanaMatch`—, así que basta con mirar si está: aquí no hace falta
+    // saber nada de los scopes.
+    //
+    // Y no es un matiz de redacción. Esta ficha comparte hoja con el hueco de
+    // rōmaji en el repaso y en el examen —`WordDrill`, `ExamSheet`—, y decir aquí
+    // «はい se lee hai» le daba hecha la respuesta al ejercicio de debajo.
+    const meaning = match.dataset.meaning
+    result.textContent = meaning
+      ? `Eso es: ${word} significa «${meaning}».`
+      : `Eso es: ${word} se lee «${reading}».`
 
     // Con todos los huecos llenos la ficha está resuelta. Solo se llega aquí una
     // vez: un hueco lleno no se vacía, así que no hay segunda vez que avisar.

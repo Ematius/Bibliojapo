@@ -71,7 +71,8 @@ export function KanaMatch({ word, kana, scope, pool }: KanaMatchProps) {
   const isSlot = (unit: { kana: string }) => scope === 'build' || unit.kana === kana.character
 
   // La lectura de lo que hay en la ficha: `a` o `aoi`. No siempre se enseña —ver
-  // `clue`—, pero es lo que se dice al acertar.
+  // `clue`—, y al acertar solo se dice cuando lo emparejado es un kana suelto:
+  // una palabra se confirma por su significado —ver `data-meaning`—.
   const reading = units.map((unit) => unit.romaji).join('')
 
   // La pista con la que se empareja, o sea la otra cara de la ficha.
@@ -103,6 +104,10 @@ export function KanaMatch({ word, kana, scope, pool }: KanaMatchProps) {
       // recomponerla por su cuenta.
       data-word={units.map((unit) => unit.kana).join('')}
       data-reading={reading}
+      // El significado, SOLO cuando lo que se reconstruye es la palabra entera.
+      // Un kana suelto no significa nada —あ no es «azul»—, así que con `kana` no
+      // viaja, y su ausencia es lo que le dice al corrector qué puede decir.
+      data-meaning={scope === 'kana' ? undefined : word.meaning}
     >
       {/* La pareja a medias: la pista puesta y el kana por poner. Las dos mitades
           se leen como las caras de una ficha de dominó, no como una etiqueta con
