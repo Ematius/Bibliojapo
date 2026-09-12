@@ -6,14 +6,22 @@ import { useSyncExternalStore } from 'react'
 // cuenta para abrirse—, y el panel está montado una sola vez, arriba del todo. Por
 // eso el estado vive aquí y no en ninguno de los dos: cada uno llama a
 // `openAccountPanel` y el panel se entera.
+// Por cuál de las dos vías empieza el formulario. Las dos están siempre a un
+// enlace de distancia dentro del panel; esto solo decide cuál se ve primero.
+export type AccountMode = 'signUp' | 'signIn'
+
 export interface AccountPanelState {
   open: boolean
   // Una línea sobre por qué se pide la cuenta, cuando la pide algo concreto. Sin
   // ella el panel se presenta solo; con ella, empieza por el motivo.
   reason: string | null
+  // Quien llega desde «Crear cuenta» no tiene una, y quien llega desde «Entrar»
+  // sí: abrir siempre por crear obligaba al segundo a buscar el enlace de cambiar
+  // de vía antes de poder escribir nada.
+  mode: AccountMode
 }
 
-let state: AccountPanelState = { open: false, reason: null }
+let state: AccountPanelState = { open: false, reason: null, mode: 'signUp' }
 const listeners = new Set<() => void>()
 
 function setState(next: AccountPanelState): void {
@@ -28,8 +36,11 @@ function subscribe(listener: () => void): () => void {
   }
 }
 
-export function openAccountPanel(reason: string | null = null): void {
-  setState({ open: true, reason })
+export function openAccountPanel(
+  reason: string | null = null,
+  mode: AccountMode = 'signUp',
+): void {
+  setState({ open: true, reason, mode })
 }
 
 export function closeAccountPanel(): void {

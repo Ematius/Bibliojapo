@@ -2,6 +2,7 @@ import { useId, useState, type FormEvent } from 'react'
 import { signIn, signInWithGoogle, signUp } from '../api/account'
 import { apiErrorCode, type ApiErrorCode } from '../api/apiError'
 import { ACCOUNT_ERRORS, PASSWORD_HINT } from './accountConfig'
+import type { AccountMode } from './accountPanelState'
 
 interface AccountFormProps {
   // Por qué se pide la cuenta, si la ha pedido algo concreto. Sustituye a la
@@ -9,18 +10,19 @@ interface AccountFormProps {
   reason: string | null
   // El id del título, para que el diálogo diga cómo se llama.
   titleId: string
+  // Por cuál de las dos vías se empieza. Es solo el arranque: el enlace de abajo
+  // sigue llevando a la otra.
+  mode: AccountMode
   // Se llama al entrar con éxito.
   onDone: () => void
 }
 
-type Mode = 'signUp' | 'signIn'
-
-const COPY: Record<Mode, { title: string; intro: string; submit: string }> = {
+const COPY: Record<AccountMode, { title: string; intro: string; submit: string }> = {
   signUp: {
     title: 'Crea tu cuenta',
     intro:
       'Con tu cuenta, tus sellos se guardan y se abren los tomos siguientes. ' +
-      'Lo que ya hayas hecho aquí entra con ella.',
+      'Accedes juegos nuevos, ha chuletas repaso rápido.',
     submit: 'Crear cuenta',
   },
   signIn: {
@@ -37,8 +39,8 @@ const COPY: Record<Mode, { title: string; intro: string; submit: string }> = {
 // los dos sitios sería escribir dos veces la misma regla, y la del servidor es la
 // que manda. Lo único que se adelanta es la pista de la contraseña, para que nadie
 // tenga que equivocarse para enterarse.
-export function AccountForm({ reason, titleId, onDone }: AccountFormProps) {
-  const [mode, setMode] = useState<Mode>('signUp')
+export function AccountForm({ reason, titleId, mode: startMode, onDone }: AccountFormProps) {
+  const [mode, setMode] = useState<AccountMode>(startMode)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

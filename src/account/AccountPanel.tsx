@@ -14,7 +14,7 @@ import './AccountPanel.scss'
 // paso de en medio, y al terminar se sigue donde se estaba, con el tomo recién
 // abierto delante.
 export function AccountPanel() {
-  const { open, reason } = useAccountPanel()
+  const { open, reason, mode } = useAccountPanel()
   const session = useSession()
   const titleId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -95,7 +95,7 @@ export function AccountPanel() {
         {session.status === 'signedIn' ? (
           <AccountProfile account={session.account} titleId={titleId} onDone={closeAccountPanel} />
         ) : (
-          <AccountForm reason={reason} titleId={titleId} onDone={closeAccountPanel} />
+          <AccountForm reason={reason} titleId={titleId} mode={mode} onDone={closeAccountPanel} />
         )}
 
         {/* Mientras no haya servidor, la cuenta vive en este navegador. Se dice,
