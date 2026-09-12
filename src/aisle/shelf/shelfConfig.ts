@@ -116,10 +116,14 @@ export const VOLUME_TURN = {
 
 // El tomo adelantándose hasta quedar delante del lector.
 //
-// El destino va en fracciones del stage y no de la ventana porque el tomo vive
-// dentro del stage: como el stage está centrado, su centro y el de la ventana
-// son el mismo punto. En pantallas más anchas que 16:9 el tomo queda algo mayor
-// de lo indicado, que es el único desajuste y no molesta.
+// El destino —`focusX` y `focusY`— va en fracciones de la VENTANA: un libro que
+// alguien acerca queda delante de quien mira, y eso no depende de por dónde esté
+// recortada la escena. El tomo se mueve en fracciones del stage, así que el paso
+// de un sitio a otro lo hace `useVolumePull` midiendo los dos.
+//
+// Los tamaños, en cambio, van en fracciones del alto del STAGE: el tomo crece con
+// la escena, como todo lo que está dentro de ella. En pantallas más anchas que
+// 16:9 queda algo mayor de lo indicado, que es el único desajuste y no molesta.
 export const VOLUME_PULL = {
   durationSeconds: 1.05,
   // Sale del estante con decisión y frena al llegar, como algo que alguien

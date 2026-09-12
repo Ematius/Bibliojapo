@@ -102,13 +102,18 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   // Si el tomo se desmonta a medio tirón, el tirón se para con él.
   useEffect(() => () => stopNudgeRef.current?.(), [])
 
-  // Medidas del libro abierto, tomadas del stage. Se miden aquí y no dentro del
-  // libro porque es el tomo quien conoce su sitio en la escena.
+  // Medidas del libro abierto, tomadas de la ventana. Se miden aquí y no dentro
+  // del libro porque es el tomo quien conoce su sitio en la escena.
+  //
+  // De la ventana y no del stage: el libro abierto se pone DELANTE de la escena y
+  // se centra en la pantalla —ver `VolumeOpening.scss`—, así que lo que no puede
+  // desbordar es la ventana. La caja del pasillo es la que mide `--vh`.
   useLayoutEffect(() => {
     const stageEl = rootRef.current?.offsetParent as HTMLElement | null
-    if (!stageEl) return
+    const viewEl = stageEl?.parentElement
+    if (!viewEl) return
 
-    setLayout(openBookLayout(stageEl.clientHeight))
+    setLayout(openBookLayout(viewEl.clientHeight))
   }, [stage])
 
   // Único camino para cambiar de pose. Al salir de `open` el libro se cierra del

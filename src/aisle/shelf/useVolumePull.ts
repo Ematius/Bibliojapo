@@ -75,15 +75,32 @@ export function useVolumePull({
     // La forma de ESTE tomo: cada uno tiene la suya.
     const shape = volume.art.shape
 
+    // Adónde se adelanta el tomo, pasado a fracciones del STAGE.
+    //
+    // La config lo dice en fracciones de la VENTANA, que es donde tiene que
+    // quedar el libro, y el tomo se mueve en fracciones del stage, que es donde
+    // vive. Antes los dos sitios eran el mismo punto porque el stage estaba
+    // centrado; desde que el pasillo encuadra por la estantería ya no lo está, y
+    // sin esta conversión el tomo se iba hacia un lado y se salía de la pantalla.
+    // Ver `framed-stage` en `styles/_stage.scss`.
+    //
+    // La ventana es la caja del pasillo y no `window`: es la que mide `--vh`, así
+    // que en un móvil no cambia cuando aparece o desaparece la barra de URL.
+    const viewRect = (stageEl.parentElement ?? stageEl).getBoundingClientRect()
+    const focusX =
+      (viewRect.left + pull.focusX * viewRect.width - stageRect.left) / stageRect.width
+    const focusY =
+      (viewRect.top + pull.focusY * viewRect.height - stageRect.top) / stageRect.height
+
     // En la pose adelantada el tomo queda centrado, así que `focusY` es su centro
     // y hay que bajar hasta su base, que es por donde está anclado.
-    const focusBaseY = pull.focusY + pull.focusHeight / 2
+    const focusBaseY = focusY + pull.focusHeight / 2
     // El tomo mide de base lo que mide adelantado, así que aquí no hay que
     // agrandarlo: la escala 1 ES la pose de delante, y la balda es la que
     // encoge. Ver el comentario del alto en ShelfVolume.scss — está montado así
     // para que la caja 3D se rasterice a tamaño grande y no llegue pixelada.
     const forward = {
-      x: (pull.focusX - volume.x) * stageRect.width,
+      x: (focusX - volume.x) * stageRect.width,
       y: (focusBaseY - volume.baseY) * stageRect.height,
       scale: 1,
     }
@@ -115,8 +132,8 @@ export function useVolumePull({
     // Lateralmente va sin corregir, porque a media vuelta el canto cae justo
     // sobre el eje del lomo, que es por donde el tomo está anclado.
     const onEdge = {
-      x: (pull.focusX - volume.x) * stageRect.width,
-      y: (pull.focusY + pull.edgeHeight / 2 - volume.baseY) * stageRect.height,
+      x: (focusX - volume.x) * stageRect.width,
+      y: (focusY + pull.edgeHeight / 2 - volume.baseY) * stageRect.height,
       scale: pull.edgeHeight / pull.focusHeight / perspectiveGain,
       rotationY: turn.edgeDeg,
     }
