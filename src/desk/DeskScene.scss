@@ -1,0 +1,36 @@
+@use '../styles/stage' as *;
+
+// El encuadre de la escena del escritorio.
+//
+// ── Por qué el encuadre simple y no el del pasillo ─────────────────────────
+// `scene-stage` cubre la ventana y recorta lo que sobre desde el CENTRO del
+// dibujo. Aquí vale, y en el pasillo no valía: allí la estantería cae a un lado y
+// el recorte se llevaba media, mientras que la mesa está en el centro y cruza el
+// dibujo de lado a lado, así que pase lo que pase queda madera en pantalla.
+//
+// El otro encuadre, `framed-stage`, protege una zona a cambio de encoger la escena
+// cuando no cabe. Aquí saldría peor: la mesa es tan ancha que protegerla obligaría
+// a encoger tanto en un móvil en vertical que la escena dejaría de cubrir la
+// pantalla y asomaría el fondo por arriba y por abajo. Ver `styles/_stage.scss`.
+//
+// ── LO QUE ESTO DEJA PENDIENTE ─────────────────────────────────────────────
+// En una pantalla estrecha se ve solo la franja CENTRAL del dibujo —en un móvil en
+// vertical, poco más de un cuarto—, así que los objetos que se posen en la mesa
+// tienen que caer dentro de esa franja o se irán fuera de la pantalla. Es la
+// decisión que toca revisar en el responsive, con anchos de verdad delante.
+.desk-scene {
+  @include scene-stage;
+}
+
+// La mesa pintada. No recibe pulsaciones: lo que se pulsa son los objetos que van
+// encima, y sin esto la madera se los comería por estar dibujada a pantalla
+// completa.
+.desk-scene__art {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+}
