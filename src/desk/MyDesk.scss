@@ -1,0 +1,143 @@
+// Mi escritorio: la mesa propia, con lo que se ha ganado encima.
+//
+// Todavía no tiene la escena puesta —llega en su propio paso—, así que se
+// sostiene sola con el fondo cálido de la casa y el papel de siempre: la tarjeta
+// de la invitación es el mismo carné del panel de cuenta, y así se reconoce como
+// su continuación cuando manda a crearla.
+//
+// El texto de la pantalla va sobre el fondo oscuro, no sobre papel: de ahí que lo
+// secundario tire a piedra y no a `--color-ink-soft`, que es tinta y sobre este
+// fondo no se leería.
+
+.my-desk {
+  position: relative;
+  // La barra se posiciona en absoluto contra el primer ancestro colocado; sin el
+  // relative de arriba se iría a la ventana y dejaría de acompañar a la pantalla.
+  // Lo mismo vale para la escena, que se encuadra contra esta caja.
+  //
+  // Alto exacto y no mínimo, como el resto de escenas: esto ya no es un documento
+  // que crece, es una habitación. Lo que sobra de ilustración se recorta aquí.
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  // El fondo de la casa asoma solo si la escena no llega a cubrir; mientras
+  // cubra, no se ve.
+  background: var(--color-bg);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+
+  // Lo que se dice con palabras, por encima de la mesa. Colocado a propósito: la
+  // escena va en absoluto, y sin esto se pintaría encima del texto.
+  &__content {
+    position: relative;
+    // Arriba cabe la barra entera —su separación, su cuerpo y el aire de debajo—
+    // antes de que empiece el título.
+    padding: 7.5rem 1.5rem 4rem;
+  }
+
+  &__title {
+    max-width: 60rem;
+    margin: 0 auto 1.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  // Lo que se dice mientras no hay tomos que enseñar: que están llegando, que no
+  // han llegado, o que todavía no hay ninguno. Los tres casos son la misma voz
+  // tranquila, así que comparten aspecto.
+  &__note {
+    max-width: 34rem;
+    margin: 0 auto;
+    color: var(--color-stone);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  // ── La invitación a crear la cuenta ──────────────────────────────────────
+  // Papel crema con filo de latón: es el carné del panel puesto sobre la mesa,
+  // y pulsarlo abre exactamente esa tarjeta.
+  &__invite {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-float);
+    background: var(--color-cream);
+    box-shadow: var(--shadow-float);
+    text-align: center;
+  }
+
+  &__invite &__note {
+    color: var(--color-ink-soft);
+  }
+
+  &__cta {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.75rem;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--color-nav-ink);
+    color: var(--color-on-nav-ink);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 3px;
+    }
+  }
+
+  // ── Los tomos ganados ────────────────────────────────────────────────────
+  // Una rejilla y no una fila: la colección va a crecer hasta doce o dieciséis
+  // tomos, y en fila el último acabaría fuera de la pantalla.
+  &__volumes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1.25rem;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  // Cada tomo, de canto sobre la balda. Alto y estrecho porque es un lomo: el
+  // día que haya tapa dibujada se cambia el relleno por ella y la proporción ya
+  // está puesta. Ver «Las tapas y los lomos son de cada tomo» en CLAUDE.md.
+  &__volume {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 3 / 4;
+    padding: 1rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-badge);
+    background: linear-gradient(
+      160deg,
+      var(--color-wood-dark),
+      var(--color-wood-deep)
+    );
+    box-shadow: var(--shadow-float);
+    color: var(--color-brass-glow);
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+@media (max-width: 48rem) {
+  // El padding vive en el contenido, no en la pantalla: la pantalla es ahora la
+  // caja de la escena y no lleva ninguno.
+  .my-desk__content {
+    // La barra sube al reducirse su separación, y el título con ella.
+    padding-top: 6rem;
+  }
+}

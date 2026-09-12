@@ -10,15 +10,32 @@ export const NAV_LOGO_KANJI = '本'
 //
 // `to` es null mientras la sección todavía no tiene pantalla: el enlace se pinta
 // igual, pero no navega. Se rellena a medida que cada una exista.
-export const NAV_LINKS = [
+export interface NavLink {
+  id: string
+  label: string
+  // El destino, o null si esa sección todavía no existe.
+  //
+  // El tipo se escribe a mano en vez de deducirse de la lista a propósito: hoy las
+  // tres tienen pantalla, y deducido saldría `string`, con lo que la rama que pinta
+  // una sección pendiente quedaría marcada como imposible y habría que borrarla.
+  // La siguiente sección que se anuncie antes de existir la necesita.
+  to: string | null
+  // Marca el enlace que vuelve al valle, para que el guardia de la ruta lo deje
+  // pasar. Ver shared/journey.ts.
+  fromNav: boolean
+}
+
+export const NAV_LINKS: readonly NavLink[] = [
   // Vuelve al valle. Es la única forma de volver a ver la portada una vez
   // recorrida, así que lleva una marca para que el guardia de la ruta la deje
   // pasar en lugar de mandarte otra vez a la puerta. Ver shared/journey.ts.
   { id: 'home', label: 'Inicio', to: '/', fromNav: true },
   // Vuelve al vestíbulo, que es donde están los carteles de los pasillos.
   { id: 'aisles', label: 'Pasillos', to: '/biblioteca', fromNav: false },
-  { id: 'collection', label: 'Mi biblioteca', to: null, fromNav: false },
-] as const
+  // La mesa propia, con lo ganado encima. Sin cuenta lleva igual: la pantalla
+  // invita a crearla, que es lo que hace falta para que haya algo que guardar.
+  { id: 'desk', label: 'Mi escritorio', to: '/mi-escritorio', fromNav: false },
+]
 
 // Llamada a la acción, al otro extremo de la barra, para quien no tiene sesión.
 // Abre el panel de la cuenta; con sesión, el botón lleva el nombre de quien está

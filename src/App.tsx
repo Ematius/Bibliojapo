@@ -15,6 +15,7 @@ const LibraryHall = lazy(() =>
 const LibraryAisle = lazy(() =>
   import('./aisle/LibraryAisle.tsx').then((m) => ({ default: m.LibraryAisle })),
 )
+const MyDesk = lazy(() => import('./desk/MyDesk.tsx').then((m) => ({ default: m.MyDesk })))
 
 function App() {
   // --vh se escribe sobre el elemento raíz, así que es global: basta con
@@ -34,6 +35,10 @@ function App() {
           {/* Un solo pasillo para las cuatro secciones: el id decide qué estantería
               se pinta. Ver shared/aisles.ts. */}
           <Route path="/pasillo/:aisleId" element={<LibraryAisle />} />
+          {/* Lo ganado: la mesa propia, con su chuleta y sus juegos encima. Sin
+              guardia en la ruta — entrar sin cuenta no enseña nada de nadie, solo
+              la invitación a crearla. Ver `desk/MyDesk.tsx`. */}
+          <Route path="/mi-escritorio" element={<MyDesk />} />
         </Routes>
       </Suspense>
 
