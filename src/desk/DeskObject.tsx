@@ -38,15 +38,14 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
 
   useDeskLift({ rootRef, frontRef, framesRef, restingRef, spot, lifted })
 
+  // Cuánto encoger y desplazar la cara de frente para que caiga encima de la de reposo.
+  // Van en el botón y no en la propia imagen: `.desk-object__face` las necesita igual y es
+  // su HERMANO, así que puestas más abajo no le llegarían.
+  const fit = frontFit(art)
   const style: StyleWithVars = {
     '--spot-x': spot.x,
     '--spot-base-y': spot.baseY,
     '--spot-width': spot.width,
-  }
-
-  // Cuánto encoger y desplazar la cara de frente para que caiga encima de la de reposo.
-  const fit = frontFit(art)
-  const frontStyle: StyleWithVars = {
     '--front-scale': fit.scale,
     '--front-left': fit.left,
     '--front-top': fit.top,
@@ -85,7 +84,6 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
           ref={frontRef}
           className="desk-object__art desk-object__art--front"
           src={art.front.src}
-          style={frontStyle}
           alt=""
           draggable="false"
         />

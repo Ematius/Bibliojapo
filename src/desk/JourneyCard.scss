@@ -27,6 +27,9 @@
 
   // Los cuatro frentes en fila, sin partirse en dos líneas: cuatro es justo lo que cabe de un
   // vistazo, y en dos filas dejarían de compararse entre sí.
+  //
+  // El orden va de derecha a izquierda, como se lee un tomo: hiragana el primero del
+  // recorrido queda a la derecha, y vocabulario el último a la izquierda.
   &__tracks {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -34,6 +37,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    direction: rtl;
   }
 
   &__track {
@@ -41,6 +45,9 @@
     flex-direction: column;
     align-items: center;
     gap: 1cqw;
+    // La fila es RTL para el orden de las columnas; el contenido de cada una vuelve a LTR
+    // para que el porcentaje y el «12 de 46» se lean del derecho.
+    direction: ltr;
   }
 
   &__dial {
@@ -59,7 +66,7 @@
   }
 
   // Lo recorrido, en latón. Con la punta redondeada, que es lo que hace que un arco corto siga
-  // pareciendo un trazo y no una mota.
+  // pareciendo un trazo y no una mota. Solo color: el número va debajo, no encima.
   &__arc {
     fill: none;
     stroke: var(--color-brass);
@@ -67,20 +74,17 @@
     stroke-linecap: round;
   }
 
-  &__percent {
-    fill: var(--color-ink);
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 700;
-    // El texto de un SVG se ancla por su línea de base; con esto queda centrado en el círculo
-    // sin calcular a mano cuánto bajarlo.
-    dominant-baseline: central;
-    text-anchor: middle;
-  }
-
   &__name {
     margin: 0;
     font-size: 3cqw;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__percent {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 4cqw;
     font-weight: 700;
     line-height: 1.2;
   }

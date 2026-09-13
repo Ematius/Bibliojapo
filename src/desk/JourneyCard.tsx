@@ -27,6 +27,8 @@ function TrackDial({ track }: { track: JourneyTrack }) {
 
   return (
     <li className="journey-card__track">
+      <p className="journey-card__name">{TRACK_LABELS[track.id]}</p>
+
       <svg className="journey-card__dial" viewBox="0 0 100 100" aria-hidden="true">
         {/* El surco entero, para que se vea lo que falta y no solo lo hecho. */}
         <circle className="journey-card__groove" cx="50" cy="50" r={RADIUS} />
@@ -42,13 +44,9 @@ function TrackDial({ track }: { track: JourneyTrack }) {
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={CIRCUMFERENCE * (1 - ratio)}
         />
-
-        <text className="journey-card__percent" x="50" y="50">
-          {Math.round(ratio * 100)}%
-        </text>
       </svg>
 
-      <p className="journey-card__name">{TRACK_LABELS[track.id]}</p>
+      <p className="journey-card__percent">{Math.round(ratio * 100)}%</p>
 
       {/* Los dos números, además del porcentaje: «12 de 46» dice lo que queda de
           una forma que un tanto por ciento no dice. */}
