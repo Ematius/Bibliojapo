@@ -1,0 +1,160 @@
+.exam-gift {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cqh;
+  text-align: center;
+
+  &__note {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-body);
+    font-size: clamp(0.5rem, 3.6cqmin, 0.85rem);
+    line-height: 1.4;
+
+    &--ready {
+      color: var(--color-ivy-dark);
+      font-weight: 600;
+    }
+  }
+
+  // El escenario: el sobre y la carta ocupan el MISMO hueco, uno encima del otro. Sin esto
+  // la hoja empujaría al sobre al aparecer, y lo que tiene que parecer es que sale de
+  // dentro.
+  &__stage {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__envelope {
+    position: absolute;
+    inset: 0;
+
+    // Apagado y difuminado de nacimiento: el regalo es por aprobar. Lo devuelve a color
+    // `giftOpening.ts`, con GSAP, y solo cuando el tomo queda sellado.
+    filter: grayscale(1) blur(2px);
+    opacity: 0.4;
+  }
+
+  // Los cinco fotogramas, apilados y al mismo tamaño: se apagan y encienden por turnos,
+  // así que tienen que caer exactamente uno sobre otro. `contain` y no `cover` porque los
+  // lienzos no comparten proporción —el cerrado es apaisado y los abiertos, cuadrados—.
+  &__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+
+    &[data-gift-frame='0'] {
+      opacity: 1;
+    }
+  }
+
+  &__letter {
+    position: absolute;
+    inset: 0;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__paper {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.4cqh;
+
+    // El papel pintado se estira al hueco entero en vez de conservar su proporción: es un
+    // fondo, y dejarlo con `contain` abriría franjas vacías a los lados de la hoja.
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    // El papel pintado trae un borde oscuro y unas esquinas dibujadas: con menos margen el
+    // texto se mete debajo de ese borde y se lee cortado.
+    padding: 6cqh 9cqw;
+  }
+
+  &__letter-line {
+    margin: 0;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: clamp(0.7rem, 4.2cqmin, 1.15rem);
+    line-height: 1.5;
+  }
+
+  &__congrats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4cqh;
+
+    // El `display: flex` de arriba tiene más prioridad que el `[hidden]` del navegador —es
+    // de autor, y de autor gana siempre a UA aunque no sea `!important`—, así que sin esto
+    // la carta con cuenta se vería aunque `giftLetter.ts` la dejara oculta.
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__percents {
+    margin: 0;
+    padding: 0.8cqh 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8cqh;
+    border-top: 1px solid var(--color-ink-soft);
+    border-bottom: 1px solid var(--color-ink-soft);
+  }
+
+  &__percent {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1em;
+    font-family: var(--font-body);
+    font-size: clamp(0.62rem, 3.6cqmin, 0.95rem);
+  }
+
+  &__percent-label {
+    color: var(--color-ink-soft);
+  }
+
+  &__percent-value {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  &__open {
+    flex-shrink: 0;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+// Una palabra entera mientras se escribe: sus letras no pueden partir línea entre ellas.
+.exam-gift__dust-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+// Una letra de la carta mientras se escribe. La crea `giftOpening.ts` al partir el texto,
+// y nace invisible para que el polvo la traiga de la nada y no de un salto de maquetación.
+.exam-gift__dust-char {
+  display: inline-block;
+  opacity: 0;
+}

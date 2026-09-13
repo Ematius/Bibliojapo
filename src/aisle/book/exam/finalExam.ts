@@ -14,6 +14,9 @@ import { writeBookmark } from '../../../shared/bookmark'
 import { fetchSeals, saveSeal, FINAL_SEAL } from '../../../api/progress'
 import { readSentenceSlots } from './sentenceTiles'
 import { stamp } from './examSeal'
+import { wakeEnvelope } from './giftOpening'
+import { prepareGiftLetter } from './giftLetter'
+import { readFinalExamScore, saveFinalExamScore, type FinalExamScore } from './finalExamScore'
 
 interface FinalExamOptions {
   blockId: string
@@ -47,6 +50,32 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
 
   const { blockId, flip, sentencesById, retry } = options
 
+  // EL REGALO de la hoja de enfrente. Nace apagado y solo se enciende desde aquí: es el
+  // premio por cerrar el tomo, así que quien decide si lo hay es el único que sabe la
+  // nota. Suspender no lo toca — se queda como estaba.
+  //
+  // Antes de dejar pulsar «Recibir regalo» espera a `prepareGiftLetter` —sin cuenta o con
+  // ella, la carta pide un viaje al servidor (la sesión, y con cuenta los % del carné)—:
+  // sin esto, abrir el sobre podría encontrarse la carta todavía en blanco. Cómo se anima
+  // la apertura es cosa de `giftOpening.ts`; esto solo prepara y levanta el cierre.
+  const gift = root.querySelector<HTMLElement>('.exam-gift')
+  const unlockGift = () => {
+    if (!gift) return
+
+    void prepareGiftLetter(gift).then(() => {
+      if (!mounted) return
+      gift.dataset.earned = 'true'
+
+      const openButton = gift.querySelector<HTMLButtonElement>('[data-gift-open]')
+      if (openButton) openButton.disabled = false
+
+      gift.querySelector<HTMLElement>('[data-gift-note]')?.setAttribute('hidden', '')
+      gift.querySelector<HTMLElement>('[data-gift-ready]')?.removeAttribute('hidden')
+
+      wakeEnvelope(gift)
+    })
+  }
+
   let mounted = true
   let locked = false
   let revealed = false
@@ -73,6 +102,42 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   root.addEventListener('mousedown', blockDrag, { capture: true })
   root.addEventListener('touchstart', blockDrag, { capture: true })
 
+  // Las filas del desglose: la misma lista tanto si se acaba de aprobar como si se
+  // reabre un tomo ya sellado —ver más abajo—, para que las dos no puedan desincronizarse.
+  const buildBlockRows = (scores: FinalExamScore): HTMLElement[] => {
+    const blocksList = reveal.querySelector<HTMLOListElement>('[data-exam-reveal-blocks]')
+    const rows = ([1, 2, 3] as const).map((block) => {
+      const row = document.createElement('li')
+      row.className = 'exam-reveal__block-row'
+
+      const label = document.createElement('span')
+      label.textContent = BLOCK_LABELS[block]
+
+      const score = document.createElement('span')
+      score.className = 'exam-reveal__block-score'
+      score.textContent = scores[block].toFixed(1)
+
+      row.append(label, score)
+      return row
+    })
+    blocksList?.replaceChildren(...rows)
+    return rows
+  }
+
+  // La nota final y el sello. Verde si se aprueba, rojo si se suspende, y el rubrique
+  // diagonal de «Aprobado» solo con el verde — no tiene sentido aprobado a medias.
+  const paintFinal = (scores: FinalExamScore, passed: boolean): void => {
+    const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
+    const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
+    const stampEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')
+    const finalScore = ([1, 2, 3] as const).reduce((sum, block) => sum + scores[block], 0) / 3
+
+    if (finalEl) finalEl.textContent = `${finalScore.toFixed(1)} / 10`
+    if (sealImg) sealImg.src = passed ? '/images/sello-verde.webp' : '/images/sello-rojo.webp'
+    if (passed) stampEl?.removeAttribute('hidden')
+    else stampEl?.setAttribute('hidden', '')
+  }
+
   // ¿YA ESTÁ SELLADO? Sin forzar a repetir un examen ya ganado — «repasar no vuelve a
   // sellar» es la misma regla que ya rige Mi escritorio. Se salta el botón de «Ver
   // evaluación completa»: no hay suspense en algo que ya se sabía, así que se enseña
@@ -87,12 +152,29 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     reveal.querySelector<HTMLElement>('[data-exam-reveal-show]')?.setAttribute('hidden', '')
     reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')?.removeAttribute('hidden')
 
-    const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
-    if (finalEl) finalEl.textContent = 'Ya superado'
+    // Con la nota guardada, el desglose de verdad; sin ella —tomos sellados antes de
+    // que existiera este guardado— el aviso genérico de siempre.
+    const stored = readFinalExamScore(blockId)
+    if (stored) {
+      buildBlockRows(stored).forEach((row) => {
+        row.style.opacity = '1'
+      })
+      paintFinal(stored, true)
+    } else {
+      const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
+      if (finalEl) finalEl.textContent = 'Ya superado'
+      reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')?.setAttribute(
+        'src',
+        '/images/sello-verde.webp',
+      )
+      reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')?.removeAttribute('hidden')
+    }
 
-    const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
-    if (sealImg) sealImg.src = '/images/sello-verde.webp'
     reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')?.classList.add('exam-seal--earned')
+
+    // El regalo sigue siendo suyo aunque el examen se aprobara otro día: lo ganado está
+    // ganado, y la chuleta es justo lo que se vuelve a abrir para repasar.
+    unlockGift()
   })
 
   // EMPEZAR: bloquea el libro y entra en la primera frase.
@@ -274,42 +356,28 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     showButton?.setAttribute('hidden', '')
     bodyEl?.removeAttribute('hidden')
 
-    const blocksList = reveal.querySelector<HTMLOListElement>('[data-exam-reveal-blocks]')
-    const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
     const sealEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')
-    const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
     const retryButton = reveal.querySelector<HTMLButtonElement>('[data-exam-retry]')
 
-    const blocks: BlockId[] = [1, 2, 3]
-    const scores = blocks.map((block) => tallies[block].score)
-    const finalScore = scores.reduce((sum, score) => sum + score, 0) / 3
-    const passed = scores.every((score) => score >= 5)
+    const scores: FinalExamScore = { 1: tallies[1].score, 2: tallies[2].score, 3: tallies[3].score }
+    const passed = ([1, 2, 3] as const).every((block) => scores[block] >= 5)
 
-    const rows = blocks.map((block) => {
-      const row = document.createElement('li')
-      row.className = 'exam-reveal__block-row'
-
-      const label = document.createElement('span')
-      label.textContent = BLOCK_LABELS[block]
-
-      const score = document.createElement('span')
-      score.className = 'exam-reveal__block-score'
-      score.textContent = tallies[block].score.toFixed(1)
-
-      row.append(label, score)
-      return row
-    })
-    blocksList?.replaceChildren(...rows)
+    const rows = buildBlockRows(scores)
 
     // Verde si se aprueba, rojo si se suspende — el mismo gesto de sello en los dos
     // casos, ver `stamp` en `examSeal.ts`, solo cambia la imagen.
     const finish = () => {
-      if (finalEl) finalEl.textContent = `${finalScore.toFixed(1)} / 10`
-      if (sealImg) sealImg.src = passed ? '/images/sello-verde.webp' : '/images/sello-rojo.webp'
+      paintFinal(scores, passed)
       if (sealEl) stamp(sealEl)
 
       if (passed) {
+        // Sin esto, reabrir el tomo más adelante solo encontraría el sello y volvería
+        // a caer en el aviso genérico — ver la rama de arriba, «¿YA ESTÁ SELLADO?».
+        saveFinalExamScore(blockId, scores)
         void saveSeal(blockId, FINAL_SEAL).catch(() => undefined)
+        // El sello cae en esta hoja y el sobre de la de enfrente se enciende a la vez:
+        // las dos están a la vista, así que el premio se ve llegar.
+        unlockGift()
       } else {
         retryButton?.removeAttribute('hidden')
       }

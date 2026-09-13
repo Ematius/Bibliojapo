@@ -104,6 +104,27 @@
   font-weight: 700;
 }
 
+// El rubrique diagonal, junto al sello: un rectángulo de tinta girado, como el que
+// lleva cualquier documento aprobado. Rotado en su sitio y no como cinta de esquina en
+// posición absoluta, para no pelearse con el recorte de `overflow-y: auto` de la hoja.
+.exam-reveal__stamp {
+  margin: 0;
+  padding: 0.15em 0.7em;
+  border: 2px solid var(--color-ivy-dark);
+  border-radius: 0.3em;
+  color: var(--color-ivy-dark);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.55rem, 4cqmin, 0.95rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-10deg);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
 // El mismo sello de `ExamSheet`, pero en el flujo de la hoja: aquí no hay ejercicios
 // debajo a los que taparles la respuesta, así que no hace falta clavarlo a una
 // esquina.

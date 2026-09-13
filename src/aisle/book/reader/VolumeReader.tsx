@@ -22,8 +22,10 @@ import { ExamRules, ExamScope } from '../exam/ExamRules'
 import { SentenceBuild } from '../exam/SentenceBuild'
 import { ExamResults } from '../exam/ExamResults'
 import { ExamReveal } from '../exam/ExamReveal'
+import { ExamGift } from '../exam/ExamGift'
 import { mountSentenceTiles } from '../exam/sentenceTiles'
 import { mountFinalExam } from '../exam/finalExam'
+import { mountGiftOpening } from '../exam/giftOpening'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { groupSentencesByTopic } from '../intro/goalGroups'
 import { KanaStroke } from '../mnemonic/KanaStroke'
@@ -241,6 +243,9 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       sentencesById,
       retry: () => setExamAttempt((attempt) => attempt + 1),
     })
+    // El regalo de la plana de enfrente. Solo el movimiento: quién lo ENCIENDE lo decide
+    // el examen de al lado, al estampar el sello verde.
+    const unmountGift = mountGiftOpening(holder)
 
     return () => {
       // Primero lo del kana: si se deja vivo, quedan una timeline y un manejador
@@ -254,6 +259,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       unmountSeal?.()
       unmountSentenceTiles?.()
       unmountFinalExam?.()
+      unmountGift?.()
       flip.destroy()
       mount.replaceChildren()
     }
@@ -363,6 +369,8 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                     )
                     return <ExamReveal characters={characters} />
                   }
+
+                  if (page.shows === 'examGift') return <ExamGift />
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined
 

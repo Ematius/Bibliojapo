@@ -53,12 +53,15 @@ export function SentenceBuild({ sentence, cue, examBlock, index, total }: Senten
       {cue === 'romaji' && <p className="sentence-build__cue">{romaji}</p>}
       {cue === 'meaning' && <p className="sentence-build__cue">{sentence.meaning}</p>}
       {/* Siempre en pantalla, aunque no haya grabación todavía: sin el botón, la hoja
-          del bloque de audio no dice qué se pide. `mountBookAudio` ya sabe apagar un
-          botón sin `data-audio` en vez de fingir que suena —ver `parts/bookAudio.ts`—,
-          así que esto se completa solo en cuanto lleguen los audios. Ver
-          `Sentence.audio` en `content/types.ts`. */}
+          del bloque de audio no dice qué se pide. `mountBookAudio` lo apaga solo en vez de
+          fingir que suena —ver `parts/bookAudio.ts`—, así que esto se completa solo en
+          cuanto lleguen los audios. Ver `Sentence.audio` en `content/types.ts`.
+
+          El `?? ''` NO sobra: sin él React se salta el atributo entero, y el selector
+          `button[data-audio]` del montaje no encuentra el botón — que se queda encendido
+          y mudo, justo lo contrario de lo que se busca. */}
       {cue === 'audio' && (
-        <BookButton className="sentence-build__listen" data-audio={sentence.audio}>
+        <BookButton className="sentence-build__listen" data-audio={sentence.audio ?? ''}>
           Escuchar
         </BookButton>
       )}

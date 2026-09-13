@@ -32,6 +32,7 @@ import { shuffle } from '../parts/shuffle'
 //   examSentence      una frase por construir con tarjetas, con una pista según el bloque
 //   examResults       la nota y las frases falladas de un bloque, al terminarlo
 //   examReveal        la nota final del tomo, y el sello si se aprueba
+//   examGift          el sobre del regalo, y la chuleta del tomo que sale de dentro
 //
 // `word`/`gap` y `reading`/`pick` son el mismo ejercicio en las dos direcciones.
 export type PageContent =
@@ -61,6 +62,7 @@ export type PageContent =
   | 'examSentence'
   | 'examResults'
   | 'examReveal'
+  | 'examGift'
 
 // La pista de una frase del examen: rōmaji, significado, o solo el sonido. Cambia con el
 // bloque — ver `finalSentenceExamSpreads`.
@@ -335,12 +337,17 @@ function finalSentenceExamSpreads(sentenceIds: string[]): Spread[] {
     return resultsSpread ? [...sentenceSpreads, resultsSpread] : sentenceSpreads
   })
 
-  // La plana final: nace casi vacía y `finalExam.ts` la rellena al terminar el tercer
-  // bloque —o de golpe si el tomo ya estaba sellado de antes—. Sola en su plana: no hay
-  // nada más del tomo con lo que emparejarla.
+  // La plana final: la nota a la derecha y el premio a la izquierda, en la MISMA plana y
+  // no en la siguiente. Las dos hojas se ven a la vez, así que el sello cayendo sobre una
+  // es lo que enciende el sobre de la otra —ver `finalExam.ts`—; separadas, encenderlo
+  // sería iluminar algo que no está en pantalla.
+  //
+  // Las dos nacen casi vacías: `finalExam.ts` rellena la nota al terminar el tercer
+  // bloque —o de golpe si el tomo ya estaba sellado de antes—, y `giftOpening.ts` abre el
+  // sobre cuando se le pide.
   const reveal: Spread = {
     right: { title: 'Nota final del tomo', shows: 'examReveal' },
-    left: { title: 'Nota final del tomo' },
+    left: { title: 'Regalo del tomo', shows: 'examGift' },
   }
 
   return [rules, ...blockSpreads, reveal]

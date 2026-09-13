@@ -42,6 +42,11 @@ export function ExamReveal({ characters }: ExamRevealProps) {
         <div className="exam-reveal__final-row">
           <p className="exam-reveal__final" data-exam-reveal-final />
 
+          {/* Solo si se aprueba: `finalExam.ts` lo destapa junto al sello, nunca solo. */}
+          <p className="exam-reveal__stamp" data-exam-reveal-stamp hidden aria-hidden="true">
+            Aprobado
+          </p>
+
           {/* Verde si se aprueba, rojo si se suspende: `finalExam.ts` decide cuál de
               los dos —`sello-verde.webp` / `sello-rojo.webp`— y pone la ruta aquí. La
               clase `exam-seal` es la misma que anima `examSeal.ts` en el examen de
