@@ -23,8 +23,10 @@ import { shuffle } from '../parts/shuffle'
 //   prompt        la palabra sin escribirla: solo lo que significa y cómo suena
 //   build         la palabra entera por construir, con todos los huecos vacíos
 //   drill         dos preguntas en una hoja: reconstruirla y escribir su lectura
-//   finalNotice   la hoja que anuncia el repaso completo
-//   finalScope    lo que entra en ese repaso: los kana del tomo
+//   finalNotice       la hoja que anuncia el repaso completo
+//   finalScope        lo que entra en ese repaso: los kana del tomo
+//   finalReviewNotice la hoja que anuncia el repaso final
+//   finalReviewScope  lo que entra en ese repaso: las palabras del tomo
 //
 // `word`/`gap` y `reading`/`pick` son el mismo ejercicio en las dos direcciones.
 export type PageContent =
@@ -47,6 +49,8 @@ export type PageContent =
   | 'examWord'
   | 'finalNotice'
   | 'finalScope'
+  | 'finalReviewNotice'
+  | 'finalReviewScope'
 
 export interface ReaderPage {
   id: string
@@ -204,11 +208,12 @@ function introSpread(): Spread {
   }
 }
 
-export function buildVolumePages(lessons: ReadyLesson[]): ReaderPage[] {
+export function buildVolumePages(lessons: ReadyLesson[], wordIds: string[]): ReaderPage[] {
   const spreads = [
     introSpread(),
     ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
     ...completeReviewSpreads(lessons),
+    ...finalReviewSpreads(lessons, wordIds),
   ]
 
   return spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
@@ -250,6 +255,42 @@ function noticeSpread(): Spread {
   return {
     right: { shows: 'finalNotice' },
     left: { title: 'Entra todo esto', shows: 'finalScope' },
+  }
+}
+
+// Una plana por CADA palabra que el bloque promete, no solo por las que ya haya usado algún
+// ejercicio: es la sección que arregla el fallo de raíz. え y は nunca son la palabra de una
+// hoja de lección —enseñan un kana que ya es toda la palabra, y no hay «dentro de otra
+// palabra» donde meterlas—, así que sin esto no las pedía nunca nadie.
+//
+// Reutiliza el mismo par de hojas con el que ya se examina cada lección de una segunda
+// palabra —escuchar a la derecha, reconstruir a ciegas a la izquierda—, sin pista ninguna:
+// aquí no hay lectura ni kana destacado, solo lo que significa y cómo suena.
+//
+// El `kana` que se le pasa a la reconstrucción no es el de la palabra —da igual, ninguna
+// hoja lo enseña ni lo corrige, ver `KanaMatch`—: es la ÚLTIMA lección del tomo, la única
+// cuya bolsa de tarjetas ya lleva los seis kana. Sin eso, el resto de la palabra podría
+// reconstruirse sin distractores donde faltase alguno de los que se dieron después.
+//
+// Sin lecciones listas o sin palabras que repasar no hay nada que armar.
+function finalReviewSpreads(lessons: ReadyLesson[], wordIds: string[]): Spread[] {
+  if (lessons.length === 0 || wordIds.length === 0) return []
+
+  const kanaId = lessons[lessons.length - 1].kanaId
+
+  const reviews = wordIds.map<Spread>((wordId) => ({
+    right: { wordId, title: 'Repaso final', shows: 'prompt' },
+    left: { kanaId, wordId, title: 'Repaso final', shows: 'build' },
+  }))
+
+  return [reviewNoticeSpread(), ...reviews]
+}
+
+// El anuncio del repaso final, en su propia plana por la misma razón que el de arriba.
+function reviewNoticeSpread(): Spread {
+  return {
+    right: { shows: 'finalReviewNotice' },
+    left: { title: 'Entran todas estas', shows: 'finalReviewScope' },
   }
 }
 

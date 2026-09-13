@@ -16,7 +16,7 @@ import { WordPrompt } from '../matching/WordPrompt'
 import { mountKanaPairing } from '../matching/kanaPairing'
 import { WordDrill } from '../drill/WordDrill'
 import { ExamSheet } from '../exam/ExamSheet'
-import { FinalNotice, FinalScope } from '../exam/FinalNotice'
+import { FinalNotice, FinalScope, FinalReviewNotice, FinalReviewScope } from '../exam/FinalNotice'
 import { mountExamSeal } from '../exam/examSeal'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { groupSentencesByTopic } from '../intro/goalGroups'
@@ -113,7 +113,12 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       )
     })
 
-    return { pages: buildVolumePages(lessons), pools }
+    // Las palabras del repaso final: solo las que ya tienen ficha. Aquí basta con existir
+    // —a diferencia de las lecciones, este repaso no enseña, así que no le hace falta ni
+    // audio ni dibujo—. Ver `finalReviewSpreads`.
+    const reviewWordIds = block.wordIds.filter((wordId) => wordsById.has(wordId))
+
+    return { pages: buildVolumePages(lessons, reviewWordIds), pools }
   }, [block, kanaById, wordsById])
 
   useEffect(() => {
@@ -285,6 +290,13 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                       (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
                     )
                     return <FinalScope characters={characters} />
+                  }
+
+                  if (page.shows === 'finalReviewNotice') return <FinalReviewNotice />
+
+                  if (page.shows === 'finalReviewScope') {
+                    const words = block.wordIds.flatMap((wordId) => wordsById.get(wordId) ?? [])
+                    return <FinalReviewScope words={words} />
                   }
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined

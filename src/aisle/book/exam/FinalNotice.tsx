@@ -1,3 +1,4 @@
+import { wordText, type Word } from '../../../content/types'
 import './FinalNotice.scss'
 
 // La hoja que anuncia el repaso completo. Va en su propia plana porque lo que dice no es una
@@ -42,6 +43,48 @@ export function FinalScope({ characters }: FinalScopeProps) {
         De cada uno se pregunta su sonido, su forma dentro de una palabra y la
         lectura entera de esa palabra.
       </p>
+    </div>
+  )
+}
+
+// La hoja que anuncia el repaso final. Va detrás del repaso completo porque ese repasaba
+// kana; este repasa PALABRAS, y hay dos —え, は— que ningún ejercicio de las lecciones
+// llega a pedir por ser de un solo carácter: no se puede pedir encontrarlo dentro de una
+// palabra si son la misma cosa.
+export function FinalReviewNotice() {
+  return (
+    <div className="final-notice">
+      <p className="final-notice__eyebrow">Antes del examen final</p>
+      <h2 className="final-notice__title">Repaso final</h2>
+
+      <p className="final-notice__body">
+        Todas las palabras que este tomo promete tienen ya su prueba propia, sin
+        excepción. Escribirlas de memoria, sin nada al lado, es el último paso antes
+        del examen que cierra el tomo.
+      </p>
+    </div>
+  )
+}
+
+interface FinalReviewScopeProps {
+  words: Word[]
+}
+
+// Lo que entra en el repaso final: las palabras del tomo, en fila, cada una con su
+// significado. La misma idea que `FinalScope`, pero de palabra en palabra y no de kana
+// en kana.
+export function FinalReviewScope({ words }: FinalReviewScopeProps) {
+  return (
+    <div className="final-scope">
+      <p className="final-scope__kana" lang="ja">
+        {words.map((word) => (
+          <span className="final-scope__kana-item" key={word.id}>
+            {wordText(word)}
+          </span>
+        ))}
+      </p>
+
+      <p className="final-scope__note">De cada una se pide escribirla entera, de memoria.</p>
     </div>
   )
 }
