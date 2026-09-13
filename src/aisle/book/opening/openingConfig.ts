@@ -71,6 +71,12 @@ export interface OpenBookLayout {
 // Vive aquí y no en el componente porque la usan dos —el que pinta el libro y el que coloca
 // las hojas dentro— y tienen que salir del mismo sitio o no encajan.
 export function openBookLayout(viewHeight: number, viewWidth: number): OpenBookLayout {
+  // El ancho que pediría el libro si solo mandara el alto de la ventana, antes de que nada lo
+  // recorte. Es lo único que decide si hace falta pedir que giren la pantalla: calculado
+  // DESPUÉS del recorte de más abajo, el ancho real queda siempre por debajo de `viewWidth`
+  // —el propio recorte lo garantiza— y la pregunta se contestaría sí siempre.
+  const naturalWidth = OPENING.height * viewHeight * OPEN_FRAME_RATIO
+
   const byCanvas = OPENING.height * viewHeight
   // Solo crece si el papel se queda corto, así que en una pantalla holgada esto no actúa y el
   // libro se sigue viendo entero.
@@ -79,14 +85,17 @@ export function openBookLayout(viewHeight: number, viewWidth: number): OpenBookL
       ? byCanvas
       : OPENING.minPaperHeight / PAPER_INSET.height
 
-  // El ancho sigue mandando sobre el alto: un libro que no cabe de lado no se lee.
-  const height = Math.min(needed, viewWidth / OPEN_FRAME_RATIO)
+  // El ancho manda sobre el alto, y el alto nunca pasa de la ventana: pedir más papel del que
+  // cabe sacaría el libro de la imagen en vez de acercarlo. En un móvil de lado corto esto deja
+  // el papel por debajo de `minPaperHeight` —no hay más sitio del que sacarlo—, y es mejor eso
+  // que un libro que se sale por arriba y por abajo.
+  const height = Math.min(needed, viewWidth / OPEN_FRAME_RATIO, viewHeight)
   const width = height * OPEN_FRAME_RATIO
 
   return {
     width,
     height,
-    fits: width <= viewWidth,
+    fits: naturalWidth <= viewWidth,
     paper: {
       left: PAPER_INSET.left * width,
       top: PAPER_INSET.top * height,
