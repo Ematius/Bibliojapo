@@ -10,7 +10,7 @@ import './DeskScene.scss'
 // La mesa está pintada vacía: la ilustración solo trae los adornos que nunca cambian ni se
 // pulsan. La hoja, la caja y el carné llegan por encima porque tienen que poder pulsarse,
 // animarse y aparecer solo cuando se han ganado.
-const DESK_SCENE = '/images/desk/escritorio.png'
+const DESK_SCENE = '/images/desk/escritorio.webp'
 
 export function DeskScene({ children }: { children?: ReactNode }) {
   return (

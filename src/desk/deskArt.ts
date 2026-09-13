@@ -80,20 +80,23 @@ export const DESK_ART = {
   // Posado está en escorzo y de frente plano: son dos dibujos y no uno escalado porque
   // enderezar el escorzo con una rotación dejaría la tarjeta torcida por dentro.
   card: {
-    resting: deskFace(`${DIR}/carnet.png`, [1536, 1024], [90, 66, 1392, 904]),
-    front: deskFace(`${DIR}/carnet-frente.png`, [1536, 1024], [6, 10, 1520, 992]),
+    resting: deskFace(`${DIR}/carnet.webp`, [1536, 1024], [90, 66, 1392, 904]),
+    front: deskFace(`${DIR}/carnet-frente.webp`, [1536, 1024], [6, 10, 1520, 992]),
   },
   sheet: {
-    resting: deskFace(`${DIR}/hoja.png`, [1672, 941], [170, 8, 1372, 918]),
-    front: deskFace(`${DIR}/hoja-frente.png`, [1448, 1086], [50, 36, 1348, 1012]),
+    resting: deskFace(`${DIR}/hoja.webp`, [1672, 941], [170, 8, 1372, 918]),
+    front: deskFace(`${DIR}/hoja-frente.webp`, [1448, 1086], [50, 36, 1348, 1012]),
   },
   box: {
-    resting: deskFace(`${DIR}/caja.png`, [1254, 1254], [66, 110, 1148, 1066]),
+    resting: deskFace(`${DIR}/caja.webp`, [1254, 1254], [66, 110, 1148, 1066]),
+    // El género de «abierta/abierto» sigue el del archivo tal como está en disco, no una
+    // progresión: 25 y 80 son «abierta», 40 y 100 son «abierto». No es un error de escritura,
+    // así que no se homogeneiza.
     frames: [
-      `${DIR}/caja-abierta-25.png`,
-      `${DIR}/caja-abierta-40.png`,
-      `${DIR}/caja-abierto-80.png`,
-      `${DIR}/caja-abierto-100.png`,
+      `${DIR}/caja-abierta-25.webp`,
+      `${DIR}/caja-abierto-40.webp`,
+      `${DIR}/caja-abierta-80.webp`,
+      `${DIR}/caja-abierto-100.webp`,
     ],
   },
 } as const satisfies Record<string, DeskArt>
