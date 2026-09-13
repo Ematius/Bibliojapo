@@ -9,9 +9,10 @@ interface ExamResultsProps {
   isLastBlock: boolean
 }
 
-// La hoja de resultados de un bloque: nace con el título y el botón, y `finalExam.ts`
-// rellena la nota y las frases falladas en cuanto se pulsa «Siguiente» en la última
-// frase del bloque —antes de llegar aquí, no al llegar—, para que se vea ya puesta.
+// La hoja de resultados de un bloque: nace vacía y con sus dos botones apagados.
+// Evaluar es OBLIGATORIO antes de seguir —no se cuenta sola al terminar la última
+// frase—, así que `finalExam.ts` solo la habilita cuando todas las frases del bloque
+// ya están hechas, y solo entra en juego «Continuar» cuando se pulsa Evaluar.
 export function ExamResults({ examBlock, title, isLastBlock }: ExamResultsProps) {
   return (
     <div className="exam-results" data-exam-results={examBlock}>
@@ -23,9 +24,14 @@ export function ExamResults({ examBlock, title, isLastBlock }: ExamResultsProps)
           navegue con lector de pantalla necesita oír cuántas hay. */}
       <ul className="exam-results__wrong" data-exam-wrong />
 
-      {/* Nace deshabilitado: cuando la última frase del bloque cae en la misma plana
-          —número impar de frases—, esta hoja ya está a la vista ANTES de contestarla.
-          `finalExam.ts` lo habilita a la vez que rellena la nota, nunca antes. */}
+      {/* Nace deshabilitado: hasta que la última frase del bloque no está hecha no hay
+          nada que evaluar. `finalExam.ts` lo habilita en cuanto lo está. */}
+      <BookButton className="exam-results__evaluate" data-exam-evaluate="true" disabled>
+        Evaluar
+      </BookButton>
+
+      {/* Nace deshabilitado también: sin evaluar no se puede pasar al bloque
+          siguiente. Lo habilita el propio botón de arriba al pulsarlo. */}
       <BookButton className="exam-results__continue" data-exam-continue="true" disabled>
         {isLastBlock ? 'Ver la nota final' : 'Siguiente bloque'}
       </BookButton>

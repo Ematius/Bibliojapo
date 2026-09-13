@@ -74,15 +74,24 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   root.addEventListener('touchstart', blockDrag, { capture: true })
 
   // ¿YA ESTÁ SELLADO? Sin forzar a repetir un examen ya ganado — «repasar no vuelve a
-  // sellar» es la misma regla que ya rige Mi escritorio.
+  // sellar» es la misma regla que ya rige Mi escritorio. Se salta el botón de «Ver
+  // evaluación completa»: no hay suspense en algo que ya se sabía, así que se enseña
+  // el resultado directo y sin animar — el mismo criterio que usa `examSeal.ts` con
+  // los sellos ganados de antes.
   void fetchSeals(blockId).then((earned) => {
     if (!mounted || !earned.has(FINAL_SEAL)) return
 
     rules.querySelector<HTMLElement>('[data-exam-start]')?.setAttribute('hidden', '')
     rules.querySelector<HTMLElement>('[data-exam-done]')?.removeAttribute('hidden')
 
+    reveal.querySelector<HTMLElement>('[data-exam-reveal-show]')?.setAttribute('hidden', '')
+    reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')?.removeAttribute('hidden')
+
     const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
     if (finalEl) finalEl.textContent = 'Ya superado'
+
+    const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
+    if (sealImg) sealImg.src = '/images/sello-verde.webp'
     reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')?.classList.add('exam-seal--earned')
   })
 
@@ -127,9 +136,8 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   const resultsPanel = (block: BlockId) =>
     root.querySelector<HTMLElement>(`.exam-results[data-exam-results="${block}"]`)
 
-  // Puntúa un bloque en su hoja de resultados. Se llama UNA vez, al pulsar
-  // «Siguiente» en la última frase de ese bloque — no al llegar a la hoja, para que
-  // se vea ya escrita en cuanto se pasa la página.
+  // Puntúa un bloque en su hoja de resultados. Se llama UNA vez, al pulsar «Evaluar»
+  // —nunca sola: evaluar es obligatorio, no un aviso que aparece por su cuenta—.
   const populateResults = (block: BlockId) => {
     const panel = resultsPanel(block)
     if (!panel) return
@@ -184,8 +192,8 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
       if (!next) return null
 
       const onNext = () => {
-        // No se puede reenviar la misma frase ni tocar sus tarjetas: la norma ya
-        // avisada de que, pulsado «Siguiente», no se puede volver atrás.
+        // No se puede reenviar la misma frase ni tocar sus tarjetas: pulsado
+        // «Hecho», la norma ya avisada es que no se puede volver atrás.
         next.disabled = true
         sentenceEl.dataset.locked = 'true'
 
@@ -203,11 +211,17 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
         if (submitted < sentences.length) return
 
         if (isLastOfBlock) {
-          populateResults(block)
+          // Ya se puede evaluar: NO se evalúa sola. Ver el botón «Evaluar» de
+          // `ExamResults.tsx` y su cableado más abajo.
+          const evaluateButton = resultsPanel(block)?.querySelector<HTMLButtonElement>(
+            '[data-exam-evaluate]',
+          )
+          if (evaluateButton) evaluateButton.disabled = false
+
           // Con un número impar de frases, la última se queda SOLA en su plana y
           // comparte hoja con los resultados —ver `readerConfig.ts`—: ya están a la
-          // vista, así que no hace falta pasar página para leerlos. Con dos, los
-          // resultados van en la plana siguiente y sí hay que pasarla.
+          // vista, así que no hace falta pasar página para llegar a evaluar. Con
+          // dos, los resultados van en la plana siguiente y sí hay que pasarla.
           if (sentences.length === 1) return
         }
 
@@ -219,15 +233,51 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     })
   })
 
-  // LOS RESULTADOS: «continuar» solo avanza. El cálculo ya está hecho —arriba—.
-  const enterReveal = () => {
+  // EVALUAR: obligatorio antes de seguir. Se habilita arriba, al terminar la última
+  // frase del bloque; al pulsarlo, se apaga a sí mismo y puntúa —lo que a su vez
+  // habilita «Continuar», dentro de `populateResults`—.
+  const evaluateTeardowns = ([1, 2, 3] as const).map((block) => {
+    const evaluateButton = resultsPanel(block)?.querySelector<HTMLButtonElement>(
+      '[data-exam-evaluate]',
+    )
+    if (!evaluateButton) return null
+
+    const onEvaluate = () => {
+      evaluateButton.disabled = true
+      populateResults(block)
+    }
+
+    evaluateButton.addEventListener('click', onEvaluate)
+    return () => evaluateButton.removeEventListener('click', onEvaluate)
+  })
+
+  const resultsPanels = [...root.querySelectorAll<HTMLElement>('.exam-results')]
+  const resultsTeardowns = resultsPanels.map((panel) => {
+    const continueButton = panel.querySelector<HTMLButtonElement>('[data-exam-continue]')
+
+    const onContinue = () => flip.flipPrev()
+
+    continueButton?.addEventListener('click', onContinue)
+    return () => continueButton?.removeEventListener('click', onContinue)
+  })
+
+  // LA REVELACIÓN. No se dispara sola al llegar: hace falta pedirla con «Ver
+  // evaluación completa» —ver `ExamReveal.tsx`—, que es lo que arranca la animación.
+  const showButton = reveal.querySelector<HTMLButtonElement>('[data-exam-reveal-show]')
+  const bodyEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')
+
+  const onShowReveal = () => {
     if (revealed) return
     revealed = true
     locked = false
 
+    showButton?.setAttribute('hidden', '')
+    bodyEl?.removeAttribute('hidden')
+
     const blocksList = reveal.querySelector<HTMLOListElement>('[data-exam-reveal-blocks]')
     const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
     const sealEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')
+    const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
     const retryButton = reveal.querySelector<HTMLButtonElement>('[data-exam-retry]')
 
     const blocks: BlockId[] = [1, 2, 3]
@@ -251,12 +301,15 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     })
     blocksList?.replaceChildren(...rows)
 
+    // Verde si se aprueba, rojo si se suspende — el mismo gesto de sello en los dos
+    // casos, ver `stamp` en `examSeal.ts`, solo cambia la imagen.
     const finish = () => {
       if (finalEl) finalEl.textContent = `${finalScore.toFixed(1)} / 10`
+      if (sealImg) sealImg.src = passed ? '/images/sello-verde.webp' : '/images/sello-rojo.webp'
+      if (sealEl) stamp(sealEl)
 
       if (passed) {
         void saveSeal(blockId, FINAL_SEAL).catch(() => undefined)
-        if (sealEl) stamp(sealEl)
       } else {
         retryButton?.removeAttribute('hidden')
       }
@@ -278,19 +331,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     })
   }
 
-  const resultsPanels = [...root.querySelectorAll<HTMLElement>('.exam-results')]
-  const resultsTeardowns = resultsPanels.map((panel) => {
-    const block = Number(panel.dataset.examResults) as BlockId
-    const continueButton = panel.querySelector<HTMLButtonElement>('[data-exam-continue]')
-
-    const onContinue = () => {
-      if (block === 3) enterReveal()
-      flip.flipPrev()
-    }
-
-    continueButton?.addEventListener('click', onContinue)
-    return () => continueButton?.removeEventListener('click', onContinue)
-  })
+  showButton?.addEventListener('click', onShowReveal)
 
   // REINTENTAR: vuelve la marca de lectura a la plana de normas ANTES de pedir el
   // nuevo intento — `VolumeReader` remonta el libro entero al cambiar `examAttempt`,
@@ -307,8 +348,10 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     root.removeEventListener('mousedown', blockDrag, { capture: true })
     root.removeEventListener('touchstart', blockDrag, { capture: true })
     startButton?.removeEventListener('click', onStart)
+    showButton?.removeEventListener('click', onShowReveal)
     retryButton?.removeEventListener('click', onRetry)
     sentenceTeardowns.forEach((teardown) => teardown?.())
+    evaluateTeardowns.forEach((teardown) => teardown?.())
     resultsTeardowns.forEach((teardown) => teardown())
   }
 }

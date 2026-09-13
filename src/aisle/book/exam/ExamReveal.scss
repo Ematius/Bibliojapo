@@ -54,6 +54,24 @@
     font-weight: 700;
     font-size: clamp(1.1rem, 9cqmin, 2.2rem);
   }
+
+  &__show {
+    margin-top: 0.4cqh;
+  }
+
+  &__body {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4cqh;
+
+    // El `display: flex` de arriba tiene la misma especificidad que el `[hidden]` del
+    // navegador y gana por ir después: sin esto, `hidden` dejaría de ocultar la hoja.
+    &[hidden] {
+      display: none;
+    }
+  }
 }
 
 // Lista de verdad, pero sin marcadores propios: cada fila ya trae su número de

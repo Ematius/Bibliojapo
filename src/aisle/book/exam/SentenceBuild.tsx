@@ -26,8 +26,8 @@ interface SentenceBuildProps {
 //
 // AQUÍ NO SE CORRIGE NADA: ni al colocar una tarjeta ni al terminar la frase. Quien
 // coloca lo hace `sentenceTiles.ts`, en silencio; quien puntúa es `finalExam.ts`, al
-// pulsar «Siguiente» y no antes. Por eso no hay `.result` como en `KanaMatch` o
-// `WordGap`: no hay nada que anunciar en esta hoja.
+// pulsar «Hecho» y no antes. Por eso no hay `.result` como en `KanaMatch` o `WordGap`:
+// no hay nada que anunciar en esta hoja.
 export function SentenceBuild({ sentence, cue, examBlock, index, total }: SentenceBuildProps) {
   const tiles = useMemo(
     () => pickCards(sentence.units.map((unit) => unit.kana), []),
@@ -52,13 +52,16 @@ export function SentenceBuild({ sentence, cue, examBlock, index, total }: Senten
 
       {cue === 'romaji' && <p className="sentence-build__cue">{romaji}</p>}
       {cue === 'meaning' && <p className="sentence-build__cue">{sentence.meaning}</p>}
-      {/* Sin grabar todavía: no hay audio que ofrecer. Ver `Sentence.audio` en
-          `content/types.ts` — el bloque 3 se completa en cuanto llegue. */}
-      {cue === 'audio' && sentence.audio ? (
+      {/* Siempre en pantalla, aunque no haya grabación todavía: sin el botón, la hoja
+          del bloque de audio no dice qué se pide. `mountBookAudio` ya sabe apagar un
+          botón sin `data-audio` en vez de fingir que suena —ver `parts/bookAudio.ts`—,
+          así que esto se completa solo en cuanto lleguen los audios. Ver
+          `Sentence.audio` en `content/types.ts`. */}
+      {cue === 'audio' && (
         <BookButton className="sentence-build__listen" data-audio={sentence.audio}>
           Escuchar
         </BookButton>
-      ) : null}
+      )}
 
       <div className="sentence-build__written" lang="ja">
         {sentence.units.map((unit, index) => (
@@ -88,11 +91,12 @@ export function SentenceBuild({ sentence, cue, examBlock, index, total }: Senten
         ))}
       </ul>
 
-      {/* Avanza `finalExam.ts`, que puntúa esta frase en silencio y pasa la hoja —con
-          `flipPrev()`: las páginas van invertidas en el DOM, ver `VolumeReader`—.
-          Nunca pasa hoja por sí solo. */}
+      {/* «Hecho» y no «Siguiente»: pulsarlo no siempre pasa hoja —dos frases comparten
+          plana, y hasta que no se envían las dos no hay a dónde ir—. Lo que sí hace
+          siempre es cerrar esta frase: `finalExam.ts` la puntúa en silencio y la deja
+          bloqueada, sin más cambios posibles. */}
       <BookButton className="sentence-build__next" data-exam-next="true">
-        Siguiente
+        Hecho
       </BookButton>
     </div>
   )

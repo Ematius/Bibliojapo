@@ -6,10 +6,11 @@ interface ExamRevealProps {
   characters: string[]
 }
 
-// La plana final: nace casi vacía y `finalExam.ts` la anima con GSAP en cuanto se
-// termina el tercer bloque —o de golpe y sin animar, si el sello ya estaba puesto de
-// antes—. Aquí solo está el papel: las tres notas, la nota final, el sello y el botón
-// de reintentar los rellena y los muestra el propio examen.
+// La plana final: nace con solo el título y un botón. Las tres notas no se dan de
+// golpe al llegar — hay que pedirlas, con «Ver evaluación completa», que es lo que
+// dispara la animación de `finalExam.ts`. Si el tomo ya estaba sellado de antes, el
+// propio examen se salta el botón y enseña el resultado sin animar: no hay nada que
+// «ver aparecer» en algo que ya se sabía.
 export function ExamReveal({ characters }: ExamRevealProps) {
   return (
     <div className="exam-reveal" data-exam-reveal>
@@ -23,33 +24,44 @@ export function ExamReveal({ characters }: ExamRevealProps) {
 
       <h2 className="exam-reveal__title">Nota final del tomo</h2>
 
-      <hr className="exam-reveal__rule" />
-
-      {/* Lista de verdad: las tres notas son hermanas y en igualdad. Vacía hasta que
-          `finalExam.ts` la rellena, una entrada por bloque. */}
-      <ol className="exam-reveal__blocks" data-exam-reveal-blocks />
-
-      <hr className="exam-reveal__rule" />
-
-      <div className="exam-reveal__final-row">
-        <p className="exam-reveal__final" data-exam-reveal-final />
-
-        {/* Mismo sello que `ExamSheet`, misma clase —`examSeal.ts` la anima igual—,
-            pero en el flujo normal de la hoja y no clavado a una esquina: aquí no
-            hay ejercicios debajo a los que taparles la respuesta. */}
-        <div
-          className="exam-seal exam-reveal__seal"
-          data-exam-reveal-seal
-          role="img"
-          aria-label="Examen final superado"
-        >
-          <img className="exam-seal__mark" src="/images/sello.webp" alt="" />
-        </div>
-      </div>
-
-      <BookButton className="exam-reveal__retry" data-exam-retry="true" hidden>
-        Reintentar
+      <BookButton className="exam-reveal__show" data-exam-reveal-show="true">
+        Ver evaluación completa
       </BookButton>
+
+      {/* Todo lo de abajo nace oculto: `finalExam.ts` lo destapa al pulsar el botón de
+          arriba, o de golpe si el tomo ya estaba sellado. */}
+      <div className="exam-reveal__body" data-exam-reveal-body hidden>
+        <hr className="exam-reveal__rule" />
+
+        {/* Lista de verdad: las tres notas son hermanas y en igualdad. Vacía hasta que
+            `finalExam.ts` la rellena, una entrada por bloque. */}
+        <ol className="exam-reveal__blocks" data-exam-reveal-blocks />
+
+        <hr className="exam-reveal__rule" />
+
+        <div className="exam-reveal__final-row">
+          <p className="exam-reveal__final" data-exam-reveal-final />
+
+          {/* Verde si se aprueba, rojo si se suspende: `finalExam.ts` decide cuál de
+              los dos —`sello-verde.webp` / `sello-rojo.webp`— y pone la ruta aquí. La
+              clase `exam-seal` es la misma que anima `examSeal.ts` en el examen de
+              cada lección, reutilizada tal cual. */}
+          <div
+            className="exam-seal exam-reveal__seal"
+            data-exam-reveal-seal
+            role="img"
+            aria-label="Resultado del examen final"
+          >
+            {/* Sin `src` todavía: un `""` le pediría al navegador la propia página
+                como si fuera una imagen. `finalExam.ts` lo pone al evaluar. */}
+            <img className="exam-seal__mark" data-exam-reveal-seal-img alt="" />
+          </div>
+        </div>
+
+        <BookButton className="exam-reveal__retry" data-exam-retry="true" hidden>
+          Reintentar
+        </BookButton>
+      </div>
     </div>
   )
 }
