@@ -277,17 +277,14 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                     )
                   }
 
-                  // Como la portada, hablan del tomo entero y no de un kana.
-                  if (page.shows === 'finalNotice' || page.shows === 'finalScope') {
+                  // Como la portada, habla del tomo entero y no de un kana.
+                  if (page.shows === 'finalNotice') return <FinalNotice />
+
+                  if (page.shows === 'finalScope') {
                     const characters = block.lessons.flatMap(
                       (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
                     )
-
-                    return page.shows === 'finalNotice' ? (
-                      <FinalNotice characters={characters} />
-                    ) : (
-                      <FinalScope characters={characters} />
-                    )
+                    return <FinalScope characters={characters} />
                   }
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined

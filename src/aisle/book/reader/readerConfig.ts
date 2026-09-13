@@ -1,5 +1,4 @@
 import { shuffle } from '../parts/shuffle'
-import { FINAL_SEAL } from '../../../api/contract'
 
 // Las páginas no se escriben a mano: las genera `buildVolumePages` a partir de las
 // lecciones del bloque.
@@ -24,8 +23,8 @@ import { FINAL_SEAL } from '../../../api/contract'
 //   prompt        la palabra sin escribirla: solo lo que significa y cómo suena
 //   build         la palabra entera por construir, con todos los huecos vacíos
 //   drill         dos preguntas en una hoja: reconstruirla y escribir su lectura
-//   finalNotice   la hoja que anuncia el examen final y lo que desbloquea
-//   finalScope    lo que entra en ese examen: los kana del tomo
+//   finalNotice   la hoja que anuncia el repaso completo
+//   finalScope    lo que entra en ese repaso: los kana del tomo
 //
 // `word`/`gap` y `reading`/`pick` son el mismo ejercicio en las dos direcciones.
 export type PageContent =
@@ -209,50 +208,44 @@ export function buildVolumePages(lessons: ReadyLesson[]): ReaderPage[] {
   const spreads = [
     introSpread(),
     ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
-    ...finalExamSpreads(lessons),
+    ...completeReviewSpreads(lessons),
   ]
 
   return spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
 }
 
-// Una plana por kana, así que el examen final crece con el bloque. Nada de elegir unos
-// cuantos al azar: esto es lo que desbloquea el tomo siguiente, y no se puede pasar sin
-// que te hayan preguntado por uno de los que dice que sabes.
+// Una plana por kana, así que el repaso crece con el bloque: repasa TODOS los kana que el
+// tomo dice que enseña, uno por uno, sin la ayuda de la hoja de enfrente.
 //
-// Un tomo sin lecciones listas no tiene examen final.
-function finalExamSpreads(lessons: ReadyLesson[]): Spread[] {
+// YA NO SELLA. Esto era el examen final hasta que se vio el primer fallo del tomo: pasaba
+// sin haber usado nunca palabras como え o は, que ningún ejercicio pide porque son de un
+// solo kana. El sello se ha movido al examen final de frases, que se añade detrás de este
+// repaso y del de vocabulario — ver «Cómo se arma un tomo» en CLAUDE.md cuando se actualice.
+//
+// Un tomo sin lecciones listas no tiene repaso.
+function completeReviewSpreads(lessons: ReadyLesson[]): Spread[] {
   if (lessons.length === 0) return []
 
-  const exams = lessons.map<Spread>((lesson, index) => ({
+  const reviews = lessons.map<Spread>((lesson) => ({
     right: {
       kanaId: lesson.kanaId,
       wordId: lesson.wordId,
-      title: 'Examen final',
+      title: 'Repaso completo',
       shows: 'examKana',
-      exam: FINAL_EXAM,
     },
     left: {
       kanaId: lesson.kanaId,
       wordId: lesson.wordId,
-      title: 'Examen final',
+      title: 'Repaso completo',
       shows: 'examWord',
-      exam: FINAL_EXAM,
-      // En la última hoja del último kana: cuando esta se resuelve, el examen entero está
-      // resuelto. Es el ÚNICO sello del tomo.
-      seal: index === lessons.length - 1,
     },
   }))
 
-  return [noticeSpread(), ...exams]
+  return [noticeSpread(), ...reviews]
 }
 
-// Lo que agrupa las pruebas del examen final. No es un id de kana, así que no puede chocar
-// con ninguno: `final` no es rōmaji de nada. Viene del contrato con el servidor porque su
-// sello es el que da la insignia: el lector y el servidor tienen que llamarlo igual.
-const FINAL_EXAM = FINAL_SEAL
-
-// El anuncio va en su propia plana y no como encabezado del examen: lo que dice no es una
-// instrucción, es lo que está en juego.
+// El anuncio va en su propia plana y no como encabezado: lo que dice no es una instrucción,
+// es lo que viene.
 function noticeSpread(): Spread {
   return {
     right: { shows: 'finalNotice' },

@@ -37,33 +37,6 @@
     line-height: 1.5;
     text-wrap: pretty;
   }
-
-  // Lo que se gana. Al pie y en pequeño: se enseña el premio sin celebrarlo todavía.
-  &__prize {
-    margin-top: auto;
-    padding-top: 1.4cqh;
-    border-top: 1px solid var(--color-brass);
-
-    display: flex;
-    align-items: center;
-    gap: 0.8em;
-  }
-
-  // Apagado: es el sello que se va a ganar, no uno ganado. A todo color le quitaría el momento
-  // al de verdad.
-  &__seal {
-    width: 18cqmin;
-    max-width: 3.4rem;
-    height: auto;
-    opacity: 0.3;
-  }
-
-  &__caption {
-    color: var(--color-ink-soft);
-    font-size: clamp(0.42rem, 2.8cqmin, 0.7rem);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
 }
 
 .final-scope {
