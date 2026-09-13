@@ -12,6 +12,9 @@
 //
 // EL GESTO NO PUEDE PASAR LA HOJA, por la misma razón que en `kanaPairing.ts`: se
 // cortan `mousedown` y `touchstart` en las tarjetas.
+import gsap from 'gsap'
+import { prefersReducedMotion } from '../../../shared/prefersReducedMotion'
+
 export function mountSentenceTiles(root: HTMLElement): (() => void) | null {
   const sentences = [...root.querySelectorAll<HTMLElement>('.sentence-build')]
   if (sentences.length === 0) return null
@@ -37,6 +40,26 @@ export function readSentenceSlots(sentence: HTMLElement): SentenceSlotState[] {
     answer: slot.dataset.answer ?? '',
     filled: slot.dataset.filled ?? null,
   }))
+}
+
+// Un vaivén corto cuando la tarjeta no ha ido a ningún sitio: el tablero está lleno,
+// o el arrastre se ha soltado fuera de cualquier hueco. Sin este aviso, la tarjeta
+// vuelve a su sitio en silencio y parece que sí se ha colocado — el mismo hueco
+// equivocado se queda como estaba y quien lo intentó no tiene manera de saberlo hasta
+// que la nota llega mal. No dice qué hueco vaciar ni si la frase va bien o mal.
+const shakeMiss = (tile: HTMLElement) => {
+  if ('vibrate' in navigator) navigator.vibrate(40)
+  if (prefersReducedMotion()) return
+
+  // Arranca desde cero a propósito: el arrastre deja su propio `translate` puesto a mano
+  // —no por GSAP—, y sin fijarlo antes el vaivén heredaría esa posición y la tarjeta se
+  // quedaría desplazada al terminar en vez de volver a su sitio.
+  gsap.set(tile, { x: 0, y: 0 })
+  gsap
+    .timeline()
+    .to(tile, { x: -5, duration: 0.05 })
+    .to(tile, { x: 5, duration: 0.08 })
+    .to(tile, { x: 0, duration: 0.05 })
 }
 
 function mountOne(sentence: HTMLElement): (() => void) | null {
@@ -73,9 +96,16 @@ function mountOne(sentence: HTMLElement): (() => void) | null {
 
   // Sin hueco de destino —la vía del teclado— se llena el primero que esté libre, en
   // el orden de la frase.
-  const place = (kana: string, target: HTMLElement | null) => {
+  //
+  // SIN NINGÚN HUECO LIBRE no se hace nada: para corregir con el teclado hay que vaciar
+  // el hueco equivocado primero. La tarjeta tiembla para avisar de que la pulsación no
+  // ha ido a ningún sitio; sin este aviso, pulsar la tarjeta «correcta» sobre una frase
+  // ya llena de arriba a abajo no hacía nada y parecía haber corregido el hueco
+  // equivocado cuando seguía exactamente como estaba.
+  const place = (kana: string, target: HTMLElement | null, tile?: HTMLElement) => {
     const slot = target ?? emptySlots()[0] ?? null
     if (slot) fill(slot, kana)
+    else if (tile) shakeMiss(tile)
   }
 
   const teardowns = tiles.map((tile) => {
@@ -120,7 +150,11 @@ function mountOne(sentence: HTMLElement): (() => void) | null {
           )
         }) ?? null
 
+      // Soltada fuera de todo hueco no queda muda: sin este aviso, la tarjeta volvía a su
+      // sitio como si nunca se hubiera soltado, y un arrastre que había fallado por unos
+      // pocos píxeles se leía igual que uno que nunca se había intentado.
       if (target) place(tile.dataset.kana ?? '', target)
+      else shakeMiss(tile)
     }
 
     const onClick = (event: MouseEvent) => {
