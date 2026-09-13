@@ -72,7 +72,7 @@ export function AccountProfile({ account, titleId, onDone }: AccountProfileProps
           <ul className="account-profile__list">
             {badges.map((badge) => (
               <li className="account-profile__badge" key={badge.blockId}>
-                <img className="account-profile__seal" src="/images/sello.webp" alt="" />
+                <img className="account-profile__seal" src="/images/sello-verde.webp" alt="" />
                 <span>Tomo {badge.volume}</span>
               </li>
             ))}
