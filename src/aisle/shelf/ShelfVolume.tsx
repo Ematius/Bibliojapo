@@ -21,6 +21,7 @@ import { useVolumeContent } from '../book/reader/useVolumeContent'
 import { VolumeScrim } from './VolumeScrim'
 import { ShelfNote } from './ShelfNote'
 import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
+import { markVolumeOpen } from '../../shared/volumeReadingState'
 import './ShelfVolume.scss'
 
 // `pending` mientras no se sabe si el tomo se puede coger. Se ve igual que uno cerrado
@@ -84,6 +85,13 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
 
   // Si el tomo se desmonta a medio tirón, el tirón se para con él.
   useEffect(() => () => stopNudgeRef.current?.(), [])
+
+  // Avisa fuera mientras el tomo no está en la balda: el libro abierto pinta por encima de la
+  // barra de navegación, así que ella tiene que enterarse de que hay que apartarse.
+  useEffect(() => {
+    if (stage === 'shelf') return
+    return markVolumeOpen()
+  }, [stage])
 
   // Medidas del libro abierto. De la VENTANA y no del stage: el libro se pone delante de
   // la escena y se centra en la pantalla, así que lo que no puede desbordar es la ventana.

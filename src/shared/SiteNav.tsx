@@ -7,6 +7,7 @@ import { NAV_CTA_LABEL, NAV_LINKS, NAV_LOGO_KANJI } from './siteNavConfig'
 import { buildSiteNavMenuHide, buildSiteNavMenuReveal } from './siteNavMenuReveal'
 import { prefersReducedMotion } from './prefersReducedMotion'
 import { useSiteNavIntro } from './useSiteNavIntro'
+import { useAnyVolumeOpen } from './volumeReadingState'
 import './SiteNav.scss'
 
 // Se pintan en dos sitios —la barra y el menú—, y quien las contiene dice si van en
@@ -38,6 +39,7 @@ export function SiteNav() {
   const menuRef = useRef<HTMLDivElement>(null)
   const session = useSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const anyVolumeOpen = useAnyVolumeOpen()
 
   useSiteNavIntro(navRef)
 
@@ -85,7 +87,11 @@ export function SiteNav() {
   }, [isMenuOpen])
 
   return (
-    <nav className="site-nav" ref={navRef} aria-label="Navegación principal">
+    <nav
+      className={`site-nav${anyVolumeOpen ? ' site-nav--hidden' : ''}`}
+      ref={navRef}
+      aria-label="Navegación principal"
+    >
       {/* El kanji hace de botón de casa, y dentro de la app «casa» es el
           vestíbulo, no la portada. */}
       <Link className="site-nav__logo" to="/biblioteca" aria-label="BOF — vestíbulo">

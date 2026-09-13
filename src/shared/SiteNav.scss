@@ -24,6 +24,19 @@
   // aplana lo justo para que la barra tenga sobre qué apoyarse sin taparla.
   backdrop-filter: blur(0.75rem);
   box-shadow: var(--shadow-float);
+  transition:
+    opacity var(--duration-fast) ease,
+    visibility 0s var(--duration-fast);
+
+  // Con un tomo fuera de la balda el libro pinta por encima de la barra — está en un portal a
+  // `document.body`, fuera de este stacking context—, así que se aparta en vez de quedar
+  // tapada a medias. `visibility` y no un `display: none`: así el desvanecido tiene tiempo de
+  // verse antes de sacarla del tabulador.
+  &--hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 
   &__logo {
     display: flex;
