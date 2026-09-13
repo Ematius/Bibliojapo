@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import './DeskScene.scss'
 
 // La escena del escritorio: la mesa pintada, y encima lo que se le ponga.
@@ -12,9 +12,27 @@ import './DeskScene.scss'
 // animarse y aparecer solo cuando se han ganado.
 const DESK_SCENE = '/images/desk/escritorio.webp'
 
-export function DeskScene({ children }: { children?: ReactNode }) {
+interface DeskSceneProps {
+  children?: ReactNode
+  // Pisar la mesa vacía cierra el objeto levantado, además de pulsarlo de nuevo o pulsar
+  // otro —eso ya lo resolvía cada `DeskObject` solo—. Opcional porque de momento solo lo pide
+  // `MyDesk`, que es quien lleva el estado de cuál está levantado.
+  onBackgroundPress?: () => void
+}
+
+export function DeskScene({ children, onBackgroundPress }: DeskSceneProps) {
+  // La imagen de la mesa no recibe pulsaciones —ver su regla en el SCSS—, así que un clic
+  // sobre ella atraviesa hasta este contenedor y llega aquí con el contenedor de objetivo. Un
+  // clic sobre un objeto también burbujea hasta aquí, pero con el botón de objetivo: por eso
+  // se compara contra `currentTarget` y no basta con escuchar el clic.
+  const onClick = onBackgroundPress
+    ? (event: MouseEvent<HTMLDivElement>) => {
+        if (event.target === event.currentTarget) onBackgroundPress()
+      }
+    : undefined
+
   return (
-    <div className="desk-scene">
+    <div className="desk-scene" onClick={onClick}>
       {/* Decorativa: lo que hay que leer son los objetos, no la mesa. */}
       <img className="desk-scene__art" src={DESK_SCENE} alt="" draggable="false" />
       {children}

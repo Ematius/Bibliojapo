@@ -1,0 +1,241 @@
+// La chuleta de un tomo, sobre la hoja levantada. El mismo papel, el mismo giro y el mismo
+// polvo que el regalo del examen final —ver `ExamGift.scss`—, pero medido en `cqw` y no en
+// `cqh`/`cqmin`: `.desk-object__face` solo declara contención de ANCHO
+// (`container-type: inline-size`), así que las unidades de alto de consulta no resolverían
+// contra nada fiable aquí. El resto de proporciones es la misma fórmula.
+.chuleta-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-ink);
+
+  &--loading {
+    justify-content: center;
+    gap: 1cqw;
+    text-align: center;
+  }
+
+  &__note {
+    margin: 0;
+    padding: 0 8cqw;
+    font-family: var(--font-body);
+    // El techo en `rem` es el que de verdad manda en una hoja grande: sin subirlo junto al
+    // resto —ver `faceScale` en `deskArt.ts`—, el texto se queda clavado en su tamaño viejo
+    // aunque el papel haya crecido.
+    font-size: clamp(0.6rem, 3.6cqw, 1.6rem);
+  }
+
+  // Vuelve a la lista de tomos. Flotante y en la esquina, como el aspa de cerrar del panel
+  // de cuenta: no compite con el papel, que es lo que hay que leer. El medallón ya trae su
+  // propio marco dibujado —ver `atras.png`—, así que el botón no añade ninguno encima.
+  &__back {
+    position: absolute;
+    top: 5cqw;
+    left: 1.5cqw;
+    z-index: 1;
+    width: 9cqw;
+    min-width: 2.25rem;
+    max-width: 3.25rem;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform var(--duration-fast) ease;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+    }
+
+    &:hover {
+      transform: scale(1.06);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 2px;
+      border-radius: var(--radius-pill);
+    }
+  }
+
+  // El escenario: da la perspectiva desde la que se ve girar la tarjeta.
+  &__stage {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    perspective: 90cqw;
+  }
+
+  // Lo que gira. Los hijos tienen que conservar su profundidad o el dorso no se esconde.
+  &__flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+  }
+
+  // Las dos caras, una encima de otra y de espaldas: el papel es el mismo dibujo visto por
+  // sus dos lados.
+  &__face {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    backface-visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4cqw;
+
+    // El papel pintado se estira al hueco entero: es un fondo, y `contain` abriría franjas
+    // vacías a los lados.
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
+    // El papel trae un borde oscuro y unas esquinas dibujadas que ocupan un margen de su
+    // ancho: con menos padding el texto se mete debajo de ese borde y la primera letra de
+    // cada fila se lee cortada.
+    padding: 9cqw 7cqw 4cqw;
+
+    &--back {
+      transform: rotateY(180deg);
+
+      .chuleta-card__line {
+        font-size: clamp(0.55rem, 2.9cqw, 1.3rem);
+        padding: 0;
+        line-height: 1.15;
+      }
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    // El techo en `rem` es el que de verdad manda en una hoja grande —ver el comentario de
+    // `&__note`—.
+    font-size: clamp(0.9rem, 5.6cqw, 2.4rem);
+    line-height: 1.1;
+  }
+
+  &__title-kana {
+    font-family: var(--font-body);
+  }
+
+  &__heading {
+    margin: 0;
+    align-self: flex-start;
+    color: var(--color-ink-soft);
+    font-family: var(--font-display);
+    font-size: clamp(0.65rem, 3.4cqw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  // En columnas: en una sola fila vertical las entradas del tomo no caben en la hoja sin
+  // dejarlas ilegibles de tan pequeñas.
+  //
+  // GRID Y NO `columns`. Con columnas CSS, los caracteres que parte `useChuletaReveal` salen
+  // en la columna equivocada y encimados: GSAP les pone una transformación a cada uno, y un
+  // `inline-block` transformado dentro de un contenedor multicolumna se coloca contra el
+  // fragmento que no es. Se ve solo al animar, nunca con la hoja quieta.
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    display: grid;
+    column-gap: 0.6em;
+
+    .chuleta-card__face--front &.chuleta-card__list--words {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .chuleta-card__face--front &.chuleta-card__list--sentences {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .chuleta-card__face--back & {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__line {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    min-width: 0;
+    gap: 0 0.3em;
+    padding: 0;
+    font-size: clamp(0.6rem, 3.4cqw, 1.5rem);
+    line-height: 1.2;
+  }
+
+  &__written {
+    font-family: var(--font-display);
+  }
+
+  &__listen {
+    flex: none;
+    padding: 0.1em 0.5em;
+    font-size: 0.85em;
+  }
+
+  &__reading {
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+
+  &__meaning {
+    color: var(--color-ink-soft);
+  }
+
+  // El botón de girar, sobre el papel y no debajo: en el flujo normal quedaba fuera del
+  // escenario —el hueco que sobraba tras `flex: 1` en `&__stage`—, en la madera de la mesa
+  // en vez de en la hoja. Flotante como `&__back`, para que quede DENTRO del papel.
+  &__flip-button {
+    position: absolute;
+    bottom: 4cqw;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 9cqw;
+    min-width: 2.25rem;
+    max-width: 3.25rem;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform var(--duration-fast) ease;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+    }
+
+    &:hover {
+      transform: translateX(-50%) scale(1.06) rotate(35deg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 2px;
+      border-radius: var(--radius-pill);
+    }
+  }
+}
+
+// Cada letra suelta de `useChuletaReveal`. `inline-block` para poder moverla y escalarla sin
+// romper el ajuste de línea del resto del texto.
+.chuleta-card__dust-char {
+  display: inline-block;
+}

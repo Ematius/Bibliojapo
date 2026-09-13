@@ -23,6 +23,16 @@
     position: relative;
     // Arriba cabe la barra entera: su separación, su cuerpo y el aire de debajo.
     padding: 7.5rem 1.5rem 4rem;
+    // La mayor parte del tiempo está vacío —solo lleva algo sin sesión o mientras cargan las
+    // insignias—, pero su padding ya reserva ese hueco bajo la barra aunque no haya nada
+    // dentro: sin esto, esa franja invisible tapa los clics de lo que hay debajo en la
+    // escena, como el botón de atrás de una chuleta que crece hasta asomar por ahí arriba.
+    pointer-events: none;
+  }
+
+  &__note,
+  &__invite {
+    pointer-events: auto;
   }
 
   // Un aviso suelto: que los tomos están llegando, que no han llegado, o que la puerta que se

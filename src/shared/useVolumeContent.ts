@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiErrorCode, type ApiErrorCode } from '../../../api/apiError'
-import { fetchVolume, type VolumeContent } from '../../../api/volumes'
+import { apiErrorCode, type ApiErrorCode } from '../api/apiError'
+import { fetchVolume, type VolumeContent } from '../api/volumes'
 
 export type VolumeLoad =
   | { status: 'idle' }

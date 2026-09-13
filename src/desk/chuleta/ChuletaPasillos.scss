@@ -1,0 +1,56 @@
+// Los tres sellos de pasillo, en fila. `cqw` porque `.desk-object__face` solo garantiza
+// contención de ANCHO — ver la nota de `ChuletaList.scss`.
+.chuleta-pasillos {
+  display: flex;
+  justify-content: center;
+  gap: 10cqw;
+  margin: 0 0 3cqw;
+  padding: 0;
+  list-style: none;
+
+  &__button {
+    width: 20cqw;
+    min-width: 2.75rem;
+    max-width: 4rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: none;
+    cursor: pointer;
+    // El sello propio apagado; el elegido, entero. La transición es de opacidad y de escala,
+    // no de sombra: una sombra animada sobre un elemento que se mueve fuerza repintado
+    // completo en cada fotograma.
+    opacity: 0.5;
+    transform: scale(0.92);
+    transition:
+      opacity var(--duration-fast) ease,
+      transform var(--duration-fast) ease;
+
+    img {
+      display: block;
+      width: 10cqw;
+      height: auto;
+      user-select: none;
+
+
+    }
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 3px;
+    }
+  }
+
+  &__button--active {
+    opacity: 1;
+    transform: scale(1);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

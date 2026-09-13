@@ -79,6 +79,11 @@
   width: calc(var(--front-scale) * 100%);
   height: calc(var(--front-height) * 100%);
   opacity: 0;
+  // Apagada no significa fuera de alcance: `opacity: 0` no quita el clic por sí sola, y esta
+  // caja puede llegar a desbordar el botón que la contiene —su tamaño sale de la cara de
+  // FRENTE, no de la de reposo—. Sin esto, lo que hay dentro —los botones de la chuleta—
+  // podría pulsarse invisible, antes de levantar la hoja.
+  pointer-events: none;
   // Lo de dentro se mide contra esta caja, así que la tipografía crece con la tarjeta en vez
   // de quedarse en un tamaño fijo que el viaje agranda a lo bruto.
   container-type: inline-size;
@@ -89,6 +94,7 @@
 // dibujo con otro, y un texto encima de ese cruce se lee como un fallo.
 .desk-object--lifted .desk-object__face {
   opacity: 1;
+  pointer-events: auto;
   transition-delay: var(--duration-slow);
 }
 

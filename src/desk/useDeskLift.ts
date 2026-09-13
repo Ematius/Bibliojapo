@@ -27,6 +27,8 @@ interface DeskLiftOptions {
   restingRef: RefObject<HTMLElement | null>
   spot: DeskSpot
   lifted: boolean
+  // Cuánto se inclina en reposo, si el objeto es de una sola cara. Ver `DeskArt.restTiltDeg`.
+  restTiltDeg?: number
 }
 
 export function useDeskLift({
@@ -36,6 +38,7 @@ export function useDeskLift({
   restingRef,
   spot,
   lifted,
+  restTiltDeg,
 }: DeskLiftOptions): void {
   const isFirstRender = useRef(true)
 
@@ -43,12 +46,22 @@ export function useDeskLift({
   // hace con `translate(-50%, -100%)`. En cuanto GSAP toque `x` o `scale` reescribirá el
   // transform entero, y sin esto el objeto daría un salto al arrancar. Misma cautela que
   // `useVolumePull`.
+  //
+  // El giro nace inclinado y no plano: es la pose de reposo, y `transformPerspective` es el
+  // equivalente en GSAP de la función CSS `perspective()` puesta en el propio elemento — da
+  // el punto de fuga sin tener que tocar el `stage` que lo contiene, que ya usa `transform`
+  // para otra cosa.
   useLayoutEffect(() => {
     const root = rootRef.current
     if (!root) return
 
-    gsap.set(root, { xPercent: -50, yPercent: -100, transformOrigin: '50% 100%' })
-  }, [rootRef])
+    gsap.set(root, {
+      xPercent: -50,
+      yPercent: -100,
+      transformOrigin: '50% 100%',
+      ...(restTiltDeg ? { rotateX: restTiltDeg, transformPerspective: 1600 } : {}),
+    })
+  }, [rootRef, restTiltDeg])
 
   useLayoutEffect(() => {
     const root = rootRef.current
@@ -70,7 +83,14 @@ export function useDeskLift({
     const x = (DESK_LIFT.frontX - spot.x) * stageWidth
     const y = (DESK_LIFT.frontY - spot.baseY) * stageHeight + liftedHeight / 2
 
-    const to = lifted ? { x, y, scale } : { x: 0, y: 0, scale: 1 }
+    const to = {
+      x: lifted ? x : 0,
+      y: lifted ? y : 0,
+      scale: lifted ? scale : 1,
+      // Se pone de frente al llegar y vuelve a apoyarse al soltarlo: el mismo giro que ya
+      // tenía en reposo, hecho parte del viaje en vez de un cambio de cara aparte.
+      ...(restTiltDeg !== undefined ? { rotateX: lifted ? 0 : restTiltDeg } : {}),
+    }
     const faceTo = lifted ? 1 : 0
 
     // Al montar se coloca sin viaje: si no, un objeto que aparece ya levantado —al volver a la
@@ -135,5 +155,5 @@ export function useDeskLift({
     return () => {
       timeline.kill()
     }
-  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted])
+  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg])
 }

@@ -120,8 +120,6 @@ export const VOLUME_LOCK = {
   // Cuánto se queda la nota a la vista. Da para leer una frase corta dos veces.
   noteSeconds: 3.2,
   noteFadeSeconds: 0.35,
-  // Si no se ha podido preguntar qué tomos están abiertos, cuánto se espera para reintentar.
-  retrySeconds: 4,
 }
 
 export const VOLUME_SCRIM = {

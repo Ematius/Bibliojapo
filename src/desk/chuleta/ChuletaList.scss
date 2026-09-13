@@ -1,0 +1,127 @@
+// La lista de tomos, sobre la hoja. `cqw` porque `.desk-object__face` solo garantiza
+// contención de ANCHO —`container-type: inline-size`—; `cqh` no resolvería contra nada fiable
+// aquí, a diferencia de la chuleta del examen final, que vive dentro de una hoja del libro con
+// contención completa.
+.chuleta-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cqw;
+  width: 100%;
+  height: 100%;
+  padding: 6cqw 6cqw 4cqw;
+  overflow-y: auto;
+  text-align: center;
+  color: var(--color-ink);
+  // El papel pintado se estira al hueco entero: es un fondo, y `contain` abriría franjas
+  // vacías a los lados. Misma lógica que `.chuleta-card__face`.
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+
+  &__title {
+    margin: 2cqw 0 1cqw;
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 5.4cqw, 1.4rem);
+  }
+
+  &__note {
+    margin: 2cqw 0 0;
+    color: var(--color-ink-soft);
+    font-size: clamp(0.5rem, 3.4cqw, 0.85rem);
+  }
+
+  // Cuatro columnas y tres filas: caben los doce tomos de un vistazo, sin que la hoja
+  // necesite scroll. La hoja es apaisada —ver `faceScale` en `deskArt.ts`—, y cuatro columnas
+  // reparten esa forma mejor que un listado alto y estrecho.
+  &__volumes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.2cqw;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // El tique, con su marco pintado de fondo. Es la MISMA ilustración —aprobado o
+  // bloqueado— para cualquier tamaño de tarjeta, así que el recorte se calcula una vez, en
+  // fracciones del lienzo, igual que `deskFace` en `deskArt.ts`.
+  &__volume {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2.2;
+    padding: 0 10% 6%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2cqw;
+    border: none;
+    // Un `<button>` trae fondo propio de fábrica: sin esto, lo que es transparente en el
+    // recorte del tique enseña ese gris en vez de la hoja de debajo.
+    background-color: transparent;
+    background-repeat: no-repeat;
+    // Recorte medido por canal alfa sobre `tarjeta-tomo-aprovado.png`: el tique real ocupa
+    // menos que el lienzo entero, que trae aire de sobra alrededor.
+    background-size: 106.2% 113.2%;
+    background-position: 52.2% 48.9%;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: transform var(--duration-fast) ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-0.15rem);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 3px;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  // El bloqueado usa el otro dibujo —cuál es lo dice `TICKET_BG` en el componente, aquí solo
+  // su recorte—, con su propio recorte medido: su lienzo no comparte proporción con el del
+  // aprobado. Se ve apagado: es el único de los tres estados que no se puede alcanzar
+  // todavía.
+  &__volume--bloqueado {
+    background-size: 107.8% 192.2%;
+    background-position: 50.5% 49.7%;
+    opacity: 0.55;
+  }
+
+  &__volume-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.5rem, 3.2cqw, 0.8rem);
+  }
+
+  &__volume-kana {
+    font-size: clamp(0.42rem, 2.6cqw, 0.68rem);
+    line-height: 1.2;
+  }
+
+  &__volume-status {
+    color: var(--color-ink-soft);
+    font-size: clamp(0.36rem, 2.2cqw, 0.58rem);
+    letter-spacing: 0.04em;
+  }
+
+  // El sello, como si hubiera caído sobre la esquina del tique. Más grande que el tique
+  // mismo lo pide: es lo primero que se tiene que leer, aprobado o no.
+  &__stamp {
+    position: absolute;
+    top: -14%;
+    right: -2%;
+    width: 34%;
+    height: auto;
+    transform: rotate(8deg);
+    pointer-events: none;
+    user-select: none;
+  }
+}

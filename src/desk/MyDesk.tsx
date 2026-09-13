@@ -4,6 +4,7 @@ import { useSession } from '../account/useSession'
 import { onApiChange } from '../api/apiChanges'
 import { fetchBadges, fetchJourney, type Badge, type JourneyTrack } from '../api/progress'
 import { SiteNav } from '../shared/SiteNav'
+import { SheetChuleta } from './chuleta/SheetChuleta'
 import { DeskObject } from './DeskObject'
 import { DeskScene } from './DeskScene'
 import { JourneyCard } from './JourneyCard'
@@ -33,20 +34,22 @@ export function MyDesk() {
     journey: JourneyTrack[] | null
   } | null>(null)
 
-  // Lo que se contesta al pulsar un objeto cuyo destino todavía no existe. Se borra al
-  // cambiar de objeto.
-  const [note, setNote] = useState<string | null>(null)
-
   // Cuál está levantado. Lo lleva la pantalla y no cada objeto porque solo puede haber uno
   // enfrente: con el estado repartido, pulsar el segundo dejaría los dos en el aire.
   const [lifted, setLifted] = useState<keyof typeof DESK_SPOTS | null>(null)
 
-  // El aviso viaja con el objeto: se enciende al levantarlo y se apaga al dejarlo, así que
-  // nunca queda un «todavía no» suelto hablando de algo que ya no está enfrente.
-  const press = (id: keyof typeof DESK_SPOTS, pending: string | null = null) => {
-    const next = lifted === id ? null : id
-    setLifted(next)
-    setNote(next ? pending : null)
+  // Pulsar el objeto YA levantado no lo suelta: ahora tiene contenido pulsable dentro —la
+  // hoja, sus propios botones para elegir tomo—, y ese clic burbujea hasta aquí igual que el
+  // de fuera. Si volviera a cerrar, elegir un tomo cerraría la hoja en el mismo gesto con el
+  // que se elige. Soltar solo pasa pisando la mesa o levantando otro objeto.
+  const press = (id: keyof typeof DESK_SPOTS) => {
+    setLifted((current) => (current === id ? current : id))
+  }
+
+  // Pisar la mesa vacía es la única forma de soltar el objeto levantado sin levantar otro: se
+  // guarda contra pisarla sin nada levantado, que no tendría nada que cerrar.
+  const closeLifted = () => {
+    if (lifted) setLifted(null)
   }
 
   // null mientras llegan; `error` si no han llegado. Se dice en vez de enseñar una lista
@@ -88,13 +91,14 @@ export function MyDesk() {
   }, [session.status, session.account?.id])
 
   // El carné está siempre que haya sesión —es la cuenta misma—; la hoja y la caja solo cuando
-  // hay algo detrás que enseñar. Las dos todavía no llevan a ninguna parte: al pulsarlas dicen
-  // que se están escribiendo. Lo que no puede pasar es que una puerta se abra a un sitio vacío.
+  // hay algo detrás que enseñar. Es una aventura gráfica: nada de avisos de «todavía no» al
+  // pulsarlas. La hoja SÍ tiene ya qué enseñar —sus chuletas, ver `chuleta/`—; la caja
+  // todavía no lleva nada dentro.
   const earned = SHOW_EVERY_OBJECT || (Array.isArray(badges) && badges.length > 0)
 
   return (
     <main className="my-desk">
-      <DeskScene>
+      <DeskScene onBackgroundPress={closeLifted}>
         {session.status === 'signedIn' ? (
           <>
             <DeskObject
@@ -118,15 +122,17 @@ export function MyDesk() {
                   art={DESK_ART.sheet}
                   label="Tus chuletas"
                   lifted={lifted === 'sheet'}
-                  onPress={() => press('sheet', 'Las chuletas se están escribiendo.')}
-                />
+                  onPress={() => press('sheet')}
+                >
+                  <SheetChuleta lifted={lifted === 'sheet'} />
+                </DeskObject>
 
                 <DeskObject
                   spot={DESK_SPOTS.box}
                   art={DESK_ART.box}
                   label="Tus juegos"
                   lifted={lifted === 'box'}
-                  onPress={() => press('box', 'Los juegos se están preparando.')}
+                  onPress={() => press('box')}
                 />
               </>
             ) : null}
@@ -180,10 +186,6 @@ export function MyDesk() {
           <p className="my-desk__note">Buscando tus tomos…</p>
         ) : badges === 'error' ? (
           <p className="my-desk__note">No se han podido traer tus tomos.</p>
-        ) : note ? (
-          // Lo que contesta una puerta que todavía no lleva a ningún sitio. Y nada más: con la
-          // mesa puesta, lo que hay ganado lo dicen los objetos.
-          <p className="my-desk__note">{note}</p>
         ) : null}
       </div>
 

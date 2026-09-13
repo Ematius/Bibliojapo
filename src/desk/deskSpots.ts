@@ -61,16 +61,18 @@ export const DESK_LIFT = {
   // El fundido entre las dos caras dura lo mismo: es el movimiento el que tapa la diferencia
   // entre un dibujo y otro, así que no puede acabar antes.
   //
-  // Sube de 0.8 respecto a antes: `sine.inOut` no tiene el arranque a toda velocidad de
-  // `power2.out`, y sin ese empujón inicial el mismo tiempo se sentiría corto.
-  seconds: 1,
+  // La curva ya no tiene tirón —ver `ease` abajo—, así que lo que quedaba de sensación de
+  // prisa era pura duración: 1 s para levantar, cruzar la escena y cambiar de cara seguía
+  // leyéndose rápido. Directo a 2: un viaje de este tamaño necesita tiempo de sobra para
+  // notarse pausado, no solo suave.
+  seconds: 0.75,
   // `sine.inOut` y no `power2.out`: `.out` arranca ya a máxima velocidad y solo frena al
   // final, así que el objeto pega un salto seco nada más soltarse. `sine.inOut` arranca y
   // frena los dos por igual, sin el pico que sí tendría un `.inOut` más marcado como
   // `power2.inOut` — es la curva pareja, no la más lenta que hay.
   ease: 'sine.inOut',
   // Lo que tarda la tapa en abrirse, ya plantado el objeto.
-  openSeconds: 0.45,
+  openSeconds: 1,
   // Los tres son hermanos colocados en absoluto, así que sin esto manda el orden del DOM: el
   // carné, que va primero, quedaba debajo de las hojas al levantarse.
   frontLayer: 2,

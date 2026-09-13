@@ -36,7 +36,7 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
   const framesRef = useRef<(HTMLImageElement | null)[]>([])
   const restingRef = useRef<HTMLImageElement>(null)
 
-  useDeskLift({ rootRef, frontRef, framesRef, restingRef, spot, lifted })
+  useDeskLift({ rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg: art.restTiltDeg })
 
   // Cuánto encoger y desplazar la cara de frente para que caiga encima de la de reposo.
   // Van en el botón y no en la propia imagen: `.desk-object__face` las necesita igual y es

@@ -1,6 +1,6 @@
 import type { ApiErrorCode } from '../../../api/apiError'
 import { BookButton } from '../parts/BookButton'
-import type { VolumeLoad } from './useVolumeContent'
+import type { VolumeLoad } from '../../../shared/useVolumeContent'
 import './VolumeStatus.scss'
 
 interface VolumeStatusProps {
