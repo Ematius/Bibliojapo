@@ -19,33 +19,32 @@ export const PASSWORD_HINT = `Al menos ${PASSWORD_MIN_LENGTH} caracteres.`
 
 // El velo entra primero y la tarjeta sube sobre él un instante después.
 //
-// Arranque y frenada larguísimos, y el panel entero despacio: no se abre, se asoma.
+// Despacio de principio a fin, sin ningún tramo que se note más rápido que el resto.
 //
-// ── Por qué `power4.inOut` ─────────────────────────────────────────────────
-// Una curva `.out` o `.in` tiene UN solo extremo lento: la primera arranca disparada
-// y la segunda acelera hasta el final, y ese pico de velocidad es el acelerón. Las
-// `.inOut` son lentas por los dos lados, y la potencia dice cuánto: `sine` apenas se
-// nota, `power4` deja el arranque y la frenada larguísimos.
+// ── Por qué `sine.inOut` y no `power4.inOut` ───────────────────────────────
+// Cualquier curva `.inOut` reparte el mismo recorrido entre un arranque lento, un
+// tramo central y una frenada lenta. Cuanto MÁS lentos se piden los extremos, más
+// rápido tiene que ir el centro para llegar a tiempo — es el mismo recorrido total,
+// así que lo que no se gasta en las puntas se paga de golpe en medio. `power4` pide
+// extremos casi parados, y ese es justo el tirón que se notaba: no es un fallo, es
+// lo que esa curva hace por diseño.
 //
-// `linear` tampoco vale, aunque no tenga acelerón: al ir a la misma velocidad de
-// principio a fin, la tarjeta se pone en marcha y se planta en seco, sin arrancar ni
-// frenar. Lo que se busca es justo lo contrario — que los extremos se noten.
+// `sine.inOut` es la más suave de todas las `.inOut` de GSAP: el reparto entre
+// arranque, medio y frenada es el más parejo que hay, así que ningún tramo destaca
+// sobre los demás y el conjunto se lee como una sola velocidad tranquila.
 //
-// ── Por qué los tiempos suben con la curva ─────────────────────────────────
-// `power4.inOut` gasta casi todo el recorrido en los extremos, así que al medio le
-// queda muy poco tiempo para cubrir el resto. Con la duración corta de antes eso
-// sería otra vez un tirón, esta vez en mitad del gesto: al agrandar el arranque y la
-// frenada hay que dar más tiempo a la animación entera, o el drama se paga en el
-// centro.
+// ── Por qué la duración compensa lo que pierde la curva ────────────────────
+// Sin el pico de `power4`, el arranque y la frenada ya no se notan tan marcados por
+// sí solos. Para que sigan sintiéndose lentos y no solo «normales», el tiempo total
+// sube: una curva suave necesita más segundos para que la lentitud se note, porque
+// ya no tiene un extremo casi inmóvil que la subraye.
 export const ACCOUNT_REVEAL = {
-  inSeconds: 1.2,
+  inSeconds: 1.4,
   // Casi lo mismo saliendo: el panel tampoco tiene prisa por irse, y una salida
   // corta después de una entrada lenta se siente como un portazo.
-  outSeconds: 1,
+  outSeconds: 1.2,
   cardDelaySeconds: 0.12,
-  // Sube algo más que antes. Con un recorrido mínimo y un tiempo largo la tarjeta no
-  // parece lenta, parece quieta: hace falta distancia para que se vea avanzar.
   riseRem: 1.75,
-  ease: 'power4.inOut',
-  easeOut: 'power4.inOut',
+  ease: 'sine.inOut',
+  easeOut: 'sine.inOut',
 }
