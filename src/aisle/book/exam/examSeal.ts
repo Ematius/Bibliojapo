@@ -92,7 +92,9 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
 //
 // El giro es fijo y no al azar: está torcido porque las manos no estampan rectas, pero que
 // cambiara en cada partida lo convertiría en un adorno inquieto.
-function stamp(seal: HTMLElement): void {
+//
+// Exportado: lo reutiliza `finalExam.ts` para el mismo gesto en la plana de la nota final.
+export function stamp(seal: HTMLElement): void {
   seal.classList.add('exam-seal--earned')
 
   // Con «reducir movimiento», el sello puesto y sin el golpe: la clase ya lo deja visible.

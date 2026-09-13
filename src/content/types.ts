@@ -65,6 +65,15 @@ export interface Sentence {
   // una partícula no es una palabra.
   wordIds: string[]
   grammarId?: string
+  // El mismo desglose que `Word.units`, pero de la frase entera: hace falta para
+  // partirla en tarjetas de un solo kana en el examen final. Se escribe a mano, como
+  // `text`, y por la misma razón: reconstruirla aquí a partir de `wordIds` y
+  // `grammarId` metería en el código la forma de ESTA frase —tema, partícula,
+  // predicado—, que una frase futura con otra gramática no tiene por qué compartir.
+  units: WordUnit[]
+  // Cómo suena la frase entera: ruta desde `public/`. Opcional, como en `Word` — las
+  // 15 de este bloque todavía no están grabadas.
+  audio?: string
 }
 
 // Un kana del bloque y con qué palabra se enseña. El emparejamiento es del TEMARIO

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { PageFlip } from 'page-flip'
 import type { Word } from '../../../content/types'
 import type { VolumeContent } from '../../../api/volumes'
@@ -18,6 +18,12 @@ import { WordDrill } from '../drill/WordDrill'
 import { ExamSheet } from '../exam/ExamSheet'
 import { FinalNotice, FinalScope, FinalReviewNotice, FinalReviewScope } from '../exam/FinalNotice'
 import { mountExamSeal } from '../exam/examSeal'
+import { ExamRules, ExamScope } from '../exam/ExamRules'
+import { SentenceBuild } from '../exam/SentenceBuild'
+import { ExamResults } from '../exam/ExamResults'
+import { ExamReveal } from '../exam/ExamReveal'
+import { mountSentenceTiles } from '../exam/sentenceTiles'
+import { mountFinalExam } from '../exam/finalExam'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { groupSentencesByTopic } from '../intro/goalGroups'
 import { KanaStroke } from '../mnemonic/KanaStroke'
@@ -60,6 +66,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
   const { block } = content
   const blockId = block.id
+
+  // Sube en cada reintento del examen final —`finalExam.ts`— y fuerza a rebarajar el
+  // orden del bloque 3 y a remontar el libro entero con sus planas en blanco. Ver el
+  // `useMemo` de abajo y el efecto de montaje.
+  const [examAttempt, setExamAttempt] = useState(0)
 
   // Lo que el paquete trae en listas, puesto en mapas para buscar por id.
   const { kanaById, wordsById, sentencesById } = useMemo(
@@ -118,8 +129,17 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // audio ni dibujo—. Ver `finalReviewSpreads`.
     const reviewWordIds = block.wordIds.filter((wordId) => wordsById.has(wordId))
 
-    return { pages: buildVolumePages(lessons, reviewWordIds), pools }
-  }, [block, kanaById, wordsById])
+    // Las frases del examen final: solo las que ya tienen su ficha, por la misma razón.
+    // Sin las 15 no hay examen — ver `finalSentenceExamSpreads`.
+    const examSentenceIds = block.sentenceIds.filter((sentenceId) => sentencesById.has(sentenceId))
+
+    // Sin usarlo dentro: solo está en las dependencias para forzar este cálculo de
+    // nuevo en cada reintento del examen final. `finalSentenceExamSpreads` sortea el
+    // bloque 3 con cada llamada, así que un intento nuevo trae un orden nuevo.
+    void examAttempt
+
+    return { pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds), pools }
+  }, [block, kanaById, wordsById, sentencesById, examAttempt])
 
   useEffect(() => {
     const template = templateRef.current
@@ -209,6 +229,18 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // Y el sello del examen, que escucha a todos los anteriores: es el primero que
     // se entera de que un ejercicio se ha resuelto. Ver `parts/solved.ts`.
     const unmountSeal = mountExamSeal(holder, blockId)
+    // Las tarjetas de las frases del examen final: mismo gesto, sin corrección al
+    // momento. Ver `sentenceTiles.ts`.
+    const unmountSentenceTiles = mountSentenceTiles(holder)
+    // El examen final en sí: bloquea el giro mientras se hace, puntúa cada frase al
+    // pulsar «Siguiente» y decide él mismo cuándo se pasa de hoja. Va DESPUÉS de
+    // `mountSentenceTiles`, que es quien deja el estado de cada hueco listo para leer.
+    const unmountFinalExam = mountFinalExam(holder, {
+      blockId,
+      flip,
+      sentencesById,
+      retry: () => setExamAttempt((attempt) => attempt + 1),
+    })
 
     return () => {
       // Primero lo del kana: si se deja vivo, quedan una timeline y un manejador
@@ -220,12 +252,16 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       unmountPick?.()
       unmountPairing?.()
       unmountSeal?.()
+      unmountSentenceTiles?.()
+      unmountFinalExam?.()
       flip.destroy()
       mount.replaceChildren()
     }
     // `blockId` entra porque de él sale el marcador: cambiar de tomo tiene que volver a
-    // montar el libro, no seguir apuntando en el del anterior.
-  }, [pageWidth, pageHeight, blockId])
+    // montar el libro, no seguir apuntando en el del anterior. `examAttempt` entra porque
+    // un reintento del examen final trae planas nuevas —barajadas de nuevo— que hay que
+    // volver a entregarle a page-flip desde cero.
+  }, [pageWidth, pageHeight, blockId, examAttempt, sentencesById])
 
   return (
     <div className="volume-reader">
@@ -297,6 +333,35 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                   if (page.shows === 'finalReviewScope') {
                     const words = block.wordIds.flatMap((wordId) => wordsById.get(wordId) ?? [])
                     return <FinalReviewScope words={words} />
+                  }
+
+                  if (page.shows === 'examRules') return <ExamRules />
+                  if (page.shows === 'examScope') return <ExamScope />
+
+                  if (page.shows === 'examSentence') {
+                    const sentence = page.sentenceId ? sentencesById.get(page.sentenceId) : undefined
+                    return sentence && page.cue && page.sentenceIndex && page.sentenceTotal ? (
+                      <SentenceBuild
+                        sentence={sentence}
+                        cue={page.cue}
+                        examBlock={page.examBlock ?? 1}
+                        index={page.sentenceIndex}
+                        total={page.sentenceTotal}
+                      />
+                    ) : null
+                  }
+
+                  if (page.shows === 'examResults') {
+                    return page.examBlock ? (
+                      <ExamResults examBlock={page.examBlock} title={page.title ?? ''} isLastBlock={page.examBlock === 3} />
+                    ) : null
+                  }
+
+                  if (page.shows === 'examReveal') {
+                    const characters = block.lessons.flatMap(
+                      (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
+                    )
+                    return <ExamReveal characters={characters} />
                   }
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined

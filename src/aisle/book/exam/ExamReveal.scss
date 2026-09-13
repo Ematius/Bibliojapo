@@ -1,0 +1,101 @@
+.exam-reveal {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4cqh;
+  text-align: center;
+
+  &__kana {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3em 0.28em;
+    font-family: var(--font-body);
+    font-size: clamp(0.85rem, 7cqmin, 1.6rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  &__kana-item {
+    padding: 0.1em 0.2em;
+    border-bottom: 2px solid var(--color-brass);
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 6.5cqmin, 1.5rem);
+  }
+
+  &__rule {
+    align-self: stretch;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--color-ink-soft);
+    opacity: 0.35;
+  }
+
+  &__final-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__final {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.1rem, 9cqmin, 2.2rem);
+  }
+}
+
+// Lista de verdad, pero sin marcadores propios: cada fila ya trae su número de
+// bloque, y un `1.` de más se leería como una segunda numeración.
+.exam-reveal__blocks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6cqh;
+  width: 100%;
+}
+
+// Una fila, rellenada por `finalExam.ts` y revelada con GSAP: el bloque a la
+// izquierda, la nota a la derecha. Nace invisible —`opacity:0`— para que el reveal
+// la traiga de la nada y no de un salto de maquetación.
+.exam-reveal__block-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+  font-family: var(--font-body);
+  font-size: clamp(0.6rem, 4.5cqmin, 1.05rem);
+  opacity: 0;
+}
+
+.exam-reveal__block-score {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+// El mismo sello de `ExamSheet`, pero en el flujo de la hoja: aquí no hay ejercicios
+// debajo a los que taparles la respuesta, así que no hace falta clavarlo a una
+// esquina.
+.exam-reveal__seal {
+  position: static;
+  width: 3.2rem;
+  max-width: none;
+  margin-left: 0.6em;
+}
+
+.exam-reveal__retry {
+  margin-top: 0.6cqh;
+}

@@ -1,0 +1,119 @@
+// El ejercicio del examen final: la pista arriba, los huecos de la frase en medio, el
+// mazo de tarjetas debajo, y «Siguiente» al final. Mismo lenguaje visual que
+// `KanaMatch`, pero sin ficha de dominó —aquí no hay una mitad ya escrita— y sin aviso
+// de acierto: no hay nada que anunciar hasta el final del bloque.
+
+.sentence-build {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5cqh;
+}
+
+.sentence-build__progress {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: clamp(0.45rem, 3cqmin, 0.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+// La pista: rōmaji o significado. El audio no necesita texto —es un botón solo—.
+.sentence-build__cue {
+  margin: 0;
+  max-width: 100%;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 7cqmin, 1.6rem);
+  text-align: center;
+  text-wrap: balance;
+}
+
+// La frase, hueco a hueco. Se envuelve porque una frase de seis kana no siempre cabe
+// en una línea dentro de media hoja.
+.sentence-build__written {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3em;
+}
+
+// Un hueco vacío o lleno: el mismo hundido de `kana-match__slot`, para que se lea
+// igual de «sitio donde cabe algo» en las dos hojas.
+.sentence-build__slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8em;
+  padding: 0.3em 0.15em;
+  background: var(--color-page-fold);
+  color: var(--color-ivy-dark);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 11cqmin, 2.2rem);
+  line-height: 1;
+
+  // Pulsarlo lo vacía: es la manera de deshacer sin tener que arrastrar otra tarjeta
+  // encima. Ver `sentenceTiles.ts`.
+  cursor: pointer;
+}
+
+.sentence-build__deck {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5cqh 2cqw;
+}
+
+.sentence-build__seat {
+  display: flex;
+}
+
+// La tarjeta que se arrastra. Nunca se deshabilita ni desaparece: un mismo kana puede
+// hacer falta en más de un hueco —はは, いい—, así que el mazo no se agota con un solo
+// uso.
+.sentence-build__tile {
+  min-width: 2.2em;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 9cqmin, 2rem);
+  line-height: 1.1;
+
+  touch-action: none;
+  user-select: none;
+  position: relative;
+
+  transition:
+    background var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-book);
+}
+
+.sentence-build__tile--dragging {
+  z-index: 2;
+  cursor: grabbing;
+  transition: background var(--duration-fast) ease;
+}
+
+.sentence-build__next {
+  flex: none;
+}
+
+// Enviada: lo dice `finalExam.ts` poniendo `data-locked`. No se puede volver a tocar
+// —la propia norma del examen—, y el papel apagado es la única señal de que ya
+// quedó fuera de las manos.
+.sentence-build[data-locked='true'] {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentence-build__tile {
+    transition: background var(--duration-fast) ease;
+  }
+}

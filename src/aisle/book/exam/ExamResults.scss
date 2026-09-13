@@ -1,0 +1,75 @@
+.exam-results {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.6cqh;
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 6.5cqmin, 1.5rem);
+    line-height: 1.2;
+  }
+
+  &__score {
+    margin: 0;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.9rem, 7cqmin, 1.7rem);
+
+    // Vacío mientras `finalExam.ts` no ha puntuado todavía: sin alto reservado, el
+    // resto de la hoja daría un salto al rellenarse.
+    &:empty {
+      min-height: 1.4em;
+    }
+  }
+
+  &__wrong {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8cqh;
+  }
+
+  &__continue {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+}
+
+// Una frase fallada: la correcta al lado de su significado, para repasarla antes del
+// siguiente intento. La pone `finalExam.ts`.
+.exam-results__wrong-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  padding-bottom: 0.4cqh;
+  border-bottom: 1px solid var(--color-ink-soft);
+}
+
+.exam-results__wrong-sentence {
+  font-family: var(--font-body);
+  font-size: clamp(0.65rem, 4.5cqmin, 1.05rem);
+}
+
+.exam-results__wrong-meaning {
+  color: var(--color-ink-soft);
+  font-size: clamp(0.5rem, 3.4cqmin, 0.8rem);
+}
+
+// Sin ninguna fallada: lo dice `finalExam.ts` con el mismo aspecto de acierto que el
+// resto del libro.
+.exam-results__all-right {
+  margin: 0;
+  color: var(--color-ivy-dark);
+  font-weight: 600;
+  font-size: clamp(0.6rem, 4cqmin, 0.95rem);
+}

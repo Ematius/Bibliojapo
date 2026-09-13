@@ -27,6 +27,11 @@ import { shuffle } from '../parts/shuffle'
 //   finalScope        lo que entra en ese repaso: los kana del tomo
 //   finalReviewNotice la hoja que anuncia el repaso final
 //   finalReviewScope  lo que entra en ese repaso: las palabras del tomo
+//   examRules         las normas del examen final de frases, el que sella
+//   examScope         los tres bloques del examen, de un vistazo
+//   examSentence      una frase por construir con tarjetas, con una pista según el bloque
+//   examResults       la nota y las frases falladas de un bloque, al terminarlo
+//   examReveal        la nota final del tomo, y el sello si se aprueba
 //
 // `word`/`gap` y `reading`/`pick` son el mismo ejercicio en las dos direcciones.
 export type PageContent =
@@ -51,6 +56,15 @@ export type PageContent =
   | 'finalScope'
   | 'finalReviewNotice'
   | 'finalReviewScope'
+  | 'examRules'
+  | 'examScope'
+  | 'examSentence'
+  | 'examResults'
+  | 'examReveal'
+
+// La pista de una frase del examen: rōmaji, significado, o solo el sonido. Cambia con el
+// bloque — ver `finalSentenceExamSpreads`.
+export type ExamCue = 'romaji' | 'meaning' | 'audio'
 
 export interface ReaderPage {
   id: string
@@ -64,9 +78,20 @@ export interface ReaderPage {
   shows?: PageContent
   // A qué examen pertenece: el id del kana si es el de una lección, `final` si es el del
   // tomo. Es lo que agrupa sus pruebas para contarlas sin escribir cuántas hay.
+  //
+  // El examen final de FRASES no lo usa: no sella por contar aciertos a la primera —ver
+  // `finalExam.ts`—, así que sus hojas no llevan `exam` ni `seal`.
   exam?: string
   // Hay UNA en todo el tomo: la última del examen final. El examen de cada lección no sella.
   seal?: boolean
+  // Solo las hojas de `examSentence`/`examResults`: a qué de los tres bloques pertenecen.
+  examBlock?: 1 | 2 | 3
+  // Solo `examSentence`: qué frase muestra y con qué pista.
+  sentenceId?: string
+  cue?: ExamCue
+  // Su posición dentro del bloque (empieza en 1), para el «Frase X de 15» de la hoja.
+  sentenceIndex?: number
+  sentenceTotal?: number
 }
 
 // Una plana, sin `id` ni `folio`: esos los pone quien la coloca, porque dónde cae depende
@@ -208,15 +233,117 @@ function introSpread(): Spread {
   }
 }
 
-export function buildVolumePages(lessons: ReadyLesson[], wordIds: string[]): ReaderPage[] {
+export function buildVolumePages(
+  lessons: ReadyLesson[],
+  wordIds: string[],
+  sentenceIds: string[],
+): ReaderPage[] {
   const spreads = [
     introSpread(),
     ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
     ...completeReviewSpreads(lessons),
     ...finalReviewSpreads(lessons, wordIds),
+    ...finalSentenceExamSpreads(sentenceIds),
   ]
 
   return spreads.flatMap((spread, index) => placeSpread(spread, `s${index}`, index * 2 + 1))
+}
+
+// Los tres bloques del examen final, en el orden en que se hacen: cada uno da las 15
+// frases del tomo en un orden distinto y con una pista distinta, para que aprobar no sea
+// memorizar la POSICIÓN de una frase. El 3 se sortea aquí y no antes —`VolumeReader` llama
+// a esta función de nuevo en cada intento, ver `examAttempt`—, así que un reintento trae un
+// orden nuevo.
+const EXAM_BLOCKS: { block: 1 | 2 | 3; cue: ExamCue; title: string }[] = [
+  { block: 1, cue: 'romaji', title: 'Bloque 1 · rōmaji' },
+  { block: 2, cue: 'meaning', title: 'Bloque 2 · español' },
+  { block: 3, cue: 'audio', title: 'Bloque 3 · audio' },
+]
+
+// El examen final de FRASES: el que de verdad sella el tomo. Va detrás del repaso de
+// vocabulario porque examina lo último de la cadena kana → palabra → frase, y solo tiene
+// sentido una vez que las dos anteriores están hechas.
+//
+// NO se corrige aquí ni en el navegador mientras se hace: `finalExam.ts` puntúa en
+// silencio y decide él mismo cuándo se pasa de hoja, así que estas planas no llevan ni
+// `exam` ni `seal` — ese conteo es de `examSeal.ts`, y este examen aprueba con un umbral,
+// no con acertar todo a la primera.
+//
+// Dos frases por plana, una en cada hoja: con un número impar, la última se queda sola y
+// comparte plana con la hoja de resultados del bloque —`finalExam.ts` sabe leer esto
+// mirando cuántas frases hay en el grupo—. Sin las 15 frases no hay examen: examinar a
+// medio escribir el tomo sería preguntar por lo que todavía no se ha enseñado.
+function finalSentenceExamSpreads(sentenceIds: string[]): Spread[] {
+  if (sentenceIds.length === 0) return []
+
+  const orders: Record<1 | 2 | 3, string[]> = {
+    1: sentenceIds,
+    2: [...sentenceIds].reverse(),
+    3: shuffle(sentenceIds),
+  }
+
+  const rules: Spread = {
+    right: { title: 'Examen final', shows: 'examRules' },
+    left: { title: 'Cómo se examina', shows: 'examScope' },
+  }
+
+  const blockSpreads = EXAM_BLOCKS.flatMap(({ block, cue, title }) => {
+    const order = orders[block]
+    const total = order.length
+
+    const sentenceSpreads: Spread[] = []
+    for (let i = 0; i < order.length; i += 2) {
+      const rightId = order[i]
+      const leftId: string | undefined = order[i + 1]
+
+      sentenceSpreads.push({
+        right: {
+          title,
+          shows: 'examSentence',
+          examBlock: block,
+          cue,
+          sentenceId: rightId,
+          sentenceIndex: i + 1,
+          sentenceTotal: total,
+        },
+        left: leftId
+          ? {
+              title,
+              shows: 'examSentence',
+              examBlock: block,
+              cue,
+              sentenceId: leftId,
+              sentenceIndex: i + 2,
+              sentenceTotal: total,
+            }
+          : { title: `${title} · Resultados`, shows: 'examResults', examBlock: block },
+      })
+    }
+
+    // Con un número PAR de frases no queda hueco libre en la última pareja: los
+    // resultados piden su propia plana, sola a la derecha —solo UNA hoja lleva
+    // `examResults`, o `finalExam.ts` encontraría dos—. (Hoy las 15 frases del tomo
+    // dejan esto sin usar, pero un bloque futuro puede no ser impar.)
+    const resultsSpread: Spread | null =
+      total % 2 === 0
+        ? {
+            right: { title: `${title} · Resultados`, shows: 'examResults', examBlock: block },
+            left: { title },
+          }
+        : null
+
+    return resultsSpread ? [...sentenceSpreads, resultsSpread] : sentenceSpreads
+  })
+
+  // La plana final: nace casi vacía y `finalExam.ts` la rellena al terminar el tercer
+  // bloque —o de golpe si el tomo ya estaba sellado de antes—. Sola en su plana: no hay
+  // nada más del tomo con lo que emparejarla.
+  const reveal: Spread = {
+    right: { title: 'Nota final del tomo', shows: 'examReveal' },
+    left: { title: 'Nota final del tomo' },
+  }
+
+  return [rules, ...blockSpreads, reveal]
 }
 
 // Una plana por kana, así que el repaso crece con el bloque: repasa TODOS los kana que el

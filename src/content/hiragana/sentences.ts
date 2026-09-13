@@ -3,6 +3,9 @@
 // duplicar el mismo dato con otro nombre.
 import type { Sentence } from '../types'
 
+// `units` va a mano, igual que `text` y por la misma razón — ver el comentario de
+// `Sentence.units` en `types.ts`. Cada uno se ha comprobado letra a letra contra
+// `text` antes de darlo por bueno.
 export const SENTENCES: Sentence[] = [
   {
     id: 'ie-wa-aoi',
@@ -10,6 +13,14 @@ export const SENTENCES: Sentence[] = [
     meaning: 'La casa es azul',
     wordIds: ['ie', 'aoi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ie-wa-ii',
@@ -17,6 +28,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'La casa es buena',
     wordIds: ['ie', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ie-wa-ooi',
@@ -24,6 +42,14 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Hay muchas casas',
     wordIds: ['ie', 'ooi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'e-wa-aoi',
@@ -31,6 +57,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'El cuadro es azul',
     wordIds: ['e', 'aoi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'e-wa-ii',
@@ -38,6 +71,12 @@ export const SENTENCES: Sentence[] = [
     meaning: 'El cuadro es bueno',
     wordIds: ['e', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'e-wa-ooi',
@@ -45,6 +84,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Hay muchos cuadros',
     wordIds: ['e', 'ooi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ue-wa-aoi',
@@ -52,6 +98,14 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Lo de arriba es azul',
     wordIds: ['ue', 'aoi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'う', romaji: 'u' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ue-wa-ii',
@@ -59,6 +113,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Lo de arriba está bien',
     wordIds: ['ue', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'う', romaji: 'u' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ao-wa-ii',
@@ -66,6 +127,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'El azul es bonito',
     wordIds: ['ao', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ao-wa-ooi',
@@ -73,6 +141,14 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Hay mucho azul',
     wordIds: ['ao', 'ooi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'haha-wa-ii',
@@ -80,6 +156,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Mi madre es buena',
     wordIds: ['haha', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'haha-wa-au',
@@ -87,6 +170,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Mi madre se encuentra (con alguien)',
     wordIds: ['haha', 'au'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'う', romaji: 'u' },
+    ],
   },
   {
     id: 'haha-wa-iu',
@@ -94,6 +184,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Mi madre dice',
     wordIds: ['haha', 'iu'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'う', romaji: 'u' },
+    ],
   },
   {
     id: 'ha-wa-ii',
@@ -103,6 +200,12 @@ export const SENTENCES: Sentence[] = [
     meaning: 'El diente está bien',
     wordIds: ['ha', 'ii'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ha-wa-ooi',
@@ -110,6 +213,13 @@ export const SENTENCES: Sentence[] = [
     meaning: 'Hay muchos dientes',
     wordIds: ['ha', 'ooi'],
     grammarId: 'topic-wa',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
 ]
 
