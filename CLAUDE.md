@@ -232,12 +232,25 @@ api/
   subida falla, se reintenta al volver a entrar.
 - **La cuenta de prueba vive en este navegador**, y el panel lo dice. Es
   «todavía no», y tiene que leerse así.
+- **`mockServer.ts` no sabe de hiragana**: lee `content/aisleContent.ts`, el
+  registro de qué pasillo tiene qué temario —ver «Cómo se arma un tomo»—, así que
+  darle temario a un pasillo nuevo no toca ni `mockServer.ts` ni `volumes.ts`.
 
-La regla del tomo: el 1 se abre siempre y sin cuenta; cada uno de los demás pide
+La regla del tomo, encadenada de un tirón por los cuatro pasillos —hiragana,
+katakana, kanji, vocabulario, en ese orden—: dentro de un pasillo, cada tomo pide
 la **insignia** del anterior, que da el servidor al recibir el sello del examen
-final. Sin cuenta, el sello se queda en el navegador y el tomo siguiente pide
-crearla en vez de abrirse. El diseño de la insignia está sin pulir: de momento es
-el sello en el carné.
+final; el primer tomo de un pasillo pide además el ÚLTIMO tomo del pasillo de
+antes sellado del todo —katakana pide hiragana terminado, kanji pide katakana,
+vocabulario pide kanji—. Solo el tomo 1 de hiragana, que no tiene pasillo
+anterior, se abre siempre y sin cuenta. Sin cuenta, el sello se queda en el
+navegador y el tomo siguiente pide crearla en vez de abrirse. El diseño de la
+insignia está sin pulir: de momento es el sello en el carné.
+
+`journey()` —el carné, los cuatro arcos del N5— sigue la misma regla: cuenta
+hasta el tomo más lejano sellado EN CADA pasillo, así que katakana y kanji dan su
+progreso real en cuanto tengan temario, sin tocar código. «Vocabulario» es la
+excepción: no es el avance de ESE pasillo, es la palabra aprendida sumada de los
+cuatro —la misma cuenta acumulada de siempre, ahora generalizada—.
 
 ### Supabase — las reglas que no se negocian
 
@@ -671,14 +684,24 @@ independientes del contenido.
 **Un tomo ES un bloque del temario.** Lo único que distingue un libro de otro son
 sus datos: no hay ni una línea de código por libro.
 
+`content/aisleContent.ts` registra, pasillo a pasillo, su `BLOCK_PLAN` y cómo pedir
+el resto de su temario. Un pasillo sin `content/<pasillo>/blocks.ts` se registra con
+la lista vacía: la balda se ve, pero sin tomos que sacar, hasta que tenga su
+carpeta. La capa `api/` —el servidor simulado, `fetchVolume`, los sellos, el
+carné— ya sabe servir cualquier pasillo que tenga temario, encadenado al anterior
+—ver «La capa `api/`»—: **de momento solo hiragana lo tiene**, así que es el único
+que se ve con tomos; darle temario a otro no exige tocar `mockServer.ts` ni
+`volumes.ts`, solo `content/aisleContent.ts` y su propia rejilla —ver «Qué hay que
+rellenar para un pasillo nuevo»—.
+
 ```text
-BLOCK_PLAN         el temario entero en orden: doce bloques, escritos o no
+AISLE_CONTENT      el BLOCK_PLAN de CADA pasillo, escrito o no (aisleContent.ts)
       ↓
-VOLUME_ORDER       un tomo por bloque, con las caras de su puesto (volumeArt.ts)
+VOLUME_ORDER       un tomo por bloque del pasillo, con las caras de su puesto (volumeArt.ts)
       ↓
 SHELF_GRID         el mueble medido: sus baldas y sus vanos
       ↓
-placeVolumes       posa cada tomo en el primer hueco libre → SHELF_VOLUMES
+placeVolumes       posa cada tomo en el primer hueco libre → buildShelfVolumes(aisleId)
       ↓
 fetchVolume        el servidor empaqueta el bloque con todo lo que nombra
       ↓
@@ -687,9 +710,10 @@ VolumeReader       recibe ese paquete, sin mirar content/ por su cuenta
 buildVolumePages   genera las páginas a partir de sus lecciones
 ```
 
-**Cuántos tomos hay no se escribe:** son tantos como bloques tenga `BLOCK_PLAN`.
-Un bloque sin escribir sigue siendo un tomo —se ve en la balda y se desbloquea a
-su hora—, pero al pulsarlo dice que todavía se está escribiendo.
+**Cuántos tomos hay no se escribe:** son tantos como bloques tenga el `BLOCK_PLAN`
+de ESE pasillo, dentro de `AISLE_CONTENT`. Un bloque sin escribir sigue siendo un
+tomo —se ve en la balda y se desbloquea a su hora—, pero al pulsarlo dice que
+todavía se está escribiendo.
 
 Un tomo en la balda puede estar abierto, cerrado (falta sellar el anterior),
 esperando cuenta (sellado sin cuenta) o sin escribir. Los cerrados se ven
@@ -743,6 +767,32 @@ bloque entero para poder abrirse.
 4. Nada en la estantería: el tomo ya está, porque su bloque ya figura en
    `BLOCK_PLAN`. Un bloque nuevo fuera de los doce se añade ahí, y la rejilla lo
    posa en el primer hueco libre.
+
+### Qué hay que rellenar para un PASILLO nuevo
+
+Katakana, kanji y vocabulario ya tienen estantería, servidor simulado y carné
+listos para servirlos —ver «La capa `api/`»—: no hace falta tocar componentes,
+solo darles temario. Faltan tres cosas, en este orden:
+
+1. `content/<pasillo>/{blocks,kana,vocabulary,sentences}.ts` → el mismo patrón que
+   `content/hiragana/`, con los tipos comunes de `content/types.ts`. Las
+   imágenes de apoyo —la ilustración mnemotécnica de cada kana, en el campo
+   `image` de `Kana`— y el audio se cuelgan a mano en `public/images/<pasillo>/`
+   y `public/audio/<pasillo>/`, con la misma regla de encaje que hiragana:
+   centrado, al 60 % del dibujo. Eso no se genera solo, es arte.
+2. `content/aisleContent.ts` → sustituir el `EMPTY_AISLE` del pasillo por una
+   entrada real: su `blockPlan`, sus `blocksById` y su `loadLessonContent` —el
+   mismo import perezoso que ya tiene la entrada de hiragana—. Sin este paso el
+   temario existe pero la app sigue sin saber que está ahí: la balda se ve vacía
+   y el servidor no tiene qué empaquetar.
+3. Medir `shelfGrid.ts` sobre la ilustración del pasillo —hoy solo está medida
+   sobre `pasillo-hiragana.webp`—. Sin este paso los tomos del pasillo nuevo se
+   colocarían con las coordenadas de la balda de hiragana, que no tiene por qué
+   coincidir con la suya: se verían en cualquier sitio menos donde toca.
+
+Con los tres hechos, la estantería del pasillo saca sus tomos sola, el servidor
+los sirve y los desbloquea encadenados al pasillo anterior, y el carné cuenta su
+progreso — nada de eso se escribe a mano.
 
 Nada más: ningún componente, ninguna página, ningún ejercicio.
 
@@ -926,6 +976,40 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 | ははおおい | Hay muchos dientes |
 | はい / いいえ | Sí / No |
 
-#### Nmemotecnica de cada hiragana
+#	Kana nuevos	Formas acum.	% de 80	Palabras	Acum.	% N5
+B1	ア イ ス ト ー (5)	7	8,8%	1	1	0,1%
+B2	ハ フ コ ツ テ ホ レ (7)	23	28,8%	13	14	1,8%
+B3	ン ル ヒ ナ タ カ ラ (7)	34	42,5%	22	36	4,5%
+B4	ヘ メ ク マ キ モ リ ウ (8)	46	57,5%	15	51	6,4%
+B5	ロ シ ム エ チ セ ケ ソ (8)	59	73,8%	15	66	8,3%
+B6	ネ オ サ ニ ノ ヌ ミ (7)	67	83,8%	5	71	8,9%
+B7	ヤ ユ ヨ ワ ッ (5)	72	90,0%	6	77	9,6%
+B8	ャ ュ ョ ァ ィ ゥ ェ ォ (8)	80	100%	10	87	10,9%
 
-A - Nos imaginamos a nuestro amigo Arturo de la mesa redonda, pero en version japonesa, obviamente no podria este levantar la espada con facilidad, debera pedir el poder de sus Amigos, asi que mientras Arturo pide el poder de la Amistad y desgasnita gritando AAAAAAAAAAAAAAAA
+Las formas incluyen los dakuten/handakuten que entran con su fila. B3 es el bloque estrella: 22 palabras.
+
+Ahora calculo la de kanji.
+
+Tabla kanji — 12 bloques, 100 kanji
+#	Kanji nuevos	Acum.	% de 100	Palabras	Acum.	% N5
+K1	一 二 三 四 五 六 七 (7)	7	7%	14	14	1,8%
+K2	人 月 年 時 分 八 九 (7)	14	14%	16	30	3,8%
+K3	今 来 大 毎 半 男 女 (7)	21	21%	17	47	5,9%
+K4	何 週 子 学 出 十 百 (7)	28	28%	17	64	8,0%
+K5	生 円 中 口 小 校 万 (7)	35	35%	17	81	10,1%
+K6	日 千 先 火 水 木 金 (7)	42	42%	20	101	12,6%
+K7	高 入 友 話 見 休 土 上 下 (9)	51	51%	16	117	14,6%
+K8	手 電 外 前 後 左 右 東 西 南 (10)	61	61%	12	129	16,1%
+K9	国 名 車 気 北 父 母 私 目 耳 (10)	71	71%	14	143	17,9%
+K10	空 天 足 体 山 川 田 雨 花 駅 (10)	81	81%	11	154	19,3%
+K11	道 語 読 書 行 食 飲 買 立 店 (10)	91	91%	11	165	20,6%
+K12	聞 会 安 新 古 長 多 少 社 (9)	100	100%	9	174	21,8%
+
+
+Balance de las tres fases
+Fase	Bloques	Caracteres	Palabras brutas	Nuevas reales	Acum. único	% N5
+Hiragana	12	46 base (110 formas)	304	304	304	38,0%
+Katakana	8	46 base (80 formas)	87	87	391	48,9%
+Kanji	12	100 kanji	174	68	459	57,4%
+FALTANTE	—	—	—	~341	800	42,6%
+
