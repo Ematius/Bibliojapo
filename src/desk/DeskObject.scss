@@ -9,24 +9,17 @@
   left: calc(var(--spot-x) * 100%);
   width: calc(var(--spot-width) * 100%);
   transform: translate(-50%, -100%);
-  // Un botón trae de fábrica marco, fondo y relleno propios, y aquí lo que se ve es el dibujo.
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
   // Transición y no timeline de GSAP: GSAP es para las entradas y salidas de la escena, no
-  // para un estado que se enciende y se apaga con el ratón.
+  // para un estado que se enciende y se apaga con el ratón. Va aquí, en el que viaja, y no
+  // en el botón: es el `<div>` el que sube al pasar el ratón, con lo de dentro pegado a él.
   transition: transform var(--duration-fast) var(--ease-book);
 
+  // El `<div>` no se pulsa —quien se pulsa es `.desk-object__button`, dentro—, pero `:hover`
+  // sí llega aquí solo con pasar el ratón por encima de un hijo, que es como ya funcionaba
+  // esto. El foco por teclado no burbujea igual, así que ese usa `:has()`.
   &:hover,
-  &:focus-visible {
+  &:has(.desk-object__button:focus-visible) {
     transform: translate(-50%, -100%) translateY(-0.4rem);
-  }
-
-  // El foco tiene que verse sobre la madera, que es oscura y con vetas.
-  &:focus-visible {
-    outline: 2px solid var(--color-brass-glow);
-    outline-offset: 4px;
   }
 
   // Sin movimiento el objeto sigue respondiendo: lo que se quita es el salto, no la señal de
@@ -35,9 +28,27 @@
     transition: none;
 
     &:hover,
-    &:focus-visible {
+    &:has(.desk-object__button:focus-visible) {
       transform: translate(-50%, -100%);
     }
+  }
+}
+
+// El botón de verdad: el único hijo pulsable de fábrica, así que el foco, la tecla Intro y
+// el nombre en voz alta los da el navegador solo. Ocupa todo el ancho del `<div>` que viaja
+// —de ahí sale el alto de su dibujo de reposo— y no aporta ningún marco propio.
+.desk-object__button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+
+  // El foco tiene que verse sobre la madera, que es oscura y con vetas.
+  &:focus-visible {
+    outline: 2px solid var(--color-brass-glow);
+    outline-offset: 4px;
   }
 }
 
