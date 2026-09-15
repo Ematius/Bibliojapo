@@ -1,4 +1,4 @@
-import { BLOCK_PLAN } from '../content/hiragana/blocks'
+import { AISLE_CONTENT } from '../content/aisleContent'
 import { readSeals } from '../shared/seals'
 import { getSession } from './account'
 import { FINAL_SEAL, type VolumeGate } from './contract'
@@ -13,7 +13,7 @@ export type VolumeAccess = 'open' | 'locked' | 'needsAccount' | 'soon'
 
 // El tomo gratuito. Se sabe sin preguntar al servidor, y por eso se puede coger
 // mientras el servidor contesta, o si no contesta.
-export const FREE_BLOCK_ID = BLOCK_PLAN[0]
+export const FREE_BLOCK_ID = AISLE_CONTENT.hiragana.blockPlan[0]
 
 function sealedHere(gate: VolumeGate | undefined): boolean {
   return Boolean(gate && readSeals(gate.blockId).has(FINAL_SEAL))

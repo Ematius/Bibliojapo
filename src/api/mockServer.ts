@@ -7,14 +7,13 @@
 // Nada de esto es seguridad: vive en el navegador y se lee desde sus herramientas.
 // El resumen de la contraseña solo evita dejarla escrita tal cual.
 import {
-  BLOCK_PLAN,
-  BLOCKS_BY_ID,
   HIRAGANA_BASE_COUNT,
   KATAKANA_BASE_COUNT,
   N5_KANJI_COUNT,
   N5_WORD_COUNT,
   progressThrough,
 } from '../content/hiragana/blocks'
+import { AISLE_CONTENT, AISLE_ORDER, globalBlockId, type AisleId } from '../content/aisleContent'
 import type { Block } from '../content/types'
 import { ApiError } from './apiError'
 import {
@@ -34,6 +33,32 @@ export const MOCK_SERVER = {
   // Qué parte de las llamadas falla como si no hubiera conexión, de 0 a 1.
   failureRate: 0,
 }
+
+interface GlobalBlock {
+  aisleId: AisleId
+  localId: string
+  blockId: string
+  // Su puesto DENTRO del pasillo, empezando por 1: el mismo número que enseña la
+  // balda —`Tomo ${index + 1}` en `shelfConfig.ts`—, no su posición en esta lista
+  // conjunta.
+  volumeNumber: number
+}
+
+// La cadena de desbloqueo entera, de un tirón: hiragana completo, luego katakana
+// completo, luego kanji, luego vocabulario. Un tomo pide el ANTERIOR de esta lista,
+// así que dentro de un pasillo es la cadena de siempre —cada bloque pide el de
+// antes— y en la frontera entre dos pasillos es «termina el pasillo anterior»,
+// porque su último bloque es lo que representa tenerlo terminado del todo.
+const GLOBAL_BLOCKS: readonly GlobalBlock[] = AISLE_ORDER.flatMap((aisleId) =>
+  AISLE_CONTENT[aisleId].blockPlan.map((localId, index) => ({
+    aisleId,
+    localId,
+    blockId: globalBlockId(aisleId, localId),
+    volumeNumber: index + 1,
+  })),
+)
+
+const GLOBAL_BLOCK_IDS = new Set(GLOBAL_BLOCKS.map((entry) => entry.blockId))
 
 interface StoredUser {
   id: string
@@ -139,7 +164,7 @@ function newId(): string {
 // un móvil nuevo no puede borrar lo ganado en otro. Aquí se ganan las insignias.
 function absorb(user: StoredUser, seals: SealsByBlock): void {
   for (const [blockId, earned] of Object.entries(seals)) {
-    if (!BLOCK_PLAN.includes(blockId)) continue
+    if (!GLOBAL_BLOCK_IDS.has(blockId)) continue
 
     const merged = new Set([...(user.seals[blockId] ?? []), ...earned])
     user.seals[blockId] = [...merged]
@@ -152,19 +177,40 @@ function absorb(user: StoredUser, seals: SealsByBlock): void {
 
 function unlockedAt(index: number, user: StoredUser | null): boolean {
   if (index === 0) return true
-  return Boolean(user?.badges.includes(BLOCK_PLAN[index - 1]))
+  return Boolean(user?.badges.includes(GLOBAL_BLOCKS[index - 1].blockId))
 }
 
-// El temario se carga AQUÍ y no arriba del archivo: este servidor lo importa la
-// barra, que va en el bundle inicial, y el temario entero viajaría con la portada.
-async function packVolume(block: Block): Promise<VolumeContent> {
-  const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }] = await Promise.all([
-    import('../content/hiragana/kana'),
-    import('../content/hiragana/vocabulary'),
-    import('../content/hiragana/sentences'),
-  ])
+// Cuánto se ha aprendido de UN pasillo, contando hasta el bloque más lejano ya
+// sellado EN ESE pasillo. Sin repetir: un kana o una palabra que reaparece en un
+// bloque posterior no cuenta dos veces. Un pasillo sin temario da cero en los dos,
+// la misma regla que un bloque sin escribir.
+function aisleProgress(aisleId: AisleId, badges: readonly string[]): { kana: number; words: number } {
+  const entries = GLOBAL_BLOCKS.filter((entry) => entry.aisleId === aisleId)
+  const badgeSet = new Set(badges)
+  const furthest = entries.reduce(
+    (best, entry, index) => (badgeSet.has(entry.blockId) ? index : best),
+    -1,
+  )
 
-  const sentences = block.sentenceIds.flatMap((id) => SENTENCES_BY_ID.get(id) ?? [])
+  const { blocksById } = AISLE_CONTENT[aisleId]
+  const reached = entries.slice(0, furthest + 1).flatMap((entry) => {
+    const block = blocksById.get(entry.localId)
+    return block ? [block] : []
+  })
+
+  return {
+    kana: new Set(reached.flatMap((block) => block.lessons.map((lesson) => lesson.kanaId))).size,
+    words: new Set(reached.flatMap((block) => block.wordIds)).size,
+  }
+}
+
+// Lo pesado del temario se carga AQUÍ y no arriba del archivo: este servidor lo
+// importa la barra, que va en el bundle inicial, y el temario entero viajaría con
+// la portada. `loadLessonContent` es quien hace el import perezoso, uno por pasillo.
+async function packVolume(aisleId: AisleId, block: Block): Promise<VolumeContent> {
+  const { kanaById, wordsById, sentencesById } = await AISLE_CONTENT[aisleId].loadLessonContent()
+
+  const sentences = block.sentenceIds.flatMap((id) => sentencesById.get(id) ?? [])
 
   const wordIds = new Set([
     ...block.wordIds,
@@ -176,10 +222,15 @@ async function packVolume(block: Block): Promise<VolumeContent> {
 
   return {
     block,
-    kana: block.lessons.flatMap((lesson) => HIRAGANA_BY_ID.get(lesson.kanaId) ?? []),
-    words: [...wordIds].flatMap((id) => VOCABULARY_BY_ID.get(id) ?? []),
+    kana: block.lessons.flatMap((lesson) => kanaById.get(lesson.kanaId) ?? []),
+    words: [...wordIds].flatMap((id) => wordsById.get(id) ?? []),
     sentences,
-    progress: progressThrough(block.id),
+    // El progreso del carné sigue siendo solo de hiragana: los demás pasillos
+    // todavía no tienen temario que contar. Se generaliza cuando lo tengan.
+    progress:
+      aisleId === 'hiragana'
+        ? progressThrough(block.id)
+        : { kana: 0, kanaPercent: 0, words: 0, wordsPercent: 0 },
   }
 }
 
@@ -290,51 +341,60 @@ export const mockServer = {
 
   badges: () =>
     respond((db): Badge[] =>
-      requireUser(db).badges.map((blockId) => ({
-        blockId,
-        volume: BLOCK_PLAN.indexOf(blockId) + 1,
-      })),
+      requireUser(db).badges.flatMap((blockId) => {
+        const entry = GLOBAL_BLOCKS.find((candidate) => candidate.blockId === blockId)
+        // Una insignia de un bloque que ya no figura en ningún plan no debería
+        // poder existir, pero por si acaso no se enseña un tomo fantasma.
+        return entry ? [{ blockId, volume: entry.volumeNumber }] : []
+      }),
     ),
 
-  // Cuenta hasta el ÚLTIMO tomo sellado, no uno por uno: se ganan en orden, así que
-  // el más avanzado ya incluye los anteriores y `progressThrough` no repite lo
-  // reutilizado. Katakana y kanji van a cero mientras no haya temario suyo.
+  // Cada pasillo cuenta hasta su ÚLTIMO tomo sellado, no uno por uno: se ganan en
+  // orden, así que el más avanzado ya incluye los anteriores. Un pasillo sin
+  // temario da cero solo, sin caso especial —ver `aisleProgress`—.
+  //
+  // «Vocabulario» no es el progreso del pasillo de ese nombre: es la palabra
+  // aprendida en TODOS, la misma cuenta acumulada de siempre, ahora sumada pasillo
+  // a pasillo en vez de leída solo de hiragana.
   journey: () =>
     respond((db): JourneyTrack[] => {
       const badges = sessionUser(db)?.badges ?? []
-      const furthest = badges.reduce(
-        (best, blockId) => Math.max(best, BLOCK_PLAN.indexOf(blockId)),
-        -1,
-      )
-      const done = furthest < 0 ? null : progressThrough(BLOCK_PLAN[furthest])
+      const progress = Object.fromEntries(
+        AISLE_ORDER.map((aisleId) => [aisleId, aisleProgress(aisleId, badges)]),
+      ) as Record<AisleId, { kana: number; words: number }>
 
       return [
-        { id: 'hiragana', learned: done?.kana ?? 0, total: HIRAGANA_BASE_COUNT },
-        { id: 'katakana', learned: 0, total: KATAKANA_BASE_COUNT },
-        { id: 'kanji', learned: 0, total: N5_KANJI_COUNT },
-        { id: 'vocabulary', learned: done?.words ?? 0, total: N5_WORD_COUNT },
+        { id: 'hiragana', learned: progress.hiragana.kana, total: HIRAGANA_BASE_COUNT },
+        { id: 'katakana', learned: progress.katakana.kana, total: KATAKANA_BASE_COUNT },
+        { id: 'kanji', learned: progress.kanji.kana, total: N5_KANJI_COUNT },
+        {
+          id: 'vocabulary',
+          learned: AISLE_ORDER.reduce((sum, aisleId) => sum + progress[aisleId].words, 0),
+          total: N5_WORD_COUNT,
+        },
       ]
     }),
 
   volumeGates: () =>
     respond((db): VolumeGate[] => {
       const user = sessionUser(db)
-      return BLOCK_PLAN.map((blockId, index) => ({
-        blockId,
+      return GLOBAL_BLOCKS.map((entry, index) => ({
+        blockId: entry.blockId,
         unlocked: unlockedAt(index, user),
-        published: BLOCKS_BY_ID.has(blockId),
+        published: AISLE_CONTENT[entry.aisleId].blocksById.has(entry.localId),
       }))
     }),
 
   volume: (blockId: string) =>
     respond((db) => {
-      const index = BLOCK_PLAN.indexOf(blockId)
-      const block = BLOCKS_BY_ID.get(blockId)
-      if (index < 0 || !block) throw new ApiError('not-found')
+      const index = GLOBAL_BLOCKS.findIndex((candidate) => candidate.blockId === blockId)
+      const entry = GLOBAL_BLOCKS[index]
+      const block = entry && AISLE_CONTENT[entry.aisleId].blocksById.get(entry.localId)
+      if (!entry || !block) throw new ApiError('not-found')
 
       const user = sessionUser(db)
       if (!unlockedAt(index, user)) throw new ApiError(user ? 'forbidden' : 'unauthorized')
 
-      return packVolume(block)
+      return packVolume(entry.aisleId, block)
     }),
 }

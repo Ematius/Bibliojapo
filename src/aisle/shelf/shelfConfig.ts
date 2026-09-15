@@ -2,7 +2,7 @@
 // aquí: sale de la rejilla de `shelfGrid.ts`. Este archivo dice cómo ES un tomo —sus
 // caras, su forma, cómo gira y cómo se adelanta— y cuáles hay.
 
-import { BLOCK_PLAN } from '../../content/hiragana/blocks'
+import { AISLE_CONTENT, globalBlockId, type AisleId } from '../../content/aisleContent'
 import { placeVolumes, type Placement } from './shelfGrid'
 import { VOLUME_ART, type VolumeArt } from './volumeArt'
 
@@ -23,24 +23,32 @@ export interface VolumeEntry {
 
 export type ShelfVolume = VolumeEntry & Placement
 
-// La colección, EN ORDEN: un tomo por cada bloque del temario, escrito o no, así que el
-// día que el plan cambie la estantería cambia con él. El orden de esta lista ES el orden
-// en la balda; no hay coordenadas que medir.
+// La colección de UN pasillo, EN ORDEN: un tomo por cada bloque de su plan, escrito o
+// no, así que el día que el plan cambie la estantería cambia con él. El orden de esta
+// lista ES el orden en la balda; no hay coordenadas que medir.
+//
+// Un pasillo sin temario todavía da la lista vacía —ver `content/aisleContent.ts`—, así
+// que la balda no saca ningún tomo hasta que exista su `content/<pasillo>/blocks.ts`.
 //
 // Cada tomo se lleva las caras de su mismo puesto en `VOLUME_ART`. Si hubiera más bloques
 // que dibujos, los que falten repiten el último: se ve, y un tomo sin tapas sería peor.
-const VOLUME_ORDER: readonly VolumeEntry[] = BLOCK_PLAN.map((blockId, index) => ({
-  id: blockId,
-  number: index + 1,
-  label: `Tomo ${index + 1}`,
-  blockId,
-  art: VOLUME_ART[Math.min(index, VOLUME_ART.length - 1)],
-}))
+export function buildShelfVolumes(aisleId: string): readonly ShelfVolume[] {
+  const content = AISLE_CONTENT[aisleId as AisleId]
+  if (!content) return []
 
-export const SHELF_VOLUMES: readonly ShelfVolume[] = placeVolumes(
-  VOLUME_ORDER,
-  (entry) => entry.art.shape.spineRatio,
-)
+  const volumeOrder: readonly VolumeEntry[] = content.blockPlan.map((localId, index) => {
+    const id = globalBlockId(aisleId as AisleId, localId)
+    return {
+      id,
+      number: index + 1,
+      label: `Tomo ${index + 1}`,
+      blockId: id,
+      art: VOLUME_ART[Math.min(index, VOLUME_ART.length - 1)],
+    }
+  })
+
+  return placeVolumes(volumeOrder, (entry) => entry.art.shape.spineRatio)
+}
 
 // Poses del tomo, en grados de giro sobre su eje vertical. El tomo es una caja cerrada de
 // cuatro caras, así que el ángulo no elige qué imagen enseñar: enseña la que toque y las
