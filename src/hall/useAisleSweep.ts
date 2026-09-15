@@ -21,13 +21,19 @@ export function useAisleSweep(stageRef: RefObject<HTMLDivElement | null>) {
       isSweepingRef.current = true
       sweepEl.src = aisle.scene
 
+      // El cartel dice de qué lado del vestíbulo cuelga: los de la mitad derecha entran
+      // por la derecha, para que el barrido vaya hacia el mismo lado del arco que se ha
+      // pulsado en vez de cruzar la escena entera.
+      const fromRight = sign.left >= 0.5
+      const driftSign = fromRight ? -1 : 1
+
       const tl = gsap.timeline({
         // Se cambia de ruta con el pasillo ya cubriendo la pantalla entera: el componente
         // de destino muestra esa misma ilustración en la misma posición, así que no se nota.
         onComplete: () => navigate(aisleRoute(aisle.id)),
       })
 
-      tl.set(sweepEl, { xPercent: -100, autoAlpha: 1 })
+      tl.set(sweepEl, { xPercent: fromRight ? 100 : -100, autoAlpha: 1 })
 
       // Se anima `x` en píxeles y no `xPercent` porque el stage ya usa xPercent para
       // centrarse; tocarlo lo descolocaría.
@@ -39,7 +45,7 @@ export function useAisleSweep(stageRef: RefObject<HTMLDivElement | null>) {
         {
           x: (_index, target: Element) =>
             (gsap.getProperty(target, 'x') as number) +
-            window.innerWidth * AISLE_SWEEP.stageDriftRatio,
+            window.innerWidth * AISLE_SWEEP.stageDriftRatio * driftSign,
           duration: AISLE_SWEEP.durationSeconds,
           ease: AISLE_SWEEP.ease,
         },

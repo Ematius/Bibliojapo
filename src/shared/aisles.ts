@@ -9,6 +9,9 @@ export interface Aisle {
 
 export const AISLES = [
   { id: 'hiragana', label: 'Hiragana', scene: '/images/hallways/pasillo-hiragana.webp' },
+  { id: 'katakana', label: 'Katakana', scene: '/images/hallways/pasillo-katakana.webp' },
+  { id: 'kanji', label: 'Kanji', scene: '/images/hallways/pasillo-kanji.webp' },
+  { id: 'vocabulario', label: 'Vocabulario', scene: '/images/hallways/pasillo-vocabulario.webp' },
 ] as const satisfies readonly Aisle[]
 
 // La ruta se deriva del id en vez de escribirse en cada entrada: así no puede haber

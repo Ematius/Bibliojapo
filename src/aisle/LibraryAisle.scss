@@ -14,17 +14,30 @@
   // se centra el libro abierto, que va `fixed`.
   container-type: size;
 
-  // El encuadre es lo que permite colocar los tomos en fracciones de la IMAGEN y no de la
-  // ventana. Aquí NO vale el del vestíbulo, que recorta desde el centro del dibujo: la
-  // estantería no está en el centro, y en una pantalla estrecha el recorte se llevaba su mitad
-  // derecha. Este encuadra por la zona de las baldas.
+  // Lo que comparten los dos encuadres. El tamaño y la posición los pone SIEMPRE uno solo
+  // de los dos modificadores de abajo, nunca los dos a la vez: mezclar `framed-stage` y
+  // `scene-stage` sobre el mismo elemento deja propiedades sueltas de uno pisando al otro
+  // —pasó con `height`, que framed-stage fija y scene-stage espera en `auto` para que
+  // mande `aspect-ratio`—.
   &__stage {
-    @include framed-stage;
-
     // El dedo recorre la escena, así que el navegador no puede quedarse con el gesto.
     // `pinch-zoom` y no `none`: se toma el arrastre de un dedo, y ampliar con dos sigue
     // funcionando.
     touch-action: pinch-zoom;
+  }
+
+  // El pasillo con balda medida: protege la zona de las baldas y recorta lo demás. Aquí
+  // NO vale el encuadre del vestíbulo, que recorta desde el centro del dibujo: la
+  // estantería no está en el centro, y en una pantalla estrecha el recorte se llevaba su
+  // mitad derecha.
+  &__stage--framed {
+    @include framed-stage;
+  }
+
+  // Los pasillos sin balda medida todavía: cubren la ventana entera recortando desde el
+  // centro, el mismo encuadre que el vestíbulo.
+  &__stage--full {
+    @include scene-stage;
   }
 
   &__scene {
@@ -37,4 +50,21 @@
     pointer-events: none;
   }
 
+  // El aviso de un pasillo sin balda todavía: centrado sobre la escena entera, la misma
+  // voz tranquila que el resto de «todavía no» del sitio.
+  &__note {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1.5rem;
+    color: var(--color-stone);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    text-align: center;
+    text-wrap: pretty;
+    pointer-events: none;
+  }
 }
