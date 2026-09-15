@@ -92,11 +92,17 @@
   //
   // El tamaño va en vw y no en vh: la imagen es más alta que ancha, así que fijar el ancho es
   // lo que evita que en una pantalla baja y apaisada se dispare de alto.
+  //
+  // Una sola curva continua para todo el rango, en vez de saltar de tamaño en cada breakpoint:
+  // ~205 px en un móvil de 375 px, ~450 px en una tablet de 1024, ~650 px en un portátil de
+  // 16", y tope en 50rem (800 px) a partir de 1920 px — de ahí en adelante da igual que la
+  // pantalla sea un portátil grande o un monitor de 27": el cartel no tiene por qué seguir
+  // creciendo.
   &__welcome-sign {
     position: absolute;
     top: 5rem;
     left: 1.5rem;
-    width: min(50rem, 50vw);
+    width: clamp(12.5rem, 4rem + 38vw, 50rem);
     z-index: 0;
   }
 

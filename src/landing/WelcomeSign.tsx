@@ -29,15 +29,13 @@ export function WelcomeSign() {
     timelineRef.current?.kill()
   }, [])
 
-  const handleClick = () => {
+  const runTransition = (isHiding: boolean) => {
     const button = buttonRef.current
     const image = imageRef.current
     const layer = layerRef.current
     if (!button || !image || !layer) return
 
     if (isBusyRef.current) return
-
-    const isHiding = isRevealed
 
     // Se da por abierto al pulsar y no al terminar: de este estado depende que el cartel
     // esté por delante de la caminante MIENTRAS crece. Al cerrar lo suelta `settle`, al
@@ -94,12 +92,38 @@ export function WelcomeSign() {
     })
   }
 
+  // Se abre sola al entrar en la página. Con un `setTimeout(0)` y no a las bravas: en
+  // desarrollo, StrictMode monta, desmonta y remonta cada efecto una vez de más, y
+  // arrancar aquí la timeline la mataría a medio crecer sin que nada la reanude —el
+  // cartel se quedaría bloqueado para siempre—. El temporizador cae fuera de ese ciclo
+  // fantasma, así que solo sobrevive el que programa el montaje real.
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => runTransition(false), 0)
+    return () => window.clearTimeout(timeoutId)
+  }, [])
+
+  // Con el cartel abierto, cualquier clic lo cierra —el propio cartel incluido—. Se
+  // escucha en captura y se corta ahí mismo: si el clic cayera en la puerta, dejarlo
+  // seguir su curso normal la abriría a la vez que cierra el cartel.
+  useEffect(() => {
+    if (!isRevealed) return
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isBusyRef.current) return
+      event.stopPropagation()
+      runTransition(true)
+    }
+
+    document.addEventListener('click', handleOutsideClick, { capture: true })
+    return () => document.removeEventListener('click', handleOutsideClick, { capture: true })
+  }, [isRevealed])
+
   return (
     <button
       ref={buttonRef}
       type="button"
       className="welcome-sign"
-      onClick={handleClick}
+      onClick={() => runTransition(false)}
       // Lo que un lector de pantalla necesita para anunciarlo, y de lo que tira el CSS
       // para subirlo por delante del resto de la portada.
       aria-expanded={isRevealed}
