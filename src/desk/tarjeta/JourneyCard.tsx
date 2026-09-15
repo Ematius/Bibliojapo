@@ -1,4 +1,4 @@
-import type { JourneyTrack, TrackId } from '../api/progress'
+import type { JourneyTrack, TrackId } from '../../api/progress'
 import './JourneyCard.scss'
 
 // Lo que se lee en el carné: cuánto se lleva recorrido del N5 y qué tomos se han cerrado.

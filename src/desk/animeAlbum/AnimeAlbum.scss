@@ -1,0 +1,90 @@
+// El álbum de anime, sobre el hueco de papel de `manga-elevado-abierto-100.webp`. Cada
+// página es una sola imagen y nada más: a diferencia de `VolumeReader.scss`, no hay texto
+// que medir en `cq*` ni bordes que fundir con el papel pintado — ver la nota de
+// `AnimeAlbum.tsx`.
+.anime-album {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &__empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 8cqw;
+    text-align: center;
+    color: var(--color-ink-soft);
+    font-family: var(--font-body);
+    font-size: clamp(0.6rem, 3.6cqw, 1.4rem);
+  }
+
+  &__mount,
+  &__book {
+    width: 100%;
+    height: 100%;
+  }
+
+  // La plantilla que page-flip clona — mismo motivo que en `VolumeReader.scss`: tamaño cero
+  // y no `hidden`, para no dejar sin construir nada que la librería tenga que copiar.
+  &__template {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 3cqw;
+    text-align: center;
+    color: var(--color-ink);
+  }
+
+  &__kicker {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-body);
+    font-size: clamp(0.6rem, 2.2cqw, 1.2rem);
+  }
+
+  &__volume {
+    margin: 0.4em 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 6cqw, 3.2rem);
+    font-weight: 700;
+  }
+
+  &__page {
+    overflow: hidden;
+    background: var(--color-album-page);
+    // Aislado para que la mezcla de la imagen de abajo no se calcule contra lo que hay
+    // DETRÁS de todo el álbum —el libro pintado— sino solo contra este fondo.
+    isolation: isolate;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      // `contain` y no `cover`: las planas de manga son más verticales que el hueco de
+      // página, que sale del ancho del libro pintado partido en dos. Con `cover` se
+      // recortarían los bocadillos de los bordes; con `contain` se ve la plana entera, con
+      // un margen de papel a los lados.
+      object-fit: contain;
+      user-select: none;
+      // Las planas se exportaron con fondo blanco opaco, no crema: `darken` se queda con el
+      // valor más oscuro de cada canal entre la imagen y `--color-album-page` de abajo, así que
+      // donde la plana es blanca aparece el crema, y donde hay tinta o color no cambia nada
+      // —esos valores ya son más oscuros que el crema en los tres canales—.
+      mix-blend-mode: darken;
+    }
+  }
+}

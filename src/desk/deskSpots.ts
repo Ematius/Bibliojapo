@@ -40,8 +40,10 @@ export interface DeskSpot {
 export const DESK_SPOTS = {
   // La hoja de estudio, la protagonista: en el centro, delante, y la más grande.
   sheet: { x: 0.45, baseY: 0.88, width: 0.40 },
-  // La caja de los juegos, un poco más al fondo para que no compita con la hoja.
-  box: { x: 0.80, baseY: 0.90, width: 0.2 },
+  // El álbum de anime, donde estaba la caja. PROVISIONAL: heredado tal cual de la caja, sin
+  // reajustar todavía a la silueta del libro, que es más alta y más estrecha que la de un
+  // cofre — ver `SHOW_DESK_SPOTS` para retocarlo a ojo.
+  anime: { x: 0.80, baseY: 0.90, width: 0.2 },
   // El carné, el más pequeño porque es el que menos se abre: lo que cuenta de él son los
   // sellos, no el trámite.
   card: { x: 0.2, baseY: 0.70, width: 0.13 },

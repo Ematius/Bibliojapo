@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from 'react'
 import type { StyleWithVars } from '../shared/styleWithVars'
 import { frontFit, type DeskArt } from './deskArt'
-import { SHOW_DESK_SPOTS, type DeskSpot } from './deskSpots'
+import { DESK_LIFT, SHOW_DESK_SPOTS, type DeskSpot } from './deskSpots'
 import { useDeskLift } from './useDeskLift'
 import './DeskObject.scss'
 
@@ -38,12 +38,26 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
   const framesRef = useRef<(HTMLImageElement | null)[]>([])
   const restingRef = useRef<HTMLImageElement>(null)
 
-  useDeskLift({ rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg: art.restTiltDeg })
+  useDeskLift({
+    rootRef,
+    frontRef,
+    framesRef,
+    restingRef,
+    spot,
+    lifted,
+    restTiltDeg: art.restTiltDeg,
+    frontWidth: art.frontWidth,
+  })
 
   // Cuánto encoger y desplazar la cara de frente para que caiga encima de la de reposo.
   // Van en el `<div>` que viaja porque el botón y `.desk-object__face` las necesitan por
   // igual, y son hermanos: puestas en uno de los dos no le llegarían al otro.
   const fit = frontFit(art)
+  // Cuánto tarda el viaje ENTERO, fotogramas de apertura incluidos si los hay: es lo que
+  // tiene que esperar `.desk-object__face` antes de encenderse. Un retraso fijo —lo que
+  // había antes— sirve para el carné o la hoja, que no abren nada, pero con el álbum de
+  // anime dejaba ver las páginas antes de que el libro acabara de abrirse.
+  const revealDelay = DESK_LIFT.seconds + (art.frames ? DESK_LIFT.openSeconds : 0)
   const style: StyleWithVars = {
     '--spot-x': spot.x,
     '--spot-base-y': spot.baseY,
@@ -52,6 +66,7 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
     '--front-left': fit.left,
     '--front-top': fit.top,
     '--front-height': fit.height,
+    '--reveal-delay': `${revealDelay}s`,
   }
 
   return (

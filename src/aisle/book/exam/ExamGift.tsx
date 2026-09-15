@@ -83,7 +83,8 @@ export function ExamGift() {
               <ul className="exam-gift__percents" data-gift-percents />
 
               <p className="exam-gift__letter-line" data-gift-line="outro">
-                Te hemos regalado una chuleta que estará en tu escritorio, y acceso al
+                Te hemos regalado una chuleta que estará en tu escritorio
+                y unas paginas de anime, y también acceso al
                 siguiente tomo. ¡Felicidades! Sigue así.
               </p>
             </div>

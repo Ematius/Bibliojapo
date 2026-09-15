@@ -29,6 +29,9 @@ interface DeskLiftOptions {
   lifted: boolean
   // Cuánto se inclina en reposo, si el objeto es de una sola cara. Ver `DeskArt.restTiltDeg`.
   restTiltDeg?: number
+  // Cuánto ocupa ESTE objeto al plantarse enfrente, si no es el tamaño que comparten los
+  // demás. Ver `DeskArt.frontWidth`.
+  frontWidth?: number
 }
 
 export function useDeskLift({
@@ -39,6 +42,7 @@ export function useDeskLift({
   spot,
   lifted,
   restTiltDeg,
+  frontWidth = DESK_LIFT.frontWidth,
 }: DeskLiftOptions): void {
   const isFirstRender = useRef(true)
 
@@ -76,7 +80,7 @@ export function useDeskLift({
     const stageWidth = stage.clientWidth
     const stageHeight = stage.clientHeight
 
-    const scale = DESK_LIFT.frontWidth / spot.width
+    const scale = frontWidth / spot.width
     // La `y` lleva el alto sumado porque el objeto está anclado por su base: sin eso se
     // plantaría con el borde de abajo en el punto de destino, no con su centro.
     const liftedHeight = root.offsetHeight * scale
@@ -155,5 +159,5 @@ export function useDeskLift({
     return () => {
       timeline.kill()
     }
-  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg])
+  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg, frontWidth])
 }

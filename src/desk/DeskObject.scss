@@ -72,11 +72,16 @@
   opacity: 0;
 }
 
-// Los fotogramas de apertura comparten lienzo con la cara de reposo, así que se apilan sin
-// ajuste ninguno: lo quieto del dibujo se queda quieto.
+// Los fotogramas de apertura se apilan sobre la cara de reposo sin ajuste ninguno.
+//
+// `height: 100%` hace falta para que `contain` funcione: con el `height: auto` de
+// `.desk-object__art`, un fotograma apaisado se pinta pegado ARRIBA del hueco en vez de
+// centrado, y la caja de contenido —que sí va centrada— se sale del papel por abajo.
 .desk-object__art--frame {
   position: absolute;
   inset: 0;
+  height: 100%;
+  object-fit: contain;
   opacity: 0;
 }
 
@@ -102,11 +107,14 @@
 }
 
 // Aparece al final del viaje y no durante: mientras el objeto vuela se está cruzando un
-// dibujo con otro, y un texto encima de ese cruce se lee como un fallo.
+// dibujo con otro, y un texto encima de ese cruce se lee como un fallo. El retraso es
+// `--reveal-delay` y no `--duration-slow` porque un objeto con fotogramas de apertura —el
+// álbum de anime— sigue abriéndose bastante después de llegar: un retraso fijo dejaba ver
+// las páginas con el libro todavía cerrándose.
 .desk-object--lifted .desk-object__face {
   opacity: 1;
   pointer-events: auto;
-  transition-delay: var(--duration-slow);
+  transition-delay: var(--reveal-delay);
 }
 
 // Ayuda de taller: el rectángulo que de verdad se pulsa. No coincide con la silueta —un botón

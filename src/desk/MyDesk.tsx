@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
 import { onApiChange } from '../api/apiChanges'
 import { fetchBadges, fetchJourney, type Badge, type JourneyTrack } from '../api/progress'
 import { SiteNav } from '../shared/SiteNav'
+import { BLOCK_PLAN } from '../content/hiragana/blocks'
+import { AnimeAlbum, type AnimeChapter } from './animeAlbum/AnimeAlbum'
+import { ANIME_PAGES } from './animeAlbum/animePages'
 import { SheetChuleta } from './chuleta/SheetChuleta'
 import { DeskObject } from './DeskObject'
 import { DeskScene } from './DeskScene'
-import { JourneyCard } from './JourneyCard'
+import { JourneyCard } from './tarjeta/JourneyCard'
 import { DESK_ART } from './deskArt'
 import { DESK_SPOTS, SHOW_EVERY_OBJECT } from './deskSpots'
 import './MyDesk.scss'
@@ -90,11 +93,27 @@ export function MyDesk() {
     // es que sea OTRA persona, no que el objeto de sesión se haya vuelto a crear.
   }, [session.status, session.account?.id])
 
-  // El carné está siempre que haya sesión —es la cuenta misma—; la hoja y la caja solo cuando
+  // El carné está siempre que haya sesión —es la cuenta misma—; la hoja y el álbum solo cuando
   // hay algo detrás que enseñar. Es una aventura gráfica: nada de avisos de «todavía no» al
-  // pulsarlas. La hoja SÍ tiene ya qué enseñar —sus chuletas, ver `chuleta/`—; la caja
+  // pulsarlas. La hoja SÍ tiene ya qué enseñar —sus chuletas, ver `chuleta/`—; el álbum
   // todavía no lleva nada dentro.
   const earned = SHOW_EVERY_OBJECT || (Array.isArray(badges) && badges.length > 0)
+
+  // Las páginas del álbum: las de cada tomo GANADO, en el orden del temario y no en el de
+  // llegada de las insignias —si no, cerrar el tomo 2 antes de que el 1 responda las
+  // colaría delante—. Un tomo sin arte todavía —ver `animePages.ts`— no aporta páginas, y
+  // no rompe nada: el álbum sigue creciendo solo en cuanto esas páginas existan.
+  //
+  // Memorizado: el álbum vuelve a montar page-flip cada vez que la lista cambia de
+  // referencia, y esta pantalla se repinta con cada objeto que se levanta.
+  const animeChapters = useMemo<AnimeChapter[]>(() => {
+    const passedIds = new Set((Array.isArray(badges) ? badges : []).map((badge) => badge.blockId))
+    return BLOCK_PLAN.flatMap((blockId, index) => {
+      const images = ANIME_PAGES[blockId]
+      if (!passedIds.has(blockId) || !images?.length) return []
+      return [{ blockId, volumeNumber: index + 1, images }]
+    })
+  }, [badges])
 
   return (
     <main className="my-desk">
@@ -128,12 +147,14 @@ export function MyDesk() {
                 </DeskObject>
 
                 <DeskObject
-                  spot={DESK_SPOTS.box}
-                  art={DESK_ART.box}
-                  label="Tus juegos"
-                  lifted={lifted === 'box'}
-                  onPress={() => press('box')}
-                />
+                  spot={DESK_SPOTS.anime}
+                  art={DESK_ART.anime}
+                  label="Tu anime"
+                  lifted={lifted === 'anime'}
+                  onPress={() => press('anime')}
+                >
+                  <AnimeAlbum chapters={animeChapters} />
+                </DeskObject>
               </>
             ) : null}
           </>

@@ -104,11 +104,7 @@ hacen que la viva parezca pequeña.
 
 ## 5. La caja — los juegos
 
-Al pulsarla, la caja **se coloca delante, a ras de la escena**, se abre, y de
-dentro salen los juegos **en abanico, flotando, cada uno con su nombre**. Se elige
-uno y se entra en él.
-
-Cada juego tendrá **su propio escenario**, sin decidir todavía.
+Manga, al desbloquear un tomo se regala unas paginas de mangas para practicar la lectura
 
 ### Reglas
 

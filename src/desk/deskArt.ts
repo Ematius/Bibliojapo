@@ -63,6 +63,14 @@ export interface DeskArt {
   // con la proporción apaisada de la silueta de reposo, y un listado de tarjetas en filas
   // necesita mucho más alto que ancho. Si no se indica, crece igual que el ancho.
   faceHeightScale?: number
+  // Dónde cae el centro de esa caja a lo alto, como fracción del lienzo de reposo. 0,5 si no
+  // se indica: el papel de un dibujo no tiene por qué estar centrado en su lienzo.
+  faceCenterY?: number
+  // Cuánto ocupa este objeto en concreto al plantarse enfrente, en vez del tamaño que
+  // comparten los demás (`DESK_LIFT.frontWidth`). Un álbum con viñetas y texto necesita más
+  // sitio que un carné o una hoja de chuleta; agrandar la caja de contenido no basta, porque
+  // no puede pasar del papel en blanco que ya mide la ilustración. Ver `useDeskLift.ts`.
+  frontWidth?: number
 }
 
 // Cómo dibujar la cara de frente para que su objeto caiga encima del de reposo. Sin esto
@@ -74,7 +82,7 @@ export function frontFit(art: DeskArt): {
   top: number
   height: number
 } {
-  const { resting, front, faceScale = 1, faceHeightScale = faceScale } = art
+  const { resting, front, faceScale = 1, faceHeightScale = faceScale, faceCenterY = 0.5 } = art
   // Sin segunda cara no hay a qué encajarse: la caja de contenido crece sobre su propio
   // centro, igual que `resting.centerX/Y` haría si el «objeto de frente» fuera el mismo
   // dibujo a otra escala.
@@ -83,7 +91,7 @@ export function frontFit(art: DeskArt): {
       scale: faceScale,
       height: faceHeightScale,
       left: (1 - faceScale) / 2,
-      top: (1 - faceHeightScale) / 2,
+      top: faceCenterY - faceHeightScale / 2,
     }
   }
 
@@ -110,26 +118,43 @@ export const DESK_ART = {
   // Una sola cara, a diferencia del carné: no hay un segundo dibujo «de frente» todavía, así
   // que la perspectiva de estar apoyada la pone el giro, no un cambio de imagen. Ver
   // `restTiltDeg` en `DeskArt` y el efecto en `useDeskLift.ts`.
-  //
-  // PRUEBA: es la primera pasada con la hoja nueva —ver conversación del 13-09-2026—, sin
-  // convertir a WebP todavía a propósito mientras se está probando.
   sheet: {
-    resting: deskFace(`${DIR}/cheatSheet/hoja.png`, [1448, 1086], [31, 37, 1387, 1007]),
+    resting: deskFace(`${DIR}/cheatSheet/hoja.webp`, [1448, 1086], [31, 37, 1387, 1007]),
     restTiltDeg: 20,
     // La chuleta tiene que enseñar los doce tomos sin scroll: más sitio que el que da su
     // silueta de reposo, que se queda tal cual estaba sobre la mesa.
     faceScale: 1.55,
   },
-  box: {
-    resting: deskFace(`${DIR}/chest/caja.webp`, [1254, 1254], [66, 110, 1148, 1066]),
-    // El género de «abierta/abierto» sigue el del archivo tal como está en disco, no una
-    // progresión: 25 y 80 son «abierta», 40 y 100 son «abierto». No es un error de escritura,
-    // así que no se homogeneiza.
+  // Un libro y no una caja: escribir juegos de verdad era demasiado para esta fase, así que la
+  // puerta pasa a ser el álbum de anime que se va ilustrando con las frases desbloqueadas. Sin
+  // `front`: la última hoja de `frames` ya es la cara abierta —de frente y no en escorzo—, y
+  // el contenido se posa encima con `faceScale`/`faceHeightScale`, no con un segundo dibujo.
+  //
+  // OJO: `manga-elevado-abierto-100.webp` mide 1536×1024 y no 1254×1254 como sus hermanos.
+  // Se pinta a lo ancho del hueco cuadrado y centrado a lo alto —ocupa sus 2/3 del medio—, y
+  // las medidas del contenido de abajo están pasadas a ese hueco. Si se cambia el PNG, se
+  // vuelve a medir su papel liso.
+  anime: {
+    resting: deskFace(`${DIR}/anime/posado.webp`, [1254, 1254], [146, 70, 994, 1111]),
+    // Cerrado y de frente, y luego las cuatro fases de apertura. El viaje entero —de la mesa
+    // hasta aquí delante— lo hace `posado.webp` tal cual, en su escorzo de reposo: no hay
+    // giro de por medio, así que el paso de escorzo a frente es el corte duro de este primer
+    // fotograma, el mismo tipo de salto que ya daba la caja al abrirse.
     frames: [
-      `${DIR}/chest/caja-abierta-25.webp`,
-      `${DIR}/chest/caja-abierto-40.webp`,
-      `${DIR}/chest/caja-abierta-80.webp`,
-      `${DIR}/chest/caja-abierto-100.webp`,
+      `${DIR}/anime/manga-elevado-cerrado.webp`,
+      `${DIR}/anime/manga-elevado-abierto-25.webp`,
+      `${DIR}/anime/manga-elevado-abierto-50.webp`,
+      `${DIR}/anime/manga-elevado-abierto-75.webp`,
+      `${DIR}/anime/manga-elevado-abierto-100.webp`,
     ],
+    // AJUSTAR A OJO. La caja de las mangas, en fracciones del hueco cuadrado: ancho, alto y
+    // centro vertical. El papel medido va de 0,085 a 0,915 a lo ancho y de 0,264 a 0,695 a
+    // lo alto; si una manga se sale del papel, se baja el número de ese lado.
+    faceScale: 0.8,
+    faceHeightScale: 0.40,
+    faceCenterY: 0.49,
+    // El tamaño del libro ENTERO al plantarse enfrente —papel y mangas juntos, sin
+    // descuadrarse—, en fracción del ancho de la escena. Los demás objetos usan 0,42.
+    frontWidth: 0.48,
   },
 } as const satisfies Record<string, DeskArt>
