@@ -5,11 +5,10 @@ import { useVolumeContent } from '../../shared/useVolumeContent'
 import { useChuletaReveal } from './useChuletaReveal'
 import './ChuletaCard.scss'
 
-// Sin convertir a WebP todavía a propósito: es la hoja nueva, en pruebas.
-const SHEET_PAPER = '/images/desk/cheatSheet/hoja.png'
+const SHEET_PAPER = '/images/desk/cheatSheet/hoja.webp'
 
-const BACK_ICON = '/images/desk/cheatSheet/atras.png'
-const FLIP_ICON = '/images/desk/cheatSheet/voltear.png'
+const BACK_ICON = '/images/desk/cheatSheet/atras.webp'
+const FLIP_ICON = '/images/desk/cheatSheet/voltear.webp'
 
 interface ChuletaCardProps {
   blockId: string

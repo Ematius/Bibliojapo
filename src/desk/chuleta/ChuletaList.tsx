@@ -39,10 +39,10 @@ const STATE_STAMP: Partial<Record<TomoState, string>> = {
 // La misma hoja que enseña `deskArt.ts` como papel de la mesa: la caja de esta lista es más
 // grande que esa silueta —ver `faceScale` en `DeskArt`—, así que sin pintar aquí su propio
 // papel se saldría del que hay debajo y enseñaría la mesa por los bordes.
-const SHEET_PAPER = '/images/desk/cheatSheet/hoja.png'
+const SHEET_PAPER = '/images/desk/cheatSheet/hoja.webp'
 
-const TICKET_APPROVED = '/images/desk/cheatSheet/tarjeta-tomo-aprovado.png'
-const TICKET_LOCKED = '/images/desk/cheatSheet/tarjeta-tomo-cerrada.png'
+const TICKET_APPROVED = '/images/desk/cheatSheet/tarjeta-tomo-aprovado.webp'
+const TICKET_LOCKED = '/images/desk/cheatSheet/tarjeta-tomo-cerrada.webp'
 
 const TICKET_BG: Record<TomoState, string> = {
   completado: TICKET_APPROVED,

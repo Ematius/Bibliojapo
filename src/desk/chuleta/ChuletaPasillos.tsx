@@ -11,9 +11,9 @@ interface Pasillo {
 }
 
 const PASILLOS: readonly Pasillo[] = [
-  { id: 'hiragana', label: 'Hiragana', sello: '/images/desk/cheatSheet/sello-hiragana.png' },
-  { id: 'katakana', label: 'Katakana', sello: '/images/desk/cheatSheet/sello-katakana.png' },
-  { id: 'kanji', label: 'Kanji', sello: '/images/desk/cheatSheet/sello-kanji.png' },
+  { id: 'hiragana', label: 'Hiragana', sello: '/images/desk/cheatSheet/sello-hiragana.webp' },
+  { id: 'katakana', label: 'Katakana', sello: '/images/desk/cheatSheet/sello-katakana.webp' },
+  { id: 'kanji', label: 'Kanji', sello: '/images/desk/cheatSheet/sello-kanji.webp' },
 ]
 
 interface ChuletaPasillosProps {
