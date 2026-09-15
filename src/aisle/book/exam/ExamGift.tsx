@@ -3,13 +3,13 @@ import './ExamGift.scss'
 
 // Los cinco fotogramas del sobre, en orden de apertura. Van los cinco al DOM y se
 // encienden por turnos: cambiando el `src` sobre la marcha, el primer pase se vería a
-// tirones mientras el navegador descarga cada PNG. Ver `giftOpening.ts`.
+// tirones mientras el navegador descarga cada imagen. Ver `giftOpening.ts`.
 const ENVELOPE_FRAMES = [
-  '/images/hallways/letter/sobre-cerrado.png',
-  '/images/hallways/letter/sobre-abierto-25.png',
-  '/images/hallways/letter/sobre-abierto-50.png',
-  '/images/hallways/letter/sobre-abierto-75.png',
-  '/images/hallways/letter/sobre-abierto-100.png',
+  '/images/hallways/letter/sobre-cerrado.webp',
+  '/images/hallways/letter/sobre-abierto-25.webp',
+  '/images/hallways/letter/sobre-abierto-50.webp',
+  '/images/hallways/letter/sobre-abierto-75.webp',
+  '/images/hallways/letter/sobre-abierto-100.webp',
 ]
 
 const LETTER_PAPER = '/images/desk/hoja-frente.webp'
