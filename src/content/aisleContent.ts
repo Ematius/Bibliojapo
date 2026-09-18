@@ -3,7 +3,7 @@
 // el bundle inicial. `shelfConfig.ts` y la capa `api/` leen de aquí en vez de
 // importar `hiragana/` a pelo, que es lo único que les permite servir cualquier
 // pasillo sin saber de los demás.
-import type { Block, Kana, Sentence, Word } from './types'
+import type { Block, Grammar, Kana, Sentence, Word } from './types'
 import { BLOCK_PLAN as HIRAGANA_BLOCK_PLAN, BLOCKS_BY_ID as HIRAGANA_BLOCKS_BY_ID } from './hiragana/blocks'
 
 // Mismos cuatro pasillos que `TrackId` en `api/contract.ts`. No se importa de allí
@@ -24,6 +24,7 @@ export interface AisleContent {
     kanaById: ReadonlyMap<string, Kana>
     wordsById: ReadonlyMap<string, Word>
     sentencesById: ReadonlyMap<string, Sentence>
+    grammarById: ReadonlyMap<string, Grammar>
   }>
 }
 
@@ -38,6 +39,7 @@ const EMPTY_AISLE: AisleContent = {
     kanaById: new Map(),
     wordsById: new Map(),
     sentencesById: new Map(),
+    grammarById: new Map(),
   }),
 }
 
@@ -46,12 +48,19 @@ export const AISLE_CONTENT: Readonly<Record<AisleId, AisleContent>> = {
     blockPlan: HIRAGANA_BLOCK_PLAN,
     blocksById: HIRAGANA_BLOCKS_BY_ID,
     loadLessonContent: async () => {
-      const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }] = await Promise.all([
-        import('./hiragana/kana'),
-        import('./hiragana/vocabulary'),
-        import('./hiragana/sentences'),
-      ])
-      return { kanaById: HIRAGANA_BY_ID, wordsById: VOCABULARY_BY_ID, sentencesById: SENTENCES_BY_ID }
+      const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }, { GRAMMAR_BY_ID }] =
+        await Promise.all([
+          import('./hiragana/kana'),
+          import('./hiragana/vocabulary'),
+          import('./hiragana/sentences'),
+          import('./hiragana/grammar'),
+        ])
+      return {
+        kanaById: HIRAGANA_BY_ID,
+        wordsById: VOCABULARY_BY_ID,
+        sentencesById: SENTENCES_BY_ID,
+        grammarById: GRAMMAR_BY_ID,
+      }
     },
   },
   katakana: EMPTY_AISLE,

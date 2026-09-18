@@ -1,4 +1,4 @@
-import type { Block, Kana, Sentence, Word } from '../content/types'
+import type { Block, Grammar, Kana, Sentence, Word } from '../content/types'
 
 // El mismo id con el que el lector agrupa las hojas del examen final: el sello
 // que estampa el libro y el que reconoce el servidor son la misma cosa.
@@ -47,6 +47,10 @@ export interface VolumeContent {
   kana: Kana[]
   words: Word[]
   sentences: Sentence[]
+  // Las reglas que nombran esas frases por su `grammarId`. Viajan resueltas porque el
+  // lector no mira `content/` por su cuenta: sin esto, la explicación de por qué は se
+  // lee «wa» de partícula no tendría forma de llegar a la hoja.
+  grammar: Grammar[]
   // Viene calculado: cuenta también los tomos anteriores, que no están en el paquete.
   progress: {
     kana: number

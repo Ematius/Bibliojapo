@@ -208,9 +208,16 @@ function aisleProgress(aisleId: AisleId, badges: readonly string[]): { kana: num
 // importa la barra, que va en el bundle inicial, y el temario entero viajaría con
 // la portada. `loadLessonContent` es quien hace el import perezoso, uno por pasillo.
 async function packVolume(aisleId: AisleId, block: Block): Promise<VolumeContent> {
-  const { kanaById, wordsById, sentencesById } = await AISLE_CONTENT[aisleId].loadLessonContent()
+  const { kanaById, wordsById, sentencesById, grammarById } =
+    await AISLE_CONTENT[aisleId].loadLessonContent()
 
   const sentences = block.sentenceIds.flatMap((id) => sentencesById.get(id) ?? [])
+
+  // En orden de aparición y sin repetir: una regla la nombran varias frases, y la que
+  // sale antes es la que hay que enseñar antes.
+  const grammarIds = new Set(
+    sentences.flatMap((sentence) => (sentence.grammarId ? [sentence.grammarId] : [])),
+  )
 
   const wordIds = new Set([
     ...block.wordIds,
@@ -225,6 +232,7 @@ async function packVolume(aisleId: AisleId, block: Block): Promise<VolumeContent
     kana: block.lessons.flatMap((lesson) => kanaById.get(lesson.kanaId) ?? []),
     words: [...wordIds].flatMap((id) => wordsById.get(id) ?? []),
     sentences,
+    grammar: [...grammarIds].flatMap((id) => grammarById.get(id) ?? []),
     // El progreso del carné sigue siendo solo de hiragana: los demás pasillos
     // todavía no tienen temario que contar. Se generaliza cuando lo tengan.
     progress:
