@@ -23,6 +23,8 @@ import { shuffle } from '../parts/shuffle'
 //   prompt        la palabra sin escribirla: solo lo que significa y cómo suena
 //   build         la palabra entera por construir, con todos los huecos vacíos
 //   drill         dos preguntas en una hoja: reconstruirla y escribir su lectura
+//   grammar           la regla de ortografía: el carácter y la lectura que toma de partícula
+//   grammarExample    esa misma regla dentro de una frase del tomo, kana a kana
 //   finalNotice       la hoja que anuncia el repaso completo
 //   finalScope        lo que entra en ese repaso: los kana del tomo
 //   finalReviewNotice la hoja que anuncia el repaso final
@@ -51,6 +53,8 @@ export type PageContent =
   | 'prompt'
   | 'build'
   | 'drill'
+  | 'grammar'
+  | 'grammarExample'
   | 'examKana'
   | 'examWord'
   | 'finalNotice'
@@ -86,6 +90,8 @@ export interface ReaderPage {
   exam?: string
   // Hay UNA en todo el tomo: la última del examen final. El examen de cada lección no sella.
   seal?: boolean
+  // Solo las hojas de `grammar`/`grammarExample`: qué regla enseñan, por su id.
+  grammarId?: string
   // Solo las hojas de `examSentence`/`examResults`: a qué de los tres bloques pertenecen.
   examBlock?: 1 | 2 | 3
   // Solo `examSentence`: qué frase muestra y con qué pista.
@@ -110,6 +116,19 @@ export interface ReadyLesson {
   wordId: string
   // La segunda palabra, si la lección la tiene Y está lista. Aquí no se decide: se coloca.
   wordId2?: string
+}
+
+// Una regla de ortografía que el tomo ya puede enseñar. Como con `ReadyLesson`, filtrar
+// las que no tienen explicación escrita es cosa de quien llama; aquí solo se colocan.
+export interface ReadyRule {
+  grammarId: string
+  // El kana del que la regla habla, si ESTE tomo lo enseña: su plana va detrás de esa
+  // lección, que es cuando el carácter acaba de aprenderse. Sin él —el carácter viene de
+  // un tomo anterior— cierra las lecciones.
+  kanaId?: string
+  // La frase con la que se enseña. No es opcional: una regla llega aquí porque alguna
+  // frase del tomo la nombra.
+  sentenceId: string
 }
 
 // Las siete planas con las que se enseña UN kana, en orden de lectura, y detrás su repaso
@@ -212,6 +231,24 @@ function examSpread(kanaId: string, wordId: string): Spread {
   }
 }
 
+// La plana de una regla: a la derecha la regla, a la izquierda la misma regla dentro de una
+// frase del tomo. Va entera y no como media hoja suelta por lo de siempre: explicar algo en
+// la hoja donde se va a usar deja media plana en blanco.
+//
+// No lleva `exam` ni `seal`: presenta, no comprueba. Lo que se hace con ella se pregunta
+// después, en el examen final de frases.
+function grammarSpread(rule: ReadyRule): Spread {
+  return {
+    right: { grammarId: rule.grammarId, title: 'Ortografía', shows: 'grammar' },
+    left: {
+      grammarId: rule.grammarId,
+      sentenceId: rule.sentenceId,
+      title: 'En una frase',
+      shows: 'grammarExample',
+    },
+  }
+}
+
 // El folio que se recibe es el de la DERECHA, que es la que se lee primero.
 function placeSpread(spread: Spread, key: string, rightFolio: number): ReaderPage[] {
   return [
@@ -235,14 +272,28 @@ function introSpread(): Spread {
   }
 }
 
+// La regla se enseña CUANDO HACE FALTA y no en un apartado aparte: detrás de la lección del
+// kana del que habla, que es cuando el carácter acaba de aprenderse y todavía no ha aparecido
+// como partícula en ninguna frase. Por eso no van todas juntas ni al principio ni al final.
 export function buildVolumePages(
   lessons: ReadyLesson[],
   wordIds: string[],
   sentenceIds: string[],
+  rules: ReadyRule[],
 ): ReaderPage[] {
+  const taughtKana = new Set(lessons.map((lesson) => lesson.kanaId))
+
   const spreads = [
     introSpread(),
-    ...lessons.flatMap((lesson) => kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2)),
+    ...lessons.flatMap((lesson) => [
+      ...kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2),
+      ...rules.filter((rule) => rule.kanaId === lesson.kanaId).map(grammarSpread),
+    ]),
+    // Las que hablan de un carácter que este tomo no enseña —se dio en uno anterior— no
+    // tienen lección detrás de la que ponerse, así que cierran las lecciones.
+    ...rules
+      .filter((rule) => !rule.kanaId || !taughtKana.has(rule.kanaId))
+      .map(grammarSpread),
     ...completeReviewSpreads(lessons),
     ...finalReviewSpreads(lessons, wordIds),
     ...finalSentenceExamSpreads(sentenceIds),

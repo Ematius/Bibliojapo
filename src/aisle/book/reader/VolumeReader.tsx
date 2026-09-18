@@ -26,6 +26,7 @@ import { ExamGift } from '../exam/ExamGift'
 import { mountSentenceTiles } from '../exam/sentenceTiles'
 import { mountFinalExam } from '../exam/finalExam'
 import { mountGiftOpening } from '../exam/giftOpening'
+import { GrammarRule, GrammarExample } from '../grammar/GrammarRule'
 import { VolumeIntro, VolumeGoal } from '../intro/VolumeIntro'
 import { groupSentencesByTopic } from '../intro/goalGroups'
 import { KanaStroke } from '../mnemonic/KanaStroke'
@@ -75,11 +76,12 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
   const [examAttempt, setExamAttempt] = useState(0)
 
   // Lo que el paquete trae en listas, puesto en mapas para buscar por id.
-  const { kanaById, wordsById, sentencesById } = useMemo(
+  const { kanaById, wordsById, sentencesById, grammarById } = useMemo(
     () => ({
       kanaById: new Map(content.kana.map((kana) => [kana.id, kana])),
       wordsById: new Map(content.words.map((word) => [word.id, word])),
       sentencesById: new Map(content.sentences.map((sentence) => [sentence.id, sentence])),
+      grammarById: new Map(content.grammar.map((rule) => [rule.id, rule])),
     }),
     [content],
   )
@@ -135,13 +137,32 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // Sin las 15 no hay examen — ver `finalSentenceExamSpreads`.
     const examSentenceIds = block.sentenceIds.filter((sentenceId) => sentencesById.has(sentenceId))
 
+    // Las reglas de ortografía que el tomo ya puede enseñar. Se cae fuera por lo mismo que
+    // una lección a medias: sin explicación escrita la plana saldría en blanco. El carácter
+    // se busca entre los kana del tomo —si lo enseña este, su plana va detrás de esa
+    // lección— y la frase es la primera del bloque que nombra la regla.
+    const rules = [...grammarById.values()].flatMap((rule) => {
+      if (!rule.explanation.trim()) return []
+
+      const sentenceId = block.sentenceIds.find(
+        (id) => sentencesById.get(id)?.grammarId === rule.id,
+      )
+      if (!sentenceId) return []
+
+      const kanaId = [...kanaById.values()].find(
+        (kana) => kana.character === rule.character,
+      )?.id
+
+      return [{ grammarId: rule.id, kanaId, sentenceId }]
+    })
+
     // Sin usarlo dentro: solo está en las dependencias para forzar este cálculo de
     // nuevo en cada reintento del examen final. `finalSentenceExamSpreads` sortea el
     // bloque 3 con cada llamada, así que un intento nuevo trae un orden nuevo.
     void examAttempt
 
-    return { pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds), pools }
-  }, [block, kanaById, wordsById, sentencesById, examAttempt])
+    return { pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds, rules), pools }
+  }, [block, kanaById, wordsById, sentencesById, grammarById, examAttempt])
 
   useEffect(() => {
     const template = templateRef.current
@@ -371,6 +392,23 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                   }
 
                   if (page.shows === 'examGift') return <ExamGift />
+
+                  // Como la portada, hablan del tomo y no de un kana: la regla es de la
+                  // frase, no de la lección en la que cae.
+                  if (page.shows === 'grammar') {
+                    const rule = page.grammarId ? grammarById.get(page.grammarId) : undefined
+                    return rule ? <GrammarRule rule={rule} /> : null
+                  }
+
+                  if (page.shows === 'grammarExample') {
+                    const rule = page.grammarId ? grammarById.get(page.grammarId) : undefined
+                    const sentence = page.sentenceId
+                      ? sentencesById.get(page.sentenceId)
+                      : undefined
+                    return rule && sentence ? (
+                      <GrammarExample rule={rule} sentence={sentence} />
+                    ) : null
+                  }
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined
 
