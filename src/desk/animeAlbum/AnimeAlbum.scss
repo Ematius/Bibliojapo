@@ -27,6 +27,31 @@
     height: 100%;
   }
 
+  &__mount {
+    position: relative;
+  }
+
+  // El lomo: dos planas puestas una junto a otra se ven cosidas y no abiertas —el hueco
+  // pintado de por sí ya sugiere el libro, y una unión recta encima se lee postiza. La
+  // sombra que oscurece hacia el centro es la misma curva que hace el papel real al
+  // combarse hacia dentro. El color sale del rgb de `--color-ink`, igual que
+  // `--color-ink-soft`: un degradado necesita varias transparencias distintas, que un solo
+  // token no puede dar.
+  &__mount::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(44, 31, 14, 0.16) 47.5%,
+      rgba(44, 31, 14, 0.26) 50%,
+      rgba(44, 31, 14, 0.16) 52.5%,
+      transparent 100%
+    );
+  }
+
   // La plantilla que page-flip clona — mismo motivo que en `VolumeReader.scss`: tamaño cero
   // y no `hidden`, para no dejar sin construir nada que la librería tenga que copiar.
   &__template {
