@@ -166,16 +166,24 @@ function mountOne(match: HTMLElement): (() => void) | null {
       // Manda EN QUÉ hueco se ha soltado: con tres huecos seguidos, acertar el kana pero
       // errar el sitio es un fallo distinto. Se mira el punto del PUNTERO y no el centro de
       // la tarjeta, que con una tarjeta grande puede quedar lejos del hueco.
+      // El más CERCANO, no el que contiene al puntero: fallar una caja pequeña por unos
+      // píxeles no puede quedarse en nada. Más allá de un alto de caja sigue siendo no haber
+      // llegado a intentarlo.
       const target =
-        pending().find((slot) => {
-          const area = slot.getBoundingClientRect()
-          return (
-            event.clientX >= area.left &&
-            event.clientX <= area.right &&
-            event.clientY >= area.top &&
-            event.clientY <= area.bottom
-          )
-        }) ?? null
+        pending()
+          .map((slot) => {
+            const area = slot.getBoundingClientRect()
+            return {
+              slot,
+              margin: area.height,
+              distance: Math.hypot(
+                Math.max(area.left - event.clientX, 0, event.clientX - area.right),
+                Math.max(area.top - event.clientY, 0, event.clientY - area.bottom),
+              ),
+            }
+          })
+          .filter((entry) => entry.distance <= entry.margin)
+          .sort((first, second) => first.distance - second.distance)[0]?.slot ?? null
 
       // Soltada fuera de todo hueco no es un fallo: es que no se ha llegado a intentar.
       if (target) place(tile, target)

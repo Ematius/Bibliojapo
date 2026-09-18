@@ -46,16 +46,20 @@
 
 // Un hueco vacío o lleno: el mismo hundido de `kana-match__slot`, para que se lea
 // igual de «sitio donde cabe algo» en las dos hojas.
+//
+// Mismo tamaño de letra que `WordPick.scss` —es el mismo gesto de completar un hueco
+// con una tarjeta—, con el `cqmin` algo más bajo porque aquí hay varios huecos seguidos
+// y no solo uno: sin bajarlo, una frase larga se saldría de la hoja antes de partir línea.
 .sentence-build__slot {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.8em;
-  padding: 0.3em 0.15em;
+  min-width: 2em;
+  padding: 0.7em 0.25em;
   background: var(--color-page-fold);
   color: var(--color-ivy-dark);
   font-family: var(--font-body);
-  font-size: clamp(1rem, 11cqmin, 2.2rem);
+  font-size: clamp(1.1rem, 12cqmin, 2.6rem);
   line-height: 1;
 
   // Pulsarlo lo vacía: es la manera de deshacer sin tener que arrastrar otra tarjeta
@@ -83,7 +87,7 @@
 .sentence-build__tile {
   min-width: 2.2em;
   font-family: var(--font-body);
-  font-size: clamp(0.9rem, 9cqmin, 2rem);
+  font-size: clamp(1rem, 10cqmin, 2.3rem);
   line-height: 1.1;
 
   touch-action: none;

@@ -139,16 +139,23 @@ function mountOne(sentence: HTMLElement): (() => void) | null {
       if (!dragging) return
       reset()
 
+      // El más CERCANO, no el que contiene al puntero: fallar una caja pequeña por unos
+      // píxeles no puede quedarse en nada. Más allá de un alto de caja sigue siendo un fallo.
       const target =
-        slots.find((slot) => {
-          const area = slot.getBoundingClientRect()
-          return (
-            event.clientX >= area.left &&
-            event.clientX <= area.right &&
-            event.clientY >= area.top &&
-            event.clientY <= area.bottom
-          )
-        }) ?? null
+        slots
+          .map((slot) => {
+            const area = slot.getBoundingClientRect()
+            return {
+              slot,
+              margin: area.height,
+              distance: Math.hypot(
+                Math.max(area.left - event.clientX, 0, event.clientX - area.right),
+                Math.max(area.top - event.clientY, 0, event.clientY - area.bottom),
+              ),
+            }
+          })
+          .filter((entry) => entry.distance <= entry.margin)
+          .sort((first, second) => first.distance - second.distance)[0]?.slot ?? null
 
       // Soltada fuera de todo hueco no queda muda: sin este aviso, la tarjeta volvía a su
       // sitio como si nunca se hubiera soltado, y un arrastre que había fallado por unos
