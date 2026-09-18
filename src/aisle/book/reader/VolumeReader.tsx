@@ -138,22 +138,41 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     const examSentenceIds = block.sentenceIds.filter((sentenceId) => sentencesById.has(sentenceId))
 
     // Las reglas de ortografía que el tomo ya puede enseñar. Se cae fuera por lo mismo que
-    // una lección a medias: sin explicación escrita la plana saldría en blanco. El carácter
-    // se busca entre los kana del tomo —si lo enseña este, su plana va detrás de esa
-    // lección— y la frase es la primera del bloque que nombra la regla.
+    // una lección a medias: sin explicación escrita la plana saldría en blanco.
     const rules = [...grammarById.values()].flatMap((rule) => {
       if (!rule.explanation.trim()) return []
 
-      const sentenceId = block.sentenceIds.find(
-        (id) => sentencesById.get(id)?.grammarId === rule.id,
-      )
-      if (!sentenceId) return []
+      // Un ejemplo por TEMA distinto: el tomo tiene tres frases seguidas de いえ, y tres
+      // veces la misma palabra se leen como una sola. Las frases salen del temario, nunca
+      // se arman aquí juntando palabras.
+      const byTopic = new Map<string, string>()
+      for (const id of block.sentenceIds) {
+        const sentence = sentencesById.get(id)
+        if (sentence?.grammarId !== rule.id) continue
+        // Sin el desglose kana a kana no hay nada que enseñar: la hoja saldría con los
+        // renglones en blanco. Las frases de los tomos por escribir todavía no lo tienen.
+        if (sentence.units.length === 0) continue
+
+        const topic = sentence.wordIds[0] ?? id
+        if (!byTopic.has(topic)) byTopic.set(topic, id)
+      }
+
+      // El primero, el de en medio y el último, y no los tres primeros: repartidos así
+      // entran temas de todo el tomo, y el último suele ser el que más enseña —en 「ははいい」
+      // el mismo carácter sale dos veces y solo uno es la partícula—.
+      const topics = [...byTopic.values()]
+      const sentenceIds =
+        topics.length <= 3
+          ? topics
+          : [topics[0], topics[Math.floor((topics.length - 1) / 2)], topics[topics.length - 1]]
+
+      if (sentenceIds.length === 0) return []
 
       const kanaId = [...kanaById.values()].find(
         (kana) => kana.character === rule.character,
       )?.id
 
-      return [{ grammarId: rule.id, kanaId, sentenceId }]
+      return [{ grammarId: rule.id, kanaId, sentenceIds }]
     })
 
     // Sin usarlo dentro: solo está en las dependencias para forzar este cálculo de
@@ -402,11 +421,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   if (page.shows === 'grammarExample') {
                     const rule = page.grammarId ? grammarById.get(page.grammarId) : undefined
-                    const sentence = page.sentenceId
-                      ? sentencesById.get(page.sentenceId)
-                      : undefined
-                    return rule && sentence ? (
-                      <GrammarExample rule={rule} sentence={sentence} />
+                    const sentences = (page.sentenceIds ?? []).flatMap(
+                      (id) => sentencesById.get(id) ?? [],
+                    )
+                    return rule && sentences.length > 0 ? (
+                      <GrammarExample rule={rule} sentences={sentences} />
                     ) : null
                   }
 

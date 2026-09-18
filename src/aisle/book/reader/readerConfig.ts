@@ -96,6 +96,8 @@ export interface ReaderPage {
   examBlock?: 1 | 2 | 3
   // Solo `examSentence`: qué frase muestra y con qué pista.
   sentenceId?: string
+  // Solo `grammarExample`: las frases con las que se enseña la regla.
+  sentenceIds?: string[]
   cue?: ExamCue
   // Su posición dentro del bloque (empieza en 1), para el «Frase X de 15» de la hoja.
   sentenceIndex?: number
@@ -126,9 +128,9 @@ export interface ReadyRule {
   // lección, que es cuando el carácter acaba de aprenderse. Sin él —el carácter viene de
   // un tomo anterior— cierra las lecciones.
   kanaId?: string
-  // La frase con la que se enseña. No es opcional: una regla llega aquí porque alguna
-  // frase del tomo la nombra.
-  sentenceId: string
+  // Las frases con las que se enseña. Nunca vacía: una regla llega aquí porque alguna
+  // frase del tomo la nombra. Quién las elige es quien llama.
+  sentenceIds: string[]
 }
 
 // Las siete planas con las que se enseña UN kana, en orden de lectura, y detrás su repaso
@@ -231,8 +233,8 @@ function examSpread(kanaId: string, wordId: string): Spread {
   }
 }
 
-// La plana de una regla: a la derecha la regla, a la izquierda la misma regla dentro de una
-// frase del tomo. Va entera y no como media hoja suelta por lo de siempre: explicar algo en
+// La plana de una regla: a la derecha la regla, a la izquierda la misma regla dentro de
+// frases del tomo. Va entera y no como media hoja suelta por lo de siempre: explicar algo en
 // la hoja donde se va a usar deja media plana en blanco.
 //
 // No lleva `exam` ni `seal`: presenta, no comprueba. Lo que se hace con ella se pregunta
@@ -242,7 +244,7 @@ function grammarSpread(rule: ReadyRule): Spread {
     right: { grammarId: rule.grammarId, title: 'Ortografía', shows: 'grammar' },
     left: {
       grammarId: rule.grammarId,
-      sentenceId: rule.sentenceId,
+      sentenceIds: rule.sentenceIds,
       title: 'En una frase',
       shows: 'grammarExample',
     },
