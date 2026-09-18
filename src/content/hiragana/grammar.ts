@@ -3,16 +3,33 @@ import type { Grammar } from '../types'
 export const GRAMMAR: Grammar[] = [
   {
     id: 'topic-wa',
-    // El mismo carácter que la palabra «diente» y que el kana は: en ははいい el
-    // primero es la palabra y el segundo esta partícula. Se escriben igual y suenan
-    // distinto.
     character: 'は',
     romaji: 'wa',
     explanation:
       'は marca de qué habla la frase. Se escribe con el mismo kana que ya conoces ' +
-      '—は, que se lee «ha»—, pero puesto entre el tema y lo que se dice de él se ' +
-      'lee «wa».',
+      '—は, que se lee «ha»—, pero puesto entre el tema y lo que se dice de él, se ' +
+      'lee «wa». Se usa en la gramática japonesa principalmente como partícula temática,' +
+      ' y sirve para marcar el tema principal o de lo que se va a hablar en la oración'
   },
+  {
+    id: 'particle-no',
+    character: 'の',
+    romaji: 'no',
+    explanation: 'Permite formar relaciones nominales como いえのえ.',
+  },
+  {
+    id: 'particle-ni',
+    character: 'に',
+    romaji: 'ni',
+    explanation: 'Permite construir localizaciones y cambios de estado con いる, ある y なる.',
+  },
+  { id: 'particle-mo', character: 'も', romaji: 'mo', explanation: '' },
+  { id: 'particle-ne', character: 'ね', romaji: 'ne', explanation: '' },
+  { id: 'particle-o', character: 'を', romaji: 'o', explanation: '' },
+  { id: 'particle-ga', character: 'が', romaji: 'ga', explanation: '' },
+  { id: 'particle-de', character: 'で', romaji: 'de', explanation: '' },
+  { id: 'particle-ka', character: 'か', romaji: 'ka', explanation: '' },
+  { id: 'particle-to', character: 'と', romaji: 'to', explanation: '' },
 ]
 
 export const GRAMMAR_BY_ID = new Map(GRAMMAR.map((rule) => [rule.id, rule]))

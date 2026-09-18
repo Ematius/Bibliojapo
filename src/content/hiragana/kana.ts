@@ -200,6 +200,1128 @@ export const HIRAGANA: Kana[] = [
     ],
     strokeViewBox: '0 0 760 775',
   },
+  // Recursos pendientes: se mantienen vacíos hasta su creación manual.
+  {
+    id: 'shi',
+    character: 'し',
+    romaji: 'shi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ru',
+    character: 'る',
+    romaji: 'ru',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 're',
+    character: 'れ',
+    romaji: 're',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'to',
+    character: 'と',
+    romaji: 'to',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ku',
+    character: 'く',
+    romaji: 'ku',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'so',
+    character: 'そ',
+    romaji: 'so',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'hi',
+    character: 'ひ',
+    romaji: 'hi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'fu',
+    character: 'ふ',
+    romaji: 'fu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'he',
+    character: 'へ',
+    romaji: 'he',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ho',
+    character: 'ほ',
+    romaji: 'ho',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ko',
+    character: 'こ',
+    romaji: 'ko',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ro',
+    character: 'ろ',
+    romaji: 'ro',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'no',
+    character: 'の',
+    romaji: 'no',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ka',
+    character: 'か',
+    romaji: 'ka',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ki',
+    character: 'き',
+    romaji: 'ki',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ke',
+    character: 'け',
+    romaji: 'ke',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'sa',
+    character: 'さ',
+    romaji: 'sa',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'su',
+    character: 'す',
+    romaji: 'su',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'se',
+    character: 'せ',
+    romaji: 'se',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ta',
+    character: 'た',
+    romaji: 'ta',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'chi',
+    character: 'ち',
+    romaji: 'chi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'tsu',
+    character: 'つ',
+    romaji: 'tsu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'te',
+    character: 'て',
+    romaji: 'te',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'na',
+    character: 'な',
+    romaji: 'na',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ni',
+    character: 'に',
+    romaji: 'ni',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'nu',
+    character: 'ぬ',
+    romaji: 'nu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ne',
+    character: 'ね',
+    romaji: 'ne',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ra',
+    character: 'ら',
+    romaji: 'ra',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ri',
+    character: 'り',
+    romaji: 'ri',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'n',
+    character: 'ん',
+    romaji: 'n',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'mo',
+    character: 'も',
+    romaji: 'mo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ma',
+    character: 'ま',
+    romaji: 'ma',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'yo',
+    character: 'よ',
+    romaji: 'yo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ya',
+    character: 'や',
+    romaji: 'ya',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'wa',
+    character: 'わ',
+    romaji: 'wa',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'mi',
+    character: 'み',
+    romaji: 'mi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'mu',
+    character: 'む',
+    romaji: 'mu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'me',
+    character: 'め',
+    romaji: 'me',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'wo',
+    character: 'を',
+    romaji: 'wo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'yu',
+    character: 'ゆ',
+    romaji: 'yu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ga',
+    character: 'が',
+    romaji: 'ga',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'gi',
+    character: 'ぎ',
+    romaji: 'gi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'gu',
+    character: 'ぐ',
+    romaji: 'gu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ge',
+    character: 'げ',
+    romaji: 'ge',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'go',
+    character: 'ご',
+    romaji: 'go',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'za',
+    character: 'ざ',
+    romaji: 'za',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ji',
+    character: 'じ',
+    romaji: 'ji',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'zu',
+    character: 'ず',
+    romaji: 'zu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ze',
+    character: 'ぜ',
+    romaji: 'ze',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'zo',
+    character: 'ぞ',
+    romaji: 'zo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'da',
+    character: 'だ',
+    romaji: 'da',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ji-2',
+    character: 'ぢ',
+    romaji: 'ji',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'zu-2',
+    character: 'づ',
+    romaji: 'zu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'de',
+    character: 'で',
+    romaji: 'de',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'do',
+    character: 'ど',
+    romaji: 'do',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'ba',
+    character: 'ば',
+    romaji: 'ba',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'bi',
+    character: 'び',
+    romaji: 'bi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'bu',
+    character: 'ぶ',
+    romaji: 'bu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'be',
+    character: 'べ',
+    romaji: 'be',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'bo',
+    character: 'ぼ',
+    romaji: 'bo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'pa',
+    character: 'ぱ',
+    romaji: 'pa',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'pi',
+    character: 'ぴ',
+    romaji: 'pi',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'pu',
+    character: 'ぷ',
+    romaji: 'pu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'pe',
+    character: 'ぺ',
+    romaji: 'pe',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'po',
+    character: 'ぽ',
+    romaji: 'po',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'small-tsu',
+    character: 'っ',
+    romaji: '',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'long-vowel-mark',
+    character: 'ー',
+    romaji: '',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'small-ya',
+    character: 'ゃ',
+    romaji: 'ya',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'small-yu',
+    character: 'ゅ',
+    romaji: 'yu',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+  {
+    id: 'small-yo',
+    character: 'ょ',
+    romaji: 'yo',
+    audio: '',
+    mnemonic: '',
+    strokeOrder: [],
+
+    image: '',
+    imageAlt: '',
+
+    outline: '',
+
+    strokes: [],
+    strokeViewBox: '',
+  },
+
 ]
 
 export const HIRAGANA_BY_ID = new Map(HIRAGANA.map((kana) => [kana.id, kana]))

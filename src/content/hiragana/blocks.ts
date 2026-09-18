@@ -7,15 +7,6 @@ export const BLOCKS: Block[] = [
     summary:
       'Cinco vocales y un kana más. Son pocos, pero con ellos ya se escriben ' +
       'frases enteras: por eso は se adelanta a su sitio en la tabla tradicional.',
-    // Los ids son el rōmaji de cada kana: la ficha que se trace en `kana.ts` tiene
-    // que nacer con ese mismo id o el bloque dejará de encontrarla.
-    //
-    // La palabra no es un ejemplo cualquiera: es la que hace falta para las frases
-    // del final del bloque. Nunca una palabra de un solo kana —え, は—, porque no se
-    // puede pedir que se encuentre el kana DENTRO de la palabra si son lo mismo.
-    //
-    // Esto es el PLAN: una lección se lista aunque le falte contenido, y
-    // `VolumeReader` deja fuera la que no esté entera.
     lessons: [
       { kanaId: 'a', wordId: 'aoi', wordId2: 'au' },
       { kanaId: 'i', wordId: 'ie', wordId2: 'ii' },
@@ -38,6 +29,13 @@ export const BLOCKS: Block[] = [
       'iu',
       'hai',
       'iie',
+      'a-expression',
+      'aa',
+      'ie-2',
+      'e-2',
+      'ee',
+      'o-honorific-prefix',
+      'hai-2',
     ],
     sentenceIds: [
       'ie-wa-aoi',
@@ -55,15 +53,437 @@ export const BLOCKS: Block[] = [
       'haha-wa-iu',
       'ha-wa-ii',
       'ha-wa-ooi',
+      'aa-ii',
+      'ee',
+    ],
+  },
+  {
+    id: 'b2',
+    title: 'Bloque 2 · しるれとくそ',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'aru',
+      'aru-2',
+      'are',
+      'iru',
+      'iru-2',
+      'ureshii',
+      'oishii',
+      'okuru',
+      'osoku',
+      'ototoi',
+      'ototoshi',
+      'sou-sou-desu',
+      'sore',
+      'tooku',
+      'haku',
+      'hashi',
+      'hashi-2',
+      'rei',
+      'rei-2',
+    ],
+    sentenceIds: [
+      'sore-wa-ii',
+      'are-wa-ii',
+      'sore-wa-oishii',
+      'are-wa-oishii',
+      'sore-wa-rei',
+      'are-wa-hashi',
+    ],
+  },
+  {
+    id: 'b3',
+    title: 'Bloque 3 · ひふへほころの',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'asoko',
+      'ano',
+      'ano-2',
+      'anou',
+      'iroiro',
+      'kuroku',
+      'koko',
+      'kono',
+      'kore',
+      'koro-goro',
+      'soko',
+      'sono',
+      'toufu',
+      'furo',
+      'hou',
+    ],
+    sentenceIds: [
+      'toufu-wa-oishii',
+      'kono-e-wa-ii',
+      'kono-ie-no-e-wa-ii',
+      'kore-wa-ii',
+      'soko-wa-ii',
+      'kono-toufu-wa-oishii',
+    ],
+  },
+  {
+    id: 'b4',
+    title: 'Bloque 4 · かきけさすせた',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'ashita',
+      'isu',
+      'urusai',
+      'kakaru',
+      'kakeru',
+      'kakeru-2',
+      'kirei',
+      'kotae',
+      'kotaekata',
+      'saa',
+      'shikashi',
+      'sushi',
+      'suru',
+    ],
+    sentenceIds: [
+      'sushi-wa-oishii',
+      'kono-isu-kirei',
+      'kotae-wa-kore',
+      'kore-wa-sushi',
+      'kore-wa-isu',
+      'ashita-wa-sushi',
+    ],
+  },
+  {
+    id: 'b5',
+    title: 'Bloque 5 · ちつてなにぬね',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'anata',
+      'ikutsu',
+      'itsu',
+      'uchi',
+      'onaka',
+      'soushite-soshite',
+      'taitei',
+      'tachi',
+      'tate',
+      'tsu',
+      'tsukeru',
+      'nai',
+      'naru',
+      'nuru',
+    ],
+    sentenceIds: [
+      'anata-wa-ie-ni-iru',
+      'anata-tachi-wa-uchi-ni-iru',
+      'kore-wa-kirei-ni-naru',
+      'uchi-ni-aru',
+      'anata-wa-koko-ni-iru',
+      'soushite-kirei-ni-naru',
+    ],
+  },
+  {
+    id: 'b6',
+    title: 'Bloque 6 · らりんも',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'achira',
+      'ikura',
+      'itsumo',
+      'imoutosan',
+      'otoutosan',
+      'omoshiroi',
+      'kantan',
+      'kurai',
+      'kurai-gurai',
+      'kochira',
+      'kochira-koso',
+      'konna',
+      'konnichiwa',
+      'san',
+      'san-2',
+      'sochira',
+      'sorekara',
+      'taihen',
+      'taihen-2',
+      'takusan',
+      'tsukurikata',
+      'totemo',
+      'hontou',
+      'mou',
+      'mou-2',
+      'moshimoshi',
+      'mochiron',
+      'morau',
+    ],
+    sentenceIds: [
+      'kore-wa-omoshiroi',
+      'sore-mo-omoshiroi',
+      'kore-wa-totemo-omoshiroi',
+      'kore-wa-ikura',
+      'konnichiwa',
+      'kochira-koso',
+      'mochiron',
+      'sorekara-suru',
+    ],
+  },
+  {
+    id: 'b7',
+    title: 'Bloque 7 · まよやわみ',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'amari',
+      'omawarisan',
+      'oyasuminasai',
+      'kaitouyoushi',
+      'kawaii',
+      'sayounara',
+      'shitsurei-shimashita',
+      'shitsurei-shimasu',
+      'sushiya',
+      'sumimasen',
+      'tsumaranai',
+      'honya',
+      'mata',
+      'minna',
+      'yaru',
+      'yoku',
+      'yoku-2',
+      'yoroshiku',
+    ],
+    sentenceIds: [
+      'kore-wa-kawaii',
+      'sore-wa-tsumaranai',
+      'sumimasen',
+      'oyasuminasai',
+      'sayounara',
+      'mata-ne',
+      'yoroshiku',
+      'minna-mo-suru',
+    ],
+  },
+  {
+    id: 'b8',
+    title: 'Bloque 8 · むめを',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+
+    ],
+    sentenceIds: [
+      'kore-o-okuru',
+      'sore-o-nuru',
+      'kore-o-suru',
+      'e-o-nuru',
+      'e-o-okuru',
+      'kotae-o-okuru',
+    ],
+  },
+  {
+    id: 'b9',
+    title: 'Bloque 9 · ゆ',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+
+    ],
+    sentenceIds: [
+      'kono-e-o-nuru',
+      'sore-o-okuru',
+      'minna-mo-suru-2',
+    ],
+  },
+  {
+    id: 'b10',
+    title: 'Bloque 10 · がぎぐげござじずぜぞだぢづでどばびぶべぼ',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'agaru',
+      'abiru',
+      'arigatou-gozaimasu',
+      'ikaga',
+      'itadakimasu',
+      'erabu',
+      'oide-ni-naru',
+      'ogenki-de',
+      'ojiisan',
+      'onigiri',
+      'onegaishimasu',
+      'ohayou-gozaimasu',
+      'obaasan',
+      'kagi',
+      'kaban',
+      'kaburu',
+      'kangaeru',
+      'garu',
+      'kudasai',
+      'konbanwa',
+      'gochisousama-deshita',
+      'gomen-kudasai',
+      'gomennasai',
+      'saigo',
+      'sugi',
+      'zutsu',
+      'sou-desu-ka',
+      'sou-desu-ne',
+      'soba',
+      'soredewa',
+      'tadaima',
+      'tadashii',
+      'tabako',
+      'tabun',
+      'daitai',
+      'dakara',
+      'dake',
+      'dandan',
+      'dekiru',
+      'dewa',
+      'demo',
+      'do',
+      'do-2',
+      'dou',
+      'dou-itashimashite',
+      'doushite',
+      'douzo',
+      'doumo',
+      'doumo-arigatou',
+      'doko',
+      'dokoka',
+      'dochira',
+      'donata',
+      'dono',
+      'dore',
+      'donna',
+      'nagara',
+      'naze',
+      'nado',
+      'nigiyaka',
+      'hajime-ni',
+      'hajimemashite',
+      'boku',
+      'mazui',
+      'mada',
+      'mondaiyoushi',
+      'mondairei',
+      'yajirushi',
+      'ringo',
+    ],
+    sentenceIds: [
+      'boku-wa-ie-ni-iru',
+      'doko-ni-iru',
+      'ringo-o-erabu',
+      'doushite-sore-o-suru',
+      'doko-de-suru',
+      'kaban-o-okuru',
+      'arigatou-gozaimasu',
+      'ohayou-gozaimasu',
+      'konbanwa',
+      'soredewa-mata',
+    ],
+  },
+  {
+    id: 'b11',
+    title: 'Bloque 11 · ぱぴぷぺぽっー',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'asatte',
+      'acchi',
+      'ittekimasu',
+      'e-3',
+      'kocchi',
+      'sekken',
+      'socchi',
+      'docchi',
+      'massugu',
+      'motte-iku',
+      'motto',
+      'rippa',
+    ],
+    sentenceIds: [
+      'asatte-ittekimasu',
+      'kore-o-motte-iku',
+      'docchi-ga-ii',
+      'kocchi-wa-rippa-desu',
+      'sekken-wa-koko-desu',
+      'motto-suru',
+      'e-socchi',
+      'socchi-wa-dou',
+    ],
+  },
+  {
+    id: 'b12',
+    title: 'Bloque 12 · ゃゅょ',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'irasshaimase',
+      'kyouto',
+      'goshujin',
+      'shouyu',
+      'ja-jaa',
+      'sou-shimashou',
+      'chawan',
+      'choudo',
+      'chotto',
+      'toukyou',
+      'ryokougaisha',
+      'ryokou-suru',
+    ],
+    sentenceIds: [
+      'irasshaimase',
+      'shouyu-wa-koko-desu',
+      'chawan-wa-soko-desu',
+      'toukyou-ni-ryokou-suru',
+      'kyouto-ni-ryokou-suru',
+      'ryokougaisha-wa-doko-desu-ka',
+      'goshujin-wa-doko-desu-ka',
+      'jaa-sou-shimashou',
+      'chotto-sumimasen',
+    ],
+  },
+  {
+    id: 'b13',
+    title: 'Bloque 13 · Cruce con Fase 2',
+    summary: '',
+    lessons: [
+    ],
+    wordIds: [
+      'uun',
+      'ee-2',
+      'keshigomu',
+      'sugu-ni',
+      'dewa-mata',
+      'yukkuri-to',
+    ],
+    sentenceIds: [
+      'uun-dou-shiyou',
+      'ee-hontou',
+      'keshigomu-wa-koko-desu',
+      'sugu-ni-okuru',
+      'yukkuri-to-nuru',
+      'dewa-mata',
     ],
   },
 ]
 
 export const BLOCKS_BY_ID = new Map(BLOCKS.map((block) => [block.id, block]))
 
-// El temario entero en orden, escrito o no: es lo que dice cuántos tomos hay en la
-// estantería. `BLOCKS` solo tiene los que ya tienen contenido. Solo ids, porque del
-// bloque 2 en adelante el contenido no viajará en el bundle.
+// El temario completo en orden. B13 es el cruce explícito con la Fase 2.
 export const BLOCK_PLAN: readonly string[] = [
   'b1',
   'b2',
@@ -77,25 +497,19 @@ export const BLOCK_PLAN: readonly string[] = [
   'b10',
   'b11',
   'b12',
+  'b13',
 ]
 
-// Los 46 kana base. B10–B12 no traen caracteres nuevos —dakuten, っ y yōon son
-// transformaciones—, así que el silabario son 110 formas pero solo 46 que dibujar.
+// Los 46 kana base; las transformaciones de B10–B12 no incrementan este total base.
 export const HIRAGANA_BASE_COUNT = 46
 
 // Aproximado a propósito: el examen no publica su lista de vocabulario.
 export const N5_WORD_COUNT = 800
 
-// Los otros dos frentes, todavía sin temario. El carné los enseña a cero desde el
-// primer día: sin ellos parecería que el camino acaba en el hiragana.
 export const KATAKANA_BASE_COUNT = 46
-
-// Aproximado, igual que las palabras. Cuando exista `content/kanji/` saldrá de ahí.
 export const N5_KANJI_COUNT = 100
 
-// Acumulado desde el primer bloque y SIN repetir: una palabra que reaparece más
-// tarde no cuenta dos veces, y por eso se juntan en conjuntos en vez de sumar
-// longitudes. Los porcentajes van sin redondear.
+// Mide únicamente las lecciones que ya tienen sus parejas manuales de vocabulario.
 export function progressThrough(blockId: string) {
   const upTo = BLOCKS.findIndex((block) => block.id === blockId)
   const reached = upTo < 0 ? [] : BLOCKS.slice(0, upTo + 1)
