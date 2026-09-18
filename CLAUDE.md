@@ -191,6 +191,16 @@ así que del bloque 2 en adelante basta con que ese paquete llegue del servidor 
 verdad. Los demás importan únicamente tipos —y la estantería, la lista de ids de
 `BLOCK_PLAN`, que no es contenido—.
 
+**Las imágenes y audios del bloque 2 en adelante van en `content-media/`, no en
+`public/`.** A una imagen no se la protege empaquetándola —Vite la mete en
+`dist/` con otro nombre, pero sigue siendo una URL pública—, así que mientras se
+producen se guardan en `content-media/<pasillo>/<bloque>/` en la raíz del repo:
+ni se importa desde `src/`, ni vive en `public/`, así que no viaja en ningún
+despliegue y solo queda versionada en el repo privado. El bloque 1 se queda en
+`public/`, porque es gratis y da igual. Cuando llegue la fase 5, el mismo script
+que vuelca `content/` a las tablas de Supabase sube estos archivos al bucket
+privado, y la carpeta se vacía.
+
 **El progreso del tomo 1 se hará SIN cuenta y tiene que sobrevivir al registro.**
 Guardarlo en local no es un apaño provisional: es la pieza que la cuenta absorbe al
 crearse. Y si alguien abandona el registro, no puede perder lo que ya hizo — la
@@ -408,77 +418,19 @@ redirección, sin SDK de Google. Ver la fase 3.
 
 ## Design tokens
 
-Todos los valores visuales viven en `_root.scss` como custom properties de CSS.
-**Nunca usar valores hardcodeados** — siempre `var(--nombre-del-token)`.
+Todos los valores visuales viven en `src/styles/root.scss` como custom properties
+de CSS. **Nunca usar valores hardcodeados** — siempre `var(--nombre-del-token)`.
+Los valores no se copian aquí: el archivo manda, y una copia se queda vieja sin
+que nadie lo note.
 
-### Paleta de colores
-
-```scss
-/* Piedra — estructura de la biblioteca */
---color-stone:        #c8b89a;  /* piedra beige envejecida */
---color-stone-dark:   #a8956f;  /* piedra en sombra */
---color-stone-deep:   #7a6a52;  /* piedra profunda */
-
-/* Madera — puertas, estanterías, marcos */
---color-wood:         #8b5e3c;  /* madera tostada */
---color-wood-dark:    #5c3a1e;  /* madera oscura */
---color-wood-deep:    #3a2210;  /* madera muy oscura */
-
-/* Latón y luz — linternas, herrajes, acentos */
---color-brass:        #d4a843;  /* latón cálido */
---color-brass-glow:   #f0c96a;  /* resplandor de linterna */
---color-amber:        #e8932a;  /* luz ámbar */
-
-/* Papel — páginas, fondo de contenido */
---color-cream:        #f5edd8;  /* papel cálido */
---color-parchment:    #e8d9b8;  /* pergamino */
-
-/* Vegetación — hiedra decorativa */
---color-ivy:          #6b8c5a;  /* hiedra apagada */
---color-ivy-dark:     #4a6340;  /* hiedra en sombra */
-
-/* Texto */
---color-ink:          #2c1f0e;  /* tinta marrón oscura */
---color-ink-soft:     rgba(44, 31, 14, 0.6);
-
-/* Fondo general — lo que hay fuera/detrás de la biblioteca */
---color-bg:           #1a1208;  /* oscuro cálido */
-
-/* Tonos por sección de aprendizaje */
---color-hiragana:     #c4956a;  /* terracota suave */
---color-hiragana-deep:#9a6a42;
---color-katakana:     #8a9e6b;  /* verde oliva */
---color-katakana-deep:#627041;
---color-kanji:        #b8845a;  /* ocre rojizo */
---color-kanji-deep:   #8a5c38;
---color-vocab:        #c4a84a;  /* dorado latón */
---color-vocab-deep:   #9a7e2e;
-```
-
-### Tipografía
-
-```scss
---font-display: 'Shippori Mincho', serif;      /* japonés / cabeceras */
---font-roman:   'Cinzel', serif;               /* logotipo BOF */
---font-body:    'Zen Kaku Gothic New', system-ui, sans-serif;
-```
-
-### Movimiento
-
-```scss
---ease-book:       cubic-bezier(0.36, 0.02, 0.16, 1);
---duration-flip:   520ms;
---duration-door:   1700ms;
---duration-fast:   280ms;
---duration-slow:   900ms;
-```
-
-### Layout
-
-```scss
---vh:            /* establecido por el hook useVh — nunca usar 100vh directamente */
---panel-width:   min(20rem, 86vw);
-```
+- **Color:** `--color-stone|wood|brass|amber|cream|parchment|ivy|ink|bg`, con sus
+  variantes `-dark`, `-deep`, `-soft` y `-glow`; uno por pasillo —`--color-hiragana`,
+  `--color-katakana`, `--color-kanji`, `--color-vocab`, cada uno con su `-deep`—; y
+  los de pieza suelta: página, cristal, cielo, error.
+- **Tipografía:** `--font-display` (japonés y cabeceras), `--font-roman` (el
+  logotipo BOF), `--font-body`.
+- **Movimiento:** `--ease-book` y `--duration-flip|door|fast|slow|pulse|sign-sway`.
+- **Layout:** `--panel-width`, y `--vh` — lo mantiene el hook `useVh`; nunca `100vh`.
 
 ---
 
@@ -612,9 +564,8 @@ Ahora el aspecto vive en `BookButton.scss` y cada hoja solo dice dónde va el su
 ## Contenido del curso
 
 Qué se enseña, en qué orden, con qué vocabulario y qué frases vive en su propio
-documento, que se carga entero en cada sesión:
-
-@docs/estructura-aprendizaje.md
+documento: `docs/estructura-aprendizaje.md`. No se carga solo — se pide cuando
+haga falta consultarlo, para no gastar tokens de sesión con él si no toca.
 
 Ese archivo es la referencia del contenido y va a cambiar a menudo. CLAUDE.md no:
 aquí solo están las reglas que se derivan de él.
@@ -837,23 +788,10 @@ tarjeta tiene que ser reconocerla, no adivinar.
 
 ## Ejercicios
 
-Catálogo de tipos de ejercicio: qué existe y para qué sirve cada uno. Cada fila
-es un ejercicio de `src/exercises/`, escrito una sola vez y válido para cualquier
-pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale de
-`docs/estructura-aprendizaje.md`.
-
-| # | Ejercicio | Qué aparece | Qué hace el usuario | Objetivo |
-| -: | --- | --- | --- | --- |
-| 1 | 🧠 **Mnemotecnia** | Dibujo mnemotécnico + **そ** + `so` | Observa la asociación visual | Crear recuerdo inicial |
-| 2 | 👁️ **Introducción** | **そ** + `so` + audio | Ve y escucha el hiragana | Asociar forma + sonido |
-| 3 | 🔎 **Reconocimiento** | **そ** + varias opciones: `so`, `ki`, `a`… | Elige `so` | Hiragana → sonido |
-| 4 | 🔄 **Reconocimiento inverso** | `so` + varios hiraganas | Elige **そ** | Sonido → hiragana |
-| 5 | 🧩 **Parejas** | Hiraganas y sus lecturas | Une **そ ↔ so** junto a hiraganas ya aprendidos | Consolidar asociaciones |
-| 6 | 🔊 **Reconocimiento auditivo** | Se escucha **「so」** + 6 tarjetas de hiragana | Elige **そ** | Sonido → forma, sin romaji |
-| 7 | 🖼️ **Primera palabra real** | Imagen + palabra, por ejemplo **そら** + audio | Observa que **そ** forma parte de una palabra | Introducir el hiragana en contexto |
-| 8 | 🧱 **Completar palabra visual** | 🖼️ cielo + **◯ら** | Entre 6 tarjetas elige **そ** | Aplicarlo dentro de una palabra |
-| 9 | 🎧 **Completar palabra por audio** | 🖼️ cielo + audio **「そら」**, pero **sin hiragana ni romaji** | Entre 6 tarjetas elige **そ** | Reconocimiento auditivo contextual |
-| 10 | ✅ **Repaso final** | Mezcla de 3–5 pruebas anteriores | Responde sin introducción | Comprobar retención |
+Los diez tipos —qué aparece, qué hace el usuario y para qué sirve cada uno— están
+en el anexo de `docs/estructura-aprendizaje.md`. Cada uno se escribe UNA sola vez
+y vale para cualquier pasillo; hoy viven en `aisle/book/`, y se moverán a
+`src/exercises/` cuando haya un segundo pasillo.
 
 ---
 
@@ -895,121 +833,3 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 - **Listener de resize sin filtro de ancho** actualiza `--vh` cuando el navegador
   móvil muestra/oculta la barra de URL, lo que interrumpe StPageFlip mid-gesture.
   Siempre comparar `window.innerWidth` antes y después antes de actualizar.
-
-
-## Ejercicios de aprendizaje
-
-| Fase               | Nº | Ejercicio                                    |
-| ------------------ | -: | -------------------------------------------- |
-| **Aprender**       |  1 | Mnemotecnia                                  |
-|                    |  2 | Hiragana + romaji + audio                    |
-| **Reconocer**      |  3 | Hiragana → romaji                            |
-|                    |  4 | Romaji → hiragana                            |
-|                    |  5 | Parejas                                      |
-| **Escuchar**       |  6 | Audio → hiragana                             |
-| **Contextualizar** |  7 | Presentar palabra real + imagen              |
-|                    |  8 | Completar viendo la imagen, es kana y roma   |
-| **Recordar**       |  9 | Completar con kana y roma usando  audio |
-| **Consolidar**     | 10 | Repaso mixto                                 |
-
-
-## Estructura del aprendizaje — los bloques
-
-### Bloques completos de la fase hiragana
-
-#### Fase hiragana base (B1–B9)
-
-| Bloque | Kana | Acum. | % base (46) | Palabras | Acum. |  % N5 |
-| ------ | ---: | ----: | ----------: | -------: | ----: | ----: |
-| B1     |    6 |     6 |       13,0% |       13 |    13 |  1,6% |
-| B2     |    6 |    12 |       26,1% |       25 |    38 |  4,8% |
-| B3     |    6 |    18 |       39,1% |       25 |    63 |  7,9% |
-| B4     |    7 |    25 |       54,3% |       31 |    94 | 11,8% |
-| B5     |    6 |    31 |       67,4% |       31 |   125 | 15,6% |
-| B6     |    4 |    35 |       76,1% |       30 |   155 | 19,4% |
-| B7     |    4 |    39 |       84,8% |       30 |   185 | 23,1% |
-| B8     |    4 |    43 |       93,5% |       24 |   209 | 26,1% |
-| B9     |    3 |    46 |        100% |       19 |   228 | 28,5% |
-
-#### Fase derivada (B10–B12)
-
-| Bloque | Formas nuevas | Acum. | % silabario (110) | Palabras | Acum. |  % N5 |
-| ------ | ------------- | ----: | ----------------: | -------: | ----: | ----: |
-| B10    | 25 (dakuten)  |    71 |             64,5% |       61 |   289 | 36,1% |
-| B11    | 6 (ぱ行 + っ) |    77 |             70,0% |        8 |   297 | 37,1% |
-| B12    | 33 (yōon)     |   110 |              100% |        7 |   304 | 38,0% |
-
-#### Orden de aprendizaje del hiragana
-
-| # | Caracteres | Nuevas | Acum. |
-|---|---|---:|---:|
-| B1 | あ い う え お は (6) | 13 | 13 |
-| B2 | け か し と き こ (6) | 25 | 38 |
-| B3 | ひ ふ へ ほ る た (6) | 25 | 63 |
-| B4 | く さ す せ そ ち +を (7) | 31 | 94 |
-| B5 | つ て ら り れ ろ (6) | 31 | 125 |
-| B6 | ぬ ま わ ん (4) | 30 | 155 |
-| B7 | ね な や の (4) | 30 | 185 |
-| B8 | に み む め (4) | 24 | 209 |
-| B9 | も ゆ よ (3) | 19 | 228 |
-| B10 | dakuten が ざ だ ば | 61 | 289 |
-| B11 | ぱ + っ + vocal larga | 8 | 297 |
-| B12 | yōon きゃ しゃ ちゃ… | 7 | 304 |
-
-#### Frases desbloqueadas al final del bloque B1
-
-| Frase | Español |
-|---|---|
-| いえはあおい | La casa es azul |
-| いえはいい | La casa es buena |
-| いえはおおい | Hay muchas casas |
-| えはあおい | El cuadro es azul |
-| えはいい | El cuadro es bueno |
-| えはおおい | Hay muchos cuadros |
-| うえはあおい | Lo de arriba es azul |
-| うえはいい | Lo de arriba está bien |
-| あおはいい | El azul es bonito |
-| あおはおおい | Hay mucho azul |
-| はははいい | Mi madre es buena |
-| はははいう | Mi madre dice |
-| ははいい | El diente está bien |
-| ははおおい | Hay muchos dientes |
-| はい / いいえ | Sí / No |
-
-#	Kana nuevos	Formas acum.	% de 80	Palabras	Acum.	% N5
-B1	ア イ ス ト ー (5)	7	8,8%	1	1	0,1%
-B2	ハ フ コ ツ テ ホ レ (7)	23	28,8%	13	14	1,8%
-B3	ン ル ヒ ナ タ カ ラ (7)	34	42,5%	22	36	4,5%
-B4	ヘ メ ク マ キ モ リ ウ (8)	46	57,5%	15	51	6,4%
-B5	ロ シ ム エ チ セ ケ ソ (8)	59	73,8%	15	66	8,3%
-B6	ネ オ サ ニ ノ ヌ ミ (7)	67	83,8%	5	71	8,9%
-B7	ヤ ユ ヨ ワ ッ (5)	72	90,0%	6	77	9,6%
-B8	ャ ュ ョ ァ ィ ゥ ェ ォ (8)	80	100%	10	87	10,9%
-
-Las formas incluyen los dakuten/handakuten que entran con su fila. B3 es el bloque estrella: 22 palabras.
-
-Ahora calculo la de kanji.
-
-Tabla kanji — 12 bloques, 100 kanji
-#	Kanji nuevos	Acum.	% de 100	Palabras	Acum.	% N5
-K1	一 二 三 四 五 六 七 (7)	7	7%	14	14	1,8%
-K2	人 月 年 時 分 八 九 (7)	14	14%	16	30	3,8%
-K3	今 来 大 毎 半 男 女 (7)	21	21%	17	47	5,9%
-K4	何 週 子 学 出 十 百 (7)	28	28%	17	64	8,0%
-K5	生 円 中 口 小 校 万 (7)	35	35%	17	81	10,1%
-K6	日 千 先 火 水 木 金 (7)	42	42%	20	101	12,6%
-K7	高 入 友 話 見 休 土 上 下 (9)	51	51%	16	117	14,6%
-K8	手 電 外 前 後 左 右 東 西 南 (10)	61	61%	12	129	16,1%
-K9	国 名 車 気 北 父 母 私 目 耳 (10)	71	71%	14	143	17,9%
-K10	空 天 足 体 山 川 田 雨 花 駅 (10)	81	81%	11	154	19,3%
-K11	道 語 読 書 行 食 飲 買 立 店 (10)	91	91%	11	165	20,6%
-K12	聞 会 安 新 古 長 多 少 社 (9)	100	100%	9	174	21,8%
-
-
-Balance de las tres fases
-Fase	Bloques	Caracteres	Palabras brutas	Nuevas reales	Acum. único	% N5
-Hiragana	12	46 base (110 formas)	304	304	304	38,0%
-Katakana	8	46 base (80 formas)	87	87	391	48,9%
-Kanji	12	100 kanji	174	68	459	57,4%
-FALTANTE	—	—	—	~341	800	42,6%
-

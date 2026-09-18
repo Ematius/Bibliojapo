@@ -355,3 +355,149 @@ Fase	Palabras	% N5 individual	% N5 acumulado
 2. Katakana	76	9,0%	33,8%
 3. Kanji	204	24,1%	57,9%
 4. Vocabulario	356	42,1%	100%
+---
+
+## 12. Anexo — catálogo de ejercicios y tablas de bloques
+
+Movido desde `CLAUDE.md` el 18-09-2026: es temario, no regla, y allí se cargaba
+entero en cada sesión.
+
+### Ejercicios
+
+Catálogo de tipos de ejercicio: qué existe y para qué sirve cada uno. Cada fila
+es un ejercicio de `src/exercises/`, escrito una sola vez y válido para cualquier
+pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale de
+`docs/estructura-aprendizaje.md`.
+
+| # | Ejercicio | Qué aparece | Qué hace el usuario | Objetivo |
+| -: | --- | --- | --- | --- |
+| 1 | 🧠 **Mnemotecnia** | Dibujo mnemotécnico + **そ** + `so` | Observa la asociación visual | Crear recuerdo inicial |
+| 2 | 👁️ **Introducción** | **そ** + `so` + audio | Ve y escucha el hiragana | Asociar forma + sonido |
+| 3 | 🔎 **Reconocimiento** | **そ** + varias opciones: `so`, `ki`, `a`… | Elige `so` | Hiragana → sonido |
+| 4 | 🔄 **Reconocimiento inverso** | `so` + varios hiraganas | Elige **そ** | Sonido → hiragana |
+| 5 | 🧩 **Parejas** | Hiraganas y sus lecturas | Une **そ ↔ so** junto a hiraganas ya aprendidos | Consolidar asociaciones |
+| 6 | 🔊 **Reconocimiento auditivo** | Se escucha **「so」** + 6 tarjetas de hiragana | Elige **そ** | Sonido → forma, sin romaji |
+| 7 | 🖼️ **Primera palabra real** | Imagen + palabra, por ejemplo **そら** + audio | Observa que **そ** forma parte de una palabra | Introducir el hiragana en contexto |
+| 8 | 🧱 **Completar palabra visual** | 🖼️ cielo + **◯ら** | Entre 6 tarjetas elige **そ** | Aplicarlo dentro de una palabra |
+| 9 | 🎧 **Completar palabra por audio** | 🖼️ cielo + audio **「そら」**, pero **sin hiragana ni romaji** | Entre 6 tarjetas elige **そ** | Reconocimiento auditivo contextual |
+| 10 | ✅ **Repaso final** | Mezcla de 3–5 pruebas anteriores | Responde sin introducción | Comprobar retención |
+
+---
+
+
+### Ejercicios de aprendizaje
+
+| Fase               | Nº | Ejercicio                                    |
+| ------------------ | -: | -------------------------------------------- |
+| **Aprender**       |  1 | Mnemotecnia                                  |
+|                    |  2 | Hiragana + romaji + audio                    |
+| **Reconocer**      |  3 | Hiragana → romaji                            |
+|                    |  4 | Romaji → hiragana                            |
+|                    |  5 | Parejas                                      |
+| **Escuchar**       |  6 | Audio → hiragana                             |
+| **Contextualizar** |  7 | Presentar palabra real + imagen              |
+|                    |  8 | Completar viendo la imagen, es kana y roma   |
+| **Recordar**       |  9 | Completar con kana y roma usando  audio |
+| **Consolidar**     | 10 | Repaso mixto                                 |
+
+
+### Estructura del aprendizaje — los bloques
+
+#### Bloques completos de la fase hiragana
+
+##### Fase hiragana base (B1–B9)
+
+| Bloque | Kana | Acum. | % base (46) | Palabras | Acum. |  % N5 |
+| ------ | ---: | ----: | ----------: | -------: | ----: | ----: |
+| B1     |    6 |     6 |       13,0% |       13 |    13 |  1,6% |
+| B2     |    6 |    12 |       26,1% |       25 |    38 |  4,8% |
+| B3     |    6 |    18 |       39,1% |       25 |    63 |  7,9% |
+| B4     |    7 |    25 |       54,3% |       31 |    94 | 11,8% |
+| B5     |    6 |    31 |       67,4% |       31 |   125 | 15,6% |
+| B6     |    4 |    35 |       76,1% |       30 |   155 | 19,4% |
+| B7     |    4 |    39 |       84,8% |       30 |   185 | 23,1% |
+| B8     |    4 |    43 |       93,5% |       24 |   209 | 26,1% |
+| B9     |    3 |    46 |        100% |       19 |   228 | 28,5% |
+
+##### Fase derivada (B10–B12)
+
+| Bloque | Formas nuevas | Acum. | % silabario (110) | Palabras | Acum. |  % N5 |
+| ------ | ------------- | ----: | ----------------: | -------: | ----: | ----: |
+| B10    | 25 (dakuten)  |    71 |             64,5% |       61 |   289 | 36,1% |
+| B11    | 6 (ぱ行 + っ) |    77 |             70,0% |        8 |   297 | 37,1% |
+| B12    | 33 (yōon)     |   110 |              100% |        7 |   304 | 38,0% |
+
+##### Orden de aprendizaje del hiragana
+
+| # | Caracteres | Nuevas | Acum. |
+|---|---|---:|---:|
+| B1 | あ い う え お は (6) | 13 | 13 |
+| B2 | け か し と き こ (6) | 25 | 38 |
+| B3 | ひ ふ へ ほ る た (6) | 25 | 63 |
+| B4 | く さ す せ そ ち +を (7) | 31 | 94 |
+| B5 | つ て ら り れ ろ (6) | 31 | 125 |
+| B6 | ぬ ま わ ん (4) | 30 | 155 |
+| B7 | ね な や の (4) | 30 | 185 |
+| B8 | に み む め (4) | 24 | 209 |
+| B9 | も ゆ よ (3) | 19 | 228 |
+| B10 | dakuten が ざ だ ば | 61 | 289 |
+| B11 | ぱ + っ + vocal larga | 8 | 297 |
+| B12 | yōon きゃ しゃ ちゃ… | 7 | 304 |
+
+##### Frases desbloqueadas al final del bloque B1
+
+| Frase | Español |
+|---|---|
+| いえはあおい | La casa es azul |
+| いえはいい | La casa es buena |
+| いえはおおい | Hay muchas casas |
+| えはあおい | El cuadro es azul |
+| えはいい | El cuadro es bueno |
+| えはおおい | Hay muchos cuadros |
+| うえはあおい | Lo de arriba es azul |
+| うえはいい | Lo de arriba está bien |
+| あおはいい | El azul es bonito |
+| あおはおおい | Hay mucho azul |
+| はははいい | Mi madre es buena |
+| はははいう | Mi madre dice |
+| ははいい | El diente está bien |
+| ははおおい | Hay muchos dientes |
+| はい / いいえ | Sí / No |
+
+#	Kana nuevos	Formas acum.	% de 80	Palabras	Acum.	% N5
+B1	ア イ ス ト ー (5)	7	8,8%	1	1	0,1%
+B2	ハ フ コ ツ テ ホ レ (7)	23	28,8%	13	14	1,8%
+B3	ン ル ヒ ナ タ カ ラ (7)	34	42,5%	22	36	4,5%
+B4	ヘ メ ク マ キ モ リ ウ (8)	46	57,5%	15	51	6,4%
+B5	ロ シ ム エ チ セ ケ ソ (8)	59	73,8%	15	66	8,3%
+B6	ネ オ サ ニ ノ ヌ ミ (7)	67	83,8%	5	71	8,9%
+B7	ヤ ユ ヨ ワ ッ (5)	72	90,0%	6	77	9,6%
+B8	ャ ュ ョ ァ ィ ゥ ェ ォ (8)	80	100%	10	87	10,9%
+
+Las formas incluyen los dakuten/handakuten que entran con su fila. B3 es el bloque estrella: 22 palabras.
+
+Ahora calculo la de kanji.
+
+Tabla kanji — 12 bloques, 100 kanji
+#	Kanji nuevos	Acum.	% de 100	Palabras	Acum.	% N5
+K1	一 二 三 四 五 六 七 (7)	7	7%	14	14	1,8%
+K2	人 月 年 時 分 八 九 (7)	14	14%	16	30	3,8%
+K3	今 来 大 毎 半 男 女 (7)	21	21%	17	47	5,9%
+K4	何 週 子 学 出 十 百 (7)	28	28%	17	64	8,0%
+K5	生 円 中 口 小 校 万 (7)	35	35%	17	81	10,1%
+K6	日 千 先 火 水 木 金 (7)	42	42%	20	101	12,6%
+K7	高 入 友 話 見 休 土 上 下 (9)	51	51%	16	117	14,6%
+K8	手 電 外 前 後 左 右 東 西 南 (10)	61	61%	12	129	16,1%
+K9	国 名 車 気 北 父 母 私 目 耳 (10)	71	71%	14	143	17,9%
+K10	空 天 足 体 山 川 田 雨 花 駅 (10)	81	81%	11	154	19,3%
+K11	道 語 読 書 行 食 飲 買 立 店 (10)	91	91%	11	165	20,6%
+K12	聞 会 安 新 古 長 多 少 社 (9)	100	100%	9	174	21,8%
+
+
+Balance de las tres fases
+Fase	Bloques	Caracteres	Palabras brutas	Nuevas reales	Acum. único	% N5
+Hiragana	12	46 base (110 formas)	304	304	304	38,0%
+Katakana	8	46 base (80 formas)	87	87	391	48,9%
+Kanji	12	100 kanji	174	68	459	57,4%
+FALTANTE	—	—	—	~341	800	42,6%
+
