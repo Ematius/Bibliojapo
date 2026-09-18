@@ -92,8 +92,19 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   // opciones. Deja pasar cualquier `<button>`/`<a>` —el mismo criterio que usa la
   // propia librería para sus controles—, así que nunca bloquea una tarjeta ni un
   // botón del examen.
+  // Antes de empezar bloquea SOLO la plana de normas, no el libro entero. Con el tomo ya
+  // sellado no bloquea nada: sin «Empezar» que pulsar, dejaría a quien lee encerrado ahí.
+  const onRulesSpread = (): boolean => {
+    const folio = flip.getPageCount() - flip.getCurrentPageIndex()
+    return (folio % 2 === 1 ? folio : folio - 1) === rulesFolio
+  }
+  const guardingRules = (): boolean => {
+    const start = rules.querySelector<HTMLButtonElement>('[data-exam-start]')
+    return start !== null && !start.hidden && onRulesSpread()
+  }
+
   const shouldBlock = (target: EventTarget | null): boolean => {
-    if (!locked) return false
+    if (!locked && !guardingRules()) return false
     return !(target as HTMLElement | null)?.closest('button, a')
   }
   const blockDrag = (event: Event) => {
@@ -179,11 +190,19 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
 
   // EMPEZAR: bloquea el libro y entra en la primera frase.
   const startButton = rules.querySelector<HTMLButtonElement>('[data-exam-start]')
+  const backButton = rules.querySelector<HTMLButtonElement>('[data-exam-back]')
   const onStart = () => {
     locked = true
+    // El «Volver» se va con el examen empezado: los botones se saltan el bloqueo, así que
+    // dejarlo puesto sería una puerta abierta al temario en mitad de la prueba.
+    backButton?.setAttribute('hidden', '')
     flip.flipPrev()
   }
   startButton?.addEventListener('click', onStart)
+
+  // El libro va montado al revés, así que retroceder es flipNext — ver VolumeReader.
+  const onBack = () => flip.flipNext()
+  backButton?.addEventListener('click', onBack)
 
   // LAS FRASES. Agrupadas por bloque y ORDENADAS por su posición de lectura —el DOM
   // las trae al revés, ver `VolumeReader`—, y desde ahí partidas en parejas de dos:
@@ -416,6 +435,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     root.removeEventListener('mousedown', blockDrag, { capture: true })
     root.removeEventListener('touchstart', blockDrag, { capture: true })
     startButton?.removeEventListener('click', onStart)
+    backButton?.removeEventListener('click', onBack)
     showButton?.removeEventListener('click', onShowReveal)
     retryButton?.removeEventListener('click', onRetry)
     sentenceTeardowns.forEach((teardown) => teardown?.())

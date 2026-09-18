@@ -31,9 +31,17 @@ export function ExamRules() {
 
       <p className="exam-rules__body">Al aprobar se sella el tomo y se abre el siguiente.</p>
 
-      <BookButton className="exam-rules__start" data-exam-start="true">
-        Empezar
-      </BookButton>
+      <div className="exam-rules__actions">
+        <BookButton className="exam-rules__start" data-exam-start="true">
+          Empezar
+        </BookButton>
+
+        {/* Con el examen por delante el libro deja de pasar hoja por gesto, así que sin
+            este botón no habría forma de volver al temario. */}
+        <BookButton className="exam-rules__back" data-exam-back="true">
+          Volver al temario
+        </BookButton>
+      </div>
 
       <p className="exam-rules__done" data-exam-done hidden>
         Este tomo ya tiene su sello. Se puede seguir leyendo sin volver a examinarse.
