@@ -16,6 +16,7 @@ import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
 import { RotateNotice } from '../book/opening/RotateNotice'
 import { BookExit } from '../book/opening/BookExit'
+import { SmallScreenNotice } from '../book/opening/SmallScreenNotice'
 import { VolumeReader } from '../book/reader/VolumeReader'
 import { VolumeStatus } from '../book/reader/VolumeStatus'
 import { useVolumeContent } from '../../shared/useVolumeContent'
@@ -60,6 +61,9 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   // Las hojas del lector no se montan hasta que el libro está abierto del todo: antes no
   // hay hueco de papel donde ponerlas.
   const [opened, setOpened] = useState(false)
+  // Si ya se ha leído el aviso de pantalla pequeña. Por tomo y por visita: repetirlo cada
+  // vez que se abre el mismo libro sería un peaje.
+  const [warned, setWarned] = useState(false)
   // La nota que explica por qué un tomo no sale. Va en un objeto y no como texto suelto
   // para que pulsar dos veces cuente como dos notas: con el mismo texto React no vería
   // cambio y la cuenta atrás no se reiniciaría.
@@ -255,12 +259,24 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     closing: `Cerrando ${volume.label}`,
   }[stage]
 
+  // En una pantalla justa se avisa de lo que se va a encontrar ANTES de abrir el tomo o de
+  // pedir que giren: girar el móvil y toparse igual con una letra cortada se lee como una
+  // app rota, y no como el apretón que es.
+  const cramped = layout ? !layout.fits || layout.tight : false
+  const warning = (stage === 'open' || stage === 'closing') && cramped && !warned
+
   return (
     <>
       {/* Va primero para quedar por detrás de todo lo demás: es el fondo sobre
           el que se destaca el tomo, no una capa encima de él. */}
       <VolumeScrim shown={stage !== 'shelf'} onDismiss={dismiss} />
 
+      {warning
+        ? createPortal(
+            <SmallScreenNotice onAccept={() => setWarned(true)} onDismiss={dismiss} />,
+            document.body,
+          )
+        : null}
 
       {/* Sigue montado mientras se cierra: es la misma línea de tiempo
           rebobinando, y desmontarlo aquí sería quitar de en medio justo lo que
@@ -269,11 +285,11 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
           `position: fixed`, y ahí dentro el bloque contenedor sería el stage —que lleva
           transform desde que se recorre con el dedo— o la caja del pasillo, que mide `--vh`
           y puede ser más alta que la pantalla. En el body se centran en lo que se ve. */}
-      {(stage === 'open' || stage === 'closing') && layout && !layout.fits
+      {(stage === 'open' || stage === 'closing') && !warning && layout && !layout.fits
         ? createPortal(<RotateNotice onDismiss={dismiss} />, document.body)
         : null}
 
-      {(stage === 'open' || stage === 'closing') && layout?.fits
+      {(stage === 'open' || stage === 'closing') && !warning && layout?.fits
         ? createPortal(
         <VolumeOpening
           layout={layout}
@@ -301,7 +317,7 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
 
       {/* La salida del tomo, solo cuando el libro no deja velo que pulsar. Al body por lo
           mismo que el libro: dentro del stage heredaría su desplazamiento. */}
-      {(stage === 'open' || stage === 'closing') && layout?.fits && layout.tight
+      {(stage === 'open' || stage === 'closing') && !warning && layout?.fits && layout.tight
         ? createPortal(<BookExit onDismiss={dismiss} />, document.body)
         : null}
 

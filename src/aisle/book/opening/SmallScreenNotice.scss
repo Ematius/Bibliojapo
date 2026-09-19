@@ -1,0 +1,92 @@
+// El aviso de pantalla pequeña, en el mismo papel que `RotateNotice`: crema, latón y tinta.
+// Más ancho que aquel porque aquí hay un párrafo y no una línea.
+
+.small-screen-notice {
+  // `fixed` y centrado como el libro al que sustituye, por lo mismo que en `VolumeOpening.scss`:
+  // dentro del stage quedaría centrado en la escena, que en el pasillo está descentrada.
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // Cabe en un móvil de lado sin tocar los bordes: ahí el alto es lo escaso, así que el aviso
+  // se estira a lo ancho antes que crecer hacia abajo.
+  width: min(30rem, 86vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 1.5rem 1.5rem;
+  border: 1px solid var(--color-brass);
+  border-radius: var(--radius-float);
+  background: var(--color-cream);
+  box-shadow: var(--shadow-float);
+  color: var(--color-ink);
+  text-align: center;
+
+  &__icon {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-brass);
+  }
+
+  &__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+  }
+
+  &__text {
+    margin: 0.5rem 0 0;
+    color: var(--color-ink-soft);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  &__button {
+    padding: 0.5rem 1.125rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease;
+
+    &:hover {
+      background: var(--color-parchment);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 3px;
+    }
+  }
+
+  // El que sigue adelante manda: es lo que se viene a hacer, y devolver el tomo es la salida.
+  &__button--go {
+    background: var(--color-parchment);
+    font-weight: 600;
+  }
+}
