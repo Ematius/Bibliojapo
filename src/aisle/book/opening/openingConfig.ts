@@ -52,6 +52,9 @@ export const OPENING = {
   // mismo. Para darle alto hay que agrandar el LIBRO, aunque sus tapas se salgan por arriba y
   // por abajo — es acercarse a leer, no un fallo de encuadre.
   minPaperHeight: 340,
+  // El velo que tiene que quedar alrededor del libro para poder devolverlo pulsando fuera.
+  // Por debajo de esto no queda dónde dar y el lector saca su propia salida — ver `BookExit`.
+  minScrimPx: 40,
   // Cinco fundidos seguidos son un segundo: el gesto de abrir un libro entero, no cinco
   // pasos que haya que mirar de uno en uno.
   frameSeconds: 0.2,
@@ -65,6 +68,9 @@ export interface OpenBookLayout {
   // Si el libro entra de ancho en la ventana. Cuando no, no se abre: se pide girar la
   // pantalla. Ver `RotateNotice`.
   fits: boolean
+  // Si el libro ha crecido hasta comerse el velo que lo rodea, que es lo que se pulsa para
+  // devolverlo. Ver `BookExit`.
+  tight: boolean
   paper: { left: number; top: number; width: number; height: number }
 }
 
@@ -95,6 +101,9 @@ export function openBookLayout(viewHeight: number, viewWidth: number): OpenBookL
     width,
     height,
     fits: naturalWidth <= viewWidth,
+    tight:
+      (viewWidth - width) / 2 < OPENING.minScrimPx &&
+      (viewHeight - height) / 2 < OPENING.minScrimPx,
     paper: {
       left: PAPER_INSET.left * width,
       top: PAPER_INSET.top * height,

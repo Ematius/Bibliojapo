@@ -15,6 +15,7 @@ import { useVolumePull, type VolumeStage } from './useVolumePull'
 import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
 import { RotateNotice } from '../book/opening/RotateNotice'
+import { BookExit } from '../book/opening/BookExit'
 import { VolumeReader } from '../book/reader/VolumeReader'
 import { VolumeStatus } from '../book/reader/VolumeStatus'
 import { useVolumeContent } from '../../shared/useVolumeContent'
@@ -260,6 +261,7 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
           el que se destaca el tomo, no una capa encima de él. */}
       <VolumeScrim shown={stage !== 'shelf'} onDismiss={dismiss} />
 
+
       {/* Sigue montado mientras se cierra: es la misma línea de tiempo
           rebobinando, y desmontarlo aquí sería quitar de en medio justo lo que
           tiene que verse plegarse. */}
@@ -295,6 +297,12 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
         </VolumeOpening>,
             document.body,
           )
+        : null}
+
+      {/* La salida del tomo, solo cuando el libro no deja velo que pulsar. Al body por lo
+          mismo que el libro: dentro del stage heredaría su desplazamiento. */}
+      {(stage === 'open' || stage === 'closing') && layout?.fits && layout.tight
+        ? createPortal(<BookExit onDismiss={dismiss} />, document.body)
         : null}
 
       <ShelfNote volume={volume} message={note?.text ?? null} />

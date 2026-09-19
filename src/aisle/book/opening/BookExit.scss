@@ -1,0 +1,40 @@
+// El botón de devolver el tomo, encima del libro abierto. Solo sale cuando el libro se come el
+// velo: mientras quede fuera donde pulsar, un botón sobre la ilustración sobra.
+
+.book-exit {
+  position: fixed;
+  top: 0.6rem;
+  right: 0.6rem;
+  // Entre el libro (4) y el panel de la cuenta (10).
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // La medida de un dedo: por debajo de esto se falla el toque en un móvil.
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-brass);
+  border-radius: 50%;
+  // Cae sobre el papel claro del libro y sobre el pasillo oscuro, así que lleva fondo propio:
+  // sin él, un aspa clara desaparecería contra la hoja.
+  background: rgba(var(--rgb-bg), 0.72);
+  color: var(--color-cream);
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+
+  &__mark {
+    width: 55%;
+    height: 55%;
+  }
+
+  &:hover {
+    background: rgba(var(--rgb-bg), 0.88);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+}
