@@ -85,11 +85,10 @@ export function openBookLayout(viewHeight: number, viewWidth: number): OpenBookL
       ? byCanvas
       : OPENING.minPaperHeight / PAPER_INSET.height
 
-  // El ancho manda sobre el alto, y el alto nunca pasa de la ventana: pedir más papel del que
-  // cabe sacaría el libro de la imagen en vez de acercarlo. En un móvil de lado corto esto deja
-  // el papel por debajo de `minPaperHeight` —no hay más sitio del que sacarlo—, y es mejor eso
-  // que un libro que se sale por arriba y por abajo.
-  const height = Math.min(needed, viewWidth / OPEN_FRAME_RATIO, viewHeight)
+  // Solo manda el ancho: el libro puede pasar de alto de la ventana y recortarse por arriba y
+  // por abajo. Es lo que da papel legible en un móvil de lado; si se vuelve a topar con el
+  // alto, el papel baja a ~200 px y los ejercicios se montan unos sobre otros.
+  const height = Math.min(needed, viewWidth / OPEN_FRAME_RATIO)
   const width = height * OPEN_FRAME_RATIO
 
   return {
