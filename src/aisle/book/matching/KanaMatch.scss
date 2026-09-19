@@ -200,6 +200,32 @@
   text-wrap: pretty;
 }
 
+// Media hoja de un móvil de lado deja unos 100 px para todo esto, y el montón se partía en dos
+// filas: la ficha se subía sobre su propio rótulo y el aviso caía sobre la tarea de abajo. Las
+// tarjetas se estrechan —no se achican, que hay que poder tocarlas— hasta que el montón entra
+// en una fila, y lo demás se aprieta.
+@container page (max-height: 380px) {
+  .kana-match {
+    gap: 2cqh;
+  }
+
+  .kana-match__deck {
+    gap: 1cqh 1.5cqw;
+  }
+
+  // Solo los lados: el alto de la tarjeta es lo que se toca con el dedo y no se toca.
+  .kana-match__tile {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  // Sin hueco reservado: aquí no hay de dónde sacarlo, y el salto que evita se nota menos que
+  // el aviso montado sobre la tarea siguiente.
+  .kana-match__result {
+    min-height: 0;
+  }
+}
+
 // Sin desplazamiento animado para quien lo ha desactivado. El cambio de fondo se queda: no es
 // movimiento, es la respuesta del botón a que lo estás tocando.
 @media (prefers-reduced-motion: reduce) {
