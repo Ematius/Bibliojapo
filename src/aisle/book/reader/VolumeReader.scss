@@ -134,6 +134,13 @@
     display: flex;
     flex-direction: column;
     gap: 1.2cqh;
+
+    // En una hoja baja —un móvil de lado— los pasos del trazado no caben y se cortan contra el
+    // borde del papel. Se quedan fuera antes que medio cortados: el trazo se aprende igual en
+    // la pauta de escritura, que lo enseña dibujado en vez de contado.
+    @container page (max-height: 380px) {
+      display: none;
+    }
   }
 
   // Encabezado de sección. Manda menos que el título de la página: no dice de qué va la hoja,
