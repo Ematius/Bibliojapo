@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
 import { onApiChange } from '../api/apiChanges'
 import { fetchBadges, fetchJourney, type Badge, type JourneyTrack } from '../api/progress'
+import { RotateNotice } from '../shared/RotateNotice'
 import { SiteNav } from '../shared/SiteNav'
 import { BLOCK_PLAN } from '../content/hiragana/blocks'
 import { AnimeAlbum, type AnimeChapter } from './animeAlbum/AnimeAlbum'
@@ -13,6 +15,7 @@ import { DeskScene } from './DeskScene'
 import { JourneyCard } from './tarjeta/JourneyCard'
 import { DESK_ART } from './deskArt'
 import { DESK_SPOTS, SHOW_EVERY_OBJECT } from './deskSpots'
+import { useNeedsLandscape } from './useNeedsLandscape'
 import './MyDesk.scss'
 
 // Mi escritorio: la mesa propia, con lo que se ha ganado encima.
@@ -25,6 +28,8 @@ import './MyDesk.scss'
 // estantería del pasillo.
 export function MyDesk() {
   const session = useSession()
+  const needsLandscape = useNeedsLandscape()
+  const navigate = useNavigate()
 
   // Lo que ha llegado, y DE QUIÉN. Sin el dueño, al salir de una cuenta y entrar en otra se
   // verían un instante los tomos de la anterior: la lista ya está en memoria y la nueva
@@ -114,6 +119,24 @@ export function MyDesk() {
       return [{ blockId, volumeNumber: index + 1, images }]
     })
   }, [badges])
+
+  // Va DESPUÉS de todos los hooks: cortar antes cambiaría cuántos se llaman al girar la
+  // pantalla. La mesa se queda pintada detrás, sin objetos ni invitación.
+  if (needsLandscape) {
+    return (
+      <main className="my-desk">
+        <DeskScene />
+
+        <RotateNotice
+          text="Mi escritorio se ve a lo ancho: de pie no caben los objetos de la mesa."
+          backLabel="Volver al vestíbulo"
+          onDismiss={() => navigate('/biblioteca')}
+        />
+
+        <SiteNav />
+      </main>
+    )
+  }
 
   return (
     <main className="my-desk">

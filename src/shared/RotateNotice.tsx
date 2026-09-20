@@ -1,18 +1,21 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { prefersReducedMotion } from '../../../shared/prefersReducedMotion'
+import { prefersReducedMotion } from './prefersReducedMotion'
 import './RotateNotice.scss'
 
 interface RotateNoticeProps {
+  // Por qué hay que girar: el motivo es de cada pantalla, no del aviso.
+  text: string
+  // Lo que hace la salida, con las palabras de cada pantalla: «Devolver el tomo», «Volver al
+  // vestíbulo».
+  backLabel: string
   onDismiss: () => void
 }
 
-// Lo que se ve en lugar del tomo cuando la pantalla no da para abrirlo.
+// Lo que se ve en lugar de una pantalla que no cabe de pie: el tomo abierto y Mi escritorio.
 //
-// El libro se dimensiona por el alto y sale vez y media más ancho que alto, así que en un
-// móvil de pie no cabe ni una de sus dos páginas. En vez de enseñarlo cortado se pide la
-// pantalla a lo ancho, que es donde entra entero.
-export function RotateNotice({ onDismiss }: RotateNoticeProps) {
+// En vez de enseñarla cortada se pide la pantalla a lo ancho, que es donde entra entera.
+export function RotateNotice({ text, backLabel, onDismiss }: RotateNoticeProps) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -73,12 +76,10 @@ export function RotateNotice({ onDismiss }: RotateNoticeProps) {
       </span>
 
       <p className="rotate-notice__title">Gira la pantalla</p>
-      <p className="rotate-notice__text">
-        El tomo se lee a lo ancho: de pie no cabe ni media página.
-      </p>
+      <p className="rotate-notice__text">{text}</p>
 
       <button className="rotate-notice__back" type="button" onClick={onDismiss}>
-        Devolver el tomo
+        {backLabel}
       </button>
     </div>
   )

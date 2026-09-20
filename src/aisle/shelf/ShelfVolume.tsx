@@ -14,7 +14,7 @@ import { openBookLayout, type OpenBookLayout } from '../book/opening/openingConf
 import { useVolumePull, type VolumeStage } from './useVolumePull'
 import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
-import { RotateNotice } from '../book/opening/RotateNotice'
+import { RotateNotice } from '../../shared/RotateNotice'
 import { BookExit } from '../book/opening/BookExit'
 import { SmallScreenNotice } from '../book/opening/SmallScreenNotice'
 import { VolumeReader } from '../book/reader/VolumeReader'
@@ -286,7 +286,14 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
           transform desde que se recorre con el dedo— o la caja del pasillo, que mide `--vh`
           y puede ser más alta que la pantalla. En el body se centran en lo que se ve. */}
       {(stage === 'open' || stage === 'closing') && !warning && layout && !layout.fits
-        ? createPortal(<RotateNotice onDismiss={dismiss} />, document.body)
+        ? createPortal(
+            <RotateNotice
+              text="El tomo se lee a lo ancho: de pie no cabe ni media página."
+              backLabel="Devolver el tomo"
+              onDismiss={dismiss}
+            />,
+            document.body,
+          )
         : null}
 
       {(stage === 'open' || stage === 'closing') && !warning && layout?.fits
