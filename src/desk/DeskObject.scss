@@ -5,10 +5,36 @@
   position: absolute;
   // `top` marca dónde TOCA la madera y el desplazamiento sube el objeto por encima de esa
   // línea. Con `bottom` habría que restar la fracción a uno y se lee peor.
-  top: calc(var(--spot-base-y) * 100%);
-  left: calc(var(--spot-x) * 100%);
-  width: calc(var(--spot-width) * 100%);
+  //
+  // El `min` sube el objeto si la escena se recorta por abajo: en un móvil apaisado solo se ve
+  // la franja del medio del dibujo, y una base en 0,88 cae pegada al borde o fuera. La escena
+  // va centrada, así que el borde visible es la mitad de su alto más media ventana; los 0,75rem
+  // son el aire. `useDeskLift` mide esta línea desde el DOM: si leyera `--spot-base-y`, el
+  // viaje partiría de un sitio que ya no es este.
+  top: min(calc(var(--spot-base-y) * 100%), calc(50% + var(--vh, 1vh) * 50 - 0.75rem));
+  // El `clamp` hace lo mismo a los lados: en una ventana más estrecha que la escena —una
+  // tableta, un móvil— se recorta por los dos lados, y un objeto cerca de un borde se queda
+  // cortado. La escena va centrada, así que el borde visible es media escena más o menos media
+  // ventana; se cuenta el ancho entero del objeto porque su centro es lo que se coloca. Con
+  // `100vw` y no con `100cqw`: nada aquí declara contención, y el hueco de la barra de scroll
+  // solo descuadra unos píxeles cuando el `clamp` ya está actuando. `useDeskLift` mide este
+  // punto desde el DOM, igual que la base.
+  left: clamp(
+    calc(50% - 50vw + var(--rest-width) * 50% + 1rem),
+    calc(var(--spot-x) * 100%),
+    calc(50% + 50vw - var(--rest-width) * 50% - 1rem)
+  );
+  width: calc(var(--rest-width) * 100%);
   transform: translate(-50%, -100%);
+
+  --rest-width: var(--spot-width);
+
+  // El mismo corte que `DESK_LIFT.shortViewport`. `useDeskLift` mide el ancho desde el DOM por
+  // el mismo motivo que la base: el objeto se levanta desde el tamaño que tiene, no desde el
+  // de la mesa grande.
+  @media (max-height: 32.5rem) {
+    --rest-width: var(--spot-short-width);
+  }
   // Transición y no timeline de GSAP: GSAP es para las entradas y salidas de la escena, no
   // para un estado que se enciende y se apaga con el ratón. Va aquí, en el que viaja, y no
   // en el botón: es el `<div>` el que sube al pasar el ratón, con lo de dentro pegado a él.
@@ -20,6 +46,15 @@
   &:hover,
   &:has(.desk-object__button:focus-visible) {
     transform: translate(-50%, -100%) translateY(-0.4rem);
+  }
+
+  // Levantado, el botón ya no suelta nada —eso se hace pisando la mesa, ver `MyDesk`— y su
+  // caja es mucho mayor que el dibujo: la del álbum es cuadrada y el libro abierto solo ocupa
+  // la franja del medio. Sin esto, pulsar por encima del libro cae en el botón, no llega al
+  // fondo de la escena —que solo cierra si el clic es SUYO, ver `DeskScene`— y el objeto se
+  // queda puesto. Lo de dentro se sigue pulsando: `__face` se lo devuelve.
+  &--lifted {
+    pointer-events: none;
   }
 
   // Sin movimiento el objeto sigue respondiendo: lo que se quita es el salto, no la señal de

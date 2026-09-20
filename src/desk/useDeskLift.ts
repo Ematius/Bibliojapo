@@ -32,8 +32,12 @@ interface DeskLiftOptions {
   // Cuánto ocupa ESTE objeto al plantarse enfrente, si no es el tamaño que comparten los
   // demás. Ver `DeskArt.frontWidth`.
   frontWidth?: number
+  // Dónde cae su centro a lo alto al plantarse. Ver `DeskArt.frontY`.
+  frontY?: number
   // Cómo plantarse en una pantalla baja. Ver `DeskArt.short`.
-  short?: { frontWidth: number; frontY: number }
+  short?: { frontWidth: number; frontY: number; fitHeight?: number }
+  // Alto de la caja de contenido en múltiplos del alto del objeto. Ver `frontFit`.
+  faceHeight?: number
 }
 
 export function useDeskLift({
@@ -45,7 +49,9 @@ export function useDeskLift({
   lifted,
   restTiltDeg,
   frontWidth = DESK_LIFT.frontWidth,
+  frontY = DESK_LIFT.frontY,
   short,
+  faceHeight = 1,
 }: DeskLiftOptions): void {
   const isFirstRender = useRef(true)
 
@@ -84,14 +90,22 @@ export function useDeskLift({
     const stageHeight = stage.clientHeight
 
     const isShort = window.matchMedia(DESK_LIFT.shortViewport).matches
-    const plant = isShort && short ? short : { frontWidth, frontY: DESK_LIFT.frontY }
+    const plant = isShort && short ? short : { frontWidth, frontY }
 
-    const scale = plant.frontWidth / spot.width
+    const restWidth = root.offsetWidth / stageWidth
+    let scale = plant.frontWidth / restWidth
+    if (isShort && short?.fitHeight) {
+      // La caja de contenido puede ser más alta que el objeto de reposo —la hoja la lleva a 1,55—
+      // y es ella lo que tiene que caber, no el dibujo.
+      const contentHeight = root.offsetHeight * Math.max(1, faceHeight)
+      scale = Math.min(scale, (window.innerHeight * short.fitHeight) / contentHeight)
+    }
     // La `y` lleva el alto sumado porque el objeto está anclado por su base: sin eso se
     // plantaría con el borde de abajo en el punto de destino, no con su centro.
     const liftedHeight = root.offsetHeight * scale
-    const x = (DESK_LIFT.frontX - spot.x) * stageWidth
-    const y = (plant.frontY - spot.baseY) * stageHeight + liftedHeight / 2
+    const x = DESK_LIFT.frontX * stageWidth - root.offsetLeft
+    const baseY = root.offsetTop / stageHeight
+    const y = (plant.frontY - baseY) * stageHeight + liftedHeight / 2
 
     const to = {
       x: lifted ? x : 0,
@@ -165,5 +179,5 @@ export function useDeskLift({
     return () => {
       timeline.kill()
     }
-  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg, frontWidth, short])
+  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg, frontWidth, frontY, short, faceHeight])
 }

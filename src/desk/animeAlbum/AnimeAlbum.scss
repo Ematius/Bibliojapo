@@ -69,7 +69,9 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding: 0 3cqw;
+    // Deja libres las dos franjas de las flechas: centrado sin esto, el número del tomo se
+    // mete debajo de la de pasar página.
+    padding: 0 6cqw;
     text-align: center;
     color: var(--color-ink);
   }
@@ -93,20 +95,23 @@
   }
 
   // Las flechas de los bordes, apenas insinuadas: el dedo manda y ellas solo avisan de que se
-  // puede pasar. Solo en un móvil: táctil y de pantalla baja, el mismo corte que
-  // `DESK_LIFT.shortViewport`. Con ratón o en una pantalla grande ya está la esquina de la hoja.
+  // puede pasar. En todas las pantallas, también con ratón: sobre una viñeta el arrastre tiene
+  // poco de donde agarrar. DENTRO del papel: fuera caen a caballo del canto de la tapa, que es
+  // donde el dibujo del libro se acaba, y se leen descolgadas del tomo.
   &__turn {
-    display: none;
+    display: block;
     position: absolute;
     top: 0;
     bottom: 0;
     z-index: 1;
-    width: 14cqw;
+    // Estrecha: dentro del papel, todo lo que ocupe de más cae sobre la viñeta. El dedo
+    // agarra igual porque la franja va de arriba abajo de la plana.
+    width: 6cqw;
     padding: 0;
     border: 0;
     background: none;
     color: var(--color-ink);
-    opacity: 0.55;
+    opacity: 0.85;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
@@ -116,10 +121,10 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 8cqw;
-      height: 8cqw;
+      width: 5cqw;
+      height: 5cqw;
       border-radius: 50%;
-      background: color-mix(in srgb, var(--color-cream) 75%, transparent);
+      background: color-mix(in srgb, var(--color-cream) 88%, transparent);
       transform: translate(-50%, -50%);
     }
 
@@ -128,14 +133,14 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 2.4cqw;
-      height: 2.4cqw;
+      width: 1.8cqw;
+      height: 1.8cqw;
       border: solid currentColor;
-      border-width: 0 0 0.6cqw 0.6cqw;
+      border-width: 0 0 0.45cqw 0.45cqw;
     }
 
     &:active {
-      opacity: 0.9;
+      opacity: 1;
     }
   }
 
@@ -152,12 +157,6 @@
 
     &::after {
       transform: translate(-70%, -50%) rotate(-135deg);
-    }
-  }
-
-  @media (pointer: coarse) and (max-height: 32.5rem) {
-    &__turn {
-      display: block;
     }
   }
 

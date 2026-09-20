@@ -4,9 +4,13 @@
   display: flex;
   justify-content: center;
   gap: 10cqw;
-  margin: 0 0 3cqw;
+  margin: 0 0 2.5cqw;
   padding: 0;
   list-style: none;
+
+  @media (max-height: 32.5rem) {
+    margin-bottom: 1cqw;
+  }
 
   &__button {
     width: 20cqw;
@@ -28,7 +32,7 @@
 
     img {
       display: block;
-      width: 10cqw;
+      width: 9cqw;
       height: auto;
       user-select: none;
 
@@ -37,6 +41,14 @@
 
     &:hover {
       opacity: 0.75;
+    }
+
+    // Móvil apaisado: la hoja se encoge y los cuatro renglones de tomos tienen que caber
+    // debajo. Mismo corte que `DESK_LIFT.shortViewport`.
+    @media (max-height: 32.5rem) {
+      img {
+        width: 7cqw;
+      }
     }
 
     &:focus-visible {

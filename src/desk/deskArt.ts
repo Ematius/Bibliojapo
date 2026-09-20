@@ -71,12 +71,20 @@ export interface DeskArt {
   // sitio que un carné o una hoja de chuleta; agrandar la caja de contenido no basta, porque
   // no puede pasar del papel en blanco que ya mide la ilustración. Ver `useDeskLift.ts`.
   frontWidth?: number
+  // Dónde cae su centro a lo alto al plantarse, en vez de `DESK_LIFT.frontY`. Una hoja grande
+  // abierta llega casi al borde de arriba y se mete debajo de la barra de navegación.
+  frontY?: number
   // Cómo plantarse en una pantalla baja —ver `DESK_LIFT.shortViewport`—, en las mismas
   // fracciones de la escena que `frontWidth` y `DESK_LIFT.frontY`. Sin esto el objeto mide lo
   // mismo que en un escritorio, y en un móvil de lado eso son 190 px de alto sobre 320: lo que
   // hay dentro no se lee. `y` baja porque el libro pintado queda por encima del centro de su
   // lienzo, y al crecer se pegaría al borde de arriba.
-  short?: { frontWidth: number; frontY: number }
+  //
+  // `fitHeight` es cuánto de la ventana puede ocupar como mucho la caja de contenido, en
+  // fracción de su alto: el objeto se encoge lo que haga falta para no salirse por arriba ni
+  // por abajo, sea cual sea el móvil. Sin él manda `frontWidth`, que solo acierta con una
+  // proporción de pantalla concreta.
+  short?: { frontWidth: number; frontY: number; fitHeight?: number }
 }
 
 // Cómo dibujar la cara de frente para que su objeto caiga encima del de reposo. Sin esto
@@ -130,6 +138,10 @@ export const DESK_ART = {
     // La chuleta tiene que enseñar los doce tomos sin scroll: más sitio que el que da su
     // silueta de reposo, que se queda tal cual estaba sobre la mesa.
     faceScale: 1.55,
+    frontY: 0.525,
+    // Abierta llena la ventana entera de un móvil apaisado y la lista se sale del papel. La
+    // `y` es 0,5 porque la escena va centrada: el centro de la ventana.
+    short: { frontWidth: 0.42, frontY: 0.5, fitHeight: 1 },
   },
   // Un libro y no una caja: escribir juegos de verdad era demasiado para esta fase, así que la
   // puerta pasa a ser el álbum de anime que se va ilustrando con las frases desbloqueadas. Sin
@@ -161,7 +173,7 @@ export const DESK_ART = {
     faceCenterY: 0.49,
     // El tamaño del libro ENTERO al plantarse enfrente —papel y mangas juntos, sin
     // descuadrarse—, en fracción del ancho de la escena. Los demás objetos usan 0,42.
-    frontWidth: 0.48,
+    frontWidth: 0.64,
     short: { frontWidth: 0.72, frontY: 0.54 },
   },
 } as const satisfies Record<string, DeskArt>

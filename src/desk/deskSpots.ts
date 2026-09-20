@@ -30,6 +30,9 @@ export interface DeskSpot {
   baseY: number
   // Ancho, en fracción del ancho de la escena. El alto sale de la proporción del recorte.
   width: number
+  // Ancho en un móvil apaisado, si el de la mesa grande no cabe: la franja de madera que se ve
+  // ahí es baja, y un objeto grande sube por encima del borde de atrás y se pega a la pared.
+  shortWidth?: number
 }
 
 // Los tres objetos, y cada uno es una puerta. El reparto no es simétrico a propósito: la luz
@@ -39,11 +42,11 @@ export interface DeskSpot {
 // se pierde cuando la escena se recorta en una pantalla estrecha.
 export const DESK_SPOTS = {
   // La hoja de estudio, la protagonista: en el centro, delante, y la más grande.
-  sheet: { x: 0.45, baseY: 0.88, width: 0.40 },
+  sheet: { x: 0.45, baseY: 0.88, width: 0.35, shortWidth: 0.28 },
   // El álbum de anime, donde estaba la caja. PROVISIONAL: heredado tal cual de la caja, sin
   // reajustar todavía a la silueta del libro, que es más alta y más estrecha que la de un
   // cofre — ver `SHOW_DESK_SPOTS` para retocarlo a ojo.
-  anime: { x: 0.80, baseY: 0.90, width: 0.2 },
+  anime: { x: 0.80, baseY: 0.90, width: 0.2, shortWidth: 0.16 },
   // El carné, el más pequeño porque es el que menos se abre: lo que cuenta de él son los
   // sellos, no el trámite.
   card: { x: 0.2, baseY: 0.70, width: 0.13 },

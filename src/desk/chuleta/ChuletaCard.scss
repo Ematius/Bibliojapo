@@ -33,8 +33,8 @@
   // propio marco dibujado —ver `atras.png`—, así que el botón no añade ninguno encima.
   &__back {
     position: absolute;
-    top: 5cqw;
-    left: 1.5cqw;
+    top: 3.5cqw;
+    left: 5cqw;
     z-index: 1;
     width: 9cqw;
     min-width: 2.25rem;
@@ -101,13 +101,13 @@
     // El papel trae un borde oscuro y unas esquinas dibujadas que ocupan un margen de su
     // ancho: con menos padding el texto se mete debajo de ese borde y la primera letra de
     // cada fila se lee cortada.
-    padding: 9cqw 7cqw 4cqw;
+    padding: 5.5cqw 8cqw 12cqw;
 
     &--back {
       transform: rotateY(180deg);
 
       .chuleta-card__line {
-        font-size: clamp(0.55rem, 2.9cqw, 1.3rem);
+        font-size: clamp(0.55rem, 2.3cqw, 1.3rem);
         padding: 0;
         line-height: 1.15;
       }
@@ -119,8 +119,11 @@
     font-family: var(--font-display);
     // El techo en `rem` es el que de verdad manda en una hoja grande —ver el comentario de
     // `&__note`—.
-    font-size: clamp(0.9rem, 5.6cqw, 2.4rem);
+    font-size: clamp(0.9rem, 4cqw, 2.4rem);
     line-height: 1.1;
+    // El botón de volver flota sobre la esquina de arriba: un título largo que se parta en
+    // varias líneas no puede llegar debajo de él.
+    padding: 0 5cqw;
   }
 
   &__title-kana {
@@ -132,7 +135,7 @@
     align-self: flex-start;
     color: var(--color-ink-soft);
     font-family: var(--font-display);
-    font-size: clamp(0.65rem, 3.4cqw, 1.5rem);
+    font-size: clamp(0.65rem, 2.6cqw, 1.5rem);
     font-weight: 600;
     line-height: 1.1;
     letter-spacing: 0.08em;
@@ -159,7 +162,7 @@
     }
 
     .chuleta-card__face--front &.chuleta-card__list--sentences {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .chuleta-card__face--back & {
@@ -174,7 +177,7 @@
     min-width: 0;
     gap: 0 0.3em;
     padding: 0;
-    font-size: clamp(0.6rem, 3.4cqw, 1.5rem);
+    font-size: clamp(0.6rem, 2.6cqw, 1.5rem);
     line-height: 1.2;
   }
 
@@ -202,9 +205,8 @@
   // en vez de en la hoja. Flotante como `&__back`, para que quede DENTRO del papel.
   &__flip-button {
     position: absolute;
-    bottom: 4cqw;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 6cqw;
+    right: 6cqw;
     z-index: 1;
     width: 9cqw;
     min-width: 2.25rem;
@@ -223,13 +225,57 @@
     }
 
     &:hover {
-      transform: translateX(-50%) scale(1.06) rotate(35deg);
+      transform: scale(1.06) rotate(35deg);
     }
 
     &:focus-visible {
       outline: 2px solid var(--color-brass);
       outline-offset: 2px;
       border-radius: var(--radius-pill);
+    }
+  }
+
+  // Móvil apaisado (el corte de `DESK_LIFT.shortViewport`): la hoja se encoge para caber en la
+  // ventana y aquí el texto tiene que encogerse con ella. Los topes en `rem` de arriba solo
+  // frenan una hoja grande; en una pequeña son los que dejan la lista más alta que el papel.
+  // Los dos botones flotantes pierden su suelo en `rem` por lo mismo, y la cara deja abajo el
+  // sitio del de girar, que si no se pisa con la última fila.
+  @media (max-height: 32.5rem) {
+    &__back,
+    &__flip-button {
+      width: 6cqw;
+      min-width: 0;
+    }
+
+    // El papel trae un borde roto que se come los primeros centímetros: pegados a la esquina
+    // los botones se leían fuera de la hoja.
+    &__back {
+      top: 4.5cqw;
+      left: 3.5cqw;
+    }
+
+    &__flip-button {
+      bottom: 4cqw;
+    }
+
+    &__face {
+      padding: 7cqw 6cqw 10cqw;
+    }
+
+    &__title {
+      font-size: 3.8cqw;
+    }
+
+    &__heading {
+      font-size: 2.2cqw;
+    }
+
+    &__line {
+      font-size: 2.3cqw;
+    }
+
+    &__face--back &__line {
+      font-size: 2.4cqw;
     }
   }
 }
