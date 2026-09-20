@@ -27,16 +27,27 @@
     height: 100%;
   }
 
+  // El papel se desvanece en la franja del lomo para que se vea el centro del libro pintado
+  // en vez de una unión recta, que se lee postiza. Pasa lo mismo en los tomos, donde la hoja
+  // se difumina en su borde. La franja tiene que caer en el margen de papel que deja
+  // `contain` entre las viñetas y el lomo: si se ensancha, se come dibujo.
+  //
+  // El negro de aquí NO es un color: en una máscara marca lo que se ve entero.
   &__mount {
     position: relative;
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 44%,
+      transparent 49%,
+      transparent 51%,
+      #000 56%,
+      #000 100%
+    );
   }
 
-  // El lomo: dos planas puestas una junto a otra se ven cosidas y no abiertas —el hueco
-  // pintado de por sí ya sugiere el libro, y una unión recta encima se lee postiza. La
-  // sombra que oscurece hacia el centro es la misma curva que hace el papel real al
-  // combarse hacia dentro. El color sale del rgb de `--color-ink`, igual que
-  // `--color-ink-soft`: un degradado necesita varias transparencias distintas, que un solo
-  // token no puede dar.
+  // Un pliegue cálido que se apaga hacia el lomo, del mismo tono que el de los tomos. Con
+  // tinta se leía como un gris pegado encima del papel.
   &__mount::after {
     content: '';
     position: absolute;
@@ -45,9 +56,11 @@
     background: linear-gradient(
       to right,
       transparent 0%,
-      rgba(44, 31, 14, 0.16) 47.5%,
-      rgba(44, 31, 14, 0.26) 50%,
-      rgba(44, 31, 14, 0.16) 52.5%,
+      transparent 38%,
+      rgba(var(--rgb-page-fold), 0.55) 47.5%,
+      rgba(var(--rgb-page-fold), 0.7) 50%,
+      rgba(var(--rgb-page-fold), 0.55) 52.5%,
+      transparent 62%,
       transparent 100%
     );
   }
