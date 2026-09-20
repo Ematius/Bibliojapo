@@ -71,6 +71,12 @@ export interface DeskArt {
   // sitio que un carné o una hoja de chuleta; agrandar la caja de contenido no basta, porque
   // no puede pasar del papel en blanco que ya mide la ilustración. Ver `useDeskLift.ts`.
   frontWidth?: number
+  // Cómo plantarse en una pantalla baja —ver `DESK_LIFT.shortViewport`—, en las mismas
+  // fracciones de la escena que `frontWidth` y `DESK_LIFT.frontY`. Sin esto el objeto mide lo
+  // mismo que en un escritorio, y en un móvil de lado eso son 190 px de alto sobre 320: lo que
+  // hay dentro no se lee. `y` baja porque el libro pintado queda por encima del centro de su
+  // lienzo, y al crecer se pegaría al borde de arriba.
+  short?: { frontWidth: number; frontY: number }
 }
 
 // Cómo dibujar la cara de frente para que su objeto caiga encima del de reposo. Sin esto
@@ -156,5 +162,6 @@ export const DESK_ART = {
     // El tamaño del libro ENTERO al plantarse enfrente —papel y mangas juntos, sin
     // descuadrarse—, en fracción del ancho de la escena. Los demás objetos usan 0,42.
     frontWidth: 0.48,
+    short: { frontWidth: 0.64, frontY: 0.53 },
   },
 } as const satisfies Record<string, DeskArt>

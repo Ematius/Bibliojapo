@@ -73,6 +73,10 @@ export const DESK_LIFT = {
   // frena los dos por igual, sin el pico que sí tendría un `.inOut` más marcado como
   // `power2.inOut` — es la curva pareja, no la más lenta que hay.
   ease: 'sine.inOut',
+  // Qué es una pantalla baja: un móvil de lado. La escena cubre por ancho y se recorta por
+  // arriba y por abajo, así que una fracción del ancho de la escena deja el objeto pequeño y
+  // con sitio de sobra. Ver `DeskArt.short`.
+  shortViewport: '(max-height: 32.5rem)',
   // Lo que tarda la tapa en abrirse, ya plantado el objeto.
   openSeconds: 1,
   // Los tres son hermanos colocados en absoluto, así que sin esto manda el orden del DOM: el

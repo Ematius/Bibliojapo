@@ -32,6 +32,8 @@ interface DeskLiftOptions {
   // Cuánto ocupa ESTE objeto al plantarse enfrente, si no es el tamaño que comparten los
   // demás. Ver `DeskArt.frontWidth`.
   frontWidth?: number
+  // Cómo plantarse en una pantalla baja. Ver `DeskArt.short`.
+  short?: { frontWidth: number; frontY: number }
 }
 
 export function useDeskLift({
@@ -43,6 +45,7 @@ export function useDeskLift({
   lifted,
   restTiltDeg,
   frontWidth = DESK_LIFT.frontWidth,
+  short,
 }: DeskLiftOptions): void {
   const isFirstRender = useRef(true)
 
@@ -80,12 +83,15 @@ export function useDeskLift({
     const stageWidth = stage.clientWidth
     const stageHeight = stage.clientHeight
 
-    const scale = frontWidth / spot.width
+    const isShort = window.matchMedia(DESK_LIFT.shortViewport).matches
+    const plant = isShort && short ? short : { frontWidth, frontY: DESK_LIFT.frontY }
+
+    const scale = plant.frontWidth / spot.width
     // La `y` lleva el alto sumado porque el objeto está anclado por su base: sin eso se
     // plantaría con el borde de abajo en el punto de destino, no con su centro.
     const liftedHeight = root.offsetHeight * scale
     const x = (DESK_LIFT.frontX - spot.x) * stageWidth
-    const y = (DESK_LIFT.frontY - spot.baseY) * stageHeight + liftedHeight / 2
+    const y = (plant.frontY - spot.baseY) * stageHeight + liftedHeight / 2
 
     const to = {
       x: lifted ? x : 0,
@@ -159,5 +165,5 @@ export function useDeskLift({
     return () => {
       timeline.kill()
     }
-  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg, frontWidth])
+  }, [rootRef, frontRef, framesRef, restingRef, spot, lifted, restTiltDeg, frontWidth, short])
 }

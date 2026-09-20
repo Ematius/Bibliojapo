@@ -47,6 +47,7 @@ export function DeskObject({ spot, art, label, lifted, onPress, children }: Desk
     lifted,
     restTiltDeg: art.restTiltDeg,
     frontWidth: art.frontWidth,
+    short: art.short,
   })
 
   // Cuánto encoger y desplazar la cara de frente para que caiga encima de la de reposo.

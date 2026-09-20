@@ -30,6 +30,7 @@ export function AnimeAlbum({ chapters }: AnimeAlbumProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const templateRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
+  const flipRef = useRef<PageFlip | null>(null)
 
   // El hueco donde vive el álbum es `.desk-object__face`, medido en `%` del objeto — nunca
   // en píxeles fijos. page-flip sí los pide, así que hay que medirlo aquí, igual que
@@ -80,8 +81,10 @@ export function AnimeAlbum({ chapters }: AnimeAlbumProps) {
 
     flip.loadFromHTML(pages)
     flip.turnToPage(pages.length - 1)
+    flipRef.current = flip
 
     return () => {
+      flipRef.current = null
       flip.destroy()
       mount.replaceChildren()
     }
@@ -119,6 +122,24 @@ export function AnimeAlbum({ chapters }: AnimeAlbumProps) {
           </div>
 
           <div className="anime-album__mount" ref={mountRef} />
+
+          {/* Solo en pantallas táctiles: un toque suelto no pasa hoja en page-flip, y el arrastre
+              cuenta píxeles sin escalar dentro de un objeto que GSAP agranda, así que en un móvil
+              apenas responde. Van FUERA del libro y sin nada dentro: la librería solo respeta
+              un <button> pulsado, no lo que lleve por dentro. Se lee a la japonesa, así que
+              «siguiente» es `flipPrev` y va a la izquierda. */}
+          <button
+            className="anime-album__turn anime-album__turn--next"
+            type="button"
+            aria-label="Página siguiente"
+            onClick={() => flipRef.current?.flipPrev()}
+          />
+          <button
+            className="anime-album__turn anime-album__turn--back"
+            type="button"
+            aria-label="Página anterior"
+            onClick={() => flipRef.current?.flipNext()}
+          />
         </>
       )}
     </div>
