@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { INTRO } from './introConfig'
 import { markIntroSeen } from './introPreference'
+import { RotateNotice } from '../shared/RotateNotice'
+import { useNeedsLandscape } from '../shared/useNeedsLandscape'
 import './IntroVideo.scss'
 
 interface IntroVideoProps {
@@ -18,6 +20,7 @@ export function IntroVideo({ entranceReady, onDone }: IntroVideoProps) {
   const leavingRef = useRef(false)
   const [needsTap, setNeedsTap] = useState(false)
   const [leaving, setLeaving] = useState(false)
+  const needsLandscape = useNeedsLandscape()
 
   const onDoneRef = useRef(onDone)
   onDoneRef.current = onDone
@@ -41,10 +44,17 @@ export function IntroVideo({ entranceReady, onDone }: IntroVideoProps) {
   }, [])
 
   // Con sonido: sin un gesto previo el navegador lo rechaza y hay que pedir un toque. Con
-  // `muted` arrancaría siempre, pero la música es parte de la intro.
+  // `muted` arrancaría siempre, pero la música es parte de la intro. Girar el móvil no es un
+  // gesto, así que tras girar se vuelve a pedir el toque.
   useEffect(() => {
-    videoRef.current?.play().catch(() => setNeedsTap(true))
-  }, [])
+    const video = videoRef.current
+    if (!video || leavingRef.current) return
+    if (needsLandscape) {
+      video.pause()
+      return
+    }
+    video.play().catch(() => setNeedsTap(true))
+  }, [needsLandscape])
 
   useEffect(() => {
     if (!leaving || !entranceReady) return
@@ -86,13 +96,21 @@ export function IntroVideo({ entranceReady, onDone }: IntroVideoProps) {
         onError={() => beginLeave(INTRO.skipFadeSeconds)}
       />
 
-      {needsTap && !leaving && (
+      {needsLandscape && !leaving && (
+        <RotateNotice
+          text="La intro se ve a lo ancho: de pie el video se recortaría."
+          backLabel="Saltar la intro"
+          onDismiss={() => beginLeave(INTRO.skipFadeSeconds)}
+        />
+      )}
+
+      {needsTap && !needsLandscape && !leaving && (
         <button type="button" className="intro-video__start" onClick={handleStart}>
           Toca para empezar
         </button>
       )}
 
-      {!leaving && (
+      {!needsLandscape && !leaving && (
         <button
           type="button"
           className="intro-video__skip"

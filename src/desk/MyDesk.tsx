@@ -15,7 +15,7 @@ import { DeskScene } from './DeskScene'
 import { JourneyCard } from './tarjeta/JourneyCard'
 import { DESK_ART } from './deskArt'
 import { DESK_SPOTS, SHOW_EVERY_OBJECT } from './deskSpots'
-import { useNeedsLandscape } from './useNeedsLandscape'
+import { useNeedsLandscape } from '../shared/useNeedsLandscape'
 import './MyDesk.scss'
 
 // Mi escritorio: la mesa propia, con lo que se ha ganado encima.
