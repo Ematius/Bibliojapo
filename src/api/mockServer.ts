@@ -221,9 +221,7 @@ async function packVolume(aisleId: AisleId, block: Block): Promise<VolumeContent
 
   const wordIds = new Set([
     ...block.wordIds,
-    ...block.lessons
-      .flatMap((lesson) => [lesson.wordId, lesson.wordId2])
-      .filter((id): id is string => Boolean(id)),
+    ...block.lessons.flatMap((lesson) => lesson.wordIds ?? []),
     ...sentences.flatMap((sentence) => sentence.wordIds),
   ])
 

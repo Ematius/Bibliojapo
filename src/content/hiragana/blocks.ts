@@ -8,12 +8,12 @@ export const BLOCKS: Block[] = [
       'Cinco vocales y un kana más. Son pocos, pero con ellos ya se escriben ' +
       'frases enteras: por eso は se adelanta a su sitio en la tabla tradicional.',
     lessons: [
-      { kanaId: 'a', wordId: 'aoi', wordId2: 'au' },
-      { kanaId: 'i', wordId: 'ie', wordId2: 'ii' },
-      { kanaId: 'u', wordId: 'ue', wordId2: 'iu' },
-      { kanaId: 'e', wordId: 'iie', wordId2: 'ie' },
-      { kanaId: 'o', wordId: 'ooi', wordId2: 'ao' },
-      { kanaId: 'ha', wordId: 'haha', wordId2: 'hai' },
+      { kanaId: 'a', wordIds: ['aoi', 'au'] },
+      { kanaId: 'i', wordIds: ['ie', 'ii'] },
+      { kanaId: 'u', wordIds: ['ue', 'iu'] },
+      { kanaId: 'e', wordIds: ['iie', 'ie'] },
+      { kanaId: 'o', wordIds: ['ooi', 'ao'] },
+      { kanaId: 'ha', wordIds: ['haha', 'hai'] },
     ],
     wordIds: [
       'e',

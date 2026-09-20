@@ -81,13 +81,14 @@ export interface Sentence {
 // el orden de estudio: el libro monta las planas de cada lección seguidas.
 export interface Lesson {
   kanaId: string
-  // Opcional: el plan del bloque va por delante de lo decidido. Sin palabra, la
+  // Las palabras con las que se enseña, tantas como tenga el kana. La PRIMERA lleva el
+  // grueso de la lección y su examen; cada una de las demás suma un ejercicio final:
+  // encontrar は en はは y luego en はい demuestra que se reconoce el carácter, no que
+  // se memorizó un dibujo. Con una sola, ese ejercicio repite la primera.
+  //
+  // Opcional: el plan del bloque va por delante de lo decidido. Sin palabras, la
   // lección no genera páginas todavía en vez de romperse.
-  wordId?: string
-  // La SEGUNDA palabra, para los dos últimos ejercicios: encontrar は en はは y luego
-  // en はい demuestra que se reconoce el carácter, no que se memorizó un dibujo. Si
-  // falta o no está lista, esas planas repiten la primera.
-  wordId2?: string
+  wordIds?: string[]
 }
 
 // Guarda REFERENCIAS, nunca copias: una palabra en dos bloques es la misma entrada

@@ -115,9 +115,9 @@ export interface Spread {
 // las que no están listas es cosa de quien llama.
 export interface ReadyLesson {
   kanaId: string
-  wordId: string
-  // La segunda palabra, si la lección la tiene Y está lista. Aquí no se decide: se coloca.
-  wordId2?: string
+  // Nunca vacía: la primera es la principal y las demás suman un ejercicio final cada una.
+  // Aquí no se decide cuáles valen: se colocan.
+  wordIds: string[]
 }
 
 // Una regla de ortografía que el tomo ya puede enseñar. Como con `ReadyLesson`, filtrar
@@ -136,10 +136,10 @@ export interface ReadyRule {
 // Las siete planas con las que se enseña UN kana, en orden de lectura, y detrás su repaso
 // y su examen. Es una función y no una lista escrita a mano porque el tomo repite esta
 // secuencia para cada kana del bloque.
-export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): Spread[] {
-  // Las dos últimas planas piden el kana dentro de OTRA palabra. Sin segunda —o si no está
-  // lista—, repiten la primera.
-  const lastWordId = wordId2 ?? wordId
+export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[]): Spread[] {
+  // Las últimas planas piden el kana dentro de OTRA palabra, una plana por cada una. Sin
+  // otra, repiten la primera.
+  const drillWordIds = otherWordIds.length > 0 ? otherWordIds : [wordId]
 
   const taught: Spread[] = [
     {
@@ -187,10 +187,10 @@ export function kanaSpreads(kanaId: string, wordId: string, wordId2?: string): S
     // Aquí cambia la palabra: se ha encontrado は dentro de はは cuatro veces y ahora hay que
     // encontrarla en はい. Eso es reconocer el carácter; repetirla por quinta vez era
     // recordar un dibujo.
-    {
-      right: { wordId: lastWordId, title: 'Escucha', shows: 'prompt' },
-      left: { kanaId, wordId: lastWordId, title: 'Escribe y lee', shows: 'drill' },
-    },
+    ...drillWordIds.map<Spread>((drillWordId) => ({
+      right: { wordId: drillWordId, title: 'Escucha', shows: 'prompt' },
+      left: { kanaId, wordId: drillWordId, title: 'Escribe y lee', shows: 'drill' },
+    })),
   ]
 
   // La lección se cierra en dos tiempos: el repaso, con la ayuda de siempre, y el examen,
@@ -288,7 +288,7 @@ export function buildVolumePages(
   const spreads = [
     introSpread(),
     ...lessons.flatMap((lesson) => [
-      ...kanaSpreads(lesson.kanaId, lesson.wordId, lesson.wordId2),
+      ...kanaSpreads(lesson.kanaId, lesson.wordIds),
       ...rules.filter((rule) => rule.kanaId === lesson.kanaId).map(grammarSpread),
     ]),
     // Las que hablan de un carácter que este tomo no enseña —se dio en uno anterior— no
@@ -421,13 +421,13 @@ function completeReviewSpreads(lessons: ReadyLesson[]): Spread[] {
   const reviews = lessons.map<Spread>((lesson) => ({
     right: {
       kanaId: lesson.kanaId,
-      wordId: lesson.wordId,
+      wordId: lesson.wordIds[0],
       title: 'Repaso completo',
       shows: 'examKana',
     },
     left: {
       kanaId: lesson.kanaId,
-      wordId: lesson.wordId,
+      wordId: lesson.wordIds[0],
       title: 'Repaso completo',
       shows: 'examWord',
     },

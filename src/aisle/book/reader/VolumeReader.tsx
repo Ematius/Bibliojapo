@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PageFlip } from 'page-flip'
-import type { Word } from '../../../content/types'
 import type { VolumeContent } from '../../../api/volumes'
 import { readBookmark, writeBookmark } from '../../../shared/bookmark'
 import { READER, buildVolumePages } from './readerConfig'
@@ -88,32 +87,14 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
   // El repaso se sortea UNA vez por tomo abierto: sin `useMemo` volvería a barajar en
   // cualquier repintado ajeno y las páginas cambiarían debajo de quien esté leyendo.
-  const { pages: readerPages, pools } = useMemo(() => {
-    // Solo entran las lecciones que se pueden dar ENTERAS, y hacen falta las tres cosas: la
-    // ficha del kana, el audio de su palabra y su representación —color o dibujo—. Con menos
-    // se queda fuera entera: media lección son planas en blanco, y quien lee no distingue
-    // una página vacía de una rota.
-    // Lo que hace falta para ENSEÑAR una palabra en una hoja de enunciado: cómo suena y cómo
-    // se representa.
-    const usable = (word?: Word) => Boolean(word?.audio && (word.swatch || word.image))
-
-    const lessons = block.lessons.flatMap((lesson) => {
-      const word = lesson.wordId ? wordsById.get(lesson.wordId) : undefined
-      const ready = usable(word) && kanaById.has(lesson.kanaId)
-      if (!ready || !word) return []
-
-      // La segunda palabra no condiciona a la lección: sin ella las dos últimas planas
-      // repiten la primera. Es media mejora, no media lección.
-      const word2 = lesson.wordId2 ? wordsById.get(lesson.wordId2) : undefined
-
-      return [
-        {
-          kanaId: lesson.kanaId,
-          wordId: word.id,
-          wordId2: usable(word2) ? word2?.id : undefined,
-        },
-      ]
-    })
+  const { pages: readerPages, pools, reviewWordIds } = useMemo(() => {
+    // Entra toda lección con palabras, esté su ficha entera o no: lo que falte sale como
+    // hoja en blanco, a propósito, para verlo al recorrer el tomo y no al llegar al examen.
+    // Si esto vuelve a filtrar por completitud, el repaso final —que sale de aquí— filtra
+    // igual, y un fallo deja de verse en su lección para desaparecer sin más.
+    const lessons = block.lessons.flatMap((lesson) =>
+      lesson.wordIds?.length ? [{ kanaId: lesson.kanaId, wordIds: lesson.wordIds }] : [],
+    )
 
     // Los distractores de cada lección: los kana de esa lección y los de las anteriores,
     // nunca uno que aún no se haya dado —descartar una tarjeta tiene que ser reconocerla—.
@@ -128,10 +109,10 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       )
     })
 
-    // Las palabras del repaso final: solo las que ya tienen ficha. Aquí basta con existir
-    // —a diferencia de las lecciones, este repaso no enseña, así que no le hace falta ni
-    // audio ni dibujo—. Ver `finalReviewSpreads`.
-    const reviewWordIds = block.wordIds.filter((wordId) => wordsById.has(wordId))
+    // Las palabras del repaso final son las de las lecciones, nunca las de `block.wordIds`:
+    // esa lista es lo que el bloque desbloquea, no lo que se enseña, y examinar de lo que
+    // no se ha dado es lo que este repaso llegó a hacer. Ver `finalReviewSpreads`.
+    const reviewWordIds = [...new Set(lessons.flatMap((lesson) => lesson.wordIds))]
 
     // Las frases del examen final: solo las que ya tienen su ficha, por la misma razón.
     // Sin las 15 no hay examen — ver `finalSentenceExamSpreads`.
@@ -180,7 +161,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // bloque 3 con cada llamada, así que un intento nuevo trae un orden nuevo.
     void examAttempt
 
-    return { pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds, rules), pools }
+    return {
+      pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds, rules),
+      pools,
+      reviewWordIds,
+    }
   }, [block, kanaById, wordsById, sentencesById, grammarById, examAttempt])
 
   useEffect(() => {
@@ -377,7 +362,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                   if (page.shows === 'finalReviewNotice') return <FinalReviewNotice />
 
                   if (page.shows === 'finalReviewScope') {
-                    const words = block.wordIds.flatMap((wordId) => wordsById.get(wordId) ?? [])
+                    const words = reviewWordIds.flatMap((wordId) => wordsById.get(wordId) ?? [])
                     return <FinalReviewScope words={words} />
                   }
 
