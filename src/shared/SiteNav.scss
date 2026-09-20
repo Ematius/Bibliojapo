@@ -211,17 +211,21 @@
 }
 
 // Por debajo de este ancho no caben las secciones más el botón sin que la barra se coma la
-// pantalla. Pasan al menú; el logotipo y la llamada a la acción se quedan.
+// pantalla. Pasan al menú, y la barra se queda solo con la hamburguesa: el logotipo y la
+// cuenta tapaban parte de la escena.
 //
 // También por alto: un móvil de lado es ancho de sobra pero solo tiene 412 px de alto, y ahí
 // la barra entera se come la escena — que es donde se está leyendo.
 @media (max-width: 48rem), (max-height: 34rem) {
   .site-nav {
-    --nav-inset: 1rem;
+    --nav-inset: 0.5rem;
 
     gap: 0.5rem;
+    padding: 0.1rem;
   }
 
+  .site-nav__logo,
+  .site-nav__cta,
   .site-nav__links {
     display: none;
   }

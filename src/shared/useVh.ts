@@ -8,6 +8,9 @@ export function useVh(): void {
     let lastWidth = window.innerWidth
     let lastPx = 0
 
+    // La barra de direcciones que obliga a ignorar el alto solo existe con pantalla táctil.
+    const touch = window.matchMedia('(pointer: coarse)')
+
     const setVh = () => {
       lastPx = window.innerHeight * 0.01
       document.documentElement.style.setProperty('--vh', `${lastPx}px`)
@@ -21,11 +24,16 @@ export function useVh(): void {
         return
       }
 
-      // Mismo ancho: la barra de direcciones se ha movido, no ha girado la pantalla. Solo
-      // sube si crece —al ocultarse hay más alto real del que se guardó al cargar—; si
+      // Mismo ancho: en un móvil es la barra de direcciones, que no ha girado la pantalla.
+      // Solo sube si crece —al ocultarse hay más alto real del que se guardó al cargar—; si
       // encoge se ignora, que es lo que evita el salto a media lectura del libro.
+      //
+      // En un escritorio no hay tal barra: cualquier bajada de alto es de verdad —redimensionar
+      // la ventana, acoplar las herramientas abajo— y quedarse con la medida vieja deja la app
+      // más alta que la ventana, con una barra de scroll sobre una escena que tendría que
+      // llenar la pantalla justa.
       const px = window.innerHeight * 0.01
-      if (px > lastPx) {
+      if (px > lastPx || !touch.matches) {
         lastPx = px
         document.documentElement.style.setProperty('--vh', `${px}px`)
       }
