@@ -18,12 +18,18 @@
 .kana-match__pair {
   display: flex;
   align-items: stretch;
-  // La ficha nunca pasa del ancho de la hoja: con tres kana y un significado largo se salía
-  // por el borde. Lo que cede es la pista, que se parte en líneas.
+  // La ficha nunca pasa del ancho de la hoja.
   max-width: 100%;
   border: 2px solid var(--color-ink-soft);
   border-radius: 0.2em;
-  font-size: clamp(1.1rem, 13cqmin, 2.6rem);
+  // La letra sale de la hoja, pero nunca mayor de lo que deja el ancho que la propia ficha
+  // pide: con tres kana y un significado largo la pista se quedaba en nada y su texto caía
+  // encima de los huecos. Ese ancho lo mide el componente en `--pair-em`, que es quien sabe
+  // cuántos huecos hay y qué pista llevan.
+  //
+  // El suelo de 1,1rem sigue mandando por encima de todo: por debajo no se lee, y ahí es
+  // mejor que la pista se apriete a que la ficha se vuelva ilegible.
+  font-size: clamp(1.1rem, min(13cqmin, calc(96cqw / var(--pair-em))), 2.6rem);
 }
 
 // La mitad escrita de la ficha. La línea que separa las dos caras vive aquí y no en el hueco,

@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Kana, Word } from '../../../content/types'
+import type { StyleWithVars } from '../../../shared/styleWithVars'
 import { BookButton } from '../parts/BookButton'
 import { pickCards } from '../parts/pickCards'
 import './KanaMatch.scss'
@@ -16,6 +17,19 @@ interface KanaMatchProps {
   // De dónde salen las tarjetas que sobran: los kana ya estudiados del bloque. Cuantos más
   // lleve dados el tomo, más falsas hay que descartar. Ver `pickCards`.
   pool: string[]
+}
+
+// Lo que la ficha pide de ancho, en em de su propia letra: cada hueco y cada kana puesto
+// miden lo que declara `KanaMatch.scss` —2,6em y 1,6em—, y la pista se estima por su palabra
+// más larga, a 0,3em por carácter más su relleno. De ahí sale la letra de la ficha, que se
+// achica solo cuando no cabe; si allí cambian esos anchos, estos números van detrás o la
+// pista volverá a caer encima de los huecos.
+function pairWidthEm(slots: boolean[], clue: string) {
+  const written = slots.reduce((em, slot) => em + (slot ? 2.6 : 1.6), 0)
+  if (!clue) return written
+
+  const longest = Math.max(...clue.split(' ').map((word) => word.length))
+  return written + longest * 0.3 + 0.8
 }
 
 // Emparejar el sonido con su kana: se arrastra el carácter hasta el hueco.
@@ -60,6 +74,11 @@ export function KanaMatch({ word, kana, scope, pool }: KanaMatchProps) {
   // oír «aoi». Construyendo, el botón vive enfrente y aquí no se repite.
   const audio = scope === 'word' ? word.audio : kana.audio
 
+  // Construyendo la palabra entera la ficha no lleva pista, así que no le reserva ancho.
+  const pairStyle: StyleWithVars = {
+    '--pair-em': pairWidthEm(units.map(isSlot), scope === 'build' ? '' : clue),
+  }
+
   return (
     <div
       className="kana-match"
@@ -76,7 +95,7 @@ export function KanaMatch({ word, kana, scope, pool }: KanaMatchProps) {
       {/* La pareja a medias: la pista puesta y el kana por poner. Las dos mitades
           se leen como las caras de una ficha de dominó, no como una etiqueta con
           un cajón al lado — por eso la línea va entre ellas y no alrededor. */}
-      <div className="kana-match__pair">
+      <div className="kana-match__pair" style={pairStyle}>
         <span className="kana-match__written" lang="ja">
           {units.map((unit, index) =>
             isSlot(unit) ? (
