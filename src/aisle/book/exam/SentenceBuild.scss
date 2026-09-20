@@ -3,6 +3,8 @@
 // `KanaMatch`, pero sin ficha de dominó —aquí no hay una mitad ya escrita— y sin aviso
 // de acierto: no hay nada que anunciar hasta el final del bloque.
 
+@use '../parts/compactTile' as *;
+
 .sentence-build {
   width: 100%;
   flex: 1;
@@ -89,6 +91,7 @@
   font-family: var(--font-body);
   font-size: clamp(1rem, 10cqmin, 2.3rem);
   line-height: 1.1;
+  @include compact-tile;
 
   touch-action: none;
   user-select: none;
@@ -114,6 +117,14 @@
 // quedó fuera de las manos.
 .sentence-build[data-locked='true'] {
   opacity: 0.6;
+}
+
+// Con seis tarjetas en una hoja baja, la sexta caía a una segunda fila y «Hecho» se montaba
+// sobre el número de página. Con el hueco más corto caben en una sola.
+@container page (max-height: 380px) {
+  .sentence-build__deck {
+    gap: 1cqh 1cqw;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

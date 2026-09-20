@@ -2,6 +2,8 @@
 // `WordGap` porque son el mismo ejercicio en las dos direcciones: lo que cambia es que aquí
 // no se teclea, se elige entre botones.
 
+@use '../parts/compactTile' as *;
+
 .word-pick {
   width: 100%;
   flex: 1;
@@ -84,6 +86,7 @@
     font-family: var(--font-body);
     font-size: clamp(0.9rem, 9cqmin, 2rem);
     line-height: 1.1;
+    @include compact-tile;
   }
 
   // Acertada. Se queda marcada para que se vea cuál era, no para bloquear nada.

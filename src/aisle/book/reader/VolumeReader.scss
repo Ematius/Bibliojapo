@@ -15,6 +15,75 @@
     height: 100%;
   }
 
+  // Las flechas de pasar hoja, sobre el canto del libro y a los lados del papel: fuera de las
+  // hojas no tapan ni un ejercicio, y a un dedo le dan una franja entera donde pulsar. Solo con
+  // pantalla táctil; con ratón ya está la esquina de la hoja.
+  &__turn {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 4rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-ink);
+    opacity: 0.6;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    // La pastilla de papel: sin ella la flecha se pierde sobre el canto del libro.
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--color-cream) 80%, transparent);
+      transform: translate(-50%, -50%);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0.75rem;
+      height: 0.75rem;
+      border: solid currentColor;
+      border-width: 0 0 0.2rem 0.2rem;
+    }
+
+    &:active {
+      opacity: 0.95;
+    }
+  }
+
+  &__turn--next {
+    right: 100%;
+
+    &::after {
+      transform: translate(-30%, -50%) rotate(45deg);
+    }
+  }
+
+  &__turn--back {
+    left: 100%;
+
+    &::after {
+      transform: translate(-70%, -50%) rotate(-135deg);
+    }
+  }
+
+  @media (pointer: coarse) {
+    &__turn {
+      display: block;
+    }
+  }
+
   // La plantilla de páginas que page-flip clona.
   //
   // Se esconde con tamaño cero y no con `hidden`: cada hoja lleva un SVG con la silueta del
@@ -135,10 +204,14 @@
     flex-direction: column;
     gap: 1.2cqh;
 
-    // En una hoja baja —un móvil de lado— los pasos del trazado no caben y se cortan contra el
-    // borde del papel. Se quedan fuera antes que medio cortados: el trazo se aprende igual en
-    // la pauta de escritura, que lo enseña dibujado en vez de contado.
-    @container page (max-height: 380px) {
+    // En una hoja baja los pasos del trazado no caben y se cortan contra el borde del papel. Se
+    // quedan fuera antes que medio cortados: el trazo se aprende igual en la pauta de escritura,
+    // que lo enseña dibujado en vez de contado.
+    //
+    // El tope no es el de un móvil de lado: en una ventana de 1440 × 900 la hoja sale a ~460 px
+    // —el papel es el 52 % del alto del libro, y el libro el 98 % de la ventana— y ahí los pasos
+    // ya se cortan. Por encima de esto el papel da de sí; por debajo, no.
+    @container page (max-height: 480px) {
       display: none;
     }
   }

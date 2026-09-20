@@ -25,6 +25,9 @@ interface FinalExamOptions {
   // Sube `examAttempt` en `VolumeReader`, que vuelve a barajar el bloque 3 y remonta
   // el libro entero con las planas del examen en blanco. Ver `readerConfig.ts`.
   retry: () => void
+  // Entrega quién sabe si el giro está cortado. Lo consultan los botones que pasan hoja sin
+  // arrastre: el bloqueo de abajo solo corta el gesto, y un `flipPrev()` directo se lo saltaría.
+  setTurnGuard?: (isBlocked: () => boolean) => void
 }
 
 type BlockId = 1 | 2 | 3
@@ -112,6 +115,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   }
   root.addEventListener('mousedown', blockDrag, { capture: true })
   root.addEventListener('touchstart', blockDrag, { capture: true })
+  options.setTurnGuard?.(() => locked || guardingRules())
 
   // Las filas del desglose: la misma lista tanto si se acaba de aprobar como si se
   // reabre un tomo ya sellado —ver más abajo—, para que las dos no puedan desincronizarse.

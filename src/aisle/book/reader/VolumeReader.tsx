@@ -65,6 +65,9 @@ interface VolumeReaderProps {
 export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderProps) {
   const templateRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
+  const flipRef = useRef<PageFlip | null>(null)
+  // Lo pone el examen final cuando hay uno: mientras dura, las flechas no pasan hoja.
+  const turnBlockedRef = useRef<() => boolean>(() => false)
 
   const { block } = content
   const blockId = block.id
@@ -214,6 +217,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     })
 
     flip.loadFromHTML(pages)
+    flipRef.current = flip
 
     // El libro abre por donde se quedó. El índice se calcula a mano: con las páginas
     // invertidas, la primera de lectura es la ÚLTIMA del DOM, y la conversión vale en los
@@ -267,6 +271,9 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       flip,
       sentencesById,
       retry: () => setExamAttempt((attempt) => attempt + 1),
+      setTurnGuard: (isBlocked) => {
+        turnBlockedRef.current = isBlocked
+      },
     })
     // El regalo de la plana de enfrente. Solo el movimiento: quién lo ENCIENDE lo decide
     // el examen de al lado, al estampar el sello verde.
@@ -285,6 +292,8 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       unmountSentenceTiles?.()
       unmountFinalExam?.()
       unmountGift?.()
+      flipRef.current = null
+      turnBlockedRef.current = () => false
       flip.destroy()
       mount.replaceChildren()
     }
@@ -537,6 +546,27 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       {/* Punto de anclaje. El contenedor real del libro se crea dentro del
           efecto y cuelga de aquí, porque la librería lo destruye al desmontar. */}
       <div className="volume-reader__mount" ref={mountRef} />
+
+      {/* Solo en pantallas táctiles: en un tomo apretado el arrastre tiene poco donde agarrar.
+          Van FUERA del libro y sin nada dentro —page-flip solo respeta un <button> pulsado, no
+          lo que lleve por dentro—, sobre el canto de las hojas, para no tapar el contenido. Se lee
+          a la japonesa: «siguiente» es `flipPrev` y va a la izquierda. */}
+      <button
+        className="volume-reader__turn volume-reader__turn--next"
+        type="button"
+        aria-label="Página siguiente"
+        onClick={() => {
+          if (!turnBlockedRef.current()) flipRef.current?.flipPrev()
+        }}
+      />
+      <button
+        className="volume-reader__turn volume-reader__turn--back"
+        type="button"
+        aria-label="Página anterior"
+        onClick={() => {
+          if (!turnBlockedRef.current()) flipRef.current?.flipNext()
+        }}
+      />
     </div>
   )
 }

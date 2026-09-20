@@ -1,0 +1,12 @@
+// La tarjeta de kana en una hoja baja —un móvil de lado—. Quien la incluye pone su propia
+// letra y su forma; aquí solo está lo que encoge. Si se cambia el umbral, hay que cambiarlo
+// también en `VolumeReader.scss`, que esconde los pasos del trazado con el mismo.
+//
+// Sigue siendo tocable: por debajo de unos 38 px de lado un dedo empieza a fallar.
+@mixin compact-tile {
+  @container page (max-height: 380px) {
+    min-width: 1.8em;
+    padding: 0.3em 0.45em;
+    font-size: 7.5cqmin;
+  }
+}
