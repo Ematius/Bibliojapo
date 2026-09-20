@@ -7,17 +7,17 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.55rem;
+  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
   appearance: none;
   cursor: pointer;
   font-family: var(--font-body);
   font-size: 0.8rem;
   color: var(--color-cream);
-  background: rgba(var(--rgb-bg), 0.45);
+  background: rgba(var(--rgb-bg), 0.7);
   border: 1px solid rgba(var(--rgb-lamplight), 0.3);
   border-radius: var(--radius-pill);
   backdrop-filter: blur(6px);
-  opacity: 0.6;
+  opacity: 0.9;
   transition:
     opacity var(--duration-fast),
     background var(--duration-fast),
@@ -34,7 +34,6 @@
   }
 
   &--on {
-    opacity: 0.9;
     border-color: var(--color-brass);
 
     .intro-toggle__icon {
@@ -53,18 +52,7 @@
     fill: currentColor;
   }
 
-  // Solo el icono en reposo; el texto asoma al pasar el puntero o enfocar, para que el botón
-  // no compita con la escena. Sin `hover` (táctil) se queda sin texto y manda el `title`.
   &__label {
-    display: none;
-    padding-right: 0.5rem;
     white-space: nowrap;
-  }
-
-  @media (hover: hover) {
-    &:hover .intro-toggle__label,
-    &:focus-visible .intro-toggle__label {
-      display: inline;
-    }
   }
 }
