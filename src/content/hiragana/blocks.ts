@@ -29,13 +29,6 @@ export const BLOCKS: Block[] = [
       'iu',
       'hai',
       'iie',
-      'a-expression',
-      'aa',
-      'ie-2',
-      'e-2',
-      'ee',
-      'o-honorific-prefix',
-      'hai-2',
     ],
     sentenceIds: [
       'ie-wa-aoi',
