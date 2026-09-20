@@ -16,12 +16,7 @@ function NavSections({ onPick }: { onPick?: () => void }) {
   return NAV_LINKS.map((link) => (
     <li className="site-nav__item" key={link.id}>
       {link.to ? (
-        <Link
-          className="site-nav__link"
-          to={link.to}
-          state={link.fromNav ? { fromNav: true } : undefined}
-          onClick={onPick}
-        >
+        <Link className="site-nav__link" to={link.to} onClick={onPick}>
           {link.label}
         </Link>
       ) : (
@@ -33,7 +28,7 @@ function NavSections({ onPick }: { onPick?: () => void }) {
   ))
 }
 
-// No aparece en el valle de la portada: allí el único camino es el sendero.
+// No aparece en la entrada: allí el único camino es la puerta.
 export function SiteNav() {
   const navRef = useRef<HTMLElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)

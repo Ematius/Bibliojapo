@@ -1,8 +1,8 @@
 // Provisional, hasta que esté decidida la identidad: 本 se lee bien a tamaño pequeño.
 export const NAV_LOGO_KANJI = '本'
 
-// La barra solo aparece de la biblioteca hacia dentro: en el valle de la portada
-// competiría con el sendero, que es el único camino.
+// La barra solo aparece de la biblioteca hacia dentro: en la entrada, el único camino es
+// la puerta.
 export interface NavLink {
   id: string
   label: string
@@ -10,14 +10,12 @@ export interface NavLink {
   // no se deduce de la lista: hoy las tres tienen pantalla, y deducido saldría
   // `string`, dejando la rama que pinta una sección pendiente como código muerto.
   to: string | null
-  // Marca el enlace que vuelve al valle, para que el guardia de la ruta lo deje pasar.
-  fromNav: boolean
 }
 
 export const NAV_LINKS: readonly NavLink[] = [
-  { id: 'home', label: 'Inicio', to: '/', fromNav: true },
-  { id: 'aisles', label: 'Pasillos', to: '/biblioteca', fromNav: false },
-  { id: 'desk', label: 'Mi escritorio', to: '/mi-escritorio', fromNav: false },
+  { id: 'home', label: 'Inicio', to: '/' },
+  { id: 'aisles', label: 'Pasillos', to: '/biblioteca' },
+  { id: 'desk', label: 'Mi escritorio', to: '/mi-escritorio' },
 ]
 
 export const NAV_CTA_LABEL = 'Crear cuenta'

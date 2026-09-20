@@ -4,11 +4,10 @@
 const ASSET_BASE = '/images/outsite'
 
 export const ASSETS = {
-  // Tres ilustraciones superpuestas, de atrás hacia delante. Las tres comparten el
+  // Las ilustraciones superpuestas, de atrás hacia delante. Todas comparten el
   // lienzo de 1672 × 941, así que se apilan sin ajustes.
   sky: `${ASSET_BASE}/cielo-exterior.webp`,
   library: `${ASSET_BASE}/biblioteca.webp`,
-  sign: `${ASSET_BASE}/cartel.webp`,
   interior: `${ASSET_BASE}/Interior.webp`,
   doorLeft: `${ASSET_BASE}/puerta-izquierda.webp`,
   doorRight: `${ASSET_BASE}/puerta-derecha.webp`,
@@ -120,19 +119,6 @@ export const LIBRARY_ANIMATION_CONFIG = {
       // Cuánto se ensancha la capa respecto al stage, para tener margen por el que derivar.
       overscan: 1.05,
       ease: 'sine.inOut',
-    },
-
-    // El cartel de bienvenida, en fracciones [0, 1] del stage igual que PORTAL. `top` es
-    // su borde SUPERIOR y el alto vale lo mismo que el ancho, así que la base cae en
-    // `top + width`: con el suelo de flores entre 0.78 y 0.92, un cartel de 0.22 de ancho
-    // se planta con `top` entre 0.58 y 0.70. No tapar ni la escalera central ni la entrada.
-    //
-    // CUIDADO CON EL BORDE IZQUIERDO: el stage se recorta un 5 % por lado en pantallas más
-    // estrechas que 16:9, así que por debajo de `left` 0.05 el cartel empieza a cortarse.
-    sign: {
-      left: 0.15,
-      top: 0.68,
-      width: 0.25,
     },
   },
 

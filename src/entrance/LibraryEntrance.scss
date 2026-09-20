@@ -39,19 +39,6 @@
     will-change: transform;
   }
 
-  // Solo se le da el ancho: el alto sale de la proporción de la ilustración, que es la del
-  // stage.
-  &__sign {
-    position: absolute;
-    left: calc(var(--sign-left) * 100%);
-    top: calc(var(--sign-top) * 100%);
-    display: block;
-    width: calc(var(--sign-width) * 100%);
-    height: auto;
-    user-select: none;
-    pointer-events: none;
-  }
-
   &__interior {
     z-index: 1;
     transform-origin: 50% 50%;

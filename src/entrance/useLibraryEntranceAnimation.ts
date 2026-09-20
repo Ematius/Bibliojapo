@@ -15,7 +15,6 @@ export interface LibraryEntranceRefs {
   interiorRef: RefObject<HTMLImageElement | null>
   skyRef: RefObject<HTMLImageElement | null>
   buildingRef: RefObject<HTMLImageElement | null>
-  signRef: RefObject<HTMLImageElement | null>
   doorLeftRef: RefObject<HTMLDivElement | null>
   doorRightRef: RefObject<HTMLDivElement | null>
   doorLeftImgRef: RefObject<HTMLImageElement | null>
@@ -77,7 +76,6 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       interiorRef,
       skyRef,
       buildingRef,
-      signRef,
       facadeGroupRef,
       doorLeftRef,
       doorRightRef,
@@ -106,7 +104,6 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
         waitForImage(interiorRef.current),
         waitForImage(skyRef.current),
         waitForImage(buildingRef.current),
-        waitForImage(signRef.current),
         waitForImage(doorLeftImgRef.current),
         waitForImage(doorRightImgRef.current),
       ])

@@ -13,8 +13,8 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** cerrando el primer tomo. El recorrido está entero —landing,
-zaguán, vestíbulo, pasillo y estantería— y el tomo del bloque 1 se lee de principio
+**Fase actual:** cerrando el primer tomo. El recorrido está entero —intro en
+video, entrada, vestíbulo, pasillo y estantería— y el tomo del bloque 1 se lee de principio
 a fin: sus seis lecciones completas, cada una con sus ejercicios, su repaso y su
 examen, y el examen final que pone el sello. Solo queda revisar a ojo que cada kana
 caiga sobre su ilustración. Lo siguiente es el encuadre de la estantería. Ver
@@ -449,8 +449,11 @@ proyecto engaña más que no tenerlo.
 
 ```text
 src/
-  landing/          ← la entrada: fachada, puertas, animación de acceso
-  entrance/         ← el zaguán
+  intro/            ← la raíz `/`: el video de apertura, su preferencia y el botón que la
+                      cambia. Solo se ve la primera vez, o siempre si se pide, y se
+                      funde sobre la entrada
+  entrance/         ← la entrada (`/`, con `/entrada` redirigiendo): fachada, puertas,
+                      animación de acceso
   hall/             ← el vestíbulo, desde donde se eligen los pasillos
   aisle/            ← el pasillo y todo lo que pasa dentro
     shelf/          ← la rejilla del mueble, el tomo en la balda, cómo se saca

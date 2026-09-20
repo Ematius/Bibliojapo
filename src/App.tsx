@@ -1,14 +1,11 @@
 import { Suspense, lazy } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { LandingRoute } from './landing/LandingRoute.tsx'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { HomeRoute } from './intro/HomeRoute'
 import { AccountPanel } from './account/AccountPanel'
 import { useVh } from './shared/useVh'
 
-// Cargadas bajo demanda: la portada no necesita el lector, page-flip ni
-// DrawSVGPlugin, así que esas tres pantallas no deben ir en el bundle inicial.
-const LibraryEntrance = lazy(() =>
-  import('./entrance/LibraryEntrance.tsx').then((m) => ({ default: m.LibraryEntrance })),
-)
+// Cargadas bajo demanda: la intro no necesita el lector, page-flip ni DrawSVGPlugin, así
+// que esas pantallas no deben ir en el bundle inicial.
 const LibraryHall = lazy(() =>
   import('./hall/LibraryHall.tsx').then((m) => ({ default: m.LibraryHall })),
 )
@@ -27,10 +24,11 @@ function App() {
     <>
       <Suspense fallback={null}>
         <Routes>
-          {/* El recorrido es portada → umbral → vestíbulo → pasillo. La portada y la
-              puerta se cruzan; el vestíbulo es el sitio al que se vuelve. */}
-          <Route path="/" element={<LandingRoute />} />
-          <Route path="/entrada" element={<LibraryEntrance />} />
+          {/* El recorrido es entrada → vestíbulo → pasillo. La entrada lleva delante la
+              intro en video; el vestíbulo es el sitio al que se vuelve. */}
+          <Route path="/" element={<HomeRoute />} />
+          {/* La entrada vivió aquí; quien la tenga en favoritos llega igualmente. */}
+          <Route path="/entrada" element={<Navigate to="/" replace />} />
           <Route path="/biblioteca" element={<LibraryHall />} />
           {/* Un solo pasillo para las cuatro secciones: el id decide qué estantería
               se pinta. Ver shared/aisles.ts. */}

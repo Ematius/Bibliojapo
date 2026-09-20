@@ -1,9 +1,8 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ASSETS, LIBRARY_ANIMATION_CONFIG as config } from './libraryEntranceConfig'
 import { useLibraryEntranceAnimation } from './useLibraryEntranceAnimation'
 import type { StyleWithVars } from '../shared/styleWithVars'
-import { markJourneyDone } from '../shared/journey'
 import './LibraryEntrance.scss'
 
 const portalCenter = {
@@ -21,9 +20,6 @@ const stageStyle: StyleWithVars = {
   '--door-seam-fade-start': config.doors3D.seamFadeStart,
   '--door-perspective-ratio': config.doors3D.perspectiveRatio,
   '--sky-overscan': config.facade.sky.overscan,
-  '--sign-left': config.facade.sign.left,
-  '--sign-top': config.facade.sign.top,
-  '--sign-width': config.facade.sign.width,
 }
 
 // La cara trasera reutiliza el PNG de la frontal, oscurecido y desaturado: es el dorso
@@ -33,7 +29,12 @@ const doorBackFaceStyle: StyleWithVars = {
   '--door-back-saturation': config.doors3D.backSaturation,
 }
 
-export function LibraryEntrance() {
+interface LibraryEntranceProps {
+  // Se llama cuando las ilustraciones están cargadas y la escena lista para verse.
+  onReady?: () => void
+}
+
+export function LibraryEntrance({ onReady }: LibraryEntranceProps) {
   const navigate = useNavigate()
   const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -41,7 +42,6 @@ export function LibraryEntrance() {
   const interiorRef = useRef<HTMLImageElement>(null)
   const skyRef = useRef<HTMLImageElement>(null)
   const buildingRef = useRef<HTMLImageElement>(null)
-  const signRef = useRef<HTMLImageElement>(null)
   const doorLeftRef = useRef<HTMLDivElement>(null)
   const doorRightRef = useRef<HTMLDivElement>(null)
   const doorLeftImgRef = useRef<HTMLImageElement>(null)
@@ -60,7 +60,6 @@ export function LibraryEntrance() {
     interiorRef,
     skyRef,
     buildingRef,
-    signRef,
     doorLeftRef,
     doorRightRef,
     doorLeftImgRef,
@@ -75,9 +74,14 @@ export function LibraryEntrance() {
   }, () => {
     // Al vestíbulo, que arranca con esta misma ilustración del interior en la misma
     // posición.
-    markJourneyDone()
     navigate('/biblioteca')
   })
+
+  const onReadyRef = useRef(onReady)
+  onReadyRef.current = onReady
+  useEffect(() => {
+    if (isReady) onReadyRef.current?.()
+  }, [isReady])
 
   return (
     <section className="library-entrance" ref={sectionRef} data-ready={isReady}>
@@ -129,9 +133,6 @@ export function LibraryEntrance() {
             </div>
           </div>
 
-          {/* Primer plano. Va después de las puertas para quedar por delante de
-              todo lo demás de la fachada. */}
-          <img className="library-entrance__sign" ref={signRef} src={ASSETS.sign} alt="" draggable="false" />
         </div>
 
         <div className="library-entrance__spill" ref={spillRef} aria-hidden="true" />
