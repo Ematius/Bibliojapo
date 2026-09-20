@@ -72,7 +72,7 @@ export function AnimeAlbum({ chapters }: AnimeAlbumProps) {
       showCover: false,
       usePortrait: false,
       autoSize: true,
-      flippingTime: 700,
+      flippingTime: 4000,
       disableFlipByClick: true,
       useMouseEvents: true,
       showPageCorners: true,

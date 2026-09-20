@@ -93,7 +93,8 @@
   }
 
   // Las flechas de los bordes, apenas insinuadas: el dedo manda y ellas solo avisan de que se
-  // puede pasar. Escondidas con ratón, que ya tiene la esquina de la hoja.
+  // puede pasar. Solo en un móvil: táctil y de pantalla baja, el mismo corte que
+  // `DESK_LIFT.shortViewport`. Con ratón o en una pantalla grande ya está la esquina de la hoja.
   &__turn {
     display: none;
     position: absolute;
@@ -154,7 +155,7 @@
     }
   }
 
-  @media (pointer: coarse) {
+  @media (pointer: coarse) and (max-height: 32.5rem) {
     &__turn {
       display: block;
     }

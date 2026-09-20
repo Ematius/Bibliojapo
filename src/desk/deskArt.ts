@@ -162,6 +162,6 @@ export const DESK_ART = {
     // El tamaño del libro ENTERO al plantarse enfrente —papel y mangas juntos, sin
     // descuadrarse—, en fracción del ancho de la escena. Los demás objetos usan 0,42.
     frontWidth: 0.48,
-    short: { frontWidth: 0.64, frontY: 0.53 },
+    short: { frontWidth: 0.72, frontY: 0.54 },
   },
 } as const satisfies Record<string, DeskArt>
