@@ -157,12 +157,23 @@
     display: grid;
     column-gap: 0.6em;
 
-    .chuleta-card__face--front &.chuleta-card__list--words {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    // Cada entrada ocupa dos pistas —texto y botón— y las comparte con sus vecinas de la
+    // columna (subgrid): el ♪ queda pegado al texto más largo y todos los de una columna
+    // en línea. Un texto corto deja hueco antes de su botón, a propósito.
+    .chuleta-card__face--front & {
+      grid-template-columns: repeat(3, minmax(0, max-content) auto);
+      column-gap: 0;
     }
 
-    .chuleta-card__face--front &.chuleta-card__list--sentences {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .chuleta-card__face--front & .chuleta-card__line {
+      display: grid;
+      grid-column: span 2;
+      grid-template-columns: subgrid;
+      align-items: baseline;
+    }
+
+    .chuleta-card__face--front & .chuleta-card__listen {
+      margin: 0 0.6em 0 0.3em;
     }
 
     .chuleta-card__face--back & {
