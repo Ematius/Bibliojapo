@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ASSETS } from '../entrance/libraryEntranceConfig'
 import { AisleSigns } from './AisleSigns'
+import { HallGuide } from './HallGuide'
 import { HallPanArrows } from './HallPanArrows'
 import { useAisleSweep } from './useAisleSweep'
 import { useScenePan } from '../shared/useScenePan'
@@ -26,6 +27,8 @@ export function LibraryHall() {
       </div>
 
       <HallPanArrows reach={reach} onPan={panBy} />
+
+      <HallGuide />
 
       <SiteNav />
 
