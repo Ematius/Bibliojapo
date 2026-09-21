@@ -43,6 +43,8 @@ export const VOCABULARY: Word[] = [] = [
     id: 'e',
     units: [{ kana: 'え', romaji: 'e' }],
     meaning: 'dibujo, imagen',
+    // El mismo archivo que el kana: es un solo carácter y suena igual.
+    audio: '/audio/hiragana/b1/e.wav',
   },
   {
     id: 'ha',
