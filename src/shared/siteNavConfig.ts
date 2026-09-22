@@ -21,6 +21,11 @@ export const NAV_LINKS: readonly NavLink[] = [
 
 export const NAV_CTA_LABEL = 'Crear cuenta'
 
+// Con sesión, la entrada a la cuenta dentro del menú. En la barra ese sitio lo ocupa el
+// nombre de quien está dentro, pero una fila de menú suelta con un nombre propio no dice
+// a dónde lleva.
+export const NAV_ACCOUNT_LABEL = 'Tu cuenta'
+
 // Se abre recortando de arriba abajo, por lo mismo que la barra: escalar deformaría el
 // texto. Cerrar va más rápido que abrir — esperar para quitar algo de en medio molesta.
 export const NAV_MENU = {

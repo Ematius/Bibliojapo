@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { Link } from 'react-router-dom'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
-import { NAV_CTA_LABEL, NAV_LINKS, NAV_LOGO_KANJI } from './siteNavConfig'
+import { NAV_ACCOUNT_LABEL, NAV_CTA_LABEL, NAV_LINKS, NAV_LOGO_KANJI } from './siteNavConfig'
 import { buildSiteNavMenuHide, buildSiteNavMenuReveal } from './siteNavMenuReveal'
 import { prefersReducedMotion } from './prefersReducedMotion'
 import { useSiteNavIntro } from './useSiteNavIntro'
@@ -111,9 +111,9 @@ export function SiteNav() {
         <span className="site-nav__burger-line" aria-hidden="true" />
       </button>
 
-      {/* El acceso a la cuenta, por eso no hay sección suya en el menú. Sin sesión
-          abre el panel —crearla es un paso de en medio, no una pantalla—; con ella
-          lleva el nombre de quien está dentro y va a su cuenta. */}
+      {/* El acceso a la cuenta. Sin sesión abre el panel —crearla es un paso de en
+          medio, no una pantalla—; con ella lleva el nombre de quien está dentro y va
+          a su cuenta. En la barra estrecha se oculta y lo releva el menú. */}
       {session.account ? (
         <Link
           className="site-nav__cta"
@@ -131,6 +131,31 @@ export function SiteNav() {
       <div className="site-nav__menu" id="site-nav-menu" ref={menuRef}>
         <ul className="site-nav__menu-list">
           <NavSections onPick={() => setIsMenuOpen(false)} />
+
+          {/* El botón de la cuenta no cabe en la barra estrecha y se oculta, así que su
+              acceso vive aquí: sin esta fila, en un móvil no hay por dónde entrar. */}
+          <li className="site-nav__item site-nav__item--account">
+            {session.account ? (
+              <Link
+                className="site-nav__link"
+                to="/account"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {NAV_ACCOUNT_LABEL}
+              </Link>
+            ) : (
+              <button
+                className="site-nav__link site-nav__link--action"
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  openAccountPanel()
+                }}
+              >
+                {NAV_CTA_LABEL}
+              </button>
+            )}
+          </li>
         </ul>
       </div>
     </nav>
