@@ -98,6 +98,12 @@ export function AccountPanel() {
         <p className="account-panel__trial">
           Versión de prueba: por ahora la cuenta se guarda solo en este navegador.
         </p>
+
+        {/* Lo exige el reglamento de VOICEVOX y del personaje para usar sus voces,
+            también con uso comercial: quitarlo deja los audios sin licencia. */}
+        <p className="account-panel__credits">
+          Voces: <span lang="ja">VOICEVOX:雀松朱司</span>
+        </p>
       </section>
     </div>
   )
