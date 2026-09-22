@@ -89,7 +89,7 @@ export function SiteNav() {
     >
       {/* El kanji hace de botón de casa, y dentro de la app «casa» es el
           vestíbulo, no la portada. */}
-      <Link className="site-nav__logo" to="/hall" aria-label="BOF — vestíbulo">
+      <Link className="site-nav__logo" to="/hall" aria-label="Bibliojapo — vestíbulo">
         <span aria-hidden="true">{NAV_LOGO_KANJI}</span>
       </Link>
 

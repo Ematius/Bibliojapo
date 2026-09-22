@@ -7,7 +7,7 @@
 // Todos juntos en una sola clave por tomo, separados por comas, para no sembrar el
 // almacenamiento de entradas sueltas.
 
-const PREFIX = 'bof:seals:'
+const PREFIX = 'bibliojapo:seals:'
 
 // Envuelto como en `bookmark.ts`: localStorage lanza en navegación privada. Ante la
 // duda, sin sellos — el examen se repite, que es el peor caso aceptable.

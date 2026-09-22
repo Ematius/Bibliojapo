@@ -76,7 +76,7 @@ interface Db {
   sessionUserId: string | null
 }
 
-const DB_KEY = 'bof:mock-server'
+const DB_KEY = 'bibliojapo:mock-server'
 
 // Sin localStorage —navegación privada, disco lleno— el servidor sigue funcionando
 // y solo pierde la memoria al recargar.

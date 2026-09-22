@@ -7,7 +7,7 @@
 // Es posicional, así que envejece: una lección nueva metida DELANTE mueve el folio.
 // Se asume — el peor caso es reabrir unas planas más atrás, no perder nada.
 
-const PREFIX = 'bof:bookmark:'
+const PREFIX = 'bibliojapo:bookmark:'
 
 // Todos los accesos van envueltos: en navegación privada o con el disco lleno,
 // localStorage lanza en vez de devolver null. Ante la duda, sin marcador.

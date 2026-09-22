@@ -4,7 +4,7 @@
 
 export type HallGuideMode = 'always' | 'never'
 
-const KEY = 'bof:hall-guide'
+const KEY = 'bibliojapo:hall-guide'
 
 export function getHallGuideMode(): HallGuideMode | null {
   try {

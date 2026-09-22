@@ -1,11 +1,11 @@
-# BOF — Biblioteca Oficial de Frikis
+# Bibliojapo — aprende japonés tomo a tomo
 ## Instrucciones para Claude Code
 
 ---
 
 ## Descripción del proyecto
 
-BOF es una app de aprendizaje de japonés con estética de biblioteca / manga.
+Bibliojapo es una app de aprendizaje de japonés con estética de biblioteca / manga.
 El usuario entra por unas puertas de madera tallada, recorre pasillos,
 elige en qué pasillo va a entrar — puede ser Hiragana, Katakana, Kanji
 o Vocabulario. Una vez dentro hay una estantería donde puede elegir tomos
@@ -428,7 +428,7 @@ que nadie lo note.
   `--color-katakana`, `--color-kanji`, `--color-vocab`, cada uno con su `-deep`—; y
   los de pieza suelta: página, cristal, cielo, error.
 - **Tipografía:** `--font-display` (japonés y cabeceras), `--font-roman` (el
-  logotipo BOF), `--font-body`.
+  logotipo de Bibliojapo), `--font-body`.
 - **Movimiento:** `--ease-book` y `--duration-flip|door|fast|slow|pulse|sign-sway`.
 - **Layout:** `--panel-width`, y `--vh` — lo mantiene el hook `useVh`; nunca `100vh`.
 

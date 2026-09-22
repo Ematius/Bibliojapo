@@ -2,8 +2,8 @@
 // siempre. Envueltas como en `bookmark.ts`: localStorage lanza en navegación privada, y ante
 // la duda se enseña la intro — nunca deja a nadie sin ella por un fallo de almacenamiento.
 
-const SEEN_KEY = 'bof:intro-seen'
-const ALWAYS_KEY = 'bof:intro-always'
+const SEEN_KEY = 'bibliojapo:intro-seen'
+const ALWAYS_KEY = 'bibliojapo:intro-always'
 
 function read(key: string): boolean {
   try {

@@ -12,7 +12,7 @@ import { fetchSeals, saveSeal } from '../../../api/progress'
 // con `data-exam="a"`, esté a la derecha o a la izquierda. No hay ningún número escrito a
 // mano: añadir una prueba a la plana la suma sola.
 //
-// Los ejercicios avisan por `bof:solved`, que burbujea, y se cuentan por el nodo que lo
+// Los ejercicios avisan por `bibliojapo:solved`, que burbujea, y se cuentan por el nodo que lo
 // manda: resolver dos veces el mismo no cuenta dos veces.
 const EXERCISES = '.kana-match, .word-gap, .word-pick'
 

@@ -4,7 +4,7 @@
 // pasa de hoja.
 //
 // No se apoya en `examSeal.ts`: aquella sella cuando TODOS los ejercicios de una
-// plana avisan de un acierto a la primera (`bof:solved`), y este examen aprueba con
+// plana avisan de un acierto a la primera (`bibliojapo:solved`), y este examen aprueba con
 // un umbral por bloque —≥5/10— que puede incluir frases falladas. El sello de aquí
 // se estampa a mano, llamando a `saveSeal` directamente al final.
 import gsap from 'gsap'

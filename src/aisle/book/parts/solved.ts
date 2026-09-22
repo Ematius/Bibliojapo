@@ -7,7 +7,7 @@
 // No lleva dentro ni id, ni tipo de ejercicio, ni puntuación: el evento burbujea desde la
 // raíz del ejercicio, así que `event.target` es esa raíz y con eso basta para contar sin
 // repetir.
-export const SOLVED_EVENT = 'bof:solved'
+export const SOLVED_EVENT = 'bibliojapo:solved'
 
 // Se dispara UNA vez por ejercicio: quien lo llama se guarda de no repetirlo. Un ejercicio
 // resuelto no se «desresuelve», así que el segundo aviso solo podría contar de más.

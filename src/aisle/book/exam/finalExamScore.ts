@@ -1,6 +1,6 @@
 // La nota de cada bloque del examen final, en localStorage: sin esto, reabrir un tomo ya
 // sellado no tiene de dónde sacar el desglose real y solo puede enseñar un aviso genérico.
-const PREFIX = 'bof:examScore:'
+const PREFIX = 'bibliojapo:examScore:'
 
 export type FinalExamScore = Record<1 | 2 | 3, number>
 

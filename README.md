@@ -1,4 +1,4 @@
-# BOF — Biblioteca Oficial de Frikis
+# Bibliojapo — aprende japonés tomo a tomo
 
 App de aprendizaje de japonés con estética de biblioteca y manga. Se entra por
 unas puertas talladas, se recorre el vestíbulo, se elige pasillo —Hiragana,
