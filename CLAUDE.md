@@ -13,15 +13,20 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** cerrando el primer tomo. El recorrido está entero —intro en
-video, entrada, vestíbulo, pasillo y estantería— y el tomo del bloque 1 se lee de principio
-a fin: sus seis lecciones completas, cada una con sus ejercicios, su repaso y su
-examen, y el examen final que pone el sello. Solo queda revisar a ojo que cada kana
-caiga sobre su ilustración. Lo siguiente es el encuadre de la estantería. Ver
-«Cómo se arma un tomo».
-En paralelo, el **front** de la progresión y las cuentas está hecho contra un
-servidor simulado: los doce tomos en la balda, el sello que da la insignia, la
-cuenta que la guarda. Ver «La capa `api/`».
+**Fase actual:** la fase 3, y lo que queda de ella es enchufar Supabase. El
+recorrido está entero —intro en video, entrada, vestíbulo, pasillo y estantería—,
+el tomo del bloque 1 se lee de principio a fin, y Mi escritorio ya está en pie:
+la mesa con sus objetos encima, la chuleta, el álbum y el carné. La cuenta
+también —el formulario con sus dos vías, el panel, el carné y la pantalla de
+ajustes—, pero todo eso habla con el servidor SIMULADO: falta el Supabase de
+verdad —esquema, políticas de RLS, login con Google— y reescribir por dentro
+`account.ts`, `progress.ts` y `volumes.ts`. Ver «La capa `api/`» y la fase 3.
+
+Dos cosas se han adelantado sobre la marcha y no están cerradas: del responsive
+(fase 4) hay ya piezas sueltas —el aviso de rotar, las flechas táctiles del
+lector, el nav estrecho, los objetos del escritorio en horizontal—, pero el paneo
+de la escena no está escrito; y el encuadre de la fase 2 sigue sin poder darse
+por bueno hasta probarlo en anchos de verdad.
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
 **Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
@@ -53,6 +58,11 @@ todavía no están tomadas en la anterior.
    misma cosa por sus dos caras: Mi escritorio es lo que se ENSEÑA de una cuenta
    —los tomos cerrados, su chuleta y los juegos que abren—, y sin nada que enseñar
    una cuenta es un formulario que no lleva a ningún sitio.
+
+   **El escritorio ya está hecho** (22-09-2026), contra el servidor simulado: la
+   mesa, sus objetos, la chuleta, el álbum y el carné. Lo que sigue de esta fase
+   es Supabase. Las reglas de abajo se quedan porque mandan sobre lo que se le
+   añada: cada objeto nuevo sobre la madera las cumple igual.
 
    **Dentro de la fase, el escritorio va PRIMERO**, contra el servidor simulado. No
    espera a Supabase por el criterio de siempre —lo que se puede ver y probar sin
@@ -150,22 +160,30 @@ todavía no están tomadas en la anterior.
    Esto cambia la fase 2: con paneo, el mueble ya no tiene que CABER, basta con
    poder alcanzarlo. `framed-stage` deja de ser «encoge la escena hasta que la zona
    entre» y pasa a decir solo dónde se aterriza.
-5. **El contenido de pago servido, y con él el tomo 2.** Bucket privado y URLs
-   firmadas de vida corta. Va pegado a la fase 3 —la de Supabase— porque el tomo 2
-   es el primero que hay que proteger: escrito «como el tomo 1» habría que
-   escribirlo dos veces. Ver «El contenido de pago no puede vivir en `content/`».
-6. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
+5. **Salir a la red** con el temario a medias, primero para amigos y conocidos, y
    completar el contenido mientras ya se usa. **Todavía gratis y sin pasarela**:
    Supabase Free y Vercel Hobby valen mientras no se cobre, y aquí es donde se
    rompen las cosas de verdad — mejor romperlas antes de que haya dinero de por
    medio.
-7. **Pagos, y con ellos el gasto.** Stripe, el webhook verificado por firma, y el
-   estado de la suscripción como dato del servidor que alimenta `VolumeGate`. Es lo
-   ÚNICO que obliga a pagar Vercel Pro —Hobby prohíbe el uso comercial— y Supabase
-   Pro, y lo único que arrastra papeleo fiscal: vender a particulares de la UE
-   obliga a declarar el IVA del país del comprador. Por eso va al final, solo.
 
-**La frontera está entre la 6 y la 7.** Todo lo anterior cuesta 0 €; el día que se
+   El resto de los tomos se escriben AQUÍ, uno a uno y ya en la red, contra
+   Supabase. No esperan a nada: un tomo escrito y probado a solas es un tomo con
+   los errores por descubrir, y once a la vez no se revisan, se sufren.
+6. **Pagos, y con ellos el contenido protegido y el gasto.** Las tres llegan el
+   mismo día: Stripe con su webhook verificado por firma y el estado de la
+   suscripción como dato del servidor que alimenta `VolumeGate`; el temario en
+   bucket privado con URLs firmadas de vida corta; y la factura.
+
+   **El bucket privado va AQUÍ, no antes.** Mientras el temario está a medias todo
+   es gratis con cuenta, y para eso basta la RLS: quien no se ha registrado no lo
+   ve. Firmar URLs antes del muro es proteger algo que se está regalando a
+   propósito. Ver «El contenido de pago no puede vivir en `content/`».
+
+   Es lo ÚNICO que obliga a pagar Vercel Pro —Hobby prohíbe el uso comercial— y
+   Supabase Pro, y lo único que arrastra papeleo fiscal: vender a particulares de
+   la UE obliga a declarar el IVA del país del comprador. Por eso va al final, solo.
+
+**La frontera está entre la 5 y la 6.** Todo lo anterior cuesta 0 €; el día que se
 activa Stripe empiezan unos 41 €/mes fijos, que a 3,50 €/mes cubren unos 15
 suscriptores. Aplazar el GASTO es correcto; aplazar la INTEGRACIÓN no, porque las
 políticas de RLS y las URLs firmadas cambian cómo se piden los datos, y descubrirlo
@@ -175,16 +193,21 @@ al final obliga a reabrir pantallas ya cerradas.
 
 - El **tomo 1 es gratis y se hace sin cuenta**, entero.
 - Al terminarlo se da una **recompensa** —sin diseñar todavía— y con ella se
-  consiguen los tomos siguientes. **Ahí se exige cuenta**, y del tomo 2 en
-  adelante el contenido es de pago.
+  consiguen los tomos siguientes. **Ahí se exige cuenta.**
+- **Mientras el temario esté a medias, todo es gratis CON cuenta.** Del tomo 2 en
+  adelante hay que registrarse, pero no pagar. Se cobra el día que el temario esté
+  entero, no antes: nadie paga por un curso a medio escribir.
 - El **progreso va por cuenta**, no por dispositivo.
 
-De ahí salen tres reglas que afectan al código desde ya:
+De ahí salen cuatro reglas que afectan al código desde ya:
 
-**El contenido de pago no puede vivir en `content/`.** Todo lo que está ahí viaja
-dentro del bundle y se lee desde las herramientas del navegador. El bloque 1 puede
-quedarse donde está —es el gratuito y da igual que se lea—, pero del 2 en adelante
-habrá que servirlo. Al escribir el bloque 2, tenerlo presente en vez de meterlo sin
+**El contenido del bloque 2 en adelante no puede vivir en `content/`.** Todo lo que
+está ahí viaja dentro del bundle y se lee desde las herramientas del navegador, así
+que exigir cuenta para el tomo 2 no sirve de nada si su temario va en el
+despliegue: el muro se salta abriendo el inspector, y eso vale igual cuando el muro
+es una cuenta que cuando sea un pago. El bloque 1 puede quedarse donde está —es el
+gratuito sin cuenta y da igual que se lea—, pero del 2 en adelante hay que
+servirlo. Al escribir el bloque 2, tenerlo presente en vez de meterlo sin
 pensar junto al 1. Juega a favor que el temario solo lo lee el servidor simulado
 (`api/mockServer.ts`): el lector recibe el tomo ya empaquetado por `fetchVolume`,
 así que del bloque 2 en adelante basta con que ese paquete llegue del servidor de
@@ -197,9 +220,16 @@ verdad. Los demás importan únicamente tipos —y la estantería, la lista de i
 producen se guardan en `content-media/<pasillo>/<bloque>/` en la raíz del repo:
 ni se importa desde `src/`, ni vive en `public/`, así que no viaja en ningún
 despliegue y solo queda versionada en el repo privado. El bloque 1 se queda en
-`public/`, porque es gratis y da igual. Cuando llegue la fase 5, el mismo script
-que vuelca `content/` a las tablas de Supabase sube estos archivos al bucket
-privado, y la carpeta se vacía.
+`public/`, porque es gratis y da igual. Cuando se monte Supabase, el mismo script
+que vuelca `content/` a las tablas sube estos archivos al bucket —público mientras
+sea gratis, privado el día del muro— y la carpeta se vacía.
+
+**Todo el media pasa por UNA función que devuelve su URL.** Hoy devuelve la ruta
+pública; el día del bucket privado devuelve la URL firmada de vida corta. Con la
+ruta escrita a pelo en cada componente, ese día se tocan veinte archivos; con la
+función, uno. Es barata de escribir ahora y cara después, y es lo que permite
+aplazar el bucket privado hasta la fase 6 sin que aplazarlo cueste nada. Vive en
+`api/`, que es la carpeta que cambia el día del backend.
 
 **El progreso del tomo 1 se hará SIN cuenta y tiene que sobrevivir al registro.**
 Guardarlo en local no es un apaño provisional: es la pieza que la cuenta absorbe al
@@ -475,8 +505,9 @@ src/
                       pantalla de lo que se gestiona —datos, contraseña, preferencias—
   contact/          ← Contacta: el aviso de que algo se ha roto. Sin cuenta también,
                       que un fallo se cuenta igual
-  desk/             ← Mi escritorio: la mesa propia. Hoy solo la pantalla con sus
-                      datos; la escena y sus objetos son la fase 3
+  desk/             ← Mi escritorio: la mesa vista desde el asiento, con sus
+                      objetos encima —la chuleta, el álbum y el carné—, cada uno
+                      una puerta
   api/              ← excepción justificada: todo lo que habla con el servidor, y
                       el servidor simulado. Es la única carpeta que cambia el día
                       del backend — ver «La capa `api/`»
