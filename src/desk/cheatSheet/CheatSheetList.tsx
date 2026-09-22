@@ -5,52 +5,52 @@ import type { VolumeAccess } from '../../api/volumes'
 import { BLOCK_PLAN } from '../../content/hiragana/blocks'
 import { BLOCK_PLAN_KANA } from '../../content/hiragana/blockPlanKana'
 import { useVolumeAccess } from '../../shared/useVolumeAccess'
-import { ChuletaPasillos, type PasilloId } from './ChuletaPasillos'
-import './ChuletaList.scss'
+import { CheatSheetAisles, type CheatSheetAisleId } from './CheatSheetAisles'
+import './CheatSheetList.scss'
 
-interface ChuletaListProps {
+interface CheatSheetListProps {
   onSelect: (blockId: string) => void
 }
 
 // Cómo se lee un tomo: ganado, al alcance pero sin ganar todavía, o fuera de alcance. De
 // esto salen el sello, el fondo y si se puede pulsar — nunca al revés.
-type TomoState = 'completado' | 'pendiente' | 'bloqueado'
+type VolumeState = 'completed' | 'pending' | 'locked'
 
-function tomoState(access: VolumeAccess | undefined, passed: boolean): TomoState {
-  if (passed) return 'completado'
+function volumeState(access: VolumeAccess | undefined, passed: boolean): VolumeState {
+  if (passed) return 'completed'
   // «Abierto» es poder LEER el tomo, no haberlo aprobado: el bloque 1 está abierto desde el
   // primer momento aunque todavía no se haya cerrado.
-  if (access === 'open') return 'pendiente'
-  return 'bloqueado'
+  if (access === 'open') return 'pending'
+  return 'locked'
 }
 
-const STATE_LABEL: Record<TomoState, string> = {
-  completado: 'Completado',
-  pendiente: 'Pendiente',
-  bloqueado: 'Bloqueado',
+const STATE_LABEL: Record<VolumeState, string> = {
+  completed: 'Completado',
+  pending: 'Pendiente',
+  locked: 'Bloqueado',
 }
 
 // El candado ya va dibujado en el fondo de un tomo bloqueado: no le hace falta sello.
-const STATE_STAMP: Partial<Record<TomoState, string>> = {
-  completado: '/images/sello-verde.webp',
-  pendiente: '/images/sello-rojo.webp',
+const STATE_STAMP: Partial<Record<VolumeState, string>> = {
+  completed: '/images/green-seal.webp',
+  pending: '/images/red-seal.webp',
 }
 
 // La misma hoja que enseña `deskArt.ts` como papel de la mesa: la caja de esta lista es más
 // grande que esa silueta —ver `faceScale` en `DeskArt`—, así que sin pintar aquí su propio
 // papel se saldría del que hay debajo y enseñaría la mesa por los bordes.
-const SHEET_PAPER = '/images/desk/cheatSheet/hoja.webp'
+const SHEET_PAPER = '/images/desk/cheatSheet/sheet.webp'
 
-const TICKET_APPROVED = '/images/desk/cheatSheet/tarjeta-tomo-aprovado.webp'
-const TICKET_LOCKED = '/images/desk/cheatSheet/tarjeta-tomo-cerrada.webp'
+const TICKET_APPROVED = '/images/desk/cheatSheet/volume-ticket-approved.webp'
+const TICKET_LOCKED = '/images/desk/cheatSheet/volume-ticket-locked.webp'
 
-const TICKET_BG: Record<TomoState, string> = {
-  completado: TICKET_APPROVED,
-  pendiente: TICKET_APPROVED,
-  bloqueado: TICKET_LOCKED,
+const TICKET_BG: Record<VolumeState, string> = {
+  completed: TICKET_APPROVED,
+  pending: TICKET_APPROVED,
+  locked: TICKET_LOCKED,
 }
 
-const PASILLO_TITLE: Record<PasilloId, string> = {
+const AISLE_TITLE: Record<CheatSheetAisleId, string> = {
   hiragana: 'Hiragana',
   katakana: 'Katakana',
   kanji: 'Kanji',
@@ -67,8 +67,8 @@ const PASILLO_TITLE: Record<PasilloId, string> = {
 // estantería —ver `shared/useVolumeAccess.ts`—; que esté GANADO de verdad, y no solo
 // alcanzable, lo dicen las insignias. Son dos preguntas distintas y hacen falta las dos: el
 // tomo 1 está siempre «abierto» en cuanto hay cuenta, aunque todavía no se haya cerrado.
-export function ChuletaList({ onSelect }: ChuletaListProps) {
-  const [pasillo, setPasillo] = useState<PasilloId>('hiragana')
+export function CheatSheetList({ onSelect }: CheatSheetListProps) {
+  const [aisle, setAisle] = useState<CheatSheetAisleId>('hiragana')
   const access = useVolumeAccess()
 
   // null mientras llegan. Sin ellas no se puede distinguir un tomo «pendiente» de uno
@@ -95,45 +95,45 @@ export function ChuletaList({ onSelect }: ChuletaListProps) {
   const passedIds = new Set((badges ?? []).map((badge) => badge.blockId))
 
   return (
-    <div className="chuleta-list" style={{ backgroundImage: `url('${SHEET_PAPER}')` }}>
-      <h3 className="chuleta-list__title">{PASILLO_TITLE[pasillo]}</h3>
+    <div className="cheat-sheet-list" style={{ backgroundImage: `url('${SHEET_PAPER}')` }}>
+      <h3 className="cheat-sheet-list__title">{AISLE_TITLE[aisle]}</h3>
 
-      <ChuletaPasillos active={pasillo} onSelect={setPasillo} />
+      <CheatSheetAisles active={aisle} onSelect={setAisle} />
 
-      {pasillo !== 'hiragana' ? (
-        <p className="chuleta-list__note">
-          Todavía no hay tomos de {PASILLO_TITLE[pasillo]}.
+      {aisle !== 'hiragana' ? (
+        <p className="cheat-sheet-list__note">
+          Todavía no hay tomos de {AISLE_TITLE[aisle]}.
         </p>
       ) : (
-        <ul className="chuleta-list__volumes">
+        <ul className="cheat-sheet-list__volumes">
           {BLOCK_PLAN.map((blockId, index) => {
-            const state = tomoState(access.get(blockId), passedIds.has(blockId))
+            const state = volumeState(access.get(blockId), passedIds.has(blockId))
             const characters = BLOCK_PLAN_KANA[blockId]
             const stamp = STATE_STAMP[state]
-            const clickable = state === 'completado'
+            const clickable = state === 'completed'
 
             return (
-              <li className="chuleta-list__item" key={blockId}>
+              <li className="cheat-sheet-list__item" key={blockId}>
                 <button
-                  className={`chuleta-list__volume chuleta-list__volume--${state}`}
+                  className={`cheat-sheet-list__volume cheat-sheet-list__volume--${state}`}
                   type="button"
                   disabled={!clickable}
                   onClick={() => onSelect(blockId)}
                   style={{ backgroundImage: `url('${TICKET_BG[state]}')` }}
                 >
                   {stamp ? (
-                    <img className="chuleta-list__stamp" src={stamp} alt="" />
+                    <img className="cheat-sheet-list__stamp" src={stamp} alt="" />
                   ) : null}
 
-                  <span className="chuleta-list__volume-title">Tomo {index + 1}</span>
+                  <span className="cheat-sheet-list__volume-title">Tomo {index + 1}</span>
 
                   {characters ? (
-                    <span className="chuleta-list__volume-kana" lang="ja">
+                    <span className="cheat-sheet-list__volume-kana" lang="ja">
                       {characters.join('・')}
                     </span>
                   ) : null}
 
-                  <span className="chuleta-list__volume-status">{STATE_LABEL[state]}</span>
+                  <span className="cheat-sheet-list__volume-status">{STATE_LABEL[state]}</span>
                 </button>
               </li>
             )

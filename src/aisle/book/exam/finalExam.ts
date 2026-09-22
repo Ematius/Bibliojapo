@@ -148,7 +148,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     const finalScore = ([1, 2, 3] as const).reduce((sum, block) => sum + scores[block], 0) / 3
 
     if (finalEl) finalEl.textContent = `${finalScore.toFixed(1)} / 10`
-    if (sealImg) sealImg.src = passed ? '/images/sello-verde.webp' : '/images/sello-rojo.webp'
+    if (sealImg) sealImg.src = passed ? '/images/green-seal.webp' : '/images/red-seal.webp'
     if (passed) stampEl?.removeAttribute('hidden')
     else stampEl?.setAttribute('hidden', '')
   }
@@ -180,7 +180,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
       if (finalEl) finalEl.textContent = 'Ya superado'
       reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')?.setAttribute(
         'src',
-        '/images/sello-verde.webp',
+        '/images/green-seal.webp',
       )
       reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')?.removeAttribute('hidden')
     }

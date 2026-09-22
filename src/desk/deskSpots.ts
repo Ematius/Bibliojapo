@@ -2,7 +2,7 @@
 // `shelfGrid.ts`, pero sin rejilla que repartir: son tres cosas puestas a conciencia, no una
 // colección que crece, así que cada una dice su sitio y basta.
 //
-// Los números salen de medir `escritorio.webp` (1672 × 941) por su perfil de luminancia, no
+// Los números salen de medir `desk.webp` (1672 × 941) por su perfil de luminancia, no
 // de ajustar a ojo.
 //
 // Todo en fracciones [0, 1] de la ILUSTRACIÓN, no de la ventana: es lo que mantiene cada

@@ -46,28 +46,28 @@ export const AISLE_SIGNS_INTRO = {
 export const AISLE_SIGNS: AisleSign[] = [
   {
     aisleId: 'hiragana',
-    asset: `${AISLE_SIGN_BASE}/cartel-hiragana.webp`,
+    asset: `${AISLE_SIGN_BASE}/hiragana-sign.webp`,
     left: 0.07,
     top: 0.195,
     width: 0.09,
   },
   {
     aisleId: 'katakana',
-    asset: `${AISLE_SIGN_BASE}/cartel-katakana.webp`,
+    asset: `${AISLE_SIGN_BASE}/katakana-sign.webp`,
     left: 0.25,
     top: 0.182,
     width: 0.09,
   },
   {
     aisleId: 'kanji',
-    asset: `${AISLE_SIGN_BASE}/cartel-kanji.webp`,
+    asset: `${AISLE_SIGN_BASE}/kanji-sign.webp`,
     left: 0.666,
     top: 0.182,
     width: 0.09,
   },
   {
-    aisleId: 'vocabulario',
-    asset: `${AISLE_SIGN_BASE}/carte-vocabulario.webp`,
+    aisleId: 'vocabulary',
+    asset: `${AISLE_SIGN_BASE}/vocabulary-sign.webp`,
     left: 0.835,
     top: 0.195,
     width: 0.09,

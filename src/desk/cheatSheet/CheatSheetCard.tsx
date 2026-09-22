@@ -2,20 +2,20 @@ import { useRef, useState } from 'react'
 import { BookButton } from '../../aisle/book/parts/BookButton'
 import { wordText, wordReading } from '../../content/types'
 import { useVolumeContent } from '../../shared/useVolumeContent'
-import { useChuletaReveal } from './useChuletaReveal'
-import './ChuletaCard.scss'
+import { useCheatSheetReveal } from './useCheatSheetReveal'
+import './CheatSheetCard.scss'
 
-const SHEET_PAPER = '/images/desk/cheatSheet/hoja.webp'
+const SHEET_PAPER = '/images/desk/cheatSheet/sheet.webp'
 
-const BACK_ICON = '/images/desk/cheatSheet/atras.webp'
-const FLIP_ICON = '/images/desk/cheatSheet/voltear.webp'
+const BACK_ICON = '/images/desk/cheatSheet/back.webp'
+const FLIP_ICON = '/images/desk/cheatSheet/flip.webp'
 
-interface ChuletaCardProps {
+interface CheatSheetCardProps {
   blockId: string
   // Vuelve a la lista de tomos.
   onClose: () => void
-  // Lo lleva `SheetChuleta` y no esta tarjeta: solo la hoja sabe si está levantada. Ver
-  // `useChuletaReveal.ts`.
+  // Lo lleva `CheatSheetPanel` y no esta tarjeta: solo la hoja sabe si está levantada. Ver
+  // `useCheatSheetReveal.ts`.
   lifted: boolean
 }
 
@@ -29,17 +29,17 @@ function playAudio(src?: string) {
 }
 
 // Una entrada de la chuleta: lo escrito en japonés y su botón de sonido. `data-dust` marca el
-// texto que `useChuletaReveal` parte en letras sueltas; `data-dust-trim` marca lo que solo
+// texto que `useCheatSheetReveal` parte en letras sueltas; `data-dust-trim` marca lo que solo
 // aparece con un fundido, sin escribirse.
-function ChuletaLine({ text, audio, label }: { text: string; audio?: string; label: string }) {
+function CheatSheetLine({ text, audio, label }: { text: string; audio?: string; label: string }) {
   return (
-    <li className="chuleta-card__line">
-      <span className="chuleta-card__written" lang="ja" data-dust>
+    <li className="cheat-sheet-card__line">
+      <span className="cheat-sheet-card__written" lang="ja" data-dust>
         {text}
       </span>
 
       <BookButton
-        className="chuleta-card__listen"
+        className="cheat-sheet-card__listen"
         data-dust-trim
         aria-label={`Escuchar ${label}`}
         onClick={() => playAudio(audio)}
@@ -54,17 +54,17 @@ function ChuletaLine({ text, audio, label }: { text: string; audio?: string; lab
 // en español. Es la misma tarjeta que el regalo del examen final —mismo papel, mismo giro,
 // mismo polvo dorado al escribirse—, pero vive aquí porque aquélla se lee una vez, al cerrar
 // el tomo, y esta se vuelve a abrir todas las veces que haga falta repasar.
-export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
+export function CheatSheetCard({ blockId, onClose, lifted }: CheatSheetCardProps) {
   const { load } = useVolumeContent(blockId, true)
   const [flipped, setFlipped] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
   const frontRef = useRef<HTMLDivElement>(null)
 
-  useChuletaReveal({ cardRef, frontRef, flipped, lifted })
+  useCheatSheetReveal({ cardRef, frontRef, flipped, lifted })
 
   const backButton = (
     <button
-      className="chuleta-card__back"
+      className="cheat-sheet-card__back"
       type="button"
       onClick={onClose}
       aria-label="Volver a los tomos"
@@ -75,9 +75,9 @@ export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
 
   if (load.status !== 'ready') {
     return (
-      <div className="chuleta-card chuleta-card--loading">
+      <div className="cheat-sheet-card cheat-sheet-card--loading">
         {backButton}
-        <p className="chuleta-card__note">
+        <p className="cheat-sheet-card__note">
           {load.status === 'error' ? 'No se ha podido traer esta chuleta.' : 'Buscando la chuleta…'}
         </p>
       </div>
@@ -92,29 +92,29 @@ export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
   const readings = kana.map((k) => k.romaji)
 
   return (
-    <div className="chuleta-card">
+    <div className="cheat-sheet-card">
       {backButton}
 
-      <div className="chuleta-card__stage">
-        <div className="chuleta-card__flip" ref={cardRef}>
+      <div className="cheat-sheet-card__stage">
+        <div className="cheat-sheet-card__flip" ref={cardRef}>
           <div
-            className="chuleta-card__face chuleta-card__face--front"
+            className="cheat-sheet-card__face cheat-sheet-card__face--front"
             style={{ backgroundImage: `url('${SHEET_PAPER}')` }}
             ref={frontRef}
           >
-            <h3 className="chuleta-card__title">
+            <h3 className="cheat-sheet-card__title">
               Chuleta de{' '}
-              <span className="chuleta-card__title-kana" lang="ja" data-dust>
+              <span className="cheat-sheet-card__title-kana" lang="ja" data-dust>
                 {kana.map((k) => k.character).join('・')}
               </span>
             </h3>
 
-            <h4 className="chuleta-card__heading" data-dust-trim>
+            <h4 className="cheat-sheet-card__heading" data-dust-trim>
               Palabras
             </h4>
-            <ul className="chuleta-card__list chuleta-card__list--words">
+            <ul className="cheat-sheet-card__list cheat-sheet-card__list--words">
               {words.map((word) => (
-                <ChuletaLine
+                <CheatSheetLine
                   text={wordText(word)}
                   audio={word.audio}
                   label={word.meaning}
@@ -123,12 +123,12 @@ export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
               ))}
             </ul>
 
-            <h4 className="chuleta-card__heading" data-dust-trim>
+            <h4 className="cheat-sheet-card__heading" data-dust-trim>
               Frases
             </h4>
-            <ul className="chuleta-card__list chuleta-card__list--sentences">
+            <ul className="cheat-sheet-card__list cheat-sheet-card__list--sentences">
               {sentences.map((sentence) => (
-                <ChuletaLine
+                <CheatSheetLine
                   text={sentence.text}
                   audio={sentence.audio}
                   label={sentence.meaning}
@@ -139,29 +139,29 @@ export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
           </div>
 
           <div
-            className="chuleta-card__face chuleta-card__face--back"
+            className="cheat-sheet-card__face cheat-sheet-card__face--back"
             style={{ backgroundImage: `url('${SHEET_PAPER}')` }}
           >
-            <h3 className="chuleta-card__title">Chuleta de {readings.join('-')}</h3>
+            <h3 className="cheat-sheet-card__title">Chuleta de {readings.join('-')}</h3>
 
-            <h4 className="chuleta-card__heading">Palabras</h4>
-            <ul className="chuleta-card__list">
+            <h4 className="cheat-sheet-card__heading">Palabras</h4>
+            <ul className="cheat-sheet-card__list">
               {words.map((word) => (
-                <li className="chuleta-card__line" key={word.id}>
-                  <span className="chuleta-card__reading">{wordReading(word)}</span>
-                  <span className="chuleta-card__meaning">{word.meaning}</span>
+                <li className="cheat-sheet-card__line" key={word.id}>
+                  <span className="cheat-sheet-card__reading">{wordReading(word)}</span>
+                  <span className="cheat-sheet-card__meaning">{word.meaning}</span>
                 </li>
               ))}
             </ul>
 
-            <h4 className="chuleta-card__heading">Frases</h4>
-            <ul className="chuleta-card__list">
+            <h4 className="cheat-sheet-card__heading">Frases</h4>
+            <ul className="cheat-sheet-card__list">
               {sentences.map((sentence) => (
-                <li className="chuleta-card__line" key={sentence.id}>
-                  <span className="chuleta-card__reading">
+                <li className="cheat-sheet-card__line" key={sentence.id}>
+                  <span className="cheat-sheet-card__reading">
                     {sentence.units.map((unit) => unit.romaji).join(' ')}
                   </span>
-                  <span className="chuleta-card__meaning">{sentence.meaning}</span>
+                  <span className="cheat-sheet-card__meaning">{sentence.meaning}</span>
                 </li>
               ))}
             </ul>
@@ -170,7 +170,7 @@ export function ChuletaCard({ blockId, onClose, lifted }: ChuletaCardProps) {
       </div>
 
       <button
-        className="chuleta-card__flip-button"
+        className="cheat-sheet-card__flip-button"
         type="button"
         onClick={() => setFlipped((was) => !was)}
         aria-label={flipped ? 'Ver el hiragana' : 'Darle la vuelta a la chuleta'}

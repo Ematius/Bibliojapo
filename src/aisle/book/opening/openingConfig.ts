@@ -4,11 +4,11 @@
 
 // En orden de apertura. El último no se va: es el libro abierto sobre el que se lee.
 export const OPENING_FRAMES = [
-  '/images/hallways/books/libro-abierto-10.webp',
-  '/images/hallways/books/libro-abierto-25.webp',
-  '/images/hallways/books/libro-abierto-50.webp',
-  '/images/hallways/books/libro-abierto-75.webp',
-  '/images/hallways/books/libro-abierto-100.webp',
+  '/images/hallways/books/book-open-10.webp',
+  '/images/hallways/books/book-open-25.webp',
+  '/images/hallways/books/book-open-50.webp',
+  '/images/hallways/books/book-open-75.webp',
+  '/images/hallways/books/book-open-100.webp',
 ]
 
 // La del fotograma FINAL (1448 × 1086), que es el único que se queda fijo en pantalla. Los

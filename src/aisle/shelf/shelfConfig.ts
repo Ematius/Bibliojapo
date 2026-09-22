@@ -9,7 +9,7 @@ import { VOLUME_ART, type VolumeArt } from './volumeArt'
 // El filo del bloque de hojas, la cara opuesta al lomo: sin él el tomo se lee como dos
 // cartones sueltos. Es el único que comparten todos, porque el papel es el mismo en toda
 // la colección; lomo y tapas son de cada uno, en `volumeArt.ts`.
-export const FORE_EDGE = '/images/hallways/books/libro-cerrado-100.webp'
+export const FORE_EDGE = '/images/hallways/books/book-closed-100.webp'
 
 export interface VolumeEntry {
   id: string

@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { prefersReducedMotion } from '../../shared/prefersReducedMotion'
 import { DESK_LIFT } from '../deskSpots'
 
-interface ChuletaRevealOptions {
+interface CheatSheetRevealOptions {
   // La cara de delante: de aquí salen las palabras que se escriben solas al llegar.
   frontRef: RefObject<HTMLElement | null>
   // La tarjeta entera, la que gira.
@@ -24,7 +24,7 @@ function splitIntoChars(element: HTMLElement): HTMLElement[] {
   const text = element.textContent ?? ''
   const chars = [...text].map((character) => {
     const span = document.createElement('span')
-    span.className = 'chuleta-card__dust-char'
+    span.className = 'cheat-sheet-card__dust-char'
     // El espacio en blanco se colapsaría al meterlo en un `inline-block` propio.
     span.textContent = character === ' ' ? ' ' : character
     return span
@@ -39,7 +39,7 @@ function splitIntoChars(element: HTMLElement): HTMLElement[] {
 // que el regalo del examen final —ver `giftOpening.ts`—, pero escrita para React normal y no
 // para una hoja clonada por page-flip: aquí SÍ hay un componente vivo y refs de verdad, así
 // que no hace falta buscar los nodos a mano ni cablear el clic por fuera de React.
-export function useChuletaReveal({ frontRef, cardRef, flipped, lifted }: ChuletaRevealOptions): void {
+export function useCheatSheetReveal({ frontRef, cardRef, flipped, lifted }: CheatSheetRevealOptions): void {
   const written = useRef(false)
 
   // El polvo cae UNA sola vez, la primera vez que se levanta la hoja con esta chuleta ya

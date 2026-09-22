@@ -165,8 +165,8 @@
       // dibujada. Se estira en vez de repetirse, porque repitiéndola aparecerían costuras
       // rectas donde el papel no las tiene.
       //
-      // Si cambia libro-abierto-100.webp hay que volver a recortarlo.
-      url('/images/hallways/books/papel-tomo.webp') center / 100% 100% no-repeat,
+      // Si cambia book-open-100.webp hay que volver a recortarlo.
+      url('/images/hallways/books/volume-paper.webp') center / 100% 100% no-repeat,
       var(--color-page);
   }
 

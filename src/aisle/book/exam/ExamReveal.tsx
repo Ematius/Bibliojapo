@@ -48,7 +48,7 @@ export function ExamReveal({ characters }: ExamRevealProps) {
           </p>
 
           {/* Verde si se aprueba, rojo si se suspende: `finalExam.ts` decide cuál de
-              los dos —`sello-verde.webp` / `sello-rojo.webp`— y pone la ruta aquí. La
+              los dos —`green-seal.webp` / `red-seal.webp`— y pone la ruta aquí. La
               clase `exam-seal` es la misma que anima `examSeal.ts` en el examen de
               cada lección, reutilizada tal cual. */}
           <div

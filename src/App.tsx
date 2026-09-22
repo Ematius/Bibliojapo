@@ -28,15 +28,18 @@ function App() {
               intro en video; el vestíbulo es el sitio al que se vuelve. */}
           <Route path="/" element={<HomeRoute />} />
           {/* La entrada vivió aquí; quien la tenga en favoritos llega igualmente. */}
-          <Route path="/entrada" element={<Navigate to="/" replace />} />
-          <Route path="/biblioteca" element={<LibraryHall />} />
+          <Route path="/entrance" element={<Navigate to="/" replace />} />
+          <Route path="/hall" element={<LibraryHall />} />
           {/* Un solo pasillo para las cuatro secciones: el id decide qué estantería
               se pinta. Ver shared/aisles.ts. */}
-          <Route path="/pasillo/:aisleId" element={<LibraryAisle />} />
+          <Route path="/aisle/:aisleId" element={<LibraryAisle />} />
           {/* Lo ganado: la mesa propia, con su chuleta y sus juegos encima. Sin
               guardia en la ruta — entrar sin cuenta no enseña nada de nadie, solo
               la invitación a crearla. Ver `desk/MyDesk.tsx`. */}
-          <Route path="/mi-escritorio" element={<MyDesk />} />
+          <Route path="/my-desk" element={<MyDesk />} />
+          {/* Cualquier otra ruta —un enlace viejo, una URL escrita a mano— vuelve al
+              principio en vez de dejar la pantalla en blanco. */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
 

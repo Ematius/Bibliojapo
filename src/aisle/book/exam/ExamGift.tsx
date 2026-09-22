@@ -5,11 +5,11 @@ import './ExamGift.scss'
 // encienden por turnos: cambiando el `src` sobre la marcha, el primer pase se vería a
 // tirones mientras el navegador descarga cada imagen. Ver `giftOpening.ts`.
 const ENVELOPE_FRAMES = [
-  '/images/hallways/letter/sobre-cerrado.webp',
-  '/images/hallways/letter/sobre-abierto-25.webp',
-  '/images/hallways/letter/sobre-abierto-50.webp',
-  '/images/hallways/letter/sobre-abierto-75.webp',
-  '/images/hallways/letter/sobre-abierto-100.webp',
+  '/images/hallways/letter/envelope-closed.webp',
+  '/images/hallways/letter/envelope-open-25.webp',
+  '/images/hallways/letter/envelope-open-50.webp',
+  '/images/hallways/letter/envelope-open-75.webp',
+  '/images/hallways/letter/envelope-open-100.webp',
 ]
 
 const LETTER_PAPER = '/images/desk/hoja-frente.webp'

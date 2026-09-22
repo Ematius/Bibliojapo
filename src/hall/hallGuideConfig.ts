@@ -1,7 +1,7 @@
 // El contenido de la guía del vestíbulo. Dato, no JSX: se cambia aquí sin tocar el componente.
 
 export const HALL_GUIDE = {
-  image: '/images/outsite/ExplicacionBiblioteca.webp',
+  image: '/images/outside/LibraryExplanation.webp',
   imageAlt:
     'Tu biblioteca de japonés en tres pasos: 1. Empieza poco a poco, 2. Todo se reutiliza, 3. Construye tu base.',
   title: 'Tu biblioteca de japonés',

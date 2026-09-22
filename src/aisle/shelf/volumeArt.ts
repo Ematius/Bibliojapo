@@ -38,12 +38,12 @@ function volumeArt(
   turned: [number, number],
   coverLeft: number,
 ): VolumeArt {
-  const tag = `${DIR}/tomo-${String(volume).padStart(2, '0')}`
+  const tag = `${DIR}/volume-${String(volume).padStart(2, '0')}`
 
   return {
-    spine: `${tag}-lomo.webp`,
-    cover: `${tag}-tapa.webp`,
-    coverTurned: `${tag}-tapa-girada.webp`,
+    spine: `${tag}-spine.webp`,
+    cover: `${tag}-cover.webp`,
+    coverTurned: `${tag}-cover-turned.webp`,
     shape: {
       coverRatio: (turned[0] - coverLeft) / turned[1],
       spineRatio: spine[0] / spine[1],

@@ -1,7 +1,7 @@
 // La estantería pintada del pasillo, medida una sola vez: aquí se mide el MUEBLE
 // —sus baldas y sus vanos— y la colocación de cada tomo se deriva de eso.
 //
-// Los números salen de medir `pasillo-hiragana.webp` (1672 × 941), no de ajustar a ojo:
+// Los números salen de medir `aisle-hiragana.webp` (1672 × 941), no de ajustar a ojo:
 // el apoyo de cada balda es donde acaban los libros ya pintados en ella, y las ménsulas
 // salen de su perfil de luminancia. Aparecen en la MISMA x en las cuatro, que es lo que
 // convierte esto en una rejilla y no en cuatro filas sueltas.

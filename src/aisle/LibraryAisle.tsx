@@ -36,11 +36,11 @@ export function LibraryAisle() {
 
   // Un pasillo que no existe manda al vestíbulo. `replace` evita que la URL inválida quede
   // en el historial y el botón atrás rebote contra ella.
-  if (!aisle) return <Navigate to="/biblioteca" replace />
+  if (!aisle) return <Navigate to="/hall" replace />
 
   // Un pasillo sin temario todavía da la balda vacía —ver `content/aisleContent.ts`— y
   // se ve entero, el mismo encuadre que el vestíbulo, sin tomos que sacar. La rejilla de
-  // `shelfGrid.ts` sigue medida solo sobre `pasillo-hiragana.webp`: el día que otro
+  // `shelfGrid.ts` sigue medida solo sobre `aisle-hiragana.webp`: el día que otro
   // pasillo tenga temario hará falta medir también la suya, o sus tomos caerían en
   // cualquier sitio.
   const shelfVolumes = buildShelfVolumes(aisle.id)

@@ -9,10 +9,10 @@ import { SiteNav } from '../shared/SiteNav'
 import { BLOCK_PLAN } from '../content/hiragana/blocks'
 import { AnimeAlbum, type AnimeChapter } from './animeAlbum/AnimeAlbum'
 import { ANIME_PAGES } from './animeAlbum/animePages'
-import { SheetChuleta } from './chuleta/SheetChuleta'
+import { CheatSheetPanel } from './cheatSheet/CheatSheetPanel'
 import { DeskObject } from './DeskObject'
 import { DeskScene } from './DeskScene'
-import { JourneyCard } from './tarjeta/JourneyCard'
+import { JourneyCard } from './journeyCard/JourneyCard'
 import { DESK_ART } from './deskArt'
 import { DESK_SPOTS, SHOW_EVERY_OBJECT } from './deskSpots'
 import { useNeedsLandscape } from '../shared/useNeedsLandscape'
@@ -130,7 +130,7 @@ export function MyDesk() {
         <RotateNotice
           text="Mi escritorio se ve a lo ancho: de pie no caben los objetos de la mesa."
           backLabel="Volver al vestíbulo"
-          onDismiss={() => navigate('/biblioteca')}
+          onDismiss={() => navigate('/hall')}
         />
 
         <SiteNav />
@@ -166,7 +166,7 @@ export function MyDesk() {
                   lifted={lifted === 'sheet'}
                   onPress={() => press('sheet')}
                 >
-                  <SheetChuleta lifted={lifted === 'sheet'} />
+                  <CheatSheetPanel lifted={lifted === 'sheet'} />
                 </DeskObject>
 
                 <DeskObject

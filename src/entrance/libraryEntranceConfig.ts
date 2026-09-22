@@ -1,16 +1,16 @@
 // Los valores ajustables de la animación de entrada. No hardcodear ninguno en los
 // componentes ni en los hooks.
 
-const ASSET_BASE = '/images/outsite'
+const ASSET_BASE = '/images/outside'
 
 export const ASSETS = {
   // Las ilustraciones superpuestas, de atrás hacia delante. Todas comparten el
   // lienzo de 1672 × 941, así que se apilan sin ajustes.
-  sky: `${ASSET_BASE}/cielo-exterior.webp`,
-  library: `${ASSET_BASE}/biblioteca.webp`,
+  sky: `${ASSET_BASE}/outdoor-sky.webp`,
+  library: `${ASSET_BASE}/library.webp`,
   interior: `${ASSET_BASE}/Interior.webp`,
-  doorLeft: `${ASSET_BASE}/puerta-izquierda.webp`,
-  doorRight: `${ASSET_BASE}/puerta-derecha.webp`,
+  doorLeft: `${ASSET_BASE}/door-left.webp`,
+  doorRight: `${ASSET_BASE}/door-right.webp`,
 }
 
 // Las comparten las tres capas de fachada y el interior.
@@ -24,7 +24,7 @@ const STAGE = {
 // entrada —interior, resplandor, derrame de luz— usa también estas cifras, así que al
 // tocarlas se mueve el conjunto entero.
 //
-// Medido sobre biblioteca.webp: el hueco interior del arco va de 0.473 a 0.527 en
+// Medido sobre library.webp: el hueco interior del arco va de 0.473 a 0.527 en
 // horizontal y de 0.6235 a 0.768 en vertical, menos el `bleed`. Si cambia la
 // ilustración, hay que medir otra vez.
 //

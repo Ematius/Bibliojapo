@@ -45,7 +45,7 @@ export function ExamSheet({ word, kana, pool, seal = false }: ExamSheetProps) {
           texto que hay debajo: se estampa ENCIMA, que es lo que hace un sello. */}
       {seal ? (
         <div className="exam-seal" role="img" aria-label="Examen final superado">
-          <img className="exam-seal__mark" src="/images/sello-verde.webp" alt="" />
+          <img className="exam-seal__mark" src="/images/green-seal.webp" alt="" />
         </div>
       ) : null}
     </div>

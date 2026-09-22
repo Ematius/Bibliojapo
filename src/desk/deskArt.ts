@@ -126,14 +126,14 @@ export const DESK_ART = {
   // Posado está en escorzo y de frente plano: son dos dibujos y no uno escalado porque
   // enderezar el escorzo con una rotación dejaría la tarjeta torcida por dentro.
   card: {
-    resting: deskFace(`${DIR}/card/carnet.webp`, [1536, 1024], [90, 66, 1392, 904]),
-    front: deskFace(`${DIR}/card/carnet-frente.webp`, [1536, 1024], [6, 10, 1520, 992]),
+    resting: deskFace(`${DIR}/card/card.webp`, [1536, 1024], [90, 66, 1392, 904]),
+    front: deskFace(`${DIR}/card/card-front.webp`, [1536, 1024], [6, 10, 1520, 992]),
   },
   // Una sola cara, a diferencia del carné: no hay un segundo dibujo «de frente» todavía, así
   // que la perspectiva de estar apoyada la pone el giro, no un cambio de imagen. Ver
   // `restTiltDeg` en `DeskArt` y el efecto en `useDeskLift.ts`.
   sheet: {
-    resting: deskFace(`${DIR}/cheatSheet/hoja.webp`, [1448, 1086], [31, 37, 1387, 1007]),
+    resting: deskFace(`${DIR}/cheatSheet/sheet.webp`, [1448, 1086], [31, 37, 1387, 1007]),
     restTiltDeg: 20,
     // La chuleta tiene que enseñar los doce tomos sin scroll: más sitio que el que da su
     // silueta de reposo, que se queda tal cual estaba sobre la mesa.
@@ -148,22 +148,22 @@ export const DESK_ART = {
   // `front`: la última hoja de `frames` ya es la cara abierta —de frente y no en escorzo—, y
   // el contenido se posa encima con `faceScale`/`faceHeightScale`, no con un segundo dibujo.
   //
-  // OJO: `manga-elevado-abierto-100.webp` mide 1536×1024 y no 1254×1254 como sus hermanos.
+  // OJO: `manga-raised-open-100.webp` mide 1536×1024 y no 1254×1254 como sus hermanos.
   // Se pinta a lo ancho del hueco cuadrado y centrado a lo alto —ocupa sus 2/3 del medio—, y
   // las medidas del contenido de abajo están pasadas a ese hueco. Si se cambia el PNG, se
   // vuelve a medir su papel liso.
   anime: {
-    resting: deskFace(`${DIR}/anime/posado.webp`, [1254, 1254], [146, 70, 994, 1111]),
+    resting: deskFace(`${DIR}/anime/resting.webp`, [1254, 1254], [146, 70, 994, 1111]),
     // Cerrado y de frente, y luego las cuatro fases de apertura. El viaje entero —de la mesa
-    // hasta aquí delante— lo hace `posado.webp` tal cual, en su escorzo de reposo: no hay
+    // hasta aquí delante— lo hace `resting.webp` tal cual, en su escorzo de reposo: no hay
     // giro de por medio, así que el paso de escorzo a frente es el corte duro de este primer
     // fotograma, el mismo tipo de salto que ya daba la caja al abrirse.
     frames: [
-      `${DIR}/anime/manga-elevado-cerrado.webp`,
-      `${DIR}/anime/manga-elevado-abierto-25.webp`,
-      `${DIR}/anime/manga-elevado-abierto-50.webp`,
-      `${DIR}/anime/manga-elevado-abierto-75.webp`,
-      `${DIR}/anime/manga-elevado-abierto-100.webp`,
+      `${DIR}/anime/manga-raised-closed.webp`,
+      `${DIR}/anime/manga-raised-open-25.webp`,
+      `${DIR}/anime/manga-raised-open-50.webp`,
+      `${DIR}/anime/manga-raised-open-75.webp`,
+      `${DIR}/anime/manga-raised-open-100.webp`,
     ],
     // AJUSTAR A OJO. La caja de las mangas, en fracciones del hueco cuadrado: ancho, alto y
     // centro vertical. El papel medido va de 0,085 a 0,915 a lo ancho y de 0,264 a 0,695 a

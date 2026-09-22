@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { ChuletaCard } from './ChuletaCard'
-import { ChuletaList } from './ChuletaList'
+import { CheatSheetCard } from './CheatSheetCard'
+import { CheatSheetList } from './CheatSheetList'
 
-interface SheetChuletaProps {
-  // Solo para pasarlo a la tarjeta: la lista no anima nada. Ver `useChuletaReveal.ts`.
+interface CheatSheetPanelProps {
+  // Solo para pasarlo a la tarjeta: la lista no anima nada. Ver `useCheatSheetReveal.ts`.
   lifted: boolean
 }
 
@@ -17,14 +17,14 @@ interface SheetChuletaProps {
 // Bajar la hoja entera solo se hace pisando la mesa —ver `MyDesk.tsx`—, en los dos niveles:
 // la lista no lleva aspa propia porque desde ahí ya se puede cambiar de pasillo o de tomo, y
 // un «volver» ahí no llevaría a ningún sitio nuevo.
-type ChuletaStep = { level: 'list' } | { level: 'card'; blockId: string }
+type CheatSheetStep = { level: 'list' } | { level: 'card'; blockId: string }
 
-export function SheetChuleta({ lifted }: SheetChuletaProps) {
-  const [step, setStep] = useState<ChuletaStep>({ level: 'list' })
+export function CheatSheetPanel({ lifted }: CheatSheetPanelProps) {
+  const [step, setStep] = useState<CheatSheetStep>({ level: 'list' })
 
   if (step.level === 'card') {
     return (
-      <ChuletaCard
+      <CheatSheetCard
         blockId={step.blockId}
         lifted={lifted}
         onClose={() => setStep({ level: 'list' })}
@@ -32,5 +32,5 @@ export function SheetChuleta({ lifted }: SheetChuletaProps) {
     )
   }
 
-  return <ChuletaList onSelect={(blockId) => setStep({ level: 'card', blockId })} />
+  return <CheatSheetList onSelect={(blockId) => setStep({ level: 'card', blockId })} />
 }

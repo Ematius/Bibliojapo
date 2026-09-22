@@ -8,16 +8,16 @@ export interface Aisle {
 }
 
 export const AISLES = [
-  { id: 'hiragana', label: 'Hiragana', scene: '/images/hallways/pasillo-hiragana.webp' },
-  { id: 'katakana', label: 'Katakana', scene: '/images/hallways/pasillo-katakana.webp' },
-  { id: 'kanji', label: 'Kanji', scene: '/images/hallways/pasillo-kanji.webp' },
-  { id: 'vocabulario', label: 'Vocabulario', scene: '/images/hallways/pasillo-vocabulario.webp' },
+  { id: 'hiragana', label: 'Hiragana', scene: '/images/hallways/aisle-hiragana.webp' },
+  { id: 'katakana', label: 'Katakana', scene: '/images/hallways/aisle-katakana.webp' },
+  { id: 'kanji', label: 'Kanji', scene: '/images/hallways/aisle-kanji.webp' },
+  { id: 'vocabulary', label: 'Vocabulario', scene: '/images/hallways/aisle-vocabulary.webp' },
 ] as const satisfies readonly Aisle[]
 
 // La ruta se deriva del id en vez de escribirse en cada entrada: así no puede haber
 // un cartel que apunte a una ruta que no case con su pasillo.
 export function aisleRoute(id: string): string {
-  return `/pasillo/${id}`
+  return `/aisle/${id}`
 }
 
 // `undefined` cuando el id no existe —una URL a mano, un enlace viejo—: es lo que

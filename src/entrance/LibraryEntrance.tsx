@@ -74,7 +74,7 @@ export function LibraryEntrance({ onReady }: LibraryEntranceProps) {
   }, () => {
     // Al vestíbulo, que arranca con esta misma ilustración del interior en la misma
     // posición.
-    navigate('/biblioteca')
+    navigate('/hall')
   })
 
   const onReadyRef = useRef(onReady)

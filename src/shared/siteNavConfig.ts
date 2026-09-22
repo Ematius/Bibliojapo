@@ -14,8 +14,8 @@ export interface NavLink {
 
 export const NAV_LINKS: readonly NavLink[] = [
   { id: 'home', label: 'Inicio', to: '/' },
-  { id: 'aisles', label: 'Pasillos', to: '/biblioteca' },
-  { id: 'desk', label: 'Mi escritorio', to: '/mi-escritorio' },
+  { id: 'aisles', label: 'Pasillos', to: '/hall' },
+  { id: 'desk', label: 'Mi escritorio', to: '/my-desk' },
 ]
 
 export const NAV_CTA_LABEL = 'Crear cuenta'

@@ -2,7 +2,7 @@
 // contención de ANCHO —`container-type: inline-size`—; `cqh` no resolvería contra nada fiable
 // aquí, a diferencia de la chuleta del examen final, que vive dentro de una hoja del libro con
 // contención completa.
-.chuleta-list {
+.cheat-sheet-list {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@
   text-align: center;
   color: var(--color-ink);
   // El papel pintado se estira al hueco entero: es un fondo, y `contain` abriría franjas
-  // vacías a los lados. Misma lógica que `.chuleta-card__face`.
+  // vacías a los lados. Misma lógica que `.cheat-sheet-card__face`.
   background-size: 100% 100%;
   background-repeat: no-repeat;
 
@@ -63,7 +63,7 @@
     // recorte del tique enseña ese gris en vez de la hoja de debajo.
     background-color: transparent;
     background-repeat: no-repeat;
-    // Recorte medido por canal alfa sobre `tarjeta-tomo-aprovado.png`: el tique real ocupa
+    // Recorte medido por canal alfa sobre `volume-ticket-approved.png`: el tique real ocupa
     // menos que el lienzo entero, que trae aire de sobra alrededor.
     background-size: 106.2% 113.2%;
     background-position: 52.2% 48.9%;
@@ -89,7 +89,7 @@
   // su recorte—, con su propio recorte medido: su lienzo no comparte proporción con el del
   // aprobado. Se ve apagado: es el único de los tres estados que no se puede alcanzar
   // todavía.
-  &__volume--bloqueado {
+  &__volume--locked {
     background-size: 107.8% 192.2%;
     background-position: 50.5% 49.7%;
     opacity: 0.55;
