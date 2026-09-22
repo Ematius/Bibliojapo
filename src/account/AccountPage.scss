@@ -1,0 +1,197 @@
+// Tu cuenta. A diferencia de las escenas, esto es una hoja de papel y no una habitación:
+// puede crecer hacia abajo, así que lleva alto MÍNIMO y deja hacer scroll.
+
+.account-page {
+  position: relative;
+  min-height: calc(var(--vh) * 100);
+  // Arriba cabe la barra entera: su separación, su cuerpo y el aire de debajo.
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+
+  &__sheet {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-float);
+    background: var(--color-page);
+    box-shadow: var(--shadow-float);
+  }
+
+  &__title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  &__section {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-page-fold);
+
+    & + & {
+      margin-top: 1.5rem;
+    }
+  }
+
+  &__heading {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  &__data {
+    display: grid;
+    // El término encoge a lo que ocupa y el valor se lleva el resto: con dos columnas
+    // iguales, un correo largo partiría mientras «Nombre» deja medio renglón vacío.
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+  }
+
+  &__term {
+    color: var(--color-ink-soft);
+    font-size: 0.875rem;
+  }
+
+  &__value {
+    margin: 0;
+    // Un correo sin espacios no parte solo, y se saldría de la hoja.
+    overflow-wrap: anywhere;
+  }
+
+  &__note {
+    margin: 0;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  &__link {
+    color: var(--color-wood-dark);
+    font-weight: 700;
+  }
+
+  &__choice {
+    display: flex;
+    gap: 0.75rem;
+    align-items: start;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+
+  &__checkbox {
+    // Sin esto la casilla se encoge al tamaño que le deje el texto de al lado.
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.1875rem;
+    accent-color: var(--color-wood);
+    cursor: pointer;
+  }
+
+  &__hint {
+    display: block;
+    margin: 0.375rem 0 0;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  &__form {
+    display: grid;
+    gap: 1rem;
+    // Los campos no se estiran a lo ancho de la hoja: una contraseña es corta y un
+    // campo de 34rem invita a escribir una frase.
+    max-width: 22rem;
+  }
+
+  &__field {
+    display: grid;
+    gap: 0.375rem;
+  }
+
+  &__label {
+    color: var(--color-ink-soft);
+    font-size: 0.875rem;
+  }
+
+  &__input {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-page-fold);
+    border-radius: var(--radius-badge);
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 1px;
+    }
+  }
+
+  &__done {
+    margin: 0;
+    color: var(--color-ivy-dark);
+    font-size: 0.875rem;
+  }
+
+  // Manda el ancho del campo, no el de la hoja: el botón acompaña al formulario.
+  &__form &__button {
+    justify-self: start;
+  }
+
+  &__ways {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  &__button {
+    padding: 0.6875rem 1.375rem;
+    border: 1px solid var(--color-nav-ink);
+    border-radius: var(--radius-pill);
+    background: var(--color-nav-ink);
+    color: var(--color-on-nav-ink);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  // El segundo camino de cada pareja: mismo tamaño, menos voz.
+  &__button--quiet {
+    background: none;
+    color: var(--color-ink);
+  }
+
+  &__error {
+    margin: 0 0 0.75rem;
+    color: var(--color-error-deep);
+    font-size: 0.875rem;
+  }
+
+  // El mismo aviso que el panel: la cuenta todavía vive en este navegador.
+  &__trial {
+    margin: 1.5rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-page-fold);
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+}

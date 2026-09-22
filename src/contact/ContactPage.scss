@@ -1,0 +1,145 @@
+// Contacta. La misma hoja de papel que «Tu cuenta»: un documento que crece hacia abajo,
+// no una habitación. Sin compartir estilos con ella todavía —son dos, y la tercera es la
+// que decide si esto sale a una pieza común—.
+
+.contact-page {
+  position: relative;
+  min-height: calc(var(--vh) * 100);
+  // Arriba cabe la barra entera: su separación, su cuerpo y el aire de debajo.
+  padding: 7.5rem 1.5rem 4rem;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+
+  &__sheet {
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: 2rem;
+    border: 1px solid var(--color-brass);
+    border-radius: var(--radius-float);
+    background: var(--color-page);
+    box-shadow: var(--shadow-float);
+  }
+
+  &__title {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  &__note {
+    margin: 0;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  &__form,
+  &__sent {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    justify-items: start;
+  }
+
+  &__field {
+    display: grid;
+    gap: 0.375rem;
+    // Los campos sí ocupan la hoja entera: aquí se escriben párrafos, no contraseñas.
+    width: 100%;
+  }
+
+  &__label {
+    padding: 0;
+    color: var(--color-ink-soft);
+    font-size: 0.875rem;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-page-fold);
+    border-radius: var(--radius-badge);
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 1px;
+    }
+  }
+
+  &__input--long {
+    // En vertical y no libre: arrastrado a lo ancho, el campo se sale de la hoja.
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  &__kinds {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    // El recuadro y el relleno que trae `fieldset` de fábrica: aquí solo agrupa.
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  &__kind {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &__radio {
+    // Sin esto la marca se encoge al espacio que le deje su etiqueta.
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: var(--color-wood);
+    cursor: pointer;
+  }
+
+  &__hint {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  &__error {
+    margin: 0;
+    color: var(--color-error-deep);
+    font-size: 0.875rem;
+  }
+
+  &__button {
+    padding: 0.6875rem 1.375rem;
+    border: 1px solid var(--color-nav-ink);
+    border-radius: var(--radius-pill);
+    background: var(--color-nav-ink);
+    color: var(--color-on-nav-ink);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  &__button--quiet {
+    background: none;
+    color: var(--color-ink);
+  }
+}

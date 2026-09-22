@@ -12,6 +12,8 @@ export type ApiErrorCode =
   | 'weak-password'
   | 'email-taken'
   | 'wrong-credentials'
+  // Un aviso sin nada escrito: no se manda un mensaje vacío.
+  | 'empty-message'
 
 export class ApiError extends Error {
   readonly code: ApiErrorCode

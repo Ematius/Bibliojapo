@@ -21,6 +21,8 @@ import {
   PASSWORD_MIN_LENGTH,
   type Account,
   type Badge,
+  type CurrentVolume,
+  type FeedbackReport,
   type JourneyTrack,
   type SealsByBlock,
   type VolumeContent,
@@ -74,6 +76,8 @@ interface StoredUser {
 interface Db {
   users: StoredUser[]
   sessionUserId: string | null
+  // Opcional: una base guardada antes de que existiera Contacta no lo trae.
+  feedback?: FeedbackReport[]
 }
 
 const DB_KEY = 'bibliojapo:mock-server'
@@ -327,6 +331,42 @@ export const mockServer = {
       { writes: true },
     ),
 
+  // Solo las cuentas de correo la tienen. Pide la actual y no solo la sesión abierta:
+  // con la sesión basta para leer, no para dejar a su dueño fuera.
+  changePassword: ({ current, next }: { current: string; next: string }) =>
+    respond(
+      (db) => {
+        const user = requireUser(db)
+
+        if (user.provider !== 'password') throw new ApiError('forbidden')
+        if (user.passwordHash !== digest(`${user.email}:${current}`)) {
+          throw new ApiError('wrong-credentials')
+        }
+        if (next.length < PASSWORD_MIN_LENGTH) throw new ApiError('weak-password')
+
+        user.passwordHash = digest(`${user.email}:${next}`)
+      },
+      { writes: true },
+    ),
+
+  // Simulado hasta las trancas: el aviso se queda en la base de este navegador, así
+  // que NO llega a nadie. Lo único que se prueba hoy es la pantalla —su espera, su
+  // error, su acuse—. Ver la cabecera de `feedback.ts`.
+  sendFeedback: (report: FeedbackReport) =>
+    respond(
+      (db) => {
+        if (!report.message.trim()) throw new ApiError('empty-message')
+        // Se acepta sin correo; con uno escrito a medias, no: quien lo deja es para
+        // que le respondan.
+        if (report.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(report.email)) {
+          throw new ApiError('invalid-email')
+        }
+
+        db.feedback = [...(db.feedback ?? []), report]
+      },
+      { writes: true },
+    ),
+
   signOut: () =>
     respond(
       (db) => {
@@ -379,6 +419,25 @@ export const mockServer = {
           total: N5_WORD_COUNT,
         },
       ]
+    }),
+
+  // El primero abierto, escrito y sin insignia. Sin sesión da el tomo gratuito
+  // siempre: los sellos de este navegador no son suyos y no los mira.
+  currentVolume: () =>
+    respond((db): CurrentVolume | null => {
+      const user = sessionUser(db)
+      const earned = new Set(user?.badges ?? [])
+
+      const entry = GLOBAL_BLOCKS.find(
+        (candidate, index) =>
+          unlockedAt(index, user) &&
+          !earned.has(candidate.blockId) &&
+          AISLE_CONTENT[candidate.aisleId].blocksById.has(candidate.localId),
+      )
+
+      if (!entry) return null
+      const { blockId, aisleId, volumeNumber } = entry
+      return { blockId, aisleId, volumeNumber }
     }),
 
   volumeGates: () =>

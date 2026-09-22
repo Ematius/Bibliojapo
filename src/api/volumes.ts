@@ -4,7 +4,7 @@ import { getSession } from './account'
 import { FINAL_SEAL, type VolumeGate } from './contract'
 import { mockServer } from './mockServer'
 
-export type { VolumeContent } from './contract'
+export type { CurrentVolume, VolumeContent } from './contract'
 
 // `needsAccount`: el anterior está sellado, pero sin cuenta, y la insignia que abre
 // este solo existe dentro de una. `soon`: ganado pero todavía sin escribir — se lee
@@ -47,4 +47,10 @@ export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
 
 export function fetchVolume(blockId: string) {
   return mockServer.volume(blockId)
+}
+
+// Por dónde sigue la lectura. `null` cuando no queda ninguno por sellar: lo escrito
+// se ha terminado, que no es lo mismo que no haber empezado.
+export function fetchCurrentVolume() {
+  return mockServer.currentVolume()
 }

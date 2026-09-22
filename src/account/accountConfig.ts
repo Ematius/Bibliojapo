@@ -10,6 +10,7 @@ export const ACCOUNT_ERRORS: Record<ApiErrorCode, string> = {
   'weak-password': `La contraseña necesita al menos ${PASSWORD_MIN_LENGTH} caracteres.`,
   'email-taken': 'Ya hay una cuenta con ese correo. Prueba a entrar.',
   'wrong-credentials': 'El correo o la contraseña no coinciden.',
+  'empty-message': 'Algo ha fallado. Vuelve a intentarlo.',
   unauthorized: 'Algo ha fallado. Vuelve a intentarlo.',
   forbidden: 'Algo ha fallado. Vuelve a intentarlo.',
   'not-found': 'Algo ha fallado. Vuelve a intentarlo.',

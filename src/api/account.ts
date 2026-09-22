@@ -77,6 +77,12 @@ export async function signInWithGoogle() {
   return account
 }
 
+// La sesión sigue abierta al cambiarla: quien la cambia está delante, y echarle sería
+// castigarle por hacerlo bien.
+export async function changePassword(input: { current: string; next: string }) {
+  await mockServer.changePassword(input)
+}
+
 // Salir no borra nada del navegador: el tomo 1 sigue sellado sin cuenta abierta.
 export async function signOut() {
   await mockServer.signOut()

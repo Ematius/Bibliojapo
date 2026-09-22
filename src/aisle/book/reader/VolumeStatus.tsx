@@ -19,6 +19,7 @@ const FAILURES: Record<ApiErrorCode, string> = {
   'weak-password': 'No se han podido traer las hojas.',
   'email-taken': 'No se han podido traer las hojas.',
   'wrong-credentials': 'No se han podido traer las hojas.',
+  'empty-message': 'No se han podido traer las hojas.',
 }
 
 // Lo que ocupa el papel del libro abierto mientras sus hojas no están. Casi nunca se ve;
