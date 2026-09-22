@@ -225,6 +225,7 @@ api/
   account.ts       la sesión, entrar, salir y crearla
   progress.ts      los sellos y las insignias
   volumes.ts       qué tomos se abren y qué hay dentro de cada uno
+  feedback.ts      los avisos de quien la usa: qué se ha roto, qué se le ocurre
   mockServer.ts    EL SERVIDOR SIMULADO: lo único que se tira
 ```
 
@@ -470,7 +471,10 @@ src/
       matching/     ← emparejar arrastrando, y el enunciado sin palabras
       drill/        ← dos preguntas en una hoja
       exam/         ← el examen de cada lección, el examen final y su sello
-  account/          ← la cuenta: el panel para crearla o entrar, y el carné
+  account/          ← la cuenta: el panel para crearla o entrar, el carné, y la
+                      pantalla de lo que se gestiona —datos, contraseña, preferencias—
+  contact/          ← Contacta: el aviso de que algo se ha roto. Sin cuenta también,
+                      que un fallo se cuenta igual
   desk/             ← Mi escritorio: la mesa propia. Hoy solo la pantalla con sus
                       datos; la escena y sus objetos son la fase 3
   api/              ← excepción justificada: todo lo que habla con el servidor, y
@@ -836,3 +840,8 @@ y vale para cualquier pasillo; hoy viven en `aisle/book/`, y se moverán a
 - **Listener de resize sin filtro de ancho** actualiza `--vh` cuando el navegador
   móvil muestra/oculta la barra de URL, lo que interrumpe StPageFlip mid-gesture.
   Siempre comparar `window.innerWidth` antes y después antes de actualizar.
+- **Una pantalla clara sin `color` propio sale con el texto BLANCO** para quien
+  tiene el sistema en modo oscuro: `base.scss` declara `color-scheme: light dark`,
+  así que sin color heredado manda el del navegador. Toda pantalla de papel
+  declara su `color` en la raíz de su bloque, y los estilos se miran en los dos
+  modos — en claro el fallo no existe.

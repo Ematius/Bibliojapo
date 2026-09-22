@@ -7,9 +7,45 @@
   min-height: calc(var(--vh) * 100);
   // Arriba cabe la barra entera: su separación, su cuerpo y el aire de debajo.
   padding: 7.5rem 1.5rem 4rem;
+  // El fondo va en dos capas de pseudoelemento y no en `background` del propio bloque
+  // porque el desenfoque de la foto no puede alcanzar al texto: aplicado aquí, se
+  // llevaría por delante la hoja entera.
+  //
+  // La foto es el interior de la biblioteca, EL MISMO que carga la entrada. Reutilizarlo
+  // sale gratis —ya está en la caché de quien ha entrado por la puerta— y sitúa las dos
+  // pantallas dentro del edificio. El día que haya un mostrador dibujado, se cambia la
+  // URL y nada más.
+  isolation: isolate;
   background: var(--color-bg);
+  // Tinta sobre papel, y heredado: sin esto los títulos se quedan con el color que
+  // pone el navegador, que en un sistema en modo oscuro es BLANCO sobre la hoja.
   color: var(--color-ink);
   font-family: var(--font-body);
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: url('/images/outside/Interior.webp') center / cover no-repeat;
+    // Apagada y fuera de foco: es el sitio donde pasa la escena, no la escena.
+    filter: blur(0.3rem) brightness(0.52) saturate(0.9);
+    // El desenfoque come por los bordes y dejaría un filo transparente sin esto.
+    transform: scale(1.08);
+  }
+
+  // La lámpara y la penumbra, por encima de la foto: le dan el mismo calor que al resto
+  // de la casa y hunden los bordes para que mande el papel.
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(60% 45% at 50% 0%, rgba(var(--rgb-lamplight), 0.16), transparent 70%),
+      radial-gradient(120% 90% at 50% 45%, transparent 30%, rgba(var(--rgb-bg), 0.7) 100%),
+      linear-gradient(180deg, rgba(var(--rgb-bg), 0.2), rgba(var(--rgb-bg), 0.5));
+  }
 
   &__sheet {
     max-width: 34rem;
