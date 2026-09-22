@@ -169,7 +169,7 @@ export const HIRAGANA: Kana[] = [
     id: 'ha',
     character: 'は',
     romaji: 'ha',
-    audio: '/audio/hiragana/b1/ha.wav',
+    audio: '/audio/hiragana/b1/word/ha.wav',
     mnemonic:
       'Para este hiragana vamos a viajar a los **ja**rdines **ja**poneses, esa paz ' +
       'que emanan. Por eso tendremos que imaginarnos a un **ja**ponés con sus ' +
