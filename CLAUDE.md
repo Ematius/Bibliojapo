@@ -757,11 +757,11 @@ Nada más: ningún componente, ninguna página, ningún ejercicio.
 ### Las tapas y los lomos son de cada tomo
 
 Cada tomo tiene su lomo, su tapa y su tapa girada, en `aisle/shelf/volumeArt.ts`,
-por orden: la primera entrada es la del tomo 1. Salen de `books/moreBoks/` —tres
-imágenes por tomo: lomo (impar), tapa (par) y tapa girada (N.N o N.1)— recortadas
-a su silueta en `books/volumes/`. Hay trece juegos para doce bloques. Los de
-`moreBoks/` son los originales sin recortar, ya en WebP: nada del proyecto los
-carga, pero están dentro de `public/` y se despliegan.
+por orden: la primera entrada es la del tomo 1. Son tres imágenes por tomo —lomo,
+tapa y tapa girada— recortadas a su silueta en `books/volumes/`: doce juegos para
+doce bloques. Los renders originales sin recortar se quitaron de `public/` para no
+desplegarlos; si hay que recortar uno otra vez, se recupera del historial de git
+(`public/images/hallways/books/moreBoks/`).
 
 El canto —el filo de las hojas— es el único que comparten todos (`FORE_EDGE`).
 

@@ -1,7 +1,7 @@
 // Las caras de cada tomo, en el orden de la colección: la primera es la del tomo 1.
 //
-// Salen de `books/moreBoks/`, tres renders por tomo —lomo, tapa plana y tapa girada con
-// el bloque de hojas—, recortados a su silueta en `books/volumes/`.
+// Tres renders por tomo —lomo, tapa plana y tapa girada con el bloque de hojas—,
+// recortados a su silueta en `books/volumes/`.
 //
 // La proporción del tomo se toma de la GIRADA, no de la plana: la plana es 2:3 exacto y
 // la tapa del render girado es un 12 % más estrecha, y al relevarse al final del giro cada
