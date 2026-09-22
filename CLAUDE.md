@@ -22,11 +22,13 @@ ajustes—, pero todo eso habla con el servidor SIMULADO: falta el Supabase de
 verdad —esquema, políticas de RLS, login con Google— y reescribir por dentro
 `account.ts`, `progress.ts` y `volumes.ts`. Ver «La capa `api/`» y la fase 3.
 
-Dos cosas se han adelantado sobre la marcha y no están cerradas: del responsive
-(fase 4) hay ya piezas sueltas —el aviso de rotar, las flechas táctiles del
-lector, el nav estrecho, los objetos del escritorio en horizontal—, pero el paneo
-de la escena no está escrito; y el encuadre de la fase 2 sigue sin poder darse
-por bueno hasta probarlo en anchos de verdad.
+El responsive (fase 4) se ha adelantado sobre la marcha y está casi entero: el
+aviso de rotar, las flechas táctiles del lector, el nav estrecho, los objetos del
+escritorio en horizontal, y el paneo de la escena —`shared/useScenePan.ts`, con
+sus números en `scenePanConfig.ts`—, que llevan el pasillo y el vestíbulo y NO
+lleva el escritorio, como manda su regla. Lo que le falta es lo que no se puede
+escribir: probarlo en anchos de verdad, y con ello cerrar el encuadre de la
+fase 2.
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
 **Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
@@ -126,7 +128,8 @@ todavía no están tomadas en la anterior.
    dos, entra y ve sus insignias desaparecidas: para esa persona, la app le ha
    perdido el progreso. Es un ajuste de Supabase, no código nuestro. Y dentro de la
    fase, **Google primero**: valida el flujo entero sin plantillas de correo de por
-   medio.
+   medio. Y se monta con el deep link contemplado desde el primer día — ver
+   «Capacitor».
 4. **Responsive.** Va DESPUÉS de Mi escritorio, no antes: es la última pantalla
    grande que falta, y ajustar anchos mientras aún no existe obliga a hacer el
    trabajo dos veces —una ahora y otra el día que el escritorio no quepa—. Aquí
@@ -182,12 +185,48 @@ todavía no están tomadas en la anterior.
    Es lo ÚNICO que obliga a pagar Vercel Pro —Hobby prohíbe el uso comercial— y
    Supabase Pro, y lo único que arrastra papeleo fiscal: vender a particulares de
    la UE obliga a declarar el IVA del país del comprador. Por eso va al final, solo.
+   Si para entonces hay app en las tiendas, la comisión y sus tres pasarelas entran
+   aquí — ver «Capacitor».
 
 **La frontera está entre la 5 y la 6.** Todo lo anterior cuesta 0 €; el día que se
 activa Stripe empiezan unos 41 €/mes fijos, que a 3,50 €/mes cubren unos 15
 suscriptores. Aplazar el GASTO es correcto; aplazar la INTEGRACIÓN no, porque las
 políticas de RLS y las URLs firmadas cambian cómo se piden los datos, y descubrirlo
 al final obliga a reabrir pantallas ya cerradas.
+
+### Capacitor — la app en las tiendas
+
+**No es una fase, es otra salida**, como Vercel: Capacitor sirve la misma `dist/`
+dentro de un WebView y la publica en las tiendas. Por eso no entra en la lista
+numerada. **Va después de la fase 4**: envolver una pantalla que todavía no cabe
+en un móvil es depurar el responsive dos veces.
+
+Pero **la decisión de si va a haberla se toma antes**, porque cambia dos piezas de
+fases anteriores:
+
+- **El login con Google, en la fase 3.** Google BLOQUEA su OAuth dentro de un
+  WebView embebido: devuelve `disallowed_useragent`. Hay que abrirlo en el
+  navegador del sistema —Custom Tabs en Android, SFSafariViewController en iOS— y
+  volver por un deep link. Así que el deep link se registra en Supabase junto a la
+  URL de Vercel, y `account.ts` decide a dónde vuelve según dónde se ejecute.
+  Montado así desde el principio es una rama en un archivo; añadido después, es
+  rehacer el login.
+- **Los pagos, en la fase 6.** Apple y Google exigen su propia compra para
+  contenido digital y se quedan un 15–30 %: a 3,50 €/mes, quedan 2,45 €. Y obliga
+  a llevar las suscripciones en tres sitios —Stripe en web, App Store, Play—, con
+  el lío de quien paga en el móvil y entra por el navegador. Esto está EN
+  MOVIMIENTO por las sentencias sobre enlaces externos: cuando toque, se mira lo
+  que valga ese día, no lo que diga este documento.
+
+Es un argumento para **salir en web primero y a las tiendas después**, cuando ya
+se sepa si alguien paga. Estar en la tienda no trae usuarios por sí solo.
+
+Lo demás no cambia: React, Vite, SCSS, GSAP, Supabase y el temario van igual. Dos
+regalos —el problema de `--vh` y la barra de URL desaparece, porque no hay barra, y
+el temario empaquetado en la app deja de ser una URL pública, aunque un APK se
+abra— y una cosa que hay que PROBAR pronto: **StPageFlip sobre el WebView de
+Android**, que es el motor del sistema y no el Chrome del escritorio. El paso de
+página con sombras es lo más pesado que tiene la app.
 
 ### El modelo
 
