@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { HALL_GUIDE } from './hallGuideConfig'
 import {
   getHallGuideMode,
@@ -88,8 +88,13 @@ export function HallGuide() {
             <details className="hall-guide__details">
               <summary className="hall-guide__summary">{HALL_GUIDE.detailsLabel}</summary>
               <div className="hall-guide__text">
-                {HALL_GUIDE.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {HALL_GUIDE.sections.map((section) => (
+                  <Fragment key={section.paragraphs[0]}>
+                    {'heading' in section && <h3 className="hall-guide__heading">{section.heading}</h3>}
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </Fragment>
                 ))}
               </div>
             </details>

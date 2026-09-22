@@ -113,6 +113,13 @@
     }
   }
 
+  &__heading {
+    margin: 1.25rem 0 0.5rem;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
   &__footer {
     display: flex;
     flex-wrap: wrap;
