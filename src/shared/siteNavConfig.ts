@@ -7,7 +7,7 @@ export interface NavLink {
   id: string
   label: string
   // El destino, o null si la sección todavía no existe. El tipo se escribe a mano y
-  // no se deduce de la lista: hoy las tres tienen pantalla, y deducido saldría
+  // no se deduce de la lista: hoy todas tienen pantalla, y deducido saldría
   // `string`, dejando la rama que pinta una sección pendiente como código muerto.
   to: string | null
 }
@@ -16,6 +16,7 @@ export const NAV_LINKS: readonly NavLink[] = [
   { id: 'home', label: 'Inicio', to: '/' },
   { id: 'aisles', label: 'Pasillos', to: '/hall' },
   { id: 'desk', label: 'Mi escritorio', to: '/my-desk' },
+  { id: 'contact', label: 'Contacta', to: '/contact' },
 ]
 
 export const NAV_CTA_LABEL = 'Crear cuenta'

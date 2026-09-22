@@ -96,6 +96,10 @@
   }
 
   &__cta {
+    // Con sesión es un enlace y sin ella un botón: sin esto, el enlace saldría subrayado y
+    // sin poder recortar el nombre, porque un <a> es de línea.
+    display: inline-block;
+    text-decoration: none;
     padding: 0.6875rem 1.375rem;
     border: none;
     border-radius: var(--radius-pill);

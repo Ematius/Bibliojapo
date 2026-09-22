@@ -111,16 +111,22 @@ export function SiteNav() {
         <span className="site-nav__burger-line" aria-hidden="true" />
       </button>
 
-      {/* Abre el panel de la cuenta. Sin sesión invita a crearla; con sesión
-          lleva el nombre de quien está dentro y abre su carné. */}
-      <button
-        className="site-nav__cta"
-        type="button"
-        onClick={() => openAccountPanel()}
-        aria-label={session.account ? `Tu cuenta: ${session.account.name}` : undefined}
-      >
-        {session.account ? session.account.name : NAV_CTA_LABEL}
-      </button>
+      {/* El acceso a la cuenta, por eso no hay sección suya en el menú. Sin sesión
+          abre el panel —crearla es un paso de en medio, no una pantalla—; con ella
+          lleva el nombre de quien está dentro y va a su cuenta. */}
+      {session.account ? (
+        <Link
+          className="site-nav__cta"
+          to="/account"
+          aria-label={`Tu cuenta: ${session.account.name}`}
+        >
+          {session.account.name}
+        </Link>
+      ) : (
+        <button className="site-nav__cta" type="button" onClick={() => openAccountPanel()}>
+          {NAV_CTA_LABEL}
+        </button>
+      )}
 
       <div className="site-nav__menu" id="site-nav-menu" ref={menuRef}>
         <ul className="site-nav__menu-list">

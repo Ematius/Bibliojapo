@@ -13,6 +13,12 @@ const LibraryAisle = lazy(() =>
   import('./aisle/LibraryAisle.tsx').then((m) => ({ default: m.LibraryAisle })),
 )
 const MyDesk = lazy(() => import('./desk/MyDesk.tsx').then((m) => ({ default: m.MyDesk })))
+const AccountPage = lazy(() =>
+  import('./account/AccountPage.tsx').then((m) => ({ default: m.AccountPage })),
+)
+const ContactPage = lazy(() =>
+  import('./contact/ContactPage.tsx').then((m) => ({ default: m.ContactPage })),
+)
 
 function App() {
   // --vh se escribe sobre el elemento raíz, así que es global: basta con
@@ -37,6 +43,12 @@ function App() {
               guardia en la ruta — entrar sin cuenta no enseña nada de nadie, solo
               la invitación a crearla. Ver `desk/MyDesk.tsx`. */}
           <Route path="/my-desk" element={<MyDesk />} />
+          {/* Lo que se gestiona de la cuenta. Sin guardia: sin sesión no enseña datos de
+              nadie, solo la invitación a entrar. Ver `account/AccountPage.tsx`. */}
+          <Route path="/account" element={<AccountPage />} />
+          {/* El aviso de que algo se ha roto. Fuera de la cuenta a propósito: un error se
+              cuenta igual sin haberla creado. */}
+          <Route path="/contact" element={<ContactPage />} />
           {/* Cualquier otra ruta —un enlace viejo, una URL escrita a mano— vuelve al
               principio en vez de dejar la pantalla en blanco. */}
           <Route path="*" element={<Navigate to="/" replace />} />
