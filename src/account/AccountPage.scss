@@ -231,3 +231,19 @@
     line-height: 1.5;
   }
 }
+
+// Los mismos cortes que la barra, y por lo mismo: ahí se queda en la hamburguesa, así que
+// el hueco de arriba —medido para la barra entera— deja media pantalla vacía antes del
+// título. Por alto porque un móvil de lado tiene 412 px y ahí ese hueco se lo come casi
+// todo.
+@media (max-width: 48rem), (max-height: 34rem) {
+  .account-page {
+    padding: 4.5rem 0.75rem 2.5rem;
+  }
+
+  // El aire de la página y el de la hoja se suman: con los dos anchos, en un móvil de
+  // 360 px la columna de texto se queda en poco más de la mitad.
+  .account-page__sheet {
+    padding: 1.25rem;
+  }
+}
