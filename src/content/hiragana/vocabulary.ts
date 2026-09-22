@@ -2,7 +2,7 @@
 // Las imágenes y los audios solo se mantienen donde ya existían; no se inventan recursos.
 import type { Word } from '../types'
 
-export const VOCABULARY: Word[] = [] = [
+export const VOCABULARY: Word[] = [
   {
     id: 'aoi',
     units: [
@@ -45,6 +45,11 @@ export const VOCABULARY: Word[] = [] = [
     meaning: 'dibujo, imagen',
     // El mismo archivo que el kana: es un solo carácter y suena igual.
     audio: '/audio/hiragana/b1/e.wav',
+    image: '/images/hiragana/imagesSupport/e-drawing.webp',
+    imageAlt:
+      'Un caballete de madera sobre el tatami con una lámina de acuarela sujeta ' +
+      'con cinta, pintada con peces koi naranjas, y al lado un pincel, un bote ' +
+      'de agua y una caja de acuarelas',
   },
   {
     id: 'ha',
