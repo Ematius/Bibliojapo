@@ -355,6 +355,12 @@ la base de datos. De ahí estas reglas, que valen desde la primera línea:
   se escriben desde el servidor —función de Postgres o Edge Function—. Si el
   navegador pudiera escribir `unlocked`, el catálogo se regala desde la consola.
   Es la misma regla que ya lleva escrita `VolumeGate`.
+- **El SELLO sí lo escribe el cliente, y se acepta a conciencia** (23-09-2026). El
+  examen se corrige en el navegador, así que quien abra la consola puede darse las
+  insignias de los doce tomos. Se decidió que da igual: lo único que se salta es su
+  propio aprendizaje. El muro que importa es el del pago, y ese vive entero en el
+  servidor. **No «arreglarlo»** subiendo la corrección de los exámenes: es trabajo
+  grande, y la decisión ya está tomada.
 - **El contenido de pago, en bucket privado**, servido con URL firmada de vida
   corta y solo si el servidor ve el derecho.
 - **El webhook de Stripe se verifica por firma.** Si no, cualquiera manda un
