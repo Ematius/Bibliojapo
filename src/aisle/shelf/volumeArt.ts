@@ -26,6 +26,11 @@ export interface VolumeArt {
   // La portada. Sirve también de contra: todavía no hay dibujo propio para ella.
   cover: string
   coverTurned: string
+  // Las mismas dos caras a 240 px de alto, para el tomo colocado en la balda, donde se
+  // pinta a 14 px de ancho. Las genera `tools/make-shelf-thumbs.mjs`: si se cambia un
+  // render hay que volver a pasarlo o la balda seguirá enseñando el anterior.
+  spineThumb: string
+  coverThumb: string
   shape: VolumeShape
 }
 
@@ -44,6 +49,8 @@ function volumeArt(
     spine: `${tag}-spine.webp`,
     cover: `${tag}-cover.webp`,
     coverTurned: `${tag}-cover-turned.webp`,
+    spineThumb: `${tag}-spine-thumb.webp`,
+    coverThumb: `${tag}-cover-thumb.webp`,
     shape: {
       coverRatio: (turned[0] - coverLeft) / turned[1],
       spineRatio: spine[0] / spine[1],

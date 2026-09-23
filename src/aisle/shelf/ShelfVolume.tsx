@@ -229,6 +229,22 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
     })
   }
 
+  // En la balda el tomo se pinta a 14 px de ancho: ahí van las miniaturas, y los renders
+  // enteros solo cuando sale. Con los grandes puestos desde el principio, la estantería
+  // pedía 14 MB antes de que nadie tocara un tomo.
+  const onShelf = stage === 'shelf'
+
+  // Los renders grandes se piden al acercarse, no al pulsar: si esperaran al clic, el giro
+  // arrancaría con la miniatura estirada. Un tomo que no puede salir no gasta nada.
+  const preloadedRef = useRef(false)
+  const preloadFullArt = () => {
+    if (preloadedRef.current || access !== 'open') return
+    preloadedRef.current = true
+    for (const src of [volume.art.spine, volume.art.cover, volume.art.coverTurned]) {
+      new Image().src = src
+    }
+  }
+
   const { shape } = volume.art
   const volumeStyle: StyleWithVars = {
     '--volume-x': volume.x,
@@ -336,6 +352,9 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
         style={volumeStyle}
         ref={rootRef}
         onClick={onPress}
+        onPointerEnter={preloadFullArt}
+        onPointerDown={preloadFullArt}
+        onFocus={preloadFullArt}
         aria-label={label}
         aria-disabled={access === 'pending' ? true : undefined}
         // Con el libro abierto el tomo sigue montado —guarda la pose y las referencias— pero
@@ -353,18 +372,20 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
             pinta encima si el navegador no puede desempatar por profundidad. */}
         {/* La contra reutiliza la portada: todavía no hay dibujo propio. */}
         <span className="shelf-volume__face shelf-volume__face--back">
-          <img src={volume.art.cover} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" />
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--cover">
-          <img src={volume.art.cover} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" />
 
           {/* La misma portada, pero pintada de tres cuartos y con el bloque de
               hojas. Vive dentro de la cara, así que gira con ella; solo se
               enciende al final del giro, cuando el tomo ya está de frente. */}
+          {/* Sin `src` en la balda: ahí no se ve ni un píxel de ella. El elemento sí se
+              queda montado —`useVolumePull` se planta si le falta alguna cara—. */}
           <img
             className="shelf-volume__turned"
-            src={volume.art.coverTurned}
+            src={onShelf ? undefined : volume.art.coverTurned}
             alt=""
             draggable="false"
             ref={turnedRef}
@@ -378,7 +399,7 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--spine">
-          <img src={volume.art.spine} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.spineThumb : volume.art.spine} alt="" draggable="false" />
         </span>
       </span>
     </button>
