@@ -1,0 +1,126 @@
+// La pantalla que ocupa el sitio de la app entera cuando algo se rompe.
+//
+// La escena trae su propio cartel de «Oops…» colgado a la derecha, así que el texto vive
+// en la mitad izquierda y el velo se levanta antes de llegar a él: cualquier capa que
+// cruce la escena entera lo borra.
+
+.error-screen {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--vh) * 100);
+  padding: 4rem 2rem;
+  background: var(--color-bg);
+  // Escena oscura con letra clara, y declarado aquí: sin color propio, un sistema en modo
+  // oscuro pinta el texto blanco sobre lo que le venga.
+  color: var(--color-cream);
+  font-family: var(--font-body);
+
+  // `fixed` y no `absolute`: la escena se queda quieta aunque el texto crezca y la pantalla
+  // llegue a tener scroll.
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: url('/images/error.png') 68% center / cover no-repeat;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      95deg,
+      rgba(var(--rgb-bg), 0.9) 0%,
+      rgba(var(--rgb-bg), 0.76) 32%,
+      rgba(var(--rgb-bg), 0.24) 56%,
+      transparent 72%
+    );
+  }
+
+  &__panel {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+    // La columna de texto no pasa de la mitad de la escena, que es hasta donde llega el velo.
+    max-width: 30rem;
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--color-brass-glow);
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--color-parchment);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  &__action {
+    padding: 0.6875rem 1.375rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-brass);
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity var(--duration-fast) ease;
+
+    &:hover {
+      opacity: 0.88;
+    }
+  }
+
+  &__link {
+    color: var(--color-parchment);
+    font-size: 0.9375rem;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  &__action:focus-visible,
+  &__link:focus-visible {
+    outline: 2px solid var(--color-brass-glow);
+    outline-offset: 3px;
+  }
+}
+
+// En estrecho la escena se recorta y el cartel se saldría del encuadre por la derecha: el
+// texto baja al pie, la escena se asoma por su esquina de arriba y el velo pasa a caer de
+// abajo arriba.
+@media (max-width: 48rem) {
+  .error-screen {
+    align-items: flex-end;
+    padding: 3rem 1.25rem 2.5rem;
+
+    &::before {
+      background-position: 74% 24%;
+    }
+
+    &::after {
+      background: linear-gradient(
+        180deg,
+        transparent 26%,
+        rgba(var(--rgb-bg), 0.72) 52%,
+        rgba(var(--rgb-bg), 0.94) 100%
+      );
+    }
+  }
+}

@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { HomeRoute } from './intro/HomeRoute'
 import { AccountPanel } from './account/AccountPanel'
+import { ErrorBoundary } from './shared/ErrorBoundary'
 import { useVh } from './shared/useVh'
 
 // Cargadas bajo demanda: la intro no necesita el lector, page-flip ni DrawSVGPlugin, así
@@ -27,7 +28,7 @@ function App() {
   useVh()
 
   return (
-    <>
+    <ErrorBoundary>
       <Suspense fallback={null}>
         <Routes>
           {/* El recorrido es entrada → vestíbulo → pasillo. La entrada lleva delante la
@@ -58,7 +59,7 @@ function App() {
       {/* Fuera de las rutas: es el mismo panel en cualquier pantalla, y lo abre
           quien lo necesite. Ver `account/AccountPanel.tsx`. */}
       <AccountPanel />
-    </>
+    </ErrorBoundary>
   )
 }
 
