@@ -13,22 +13,32 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** la fase 3, y lo que queda de ella es enchufar Supabase. El
+**Fase actual:** cerradas la 3 y la 4 (25-09-2026), lo siguiente es SALIR A LA RED. El
 recorrido está entero —intro en video, entrada, vestíbulo, pasillo y estantería—,
 el tomo del bloque 1 se lee de principio a fin, y Mi escritorio ya está en pie:
-la mesa con sus objetos encima, la chuleta, el álbum y el carné. La cuenta
-también —el formulario con sus dos vías, el panel, el carné y la pantalla de
-ajustes—, pero todo eso habla con el servidor SIMULADO: falta el Supabase de
-verdad —esquema, políticas de RLS, login con Google— y reescribir por dentro
-`account.ts`, `progress.ts` y `volumes.ts`. Ver «La capa `api/`» y la fase 3.
+la mesa con sus objetos encima, la chuleta, el álbum y el carné.
 
-El responsive (fase 4) se ha adelantado sobre la marcha y está casi entero: el
-aviso de rotar, las flechas táctiles del lector, el nav estrecho, los objetos del
-escritorio en horizontal, y el paneo de la escena —`shared/useScenePan.ts`, con
-sus números en `scenePanConfig.ts`—, que llevan el pasillo y el vestíbulo y NO
-lleva el escritorio, como manda su regla. Lo que le falta es lo que no se puede
-escribir: probarlo en anchos de verdad, y con ello cerrar el encuadre de la
-fase 2.
+**Supabase ya está enchufado, y en producción.** `account.ts`, `progress.ts`,
+`feedback.ts` y `volumes.ts` hablan con él —sesión, sellos, insignias, tomos,
+carné, avisos—, con su esquema y sus políticas de RLS. Del simulado solo queda UNA
+llamada, `mockServer.volume(blockId)` dentro de `volumes.ts`: el temario sigue en
+`content/` a propósito hasta el bloque 2, y ahí se tira — ver «El contenido de pago
+no puede vivir en `content/`». El login con Google funciona, el dominio propio es
+`bibliojapo.app`, y borrar la cuenta ya se hace desde la pantalla — ver «Lo legal».
+Lo último que queda de esta fase es de CORREO, y espera a la fase 5 porque hasta
+que no haya usuarios de verdad no se nota: el SMTP propio y las plantillas.
+
+Falta una decisión que no se ha tomado y no se toma sola: **quién creó su cuenta con
+correo y meses después pulsa «Continuar con Google» con ESE MISMO correo**. O acaba
+con dos cuentas separadas —y ve sus insignias desaparecidas— o con una sola con dos
+formas de entrar. Es un ajuste de Supabase, no código nuestro.
+
+El responsive (fase 4) también está cerrado, y con él el encuadre que colgaba de la
+fase 2: probado en anchos de verdad el 25-09-2026. Lo componen el aviso de rotar,
+las flechas táctiles del lector, el nav estrecho, los objetos del escritorio en
+horizontal, y el paneo de la escena —`shared/useScenePan.ts`, con sus números en
+`scenePanConfig.ts`—, que llevan el pasillo y el vestíbulo y NO lleva el
+escritorio, como manda su regla.
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
 **Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
@@ -54,8 +64,8 @@ todavía no están tomadas en la anterior.
    la estantería, de modo que siempre quepa y la ilustración haga de relleno. Va
    ANTES que el responsive porque es la pieza que lo vuelve abordable: ningún
    ajuste de tomos arregla un mueble que se sale de la pantalla. El encuadre se
-   escribe aquí, pero **no se da por cerrado hasta la fase 4**: hasta que no se
-   prueba en anchos de verdad, no se sabe si el mueble cabe.
+   escribió aquí y se dio por cerrado en la fase 4 (25-09-2026), que es cuando se
+   probó en anchos de verdad: hasta entonces no se sabía si el mueble cabe.
 3. **Mi escritorio, y con él la cuenta de verdad.** Van juntas porque son la
    misma cosa por sus dos caras: Mi escritorio es lo que se ENSEÑA de una cuenta
    —los tomos cerrados, su chuleta y los juegos que abren—, y sin nada que enseñar
@@ -168,6 +178,19 @@ todavía no están tomadas en la anterior.
    Supabase Free y Vercel Hobby valen mientras no se cobre, y aquí es donde se
    rompen las cosas de verdad — mejor romperlas antes de que haya dinero de por
    medio.
+
+   **El correo, ANTES de dar la dirección a nadie.** Supabase manda los correos de
+   confirmación con su servidor integrado, que es solo para desarrollo y lleva un
+   límite de unos pocos envíos por hora —`Authentication → Rate Limits`—. En cuanto
+   se registren varias personas seguidas los correos dejan de salir, y el efecto es
+   que crean la cuenta y NUNCA pueden entrar: no reciben nada, no hay a qué dar
+   clic, y desde fuera parece que la app está rota. No falla ruidosamente, falla en
+   silencio, y se lleva por delante justo a quien sí quería entrar. Se arregla con
+   un SMTP propio en `Authentication → Emails → SMTP Settings`, y Resend ya se usa
+   para los avisos de Contacta: es verificar `bibliojapo.app` ahí y reutilizarlo,
+   que sigue costando 0 €. Con ello van las PLANTILLAS, que hoy son las de Supabase
+   en inglés — es lo primero que recibe quien acaba de cruzar unas puertas de
+   madera tallada.
 
    El resto de los tomos se escriben AQUÍ, uno a uno y ya en la red, contra
    Supabase. No esperan a nada: un tomo escrito y probado a solas es un tomo con
