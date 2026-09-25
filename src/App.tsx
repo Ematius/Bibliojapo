@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { HomeRoute } from './intro/HomeRoute'
 import { AccountPanel } from './account/AccountPanel'
 import { ErrorBoundary } from './shared/ErrorBoundary'
@@ -61,9 +62,10 @@ function App() {
           quien lo necesite. Ver `account/AccountPanel.tsx`. */}
       <AccountPanel />
 
-      {/* Solo cuenta visitas en el despliegue de Vercel: en local no manda nada y la
-          consola avisa de que el script no carga. No es un fallo. */}
+      {/* Los dos solo miden en el despliegue de Vercel: en local no mandan nada y la
+          consola avisa de que su script no carga. No es un fallo. */}
       <Analytics />
+      <SpeedInsights />
     </ErrorBoundary>
   )
 }
