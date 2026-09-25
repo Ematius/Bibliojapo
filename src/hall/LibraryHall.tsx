@@ -16,7 +16,10 @@ import './LibraryHall.scss'
 export function LibraryHall() {
   const stageRef = useRef<HTMLDivElement>(null)
   const { sweepRef, sweepToAisle } = useAisleSweep(stageRef)
-  const { reach, panBy } = useScenePan(stageRef)
+  // Se aterriza a la izquierda y no en el centro del dibujo: los carteles cuelgan repartidos
+  // por los extremos y el centro es pared, así que en una pantalla estrecha el encuadre
+  // centrado cae justo en el hueco y no se ve NI UNO.
+  const { reach, panBy } = useScenePan(stageRef, { landing: 'left' })
 
   return (
     <main className="library-hall">

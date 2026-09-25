@@ -2,16 +2,27 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObje
 import gsap from 'gsap'
 import { SCENE_PAN as pan } from './scenePanConfig'
 
+interface ScenePanOptions {
+  // Dónde se aterriza la primera vez que sobra escena. `center` deja el encuadre que ponga el
+  // CSS; `left` arranca pegado al borde izquierdo, para escenas cuyo centro no es lo que hay
+  // que ver. Ver «Se aterriza SIEMPRE sobre lo importante» en CLAUDE.md.
+  landing?: 'center' | 'left'
+}
+
 // Se anima `x` y nunca el `transform`: hay stages que se centran con un `translate` de
 // media caja, que GSAP guarda como `xPercent`, y escribir el transform entero los
 // descentraría.
-export function useScenePan(stageRef: RefObject<HTMLElement | null>) {
+export function useScenePan(
+  stageRef: RefObject<HTMLElement | null>,
+  { landing = 'center' }: ScenePanOptions = {},
+) {
   const [reach, setReach] = useState({ left: false, right: false })
   // Hasta dónde puede llegar la `x`, no cuánto sobra de escena: los dos stages del sitio
   // se colocan distinto —uno centrado, otro encuadrado por una zona— y solo el recorrido
   // que le queda a cada lado vale para los dos.
   const limitsRef = useRef({ min: 0, max: 0 })
   const offsetRef = useRef(0)
+  const hasLandedRef = useRef(false)
 
   const syncReach = useCallback(() => {
     const { min, max } = limitsRef.current
@@ -42,12 +53,21 @@ export function useScenePan(stageRef: RefObject<HTMLElement | null>) {
         offsetRef.current = 0
       } else {
         limitsRef.current = { min: offset - overRight, max: offset + overLeft }
+        // El aterrizaje es SOLO la primera vez que hay recorrido. Se vuelve a medir al girar
+        // la pantalla y cada vez que cambia la caja, y recolocar ahí se llevaría por delante
+        // el sitio que se estuviera mirando.
+        const landsLeft =
+          landing === 'left' &&
+          !hasLandedRef.current &&
+          overLeft + overRight > hostBox.width * pan.landingRangeRatio
+        const target = landsLeft ? limitsRef.current.max : offset
+        hasLandedRef.current = true
         // Ensanchar la ventana puede dejar el sitio donde se estaba mirando fuera de los
         // topes nuevos, y con él un borde al descubierto.
         offsetRef.current = gsap.utils.clamp(
           limitsRef.current.min,
           limitsRef.current.max,
-          offset,
+          target,
         )
       }
 
@@ -60,7 +80,7 @@ export function useScenePan(stageRef: RefObject<HTMLElement | null>) {
     const observer = new ResizeObserver(measure)
     observer.observe(host)
     return () => observer.disconnect()
-  }, [stageRef, syncReach])
+  }, [stageRef, syncReach, landing])
 
   // `direction` es hacia dónde mira la vista: 1 es hacia la izquierda de la escena, que se
   // consigue llevando el dibujo a la derecha.

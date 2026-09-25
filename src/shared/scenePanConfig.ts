@@ -9,6 +9,12 @@ export const SCENE_PAN = {
   // y arrastre. Por debajo son ruido: en un escritorio apaisado sobran unos píxeles.
   minRangeRatio: 0.1,
 
+  // A partir de cuánto sobra, también en fracción del ancho visible, la escena aterriza
+  // donde diga `landing` en vez de donde la deje el CSS. Sobrando MÁS DEL DOBLE de lo que
+  // cabe, la franja que se ve es tan estrecha que el centro del dibujo casi nunca tiene
+  // nada: es el móvil de pie. Por debajo manda el centrado, que reparte mejor.
+  landingRangeRatio: 2,
+
   // Sin este margen, el temblor del dedo al tocar un cartel contaría como arrastre y se
   // tragaría la pulsación.
   dragThresholdPx: 8,
