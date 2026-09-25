@@ -107,7 +107,9 @@ create trigger on_final_seal
 -- admite null y `anon` puede insertar.
 create table if not exists public.feedback (
   id uuid primary key default gen_random_uuid(),
-  account_id uuid references auth.users (id) on delete set null,
+  -- Lo pone el servidor, no el navegador: así un aviso no se puede firmar con la
+  -- cuenta de otro. Queda null cuando se escribe sin cuenta, que se puede.
+  account_id uuid default auth.uid() references auth.users (id) on delete set null,
   kind text not null check (kind in ('bug', 'idea', 'other')),
   message text not null check (length(message) between 1 and 5000),
   email text not null default '',
@@ -150,9 +152,10 @@ create policy "seals: sellar lo propio" on public.seals
 create policy "badges: leer lo propio" on public.badges
   for select to authenticated using ((select auth.uid()) = user_id);
 
--- Nadie las lee desde la app: se leen desde el panel, que va por `service_role`.
+-- Nadie los lee desde la app: se leen desde el panel, que va por `service_role`.
 create policy "feedback: escribir y punto" on public.feedback
-  for insert to anon, authenticated with check (true);
+  for insert to anon, authenticated
+  with check (account_id is null or account_id = (select auth.uid()));
 
 -- ---------------------------------------------------------------------------
 -- Permisos

@@ -1,20 +1,15 @@
 // Los avisos que manda quien usa la app: un fallo, una idea, cualquier otra cosa.
 //
-// ⚠ EL ENVÍO ES SIMULADO. Hoy el mensaje se guarda en la base del servidor simulado —es
-// decir, en el localStorage de quien escribe— y NO LE LLEGA A NADIE. Lo que sí es de
-// verdad es la pantalla: su espera, sus errores y su acuse de recibo.
+// El aviso se guarda en la tabla `feedback`, que solo admite escribir: nadie puede
+// leer los avisos desde la app, ni los suyos.
 //
-// El día de Supabase se reescribe SOLO este archivo, sin tocar el formulario:
-//   1. Tabla `feedback` con RLS y una única política de INSERT —cualquiera puede
-//      escribir, nadie puede leer—. Si se pudiera leer, los avisos de unos serían
-//      visibles para otros.
-//   2. `sendFeedback` pasa a ser un `insert` con la clave `anon`. El `user_id` lo pone
-//      el servidor con `auth.uid()`, nunca el navegador.
-//   3. El aviso por correo sale de un trigger o una Edge Function, no del cliente:
-//      mandarlo desde aquí pediría una clave de correo en el bundle.
+// ⚠ NO AVISA POR CORREO. El mensaje llega a la base y ahí se queda hasta que alguien
+// mire el panel. El correo tiene que salir de un trigger o una Edge Function, nunca
+// de aquí: mandarlo desde el navegador pediría una clave de correo en el bundle.
 // Ver «La capa `api/`» y «Supabase — las reglas que no se negocian» en CLAUDE.md.
 import { getSession } from './account'
-import { mockServer } from './mockServer'
+import { ApiError } from './apiError'
+import { supabase } from './supabase'
 
 export type { FeedbackContext, FeedbackKind, FeedbackReport } from './contract'
 import type { FeedbackContext, FeedbackKind } from './contract'
@@ -37,5 +32,19 @@ export async function sendFeedback(input: {
   message: string
   email: string
 }): Promise<void> {
-  await mockServer.sendFeedback({ ...input, context: collectContext() })
+  if (!input.message.trim()) throw new ApiError('empty-message')
+
+  const context = collectContext()
+  // `account_id` no viaja: lo pone la propia tabla con `auth.uid()`, y su política
+  // rechaza cualquier otro. Firmar un aviso con la cuenta de otro es imposible.
+  const { error } = await supabase.from('feedback').insert({
+    kind: input.kind,
+    message: input.message,
+    email: input.email,
+    route: context.route,
+    user_agent: context.userAgent,
+    viewport: context.viewport,
+  })
+
+  if (error) throw new ApiError('network')
 }
