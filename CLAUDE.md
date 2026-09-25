@@ -989,3 +989,11 @@ y vale para cualquier pasillo; hoy viven en `aisle/book/`, y se moverán a
   así que sin color heredado manda el del navegador. Toda pantalla de papel
   declara su `color` en la raíz de su bloque, y los estilos se miran en los dos
   modos — en claro el fallo no existe.
+- **`onComplete` de una timeline con `scrub` NO sirve para navegar.** Con scrub la
+  timeline persigue al scroll en vez de correr sola, y no aterriza de forma fiable
+  en su último fotograma: el recorrido llega al final, la escena se ve terminada y
+  la ruta se queda sin cambiar. El aviso se toma del ScrollTrigger —`onLeave`, o el
+  progreso— y nunca de la timeline. Ojo además con el último tramo del recorrido
+  cuando ahí ya no queda nada que mirar: si la escena se funde del todo antes del
+  final, quien suelta la rueda cree que ha entrado, y con la escena fijada por el
+  pin nada le dice que le falta. Por eso se entra al 0.98 y no al 1.
