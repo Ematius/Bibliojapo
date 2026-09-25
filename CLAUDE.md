@@ -280,6 +280,34 @@ estado de desarrollo que no vaya a ver nadie: lo va a ver gente de verdad. Por e
 una lección solo entra en el libro cuando está entera —ver «Cómo se arma un tomo»—
 y por eso lo que falta tiene que leerse siempre como «todavía no», nunca como roto.
 
+### Lo legal — qué hay, y qué NO hace falta
+
+Escrito el 25-09-2026, en `src/legal/`: la política de privacidad (`/privacidad`) y el aviso
+legal con las condiciones (`/legal`), más la casilla obligatoria del formulario de registro,
+que bloquea también la vía de Google porque por ahí se crea cuenta igual.
+
+- **Los datos del responsable viven en `legal/legalInfo.ts`**, nunca escritos dentro del JSX:
+  los piden las dos páginas y la casilla, y tres copias se desincronizan en cuanto cambie el
+  correo. La lista de proveedores sale de ahí también, así que autoalojar las fuentes será
+  borrar una entrada.
+- **NO hay banner de cookies, y es correcto.** La ley no habla de cookies sino de guardar
+  información en el equipo, así que `localStorage` cuenta igual — pero todo lo que guarda
+  Bibliojapo está exento por ser necesario para el servicio: la sesión, las preferencias y el
+  progreso sin cuenta. Vercel Analytics y Speed Insights no escriben en el dispositivo ni
+  dejan identificador persistente, así que tampoco lo disparan. **El banner nacería solo**
+  con analítica que sí rastree —Google Analytics— o con un tercero incrustado, tipo un vídeo
+  de YouTube. Poner uno «por si acaso» es PEOR que no tenerlo: pide permiso para nada,
+  ensucia la entrada y enseña a pulsar «Aceptar» sin leer.
+- **Supabase está en París**, así que la cuenta y el progreso no salen de la UE. Vercel y
+  Google Fonts sí son de EEUU, y es la única transferencia que hay que declarar. Autoalojar
+  las fuentes quitaría a Google del todo.
+- **Lo que espera a la fase 6**, con el pago: NIF y domicilio en el aviso legal, condiciones
+  de contratación, derecho de desistimiento y el IVA de la UE. Hoy no hay actividad
+  económica que declarar, y por eso el aviso legal no los lleva.
+- **Una página legal no promete lo que no existe.** Decían que la cuenta se borra desde
+  ajustes, y todavía no se puede; ahora dicen que se pide y se borra a mano. El día que haya
+  botón se cambian las dos.
+
 ### La capa `api/` — el servidor, simulado
 
 Todo lo que un día hablará con el backend vive en `src/api/`, y **es lo único que
@@ -550,6 +578,9 @@ src/
                       pantalla de lo que se gestiona —datos, contraseña, preferencias—
   contact/          ← Contacta: el aviso de que algo se ha roto. Sin cuenta también,
                       que un fallo se cuenta igual
+  legal/            ← la política de privacidad y el aviso legal, con los datos del
+                      responsable en UN solo archivo. Sin cuenta también: se leen antes
+                      de crearla, que es cuando hacen falta
   desk/             ← Mi escritorio: la mesa vista desde el asiento, con sus
                       objetos encima —la chuleta, el álbum y el carné—, cada uno
                       una puerta

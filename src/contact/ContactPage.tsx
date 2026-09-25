@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { SiteNav } from '../shared/SiteNav'
 import { ContactForm } from './ContactForm'
 import './ContactPage.scss'
@@ -18,6 +19,17 @@ export function ContactPage() {
         </p>
 
         <ContactForm />
+
+        {/* Quien viene a escribir suele venir también a preguntar qué se guarda de él. */}
+        <p className="contact-page__legal">
+          <Link className="contact-page__link" to="/privacidad">
+            Política de privacidad
+          </Link>
+          {' · '}
+          <Link className="contact-page__link" to="/legal">
+            Aviso legal y condiciones
+          </Link>
+        </p>
       </div>
 
       <SiteNav />

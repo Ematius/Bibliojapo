@@ -1,0 +1,79 @@
+// La política de privacidad y el aviso legal: la misma hoja de papel que «Contacta» y «Tu
+// cuenta», con tipografía de documento largo —aquí se lee, no se rellena un formulario—.
+//
+// Un solo bloque para las dos páginas: son el mismo documento con distinto texto, y
+// separarlas obligaría a cambiar el interlineado en dos sitios.
+
+@use '../shared/paperPage' as *;
+
+.legal-page {
+  @include paper-page;
+
+  &__sheet {
+    @include paper-sheet;
+  }
+
+  &__title {
+    margin: 0 0 0.375rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  &__updated {
+    margin: 0;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+  }
+
+  &__section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-page-fold);
+  }
+
+  &__heading {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  &__text {
+    margin: 0;
+    line-height: 1.7;
+    text-wrap: pretty;
+
+    & + & {
+      margin-top: 0.875rem;
+    }
+  }
+
+  &__list {
+    // El hueco de fábrica de `ul` es mayor que el que deja la sangría de la viñeta.
+    margin: 0.875rem 0 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__item {
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+
+  &__link {
+    color: var(--color-ink);
+    text-decoration-color: var(--color-brass);
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      text-decoration-color: var(--color-ink);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass);
+      outline-offset: 2px;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { signOut } from '../api/account'
 import { SiteNav } from '../shared/SiteNav'
 import { getAlwaysIntro, setAlwaysIntro } from '../intro/introPreference'
@@ -153,6 +154,20 @@ export function AccountPage() {
             </section>
           </>
         )}
+        {/* Fuera del condicional de la sesión: quien quiere saber qué se guarda de él
+            suele venir ANTES de crear la cuenta, no después. */}
+        <section className="account-page__section account-page__section--edge">
+          <h2 className="account-page__heading">Lo legal</h2>
+          <p className="account-page__hint">
+            <Link className="account-page__link" to="/privacidad">
+              Política de privacidad
+            </Link>
+            {' · '}
+            <Link className="account-page__link" to="/legal">
+              Aviso legal y condiciones
+            </Link>
+          </p>
+        </section>
       </div>
 
       <SiteNav />

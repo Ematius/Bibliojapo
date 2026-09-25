@@ -181,6 +181,34 @@
     font-size: 0.75rem;
   }
 
+  // La letra pequeña del consentimiento. La marca se alinea con la PRIMERA línea del texto,
+  // no con el centro del párrafo: centrada, en dos líneas queda flotando en medio.
+  &__consent {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    color: var(--color-ink-soft);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  &__checkbox {
+    // Sin esto la marca se encoge al espacio que le deje su etiqueta.
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+    accent-color: var(--color-wood);
+    cursor: pointer;
+  }
+
+  &__consent-link {
+    color: var(--color-ink);
+    text-decoration-color: var(--color-brass);
+    text-underline-offset: 0.15em;
+  }
+
   // Al lado del campo de contraseña, no al pie del formulario: es la misma pastilla que
   // `__switch-button`, solo que aquí se saca de la fila de campos hacia el borde.
   &__forgot {

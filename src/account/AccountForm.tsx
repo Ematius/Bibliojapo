@@ -1,6 +1,8 @@
 import { useId, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { requestPasswordReset, signIn, signInWithGoogle, signUp } from '../api/account'
 import { apiErrorCode, type ApiErrorCode } from '../api/apiError'
+import { MINIMUM_AGE } from '../legal/legalInfo'
 import { ACCOUNT_ERRORS, PASSWORD_HINT } from './accountConfig'
 import type { AccountMode } from './accountPanelState'
 
@@ -24,7 +26,7 @@ const COPY: Record<FormMode, { title: string; intro: string; submit: string }> =
     title: 'Crea tu cuenta',
     intro:
       'Con tu cuenta, tus sellos se guardan y se abren los tomos siguientes. ' +
-      'Accedes juegos nuevos, ha chuletas repaso rápido.',
+      'Y en tu escritorio se van quedando las chuletas de lo que cierres.',
     submit: 'Crear cuenta',
   },
   signIn: {
@@ -44,6 +46,9 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  // Se conserva al cambiar de modo: marcarla es un acto suyo, y volver de «entrar» no lo
+  // deshace.
+  const [accepted, setAccepted] = useState(false)
   // Qué se está enviando, para apagar los botones. Son dos porque Google tiene su propio
   // botón y su propia espera.
   const [pending, setPending] = useState<'form' | 'google' | null>(null)
@@ -59,6 +64,9 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
   const fieldId = useId()
 
   const copy = COPY[mode]
+  // Sin la casilla no hay consentimiento que probar, así que no hay cuenta que crear. Alcanza
+  // también a Google: por esa vía se crea cuenta igual.
+  const blocked = mode === 'signUp' && !accepted
 
   const run = async (kind: 'form' | 'google', attempt: () => Promise<unknown>) => {
     setPending(kind)
@@ -245,13 +253,37 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
           </button>
         ) : null}
 
+        {mode === 'signUp' ? (
+          <label className="account-form__consent">
+            <input
+              className="account-form__checkbox"
+              type="checkbox"
+              checked={accepted}
+              onChange={(event) => setAccepted(event.target.checked)}
+            />
+            <span>
+              He leído la{' '}
+              {/* En pestaña aparte: el panel se cierra al navegar, y con él se iría lo que
+                  ya hubiera escrito en el formulario. */}
+              <Link className="account-form__consent-link" to="/privacidad" target="_blank">
+                política de privacidad
+              </Link>{' '}
+              y acepto las{' '}
+              <Link className="account-form__consent-link" to="/legal" target="_blank">
+                condiciones de uso
+              </Link>
+              . Tengo {MINIMUM_AGE} años o más.
+            </span>
+          </label>
+        ) : null}
+
         {error ? (
           <p className="account-form__error" role="alert">
             {ACCOUNT_ERRORS[error]}
           </p>
         ) : null}
 
-        <button className="account-panel__primary" type="submit" disabled={pending !== null}>
+        <button className="account-panel__primary" type="submit" disabled={pending !== null || blocked}>
           {pending === 'form' ? 'Un momento…' : copy.submit}
         </button>
       </form>
@@ -263,7 +295,7 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
       <button
         className="account-panel__secondary"
         type="button"
-        disabled={pending !== null}
+        disabled={pending !== null || blocked}
         onClick={() => void run('google', signInWithGoogle)}
       >
         {pending === 'google' ? 'Un momento…' : 'Continuar con Google'}

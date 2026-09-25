@@ -22,6 +22,12 @@ const AccountPage = lazy(() =>
 const ContactPage = lazy(() =>
   import('./contact/ContactPage.tsx').then((m) => ({ default: m.ContactPage })),
 )
+const PrivacyPage = lazy(() =>
+  import('./legal/PrivacyPage.tsx').then((m) => ({ default: m.PrivacyPage })),
+)
+const TermsPage = lazy(() =>
+  import('./legal/TermsPage.tsx').then((m) => ({ default: m.TermsPage })),
+)
 
 function App() {
   // --vh se escribe sobre el elemento raíz, así que es global: basta con
@@ -52,6 +58,10 @@ function App() {
           {/* El aviso de que algo se ha roto. Fuera de la cuenta a propósito: un error se
               cuenta igual sin haberla creado. */}
           <Route path="/contact" element={<ContactPage />} />
+          {/* Qué se guarda y con qué condiciones. Fuera de la cuenta a propósito: se
+              consultan ANTES de crearla, que es cuando hacen falta. */}
+          <Route path="/privacidad" element={<PrivacyPage />} />
+          <Route path="/legal" element={<TermsPage />} />
           {/* Cualquier otra ruta —un enlace viejo, una URL escrita a mano— vuelve al
               principio en vez de dejar la pantalla en blanco. */}
           <Route path="*" element={<Navigate to="/" replace />} />
