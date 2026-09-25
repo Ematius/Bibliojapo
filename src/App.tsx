@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import { HomeRoute } from './intro/HomeRoute'
 import { AccountPanel } from './account/AccountPanel'
 import { ErrorBoundary } from './shared/ErrorBoundary'
@@ -59,6 +60,10 @@ function App() {
       {/* Fuera de las rutas: es el mismo panel en cualquier pantalla, y lo abre
           quien lo necesite. Ver `account/AccountPanel.tsx`. */}
       <AccountPanel />
+
+      {/* Solo cuenta visitas en el despliegue de Vercel: en local no manda nada y la
+          consola avisa de que el script no carga. No es un fallo. */}
+      <Analytics />
     </ErrorBoundary>
   )
 }
