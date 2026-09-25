@@ -28,8 +28,4 @@ export const PROCESSORS: readonly Processor[] = [
     name: 'Vercel',
     purpose: 'aloja la web y mide cuántas visitas recibe cada pantalla',
   },
-  {
-    name: 'Google Fonts',
-    purpose: 'sirve las tipografías japonesas, y para eso recibe tu dirección IP',
-  },
 ]

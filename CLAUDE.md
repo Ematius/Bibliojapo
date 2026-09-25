@@ -288,8 +288,8 @@ que bloquea también la vía de Google porque por ahí se crea cuenta igual.
 
 - **Los datos del responsable viven en `legal/legalInfo.ts`**, nunca escritos dentro del JSX:
   los piden las dos páginas y la casilla, y tres copias se desincronizan en cuanto cambie el
-  correo. La lista de proveedores sale de ahí también, así que autoalojar las fuentes será
-  borrar una entrada.
+  correo. La lista de proveedores sale de ahí también, así que quitar uno —como ya pasó con
+  Google Fonts— es borrar su entrada y nada más.
 - **NO hay banner de cookies, y es correcto.** La ley no habla de cookies sino de guardar
   información en el equipo, así que `localStorage` cuenta igual — pero todo lo que guarda
   Bibliojapo está exento por ser necesario para el servicio: la sesión, las preferencias y el
@@ -298,9 +298,11 @@ que bloquea también la vía de Google porque por ahí se crea cuenta igual.
   con analítica que sí rastree —Google Analytics— o con un tercero incrustado, tipo un vídeo
   de YouTube. Poner uno «por si acaso» es PEOR que no tenerlo: pide permiso para nada,
   ensucia la entrada y enseña a pulsar «Aceptar» sin leer.
-- **Supabase está en París**, así que la cuenta y el progreso no salen de la UE. Vercel y
-  Google Fonts sí son de EEUU, y es la única transferencia que hay que declarar. Autoalojar
-  las fuentes quitaría a Google del todo.
+- **Supabase está en París**, así que la cuenta y el progreso no salen de la UE. Vercel es
+  la única transferencia a EEUU que queda por declarar: **las tipografías se sirven desde
+  `public/fonts/`** y no desde el CDN de Google, que recibía la IP de cada visitante. Son 607
+  fragmentos y 13 MB en el repo, pero el navegador solo baja los tramos de Unicode que su
+  texto necesita — no volver a apuntar a `fonts.googleapis.com` por ahorrar ese peso.
 - **Lo que espera a la fase 6**, con el pago: NIF y domicilio en el aviso legal, condiciones
   de contratación, derecho de desistimiento y el IVA de la UE. Hoy no hay actividad
   económica que declarar, y por eso el aviso legal no los lleva.

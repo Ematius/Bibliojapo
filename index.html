@@ -13,10 +13,16 @@
          verá con la serif del sistema.
 
          Los pesos son exactamente los que aparecen en el CSS. Cada peso de una
-         familia japonesa son cientos de reglas @font-face —Google trocea los
-         miles de glifos por rangos de Unicode— así que pedir uno de más cuesta
-         mucho más que en una fuente latina. Antes se pedía el 500 de Shippori,
-         que no usaba nadie.
+         familia japonesa son cientos de reglas @font-face —los miles de glifos van
+         troceados por rangos de Unicode— así que pedir uno de más cuesta mucho más
+         que en una fuente latina. Antes se pedía el 500 de Shippori, que no usaba
+         nadie.
+
+         Las servimos NOSOTROS, desde `public/fonts/`, y no el CDN de Google: desde
+         su CDN, cada visitante le manda su IP, y eso obliga a declararlo en la
+         política de privacidad. No volver a apuntar a `fonts.googleapis.com` por
+         ahorrarse los 13 MB del repo — el visitante solo descarga los fragmentos
+         que su texto necesita, así que no los paga nadie.
 
          ── Por qué NO bloquea el render ─────────────────────────────────────
          Este archivo tardaba 2,2 segundos en llegar y hasta entonces no se
@@ -27,10 +33,8 @@
          Se puede hacer porque la portada no tiene una sola letra: es una escena
          de ilustraciones. Nadie ve el cambio de fuente, y para cuando hay texto
          en pantalla la familia lleva rato cargada. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      href="/fonts/fonts.css"
       rel="stylesheet"
       media="print"
       onload="this.media='all'"
@@ -39,10 +43,7 @@
          forma de siempre. Aquí sí bloquea, que es lo correcto: es la única manera
          de que el texto salga con su letra. -->
     <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
-        rel="stylesheet"
-      />
+      <link href="/fonts/fonts.css" rel="stylesheet" />
     </noscript>
     <meta
       name="description"

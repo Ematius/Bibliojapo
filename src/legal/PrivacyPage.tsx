@@ -83,10 +83,11 @@ export function PrivacyPage() {
           </ul>
           <p className="legal-page__text">
             Lo que te identifica —tu cuenta y tu progreso— se guarda en servidores de Supabase
-            en París, así que no sale de la Unión Europea. Vercel y Google sí son empresas
-            estadounidenses, y los datos técnicos que ven al servirte la web —tu dirección IP,
-            tu navegador— pueden tratarse fuera del Espacio Económico Europeo, amparados en los
-            marcos de transferencia que reconoce la Comisión Europea.
+            en París, así que no sale de la Unión Europea. Vercel es una empresa estadounidense,
+            y los datos técnicos que ve al servirte la web —tu dirección IP, tu navegador—
+            pueden tratarse fuera del Espacio Económico Europeo, amparados en los marcos de
+            transferencia que reconoce la Comisión Europea. Las tipografías las servimos
+            nosotros, así que no hay ningún tercero más de por medio.
           </p>
         </section>
 
