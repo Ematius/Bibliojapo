@@ -143,21 +143,16 @@ export function AccountPage() {
                 {leaving ? 'Un momento…' : 'Cerrar sesión'}
               </button>
 
-              {/* Borrar la cuenta lo exige el RGPD en cuanto se cobre, y no se puede
-                  hacer de verdad contra un servidor que vive en este navegador. Se
-                  anuncia como «todavía no» en vez de esconderse. */}
+              {/* Borrar la cuenta lo exige el RGPD en cuanto se cobre. Todavía no hay
+                  botón que la borre de Supabase: se anuncia como «todavía no» en vez
+                  de esconderse. */}
               <p className="account-page__hint">
-                Borrar la cuenta llegará con el servidor de verdad. Mientras tanto, se borra
-                sola al vaciar los datos de este navegador.
+                Borrar la cuenta todavía no se puede hacer desde aquí. Escríbenos en
+                Contacta y te la borramos.
               </p>
             </section>
           </>
         )}
-
-        {/* Lo mismo que dice el panel: mientras no haya servidor, la cuenta vive aquí. */}
-        <p className="account-page__trial">
-          Versión de prueba: por ahora la cuenta se guarda solo en este navegador.
-        </p>
       </div>
 
       <SiteNav />

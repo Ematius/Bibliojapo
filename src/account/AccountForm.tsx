@@ -1,8 +1,13 @@
 import { useId, useState, type FormEvent } from 'react'
-import { signIn, signInWithGoogle, signUp } from '../api/account'
+import { requestPasswordReset, signIn, signInWithGoogle, signUp } from '../api/account'
 import { apiErrorCode, type ApiErrorCode } from '../api/apiError'
 import { ACCOUNT_ERRORS, PASSWORD_HINT } from './accountConfig'
 import type { AccountMode } from './accountPanelState'
+
+// `resetPassword` no llega nunca hasta aquí: `AccountPanel` lo intercepta y pinta
+// `ResetPassword` en su lugar. Excluirlo del tipo, y no solo de este archivo, es lo que
+// hace que un tercer modo mal enrutado se note en la compilación en vez de en pantalla.
+type FormMode = Exclude<AccountMode, 'resetPassword'>
 
 interface AccountFormProps {
   // Por qué se pide la cuenta. Sustituye a la presentación de siempre: quien llega desde un
@@ -10,11 +15,11 @@ interface AccountFormProps {
   reason: string | null
   titleId: string
   // Solo el arranque: el enlace de abajo sigue llevando a la otra vía.
-  mode: AccountMode
+  mode: FormMode
   onDone: () => void
 }
 
-const COPY: Record<AccountMode, { title: string; intro: string; submit: string }> = {
+const COPY: Record<FormMode, { title: string; intro: string; submit: string }> = {
   signUp: {
     title: 'Crea tu cuenta',
     intro:
@@ -35,7 +40,7 @@ const COPY: Record<AccountMode, { title: string; intro: string; submit: string }
 // comprueba el servidor y aquí se enseña lo que diga. Validar en los dos sitios sería
 // escribir dos veces la misma regla. Lo único que se adelanta es la pista de la contraseña.
 export function AccountForm({ reason, titleId, mode: startMode, onDone }: AccountFormProps) {
-  const [mode, setMode] = useState<AccountMode>(startMode)
+  const [mode, setMode] = useState<FormMode>(startMode)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -43,6 +48,14 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
   // botón y su propia espera.
   const [pending, setPending] = useState<'form' | 'google' | null>(null)
   const [error, setError] = useState<ApiErrorCode | null>(null)
+  // Aparte de `mode`: se alcanza desde un enlace dentro del formulario de entrar, no
+  // desde fuera del panel, así que no le hace falta ser un modo del panel.
+  const [forgot, setForgot] = useState<{ status: 'closed' | 'open' | 'sent'; email: string }>({
+    status: 'closed',
+    email: '',
+  })
+  const [forgotPending, setForgotPending] = useState(false)
+  const [forgotError, setForgotError] = useState<ApiErrorCode | null>(null)
   const fieldId = useId()
 
   const copy = COPY[mode]
@@ -73,6 +86,99 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
   const switchMode = () => {
     setMode(mode === 'signUp' ? 'signIn' : 'signUp')
     setError(null)
+    setForgot({ status: 'closed', email: '' })
+  }
+
+  const submitForgot = async (event: FormEvent) => {
+    event.preventDefault()
+    setForgotPending(true)
+    setForgotError(null)
+
+    try {
+      await requestPasswordReset(forgot.email)
+      setForgot((current) => ({ ...current, status: 'sent' }))
+    } catch (caught) {
+      setForgotError(apiErrorCode(caught))
+    } finally {
+      setForgotPending(false)
+    }
+  }
+
+  // El enlace solo vive en «entrar»: crear cuenta no tiene contraseña que recuperar
+  // todavía. Sustituye al formulario entero en vez de colarse dentro: pedir un correo
+  // y pedir credenciales son dos preguntas distintas.
+  if (mode === 'signIn' && forgot.status !== 'closed') {
+    return (
+      <div className="account-form">
+        <p className="account-panel__eyebrow">Carné de socio</p>
+        <h2 className="account-panel__title" id={titleId}>
+          Recupera tu contraseña
+        </h2>
+
+        {forgot.status === 'sent' ? (
+          <>
+            <p className="account-panel__intro" role="status">
+              Si esa cuenta existe, te hemos mandado un correo con un enlace para elegir
+              una contraseña nueva.
+            </p>
+            <button
+              className="account-form__switch-button"
+              type="button"
+              onClick={() => setForgot({ status: 'closed', email: '' })}
+            >
+              Volver a entrar
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="account-panel__intro">
+              Escribe tu correo y te mandamos un enlace para elegir una contraseña nueva.
+            </p>
+
+            <form
+              className="account-form__fields"
+              onSubmit={(event) => void submitForgot(event)}
+              noValidate
+            >
+              <label className="account-form__field" htmlFor={`${fieldId}-forgot-email`}>
+                <span className="account-form__label">Correo electrónico</span>
+                <input
+                  className="account-form__input"
+                  id={`${fieldId}-forgot-email`}
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  value={forgot.email}
+                  onChange={(event) =>
+                    setForgot((current) => ({ ...current, email: event.target.value }))
+                  }
+                />
+              </label>
+
+              {forgotError ? (
+                <p className="account-form__error" role="alert">
+                  {ACCOUNT_ERRORS[forgotError]}
+                </p>
+              ) : null}
+
+              <button className="account-panel__primary" type="submit" disabled={forgotPending}>
+                {forgotPending ? 'Un momento…' : 'Mandar el enlace'}
+              </button>
+            </form>
+
+            <p className="account-form__switch">
+              <button
+                className="account-form__switch-button"
+                type="button"
+                onClick={() => setForgot({ status: 'closed', email: '' })}
+              >
+                Volver a entrar
+              </button>
+            </p>
+          </>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -128,6 +234,16 @@ export function AccountForm({ reason, titleId, mode: startMode, onDone }: Accoun
             </span>
           ) : null}
         </label>
+
+        {mode === 'signIn' ? (
+          <button
+            className="account-form__switch-button account-form__forgot"
+            type="button"
+            onClick={() => setForgot({ status: 'open', email: '' })}
+          >
+            ¿Has olvidado tu contraseña?
+          </button>
+        ) : null}
 
         {error ? (
           <p className="account-form__error" role="alert">

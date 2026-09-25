@@ -131,18 +131,6 @@
     outline-offset: 3px;
   }
 
-  // La nota de que la cuenta todavía es de prueba. Al pie y en voz baja: es honesta, no una
-  // alarma.
-  &__trial {
-    margin: 1.5rem 0 0;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-parchment);
-    color: var(--color-ink-soft);
-    font-size: 0.75rem;
-    line-height: 1.5;
-    text-align: center;
-  }
-
   &__credits {
     margin: 0.5rem 0 0;
     color: var(--color-ink-soft);
@@ -191,6 +179,13 @@
   &__hint {
     color: var(--color-ink-soft);
     font-size: 0.75rem;
+  }
+
+  // Al lado del campo de contraseña, no al pie del formulario: es la misma pastilla que
+  // `__switch-button`, solo que aquí se saca de la fila de campos hacia el borde.
+  &__forgot {
+    align-self: flex-end;
+    font-size: 0.8125rem;
   }
 
   &__error {

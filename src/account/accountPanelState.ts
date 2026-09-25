@@ -6,7 +6,10 @@ import { useSyncExternalStore } from 'react'
 // panel está montado una sola vez, arriba del todo. Por eso el estado vive aquí.
 // Por cuál de las dos vías empieza el formulario. Las dos están siempre a un enlace de
 // distancia dentro del panel.
-export type AccountMode = 'signUp' | 'signIn'
+//
+// `resetPassword` no lo elige quien abre el panel: lo pone `AccountPanel` al recibir el
+// aviso de Supabase de que se ha vuelto del enlace de recuperar la contraseña.
+export type AccountMode = 'signUp' | 'signIn' | 'resetPassword'
 
 export interface AccountPanelState {
   open: boolean

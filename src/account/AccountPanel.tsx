@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { closeAccountPanel, useAccountPanel } from './accountPanelState'
+import { subscribePasswordRecovery } from '../api/account'
+import { closeAccountPanel, openAccountPanel, useAccountPanel } from './accountPanelState'
 import { useAccountPanelReveal } from './useAccountPanelReveal'
 import { useSession } from './useSession'
 import { AccountForm } from './AccountForm'
 import { AccountProfile } from './AccountProfile'
+import { ResetPassword } from './ResetPassword'
 import './AccountPanel.scss'
 
 // El panel de la cuenta: crearla, entrar, y el carné de quien ya está dentro.
@@ -26,6 +28,11 @@ export function AccountPanel() {
 
   const onHidden = useCallback(() => setMounted(false), [])
   useAccountPanelReveal({ rootRef, cardRef, open, onHidden })
+
+  // Quien vuelve del enlace del correo no ha pulsado nada en la app que abra el panel: lo
+  // abre este aviso. `api/account.ts` solo cuenta que ha pasado — abrir el panel es
+  // decisión de la pantalla, no de la capa que habla con Supabase.
+  useEffect(() => subscribePasswordRecovery(() => openAccountPanel(null, 'resetPassword')), [])
 
   // Escape cierra. Solo se escucha con el panel abierto.
   useEffect(() => {
@@ -83,21 +90,18 @@ export function AccountPanel() {
           ×
         </button>
 
-        {/* Al entrar o salir con éxito el panel se cierra: lo que se quería era
-            seguir, y detrás está la estantería encendiendo lo que se acaba de
-            ganar. */}
-        {session.status === 'signedIn' ? (
+        {/* Al entrar o salir con éxito el panel se cierra: lo que se quería era seguir, y
+            detrás está la estantería encendiendo lo que se acaba de ganar.
+            `resetPassword` va antes que `signedIn` porque Supabase ya autentica con la
+            sesión temporal del enlace: sin este orden se enseñaría el carné en vez del
+            formulario de la contraseña nueva. */}
+        {mode === 'resetPassword' ? (
+          <ResetPassword titleId={titleId} onDone={closeAccountPanel} />
+        ) : session.status === 'signedIn' ? (
           <AccountProfile account={session.account} titleId={titleId} onDone={closeAccountPanel} />
         ) : (
           <AccountForm reason={reason} titleId={titleId} mode={mode} onDone={closeAccountPanel} />
         )}
-
-        {/* Mientras no haya servidor, la cuenta vive en este navegador. Se dice,
-            porque quien la cree en el móvil no la encontrará en el ordenador: eso
-            es «todavía no», y tiene que leerse así. */}
-        <p className="account-panel__trial">
-          Versión de prueba: por ahora la cuenta se guarda solo en este navegador.
-        </p>
 
         {/* Lo exige el reglamento de VOICEVOX y del personaje para usar sus voces,
             también con uso comercial: quitarlo deja los audios sin licencia. */}

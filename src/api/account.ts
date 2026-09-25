@@ -18,6 +18,20 @@ let session: Session = { status: 'loading', account: null }
 let requested = false
 const listeners = new Set<() => void>()
 
+// Quien abre el enlace del correo de recuperación no elige el panel a mano: Supabase abre
+// la app con una sesión temporal y avisa con este evento, distinto de `SIGNED_IN`. Un
+// conjunto aparte porque no es «la sesión cambió», es «toca pedir la contraseña nueva» — y
+// de eso no sabe nada `api/`, así que solo lo avisa. Quien decide abrir el panel es la
+// pantalla que escuche esto.
+const recoveryListeners = new Set<() => void>()
+
+export function subscribePasswordRecovery(listener: () => void): () => void {
+  recoveryListeners.add(listener)
+  return () => {
+    recoveryListeners.delete(listener)
+  }
+}
+
 function setSession(next: Session): void {
   session = next
   listeners.forEach((listener) => listener())
@@ -59,7 +73,8 @@ async function loadSession(user: User | null): Promise<void> {
 //
 // Dentro del callback NO se puede esperar a otra llamada de supabase: el cliente se
 // queda bloqueado. Por eso el perfil se pide FUERA, en una tarea aparte.
-supabase.auth.onAuthStateChange((_event, next) => {
+supabase.auth.onAuthStateChange((event, next) => {
+  if (event === 'PASSWORD_RECOVERY') recoveryListeners.forEach((listener) => listener())
   void Promise.resolve().then(() => loadSession(next?.user ?? null))
 })
 
@@ -144,4 +159,21 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut()
   if (error) throwAuthError(error)
   setSession(fromAccount(null))
+}
+
+// El correo con el enlace de vuelta. Da igual que la cuenta exista o no —quien pregunta no
+// tiene por qué saberlo—, así que nunca lanza por un correo que no encuentra cuenta.
+export async function requestPasswordReset(email: string): Promise<void> {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname,
+  })
+  if (error) throwAuthError(error)
+}
+
+// Se llama SOLO tras `PASSWORD_RECOVERY`: la sesión temporal que trae el enlace ya
+// autentica, así que no hay «contraseña actual» que pedir — es justo la que se ha
+// olvidado.
+export async function resetPassword(next: string): Promise<void> {
+  const { error } = await supabase.auth.updateUser({ password: next })
+  if (error) throwAuthError(error)
 }
