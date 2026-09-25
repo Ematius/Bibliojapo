@@ -212,3 +212,42 @@ drop trigger if exists on_feedback_insert on public.feedback;
 create trigger on_feedback_insert
   after insert on public.feedback
   for each row execute function public.notify_feedback();
+
+-- ---------------------------------------------------------------------------
+-- Borrar la cuenta
+-- ---------------------------------------------------------------------------
+
+-- Lo exige el RGPD, y el cliente no puede hacerlo solo: la clave `anon` no llega a
+-- `auth.users`. La función corre con los permisos de su DUEÑO, así que hay que
+-- escribirla cerrada, y lo que la cierra son dos cosas:
+--
+-- No recibe el id como parámetro, a propósito. Con un parámetro, cualquiera con la
+-- clave publicable podría pasar el de otra persona y borrarle la cuenta. Sacándolo de
+-- `auth.uid()` —que viene del token firmado de la sesión— solo puede borrarse a sí
+-- mismo, y no hay nada que manipular desde el navegador.
+--
+-- Lo demás cae por las claves foráneas: `profiles`, `seals` y `badges` van en cascada,
+-- y `feedback` a `set null`, que es lo que promete la política —el aviso se queda, el
+-- rastro de quién lo mandó se va—.
+create or replace function public.delete_own_account()
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  caller uuid := auth.uid();
+begin
+  if caller is null then
+    raise exception 'delete_own_account requires a session';
+  end if;
+
+  delete from auth.users where id = caller;
+end;
+$$;
+
+-- `public` incluye a `anon`, así que sin revocarlo se podría llamar sin sesión. No
+-- borraría nada —`auth.uid()` sería null y la función falla—, pero la puerta no tiene
+-- por qué estar abierta.
+revoke execute on function public.delete_own_account() from public;
+grant execute on function public.delete_own_account() to authenticated;

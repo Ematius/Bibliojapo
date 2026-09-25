@@ -3,7 +3,7 @@ import { announceApiChange } from './apiChanges'
 import { ApiError } from './apiError'
 import type { Account } from './contract'
 import { supabase } from './supabase'
-import { throwAuthError } from './supabaseError'
+import { throwAuthError, throwPostgrestError } from './supabaseError'
 
 export { PASSWORD_MIN_LENGTH, type Account } from './contract'
 
@@ -158,6 +158,25 @@ export async function changePassword(input: { current: string; next: string }) {
 export async function signOut() {
   const { error } = await supabase.auth.signOut()
   if (error) throwAuthError(error)
+  setSession(fromAccount(null))
+}
+
+// Borrar la cuenta la borra DE VERDAD, no la esconde: la función del servidor tira de
+// `auth.users` y las claves foráneas se llevan detrás el perfil, los sellos y las
+// insignias. No hay vuelta atrás y no queda copia — lo exige el RGPD.
+//
+// Lo guardado en el navegador no se toca, igual que al salir: quien borra su cuenta y sigue
+// leyendo el tomo 1 no tiene por qué perder por dónde iba.
+export async function deleteAccount(): Promise<void> {
+  if (!getSession().account) throw new ApiError('unauthorized')
+
+  const { error, status } = await supabase.rpc('delete_own_account')
+  if (error) throwPostgrestError(error, status)
+
+  // `scope: 'local'` porque el usuario ya no existe: pedirle al servidor que invalide el
+  // token devolvería un error por algo que ya está hecho. Aquí solo falta que el navegador
+  // deje de creerse dentro.
+  await supabase.auth.signOut({ scope: 'local' })
   setSession(fromAccount(null))
 }
 

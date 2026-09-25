@@ -132,7 +132,15 @@ export function PrivacyPage() {
           <h2 className="legal-page__heading">Lo que puedes exigir</h2>
           <p className="legal-page__text">
             Tienes derecho a saber qué datos tuyos hay, a corregirlos, a llevártelos, a limitar
-            su uso, a oponerte y a que se borren. Para cualquiera de esas cosas, escribe a{' '}
+            su uso, a oponerte y a que se borren. Borrar la cuenta lo haces tú mismo desde{' '}
+            <Link className="legal-page__link" to="/account">
+              tu cuenta
+            </Link>
+            , sin pedir permiso a nadie y sin esperar a que yo lo apruebe: se borran tu correo,
+            tu nombre, tus sellos y tus insignias, y no queda copia.
+          </p>
+          <p className="legal-page__text">
+            Para cualquier otra de esas cosas, escribe a{' '}
             <a className="legal-page__link" href={mailto}>
               {CONTACT_EMAIL}
             </a>{' '}
@@ -141,10 +149,6 @@ export function PrivacyPage() {
               Contacta
             </Link>
             , y te contesto yo.
-          </p>
-          <p className="legal-page__text">
-            El botón para borrar tu cuenta tú mismo todavía no está puesto: es de lo primero que
-            falta por hacer. Hasta que lo esté, pídemelo y la borro yo, sin preguntarte por qué.
           </p>
           <p className="legal-page__text">
             Si crees que no lo he hecho bien, puedes reclamar ante la Agencia Española de

@@ -4,6 +4,7 @@ import { signOut } from '../api/account'
 import { SiteNav } from '../shared/SiteNav'
 import { getAlwaysIntro, setAlwaysIntro } from '../intro/introPreference'
 import { openAccountPanel } from './accountPanelState'
+import { AccountDelete } from './AccountDelete'
 import { CurrentVolumeNote } from './CurrentVolumeNote'
 import { PasswordChange } from './PasswordChange'
 import { useSession } from './useSession'
@@ -143,14 +144,13 @@ export function AccountPage() {
               >
                 {leaving ? 'Un momento…' : 'Cerrar sesión'}
               </button>
+            </section>
 
-              {/* Borrar la cuenta lo exige el RGPD en cuanto se cobre. Todavía no hay
-                  botón que la borre de Supabase: se anuncia como «todavía no» en vez
-                  de esconderse. */}
-              <p className="account-page__hint">
-                Borrar la cuenta todavía no se puede hacer desde aquí. Escríbenos en
-                Contacta y te la borramos.
-              </p>
+            {/* En su propia sección y la última: no se pone al lado de «cerrar sesión», que
+                es lo que la gente viene a pulsar todos los días. */}
+            <section className="account-page__section account-page__section--edge">
+              <h2 className="account-page__heading">Borrar tu cuenta</h2>
+              <AccountDelete />
             </section>
           </>
         )}

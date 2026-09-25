@@ -58,12 +58,11 @@ export function TermsPage() {
             crees que alguien ha entrado en ella, cámbiala y avísanos.
           </p>
           <p className="legal-page__text">
-            Puedes irte cuando quieras. El botón para borrarla tú mismo todavía no está puesto;
-            hasta que lo esté, pídemelo por{' '}
-            <Link className="legal-page__link" to="/contact">
-              Contacta
-            </Link>{' '}
-            o por correo y la borro yo, sin preguntarte por qué.
+            Puedes irte cuando quieras y borrarla tú mismo desde{' '}
+            <Link className="legal-page__link" to="/account">
+              tu cuenta
+            </Link>
+            . No hay que pedirlo por correo ni esperar a que nadie lo apruebe.
           </p>
         </section>
 

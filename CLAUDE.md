@@ -306,9 +306,9 @@ que bloquea también la vía de Google porque por ahí se crea cuenta igual.
 - **Lo que espera a la fase 6**, con el pago: NIF y domicilio en el aviso legal, condiciones
   de contratación, derecho de desistimiento y el IVA de la UE. Hoy no hay actividad
   económica que declarar, y por eso el aviso legal no los lleva.
-- **Una página legal no promete lo que no existe.** Decían que la cuenta se borra desde
-  ajustes, y todavía no se puede; ahora dicen que se pide y se borra a mano. El día que haya
-  botón se cambian las dos.
+- **Una página legal no promete lo que no existe**, y al revés: el día que el borrado dejó
+  de ser «escríbenos», las dos páginas cambiaron con él. Lo que digan tiene que poder
+  comprobarse en la app esa misma tarde.
 
 ### La capa `api/` — el servidor, simulado
 
@@ -403,7 +403,12 @@ la base de datos. De ahí estas reglas, que valen desde la primera línea:
 - **El webhook de Stripe se verifica por firma.** Si no, cualquiera manda un
   «pagado» falso.
 - **Borrar la cuenta es obligatorio**, no una cortesía: lo exige el RGPD en cuanto
-  se cobre en Europa. Va en el panel, junto a cerrar sesión.
+  se cobre en Europa. Hecho el 25-09-2026 en `account/AccountDelete.tsx`, en su propia
+  sección al final de «Tu cuenta» y NO al lado de cerrar sesión, que es lo que se pulsa
+  todos los días. Se confirma escribiendo BORRAR, y lo ejecuta `delete_own_account()`:
+  una función `security definer` que saca a quién borrar de `auth.uid()` y **nunca de un
+  parámetro** —con parámetro, cualquiera con la clave publicable borraría la cuenta de
+  otro—. El progreso cae detrás por las claves foráneas.
 
 ---
 
