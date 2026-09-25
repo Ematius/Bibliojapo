@@ -170,3 +170,45 @@ grant select, update            on public.profiles to authenticated;
 grant select, insert            on public.seals    to authenticated;
 grant select                    on public.badges   to authenticated;
 grant insert                    on public.feedback to anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Aviso por correo de Contacta
+-- ---------------------------------------------------------------------------
+
+-- El panel de Database Webhooks falla en este proyecto con «schema
+-- supabase_functions does not exist» —un hueco de aprovisionamiento de Supabase,
+-- no nuestro—, así que el disparo va por un trigger propio con pg_net en vez de
+-- por esa UI. El secreto compartido con la función vive en Vault, nunca aquí: se
+-- guarda una sola vez desde el SQL Editor con `vault.create_secret(...)` y esa
+-- consulta NO se commitea.
+create extension if not exists pg_net;
+
+create or replace function public.notify_feedback()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  webhook_secret text;
+begin
+  select decrypted_secret into webhook_secret
+  from vault.decrypted_secrets
+  where name = 'feedback_webhook_secret';
+
+  perform net.http_post(
+    url := 'https://jfrgxqskgxnqgoxmtnjr.supabase.co/functions/v1/notify-feedback',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'x-webhook-secret', webhook_secret
+    ),
+    body := jsonb_build_object('record', to_jsonb(new))
+  );
+  return new;
+end;
+$$;
+
+drop trigger if exists on_feedback_insert on public.feedback;
+create trigger on_feedback_insert
+  after insert on public.feedback
+  for each row execute function public.notify_feedback();
