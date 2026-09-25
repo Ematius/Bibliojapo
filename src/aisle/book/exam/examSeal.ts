@@ -47,13 +47,17 @@ export function mountExamSeal(root: HTMLElement, blockId: string): (() => void) 
   // Llegan con retraso —pueden venir de la cuenta—, pero para cuando alguien llega a la
   // última hoja ya han llegado. Si el libro se cierra antes, la respuesta se tira.
   let mounted = true
-  void fetchSeals(blockId).then((earned) => {
-    if (!mounted) return
-    for (const [id, exam] of exams) {
-      if (!earned.has(id)) continue
-      exam.seals.forEach((seal) => seal.classList.add('exam-seal--earned'))
-    }
-  })
+  void fetchSeals(blockId)
+    .then((earned) => {
+      if (!mounted) return
+      for (const [id, exam] of exams) {
+        if (!earned.has(id)) continue
+        exam.seals.forEach((seal) => seal.classList.add('exam-seal--earned'))
+      }
+    })
+    // Sin cortar el examen por esto: lo peor que pasa es que un sello ya ganado no
+    // salga puesto, y `fetchSeals` puede lanzar desde que traduce los fallos de Supabase.
+    .catch(() => {})
 
   const onSolved = (event: Event) => {
     const check = (event.target as Element | null)?.closest(EXERCISES)

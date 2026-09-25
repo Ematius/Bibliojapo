@@ -14,13 +14,22 @@ const FAILURES: Record<ApiErrorCode, string> = {
   unauthorized: 'Este tomo se abre con una cuenta.',
   forbidden: 'Este tomo todavía no está abierto para ti.',
   'not-found': 'Este tomo todavía se está escribiendo.',
+  'rate-limited': 'Has pedido muchas hojas seguidas. Espera un momento.',
+  server: 'La biblioteca no responde ahora mismo. Inténtalo en unos minutos.',
+  unexpected: 'No se han podido traer las hojas, y no es cosa de tu conexión.',
+  // Los que no puede devolver pedir un tomo. Si llegaran aquí sería un fallo nuestro.
   'missing-name': 'No se han podido traer las hojas.',
   'invalid-email': 'No se han podido traer las hojas.',
   'weak-password': 'No se han podido traer las hojas.',
   'email-taken': 'No se han podido traer las hojas.',
   'wrong-credentials': 'No se han podido traer las hojas.',
+  'email-not-confirmed': 'No se han podido traer las hojas.',
   'empty-message': 'No se han podido traer las hojas.',
 }
+
+// Volver a pedir solo sirve con estos tres. Un tomo sin escribir, uno sin ganar o un fallo
+// nuestro no se arreglan pulsando otra vez.
+const RETRYABLE: readonly ApiErrorCode[] = ['network', 'server', 'rate-limited']
 
 // Lo que ocupa el papel del libro abierto mientras sus hojas no están. Casi nunca se ve;
 // existe para cuando la conexión va lenta o falla, donde lo peor sería un libro abierto en
@@ -37,9 +46,7 @@ export function VolumeStatus({ load, onRetry }: VolumeStatusProps) {
     )
   }
 
-  // Reintentar solo tiene sentido si lo que falló fue la conexión: un tomo sin escribir o sin
-  // ganar no se arregla pulsando otra vez.
-  const retryable = load.code === 'network'
+  const retryable = RETRYABLE.includes(load.code)
 
   return (
     <div className="volume-status" role="alert">

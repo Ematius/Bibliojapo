@@ -158,39 +158,44 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   // evaluación completa»: no hay suspense en algo que ya se sabía, así que se enseña
   // el resultado directo y sin animar — el mismo criterio que usa `examSeal.ts` con
   // los sellos ganados de antes.
-  void fetchSeals(blockId).then((earned) => {
-    if (!mounted || !earned.has(FINAL_SEAL)) return
+  void fetchSeals(blockId)
+    .then((earned) => {
+      if (!mounted || !earned.has(FINAL_SEAL)) return
 
-    rules.querySelector<HTMLElement>('[data-exam-start]')?.setAttribute('hidden', '')
-    rules.querySelector<HTMLElement>('[data-exam-done]')?.removeAttribute('hidden')
+      rules.querySelector<HTMLElement>('[data-exam-start]')?.setAttribute('hidden', '')
+      rules.querySelector<HTMLElement>('[data-exam-done]')?.removeAttribute('hidden')
 
-    reveal.querySelector<HTMLElement>('[data-exam-reveal-show]')?.setAttribute('hidden', '')
-    reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')?.removeAttribute('hidden')
+      reveal.querySelector<HTMLElement>('[data-exam-reveal-show]')?.setAttribute('hidden', '')
+      reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')?.removeAttribute('hidden')
 
-    // Con la nota guardada, el desglose de verdad; sin ella —tomos sellados antes de
-    // que existiera este guardado— el aviso genérico de siempre.
-    const stored = readFinalExamScore(blockId)
-    if (stored) {
-      buildBlockRows(stored).forEach((row) => {
-        row.style.opacity = '1'
-      })
-      paintFinal(stored, true)
-    } else {
-      const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
-      if (finalEl) finalEl.textContent = 'Ya superado'
-      reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')?.setAttribute(
-        'src',
-        '/images/green-seal.webp',
-      )
-      reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')?.removeAttribute('hidden')
-    }
+      // Con la nota guardada, el desglose de verdad; sin ella —tomos sellados antes de
+      // que existiera este guardado— el aviso genérico de siempre.
+      const stored = readFinalExamScore(blockId)
+      if (stored) {
+        buildBlockRows(stored).forEach((row) => {
+          row.style.opacity = '1'
+        })
+        paintFinal(stored, true)
+      } else {
+        const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
+        if (finalEl) finalEl.textContent = 'Ya superado'
+        reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')?.setAttribute(
+          'src',
+          '/images/green-seal.webp',
+        )
+        reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')?.removeAttribute('hidden')
+      }
 
-    reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')?.classList.add('exam-seal--earned')
+      reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')?.classList.add('exam-seal--earned')
 
-    // El regalo sigue siendo suyo aunque el examen se aprobara otro día: lo ganado está
-    // ganado, y la chuleta es justo lo que se vuelve a abrir para repasar.
-    unlockGift()
-  })
+      // El regalo sigue siendo suyo aunque el examen se aprobara otro día: lo ganado está
+      // ganado, y la chuleta es justo lo que se vuelve a abrir para repasar.
+      unlockGift()
+    })
+    // Sin cortar el examen por esto: lo peor que pasa es no saltarse las normas de un
+    // tomo ya sellado, y `fetchSeals` puede lanzar desde que traduce los fallos de
+    // Supabase.
+    .catch(() => {})
 
   // EMPEZAR: bloquea el libro y entra en la primera frase.
   const startButton = rules.querySelector<HTMLButtonElement>('[data-exam-start]')

@@ -1,8 +1,9 @@
-import type { AuthError, User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 import { announceApiChange } from './apiChanges'
-import { ApiError, type ApiErrorCode } from './apiError'
+import { ApiError } from './apiError'
 import type { Account } from './contract'
 import { supabase } from './supabase'
+import { throwAuthError } from './supabaseError'
 
 export { PASSWORD_MIN_LENGTH, type Account } from './contract'
 
@@ -80,20 +81,6 @@ export function subscribeSession(listener: () => void): () => void {
   }
 }
 
-// Los códigos de Supabase traducidos a los que distinguen las pantallas. Lo que no
-// esté aquí se trata como fallo de red, que es reintentable — ver `apiError.ts`.
-function fail(error: AuthError): never {
-  const codes: Record<string, ApiErrorCode> = {
-    invalid_credentials: 'wrong-credentials',
-    email_not_confirmed: 'wrong-credentials',
-    user_already_exists: 'email-taken',
-    email_exists: 'email-taken',
-    weak_password: 'weak-password',
-    validation_failed: 'invalid-email',
-  }
-  throw new ApiError(codes[error.code ?? ''] ?? 'network')
-}
-
 export async function signUp(input: { name: string; email: string; password: string }) {
   const name = input.name.trim()
   // Supabase no exige nombre y el carné sí. Se comprueba antes de llamar para no
@@ -106,8 +93,8 @@ export async function signUp(input: { name: string; email: string; password: str
     // De aquí lo saca el disparador que crea la fila de `profiles`.
     options: { data: { name } },
   })
-  if (error) fail(error)
-  if (!data.user) throw new ApiError('network')
+  if (error) throwAuthError(error)
+  if (!data.user) throw new ApiError('unexpected')
 
   const account = await accountFrom(data.user)
   setSession(fromAccount(account))
@@ -116,7 +103,7 @@ export async function signUp(input: { name: string; email: string; password: str
 
 export async function signIn(input: { email: string; password: string }) {
   const { data, error } = await supabase.auth.signInWithPassword(input)
-  if (error) fail(error)
+  if (error) throwAuthError(error)
 
   const account = await accountFrom(data.user)
   setSession(fromAccount(account))
@@ -131,7 +118,7 @@ export async function signInWithGoogle(): Promise<void> {
     // Sin la query ni el hash: el que traiga la vuelta de Google los necesita libres.
     options: { redirectTo: window.location.origin + window.location.pathname },
   })
-  if (error) fail(error)
+  if (error) throwAuthError(error)
 }
 
 // La sesión sigue abierta al cambiarla: quien la cambia está delante, y echarle sería
@@ -149,12 +136,12 @@ export async function changePassword(input: { current: string; next: string }) {
   if (check.error) throw new ApiError('wrong-credentials')
 
   const { error } = await supabase.auth.updateUser({ password: input.next })
-  if (error) fail(error)
+  if (error) throwAuthError(error)
 }
 
 // Salir no borra nada del navegador: el tomo 1 sigue sellado sin cuenta abierta.
 export async function signOut() {
   const { error } = await supabase.auth.signOut()
-  if (error) fail(error)
+  if (error) throwAuthError(error)
   setSession(fromAccount(null))
 }

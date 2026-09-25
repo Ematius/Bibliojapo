@@ -32,35 +32,77 @@
     position: fixed;
     inset: 0;
     z-index: -1;
+    // Más suave que antes: ahora el texto va sobre el cartel y el velo solo tiene que
+    // separarlo de la escena, no hacerlo legible.
     background: linear-gradient(
       95deg,
-      rgba(var(--rgb-bg), 0.9) 0%,
-      rgba(var(--rgb-bg), 0.76) 32%,
-      rgba(var(--rgb-bg), 0.24) 56%,
+      rgba(var(--rgb-bg), 0.72) 0%,
+      rgba(var(--rgb-bg), 0.58) 32%,
+      rgba(var(--rgb-bg), 0.18) 56%,
       transparent 72%
     );
   }
 
-  &__panel {
+  // El cartel: una tabla clavada con el aviso, colgada de dos cadenas como la que ya
+  // cuelga en la escena. No pasa de la mitad izquierda, que es donde acaba el velo y
+  // donde empieza el cartel dibujado.
+  &__sign {
+    position: relative;
     display: grid;
     justify-items: start;
-    gap: 1.25rem;
-    // La columna de texto no pasa de la mitad de la escena, que es hasta donde llega el velo.
+    gap: 1rem;
     max-width: 30rem;
+    padding: 2rem;
+    border: 2px solid var(--color-wood-dark);
+    border-radius: var(--radius-float);
+    background:
+      radial-gradient(circle at 1.5rem 1.4rem, var(--color-brass) 0 0.3rem, transparent 0.32rem),
+      radial-gradient(
+        circle at calc(100% - 1.5rem) 1.4rem,
+        var(--color-brass) 0 0.3rem,
+        transparent 0.32rem
+      ),
+      linear-gradient(170deg, var(--color-page), var(--color-parchment));
+    box-shadow: var(--shadow-float);
+    // Tinta sobre el pergamino del cartel, declarado aquí y no heredado de la escena:
+    // sin esto, lo de dentro saldría con el color claro del fondo oscuro.
+    color: var(--color-ink);
+  }
+
+  // Las dos cadenas de las que cuelga. Nacen de los remaches y se juntan hacia arriba,
+  // fuera del cartel.
+  &__sign::before,
+  &__sign::after {
+    content: '';
+    position: absolute;
+    top: -2.5rem;
+    width: 0.125rem;
+    height: 2.5rem;
+    background: linear-gradient(var(--color-brass-glow), var(--color-brass));
+    transform-origin: bottom center;
+  }
+
+  &__sign::before {
+    left: 1.5rem;
+    transform: rotate(-9deg);
+  }
+
+  &__sign::after {
+    right: 1.5rem;
+    transform: rotate(9deg);
   }
 
   &__title {
     margin: 0;
-    color: var(--color-brass-glow);
+    color: var(--color-wood-deep);
     font-family: var(--font-display);
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: 500;
     line-height: 1.2;
   }
 
   &__text {
     margin: 0;
-    color: var(--color-parchment);
     line-height: 1.6;
     text-wrap: pretty;
   }
@@ -73,9 +115,14 @@
     margin-top: 0.5rem;
   }
 
+  // Sirve al enlace de volver y al botón de recargar: el botón trae borde, fuente y
+  // fondo propios del navegador, y sin quitarlos los dos no se parecerían en nada.
   &__action {
     padding: 0.6875rem 1.375rem;
+    border: none;
     border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    cursor: pointer;
     background: var(--color-brass);
     color: var(--color-ink);
     font-size: 0.9375rem;
@@ -89,7 +136,7 @@
   }
 
   &__link {
-    color: var(--color-parchment);
+    color: var(--color-wood-dark);
     font-size: 0.9375rem;
     text-decoration: underline;
     text-underline-offset: 0.25em;
@@ -97,7 +144,7 @@
 
   &__action:focus-visible,
   &__link:focus-visible {
-    outline: 2px solid var(--color-brass-glow);
+    outline: 2px solid var(--color-wood-dark);
     outline-offset: 3px;
   }
 }
@@ -121,6 +168,10 @@
         rgba(var(--rgb-bg), 0.72) 52%,
         rgba(var(--rgb-bg), 0.94) 100%
       );
+    }
+
+    &__sign {
+      padding: 1.5rem;
     }
   }
 }

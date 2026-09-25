@@ -10,6 +10,7 @@
 import { getSession } from './account'
 import { ApiError } from './apiError'
 import { supabase } from './supabase'
+import { throwPostgrestError } from './supabaseError'
 
 export type { FeedbackContext, FeedbackKind, FeedbackReport } from './contract'
 import type { FeedbackContext, FeedbackKind } from './contract'
@@ -37,7 +38,7 @@ export async function sendFeedback(input: {
   const context = collectContext()
   // `account_id` no viaja: lo pone la propia tabla con `auth.uid()`, y su política
   // rechaza cualquier otro. Firmar un aviso con la cuenta de otro es imposible.
-  const { error } = await supabase.from('feedback').insert({
+  const { error, status } = await supabase.from('feedback').insert({
     kind: input.kind,
     message: input.message,
     email: input.email,
@@ -46,5 +47,5 @@ export async function sendFeedback(input: {
     viewport: context.viewport,
   })
 
-  if (error) throw new ApiError('network')
+  if (error) throwPostgrestError(error, status)
 }
