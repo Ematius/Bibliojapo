@@ -154,7 +154,16 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
           particles?.setGlobalOpacity(0.15)
 
           enterActionRef.current = () => {
-            const tl = gsap.timeline()
+            // Sin el aviso del final, la fachada se funde y deja el interior a la vista —la
+            // MISMA ilustración con la que arranca el vestíbulo— sin haber cambiado de ruta:
+            // parece que se ha entrado, pero no hay carteles ni barra y no se sale de ahí.
+            const tl = gsap.timeline({
+              onComplete: () => {
+                if (hasEnteredRef.current) return
+                hasEnteredRef.current = true
+                onEnterCompleteRef.current()
+              },
+            })
             tl.to(doorLeftRef.current, { rotateY: config.doors.leftRotationOpen, duration: 0.6, ease: 'power2.inOut' }, 0)
             tl.to(doorRightRef.current, { rotateY: config.doors.rightRotationOpen, duration: 0.6, ease: 'power2.inOut' }, 0)
             tl.to(glowRef.current, { opacity: config.glow.open, duration: 0.6, ease: 'sine.out' }, 0)
