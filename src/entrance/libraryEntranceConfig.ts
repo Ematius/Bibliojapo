@@ -90,6 +90,13 @@ export const LIBRARY_ANIMATION_CONFIG = {
   scroll: {
     // Distancia total de scroll-jacking, en alturas de viewport.
     viewportHeights: 2.5,
+
+    // Con cuánto recorrido se da por entrado. NO es 1 a propósito: la fachada se desvanece
+    // hasta `push.facadeMinOpacity`, que es 0, así que en el último tramo ya no queda nada
+    // que mirar —el interior está limpio y parece que se ha entrado—. Exigir el final
+    // exacto deja plantado a quien suelta la rueda ahí, y con la pantalla fija por el pin
+    // nada le dice que le falta.
+    enterAtProgress: 0.98,
   },
 
   doors: {

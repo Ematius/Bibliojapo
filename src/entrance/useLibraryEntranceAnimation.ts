@@ -149,21 +149,24 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       readyRef.current = true
       setIsReady(true)
 
+      // Se entra UNA vez, venga el aviso de donde venga. Son tres porque ninguno basta
+      // solo: con `scrub` la timeline es un tween que PERSIGUE al scroll y hay máquinas
+      // donde no remata, y el recorrido se puede soltar antes del final.
+      const enterHall = () => {
+        if (hasEnteredRef.current) return
+        hasEnteredRef.current = true
+        onEnterCompleteRef.current()
+      }
+
       ctx = gsap.context(() => {
         if (wantsStillness) {
           particles?.setGlobalOpacity(0.15)
 
           enterActionRef.current = () => {
-            // Sin el aviso del final, la fachada se funde y deja el interior a la vista —la
-            // MISMA ilustración con la que arranca el vestíbulo— sin haber cambiado de ruta:
+            // Sin este aviso, la fachada se funde y deja el interior a la vista —la MISMA
+            // ilustración con la que arranca el vestíbulo— sin haber cambiado de ruta:
             // parece que se ha entrado, pero no hay carteles ni barra y no se sale de ahí.
-            const tl = gsap.timeline({
-              onComplete: () => {
-                if (hasEnteredRef.current) return
-                hasEnteredRef.current = true
-                onEnterCompleteRef.current()
-              },
-            })
+            const tl = gsap.timeline({ onComplete: enterHall })
             tl.to(doorLeftRef.current, { rotateY: config.doors.leftRotationOpen, duration: 0.6, ease: 'power2.inOut' }, 0)
             tl.to(doorRightRef.current, { rotateY: config.doors.rightRotationOpen, duration: 0.6, ease: 'power2.inOut' }, 0)
             tl.to(glowRef.current, { opacity: config.glow.open, duration: 0.6, ease: 'sine.out' }, 0)
@@ -198,14 +201,7 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
         const syncParticles = () => particles?.setGlobalOpacity(particlesProxy.value)
 
         const tl = gsap.timeline({
-          // Con scrub la timeline persigue al scroll, así que esto salta cuando el recorrido
-          // llega de verdad al final, no cuando el scroll toca el límite. El guard evita que
-          // se repita si se sube y se vuelve a bajar antes de que cambie la ruta.
-          onComplete: () => {
-            if (hasEnteredRef.current) return
-            hasEnteredRef.current = true
-            onEnterCompleteRef.current()
-          },
+          onComplete: enterHall,
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
@@ -214,10 +210,14 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
             scrub: 1,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            // Pasarse de largo del recorrido es haber entrado, aunque la timeline venga
+            // detrás.
+            onLeave: enterHall,
             onUpdate: (self) => {
               if (enterButtonRef.current) {
                 enterButtonRef.current.style.pointerEvents = self.progress < 0.02 ? 'auto' : 'none'
               }
+              if (self.progress >= config.scroll.enterAtProgress) enterHall()
             },
           },
         })
