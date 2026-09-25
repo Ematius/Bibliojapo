@@ -343,6 +343,13 @@ api/
 - **`mockServer.ts` no sabe de hiragana**: lee `content/aisleContent.ts`, el
   registro de qué pasillo tiene qué temario —ver «Cómo se arma un tomo»—, así que
   darle temario a un pasillo nuevo no toca ni `mockServer.ts` ni `volumes.ts`.
+- **El correo de Contacta llega hoy a la cuenta personal, no a
+  `bibliojapo5@gmail.com`** (decidido 25-09-2026). Lo manda
+  `supabase/functions/notify-feedback/index.ts` con Resend, y sin dominio propio
+  verificado en Resend solo se puede enviar a la dirección con la que se creó esa
+  cuenta —hoy, la personal—. Cambiarlo es tocar el secreto `FEEDBACK_TO` en el
+  panel de Supabase, y se aplaza a propósito hasta que haya suficientes usuarios
+  para justificar verificar un dominio propio en Resend.
 
 La regla del tomo, encadenada de un tirón por los cuatro pasillos —hiragana,
 katakana, kanji, vocabulario, en ese orden—: dentro de un pasillo, cada tomo pide
