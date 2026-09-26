@@ -26,15 +26,17 @@ script vuelca a las tablas. El login con Google funciona, el dominio propio es
 `bibliojapo.app`, el SMTP propio de Resend está verificado, y borrar la cuenta ya se
 hace desde la pantalla — ver «Lo legal».
 
-**Lo que queda de esta fase**, en este orden: las plantillas de correo, que hoy son
-las de Supabase en inglés; el bucket de Storage, que es lo único del temario que no se
-ha montado y que hace falta para el media del bloque 2; y escribir los tomos que
+**Lo que queda de esta fase**: el bucket de Storage, que es lo único del temario que
+no se ha montado y que hace falta para el media del bloque 2, y escribir los tomos que
 faltan, uno a uno y ya en la red.
 
-Falta una decisión que no se ha tomado y no se toma sola: **quién creó su cuenta con
-correo y meses después pulsa «Continuar con Google» con ESE MISMO correo**. O acaba
-con dos cuentas separadas —y ve sus insignias desaparecidas— o con una sola con dos
-formas de entrar. Es un ajuste de Supabase, no código nuestro.
+**Las dos formas de entrar acaban en UNA cuenta**, comprobado el 26-09-2026: quien se
+registró con correo y después pulsa «Continuar con Google» con ese mismo correo
+conserva su `user id`, y en el panel aparece una sola fila con dos proveedores. No
+hubo que configurar nada —Supabase enlaza las identidades cuando el proveedor devuelve
+un correo ya verificado—, pero importa saberlo escrito: `seals` y `badges` cuelgan del
+`user id`, así que si algún día dejara de enlazar, esa persona entraría y vería sus
+insignias desaparecidas.
 
 El responsive (fase 4) también está cerrado, y con él el encuadre que colgaba de la
 fase 2: probado en anchos de verdad el 25-09-2026. Lo componen el aviso de rotar,
@@ -135,15 +137,16 @@ todavía no están tomadas en la anterior.
    son rutas a las que se entra desde fuera: la ida y vuelta real a Google, el correo
    de confirmación, «he olvidado mi contraseña» y borrar la cuenta.
 
-   **Las dos vías de entrada se quedan** —correo y Google—, y traen una decisión que
-   hay que tomar a conciencia, no por omisión: quien creó su cuenta con un correo y
-   una contraseña y meses después pulsa «Continuar con Google» con ESE MISMO correo,
-   o acaba con dos cuentas separadas o con una sola con dos formas de entrar. Si son
-   dos, entra y ve sus insignias desaparecidas: para esa persona, la app le ha
-   perdido el progreso. Es un ajuste de Supabase, no código nuestro. Y dentro de la
-   fase, **Google primero**: valida el flujo entero sin plantillas de correo de por
-   medio. Y se monta con el deep link contemplado desde el primer día — ver
-   «Capacitor».
+   **Las dos vías de entrada se quedan** —correo y Google—, y las dos llevan a la
+   misma cuenta: ver arriba, comprobado el 26-09-2026. Dentro de la fase se hizo
+   **Google primero**, que valida el flujo entero sin plantillas de correo de por
+   medio, y con el deep link contemplado desde el primer día — ver «Capacitor».
+
+   Lo que sí deja rastro en el código: el aviso de correo ya registrado nombra **las
+   dos vías** («entra con tu contraseña o con Google»). Desde el formulario no se sabe
+   con cuál se creó la cuenta —Supabase no lo dice, y hace bien—, y una cuenta nacida
+   de Google no tiene contraseña: mandarla solo a «entra» la dejaría fuera sin
+   entender por qué.
 4. **Responsive.** Va DESPUÉS de Mi escritorio, no antes: es la última pantalla
    grande que falta, y ajustar anchos mientras aún no existe obliga a hacer el
    trabajo dos veces —una ahora y otra el día que el escritorio no quepa—. Aquí
@@ -192,8 +195,9 @@ todavía no están tomadas en la anterior.
    cuenta y NUNCA pueden entrar. No falla ruidosamente, falla en silencio, y se lleva
    por delante justo a quien sí quería entrar.
 
-   **Quedan las PLANTILLAS**, que hoy son las de Supabase en inglés — es lo primero
-   que recibe quien acaba de cruzar unas puertas de madera tallada.
+   Las PLANTILLAS, en cambio, siguen siendo las de Supabase en inglés, y se quedan
+   así a propósito hasta la fase 6 (decidido 26-09-2026): mientras entran amigos y
+   conocidos, un correo en inglés se entiende y se perdona. Ver la fase 6.
 
    El resto de los tomos se escriben AQUÍ, uno a uno y ya en la red, contra
    Supabase. No esperan a nada: un tomo escrito y probado a solas es un tomo con
@@ -202,6 +206,11 @@ todavía no están tomadas en la anterior.
    mismo día: Stripe con su webhook verificado por firma y el estado de la
    suscripción como dato del servidor que alimenta `VolumeGate`; el temario en
    bucket privado con URLs firmadas de vida corta; y la factura.
+
+   **Lo PRIMERO de esta fase son las plantillas de correo**, antes que Stripe: hoy
+   son las de Supabase en inglés, y el correo de confirmación es lo primero que
+   recibe quien acaba de cruzar unas puertas de madera tallada. En inglés se perdona
+   mientras nadie paga; el día que se cobra, no.
 
    **El bucket privado va AQUÍ, no antes.** Mientras el temario está a medias todo
    es gratis con cuenta, y para eso basta la RLS: quien no se ha registrado no lo
