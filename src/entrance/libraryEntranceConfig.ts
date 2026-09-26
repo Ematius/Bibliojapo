@@ -45,12 +45,11 @@ const PORTAL = {
   bleed: 0.018,
 }
 
-// Fases de la timeline única, como fracciones [0, 1] del progreso total de scroll.
+// Fases de la animación de entrada, como fracciones [0, 1] de `enter.durationSeconds`.
 const PHASES = {
-  closed: [0, 0.1] as [number, number],
-  opening: [0.1, 0.45] as [number, number],
-  open: [0.45, 0.65] as [number, number],
-  push: [0.65, 1] as [number, number],
+  opening: [0, 0.4] as [number, number],
+  open: [0.4, 0.6] as [number, number],
+  push: [0.6, 1] as [number, number],
 }
 
 const centerOverlap = 0.01
@@ -75,28 +74,13 @@ const DOORS_3D = {
   backSaturation: 0.75,
 }
 
-// La usan dos sitios que tienen que dar exactamente el mismo número: el ScrollTrigger
-// para su `end`, y la vuelta de un pasillo para saltar al final del recorrido. Con la
-// fórmula escrita en cada uno, cambiar solo uno dejaba el salto corto o largo.
-export function getEntranceScrollLength(): number {
-  return window.innerHeight * LIBRARY_ANIMATION_CONFIG.scroll.viewportHeights
-}
-
 export const LIBRARY_ANIMATION_CONFIG = {
   stage: STAGE,
   portal: PORTAL,
   phases: PHASES,
 
-  scroll: {
-    // Distancia total de scroll-jacking, en alturas de viewport.
-    viewportHeights: 2.5,
-
-    // Con cuánto recorrido se da por entrado. NO es 1 a propósito: la fachada se desvanece
-    // hasta `push.facadeMinOpacity`, que es 0, así que en el último tramo ya no queda nada
-    // que mirar —el interior está limpio y parece que se ha entrado—. Exigir el final
-    // exacto deja plantado a quien suelta la rueda ahí, y con la pantalla fija por el pin
-    // nada le dice que le falta.
-    enterAtProgress: 0.98,
+  enter: {
+    durationSeconds: 3.2,
   },
 
   doors: {

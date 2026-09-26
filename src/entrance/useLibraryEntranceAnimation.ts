@@ -1,13 +1,9 @@
-import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
-import { LIBRARY_ANIMATION_CONFIG as config, getEntranceScrollLength } from './libraryEntranceConfig'
+import { LIBRARY_ANIMATION_CONFIG as config } from './libraryEntranceConfig'
 import { fitDoorImageToContainer } from './getOpaqueBounds'
 import { LibraryParticles } from './LibraryParticles'
 import { prefersReducedMotion } from '../shared/prefersReducedMotion'
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
 export interface LibraryEntranceRefs {
   sectionRef: RefObject<HTMLElement | null>
@@ -65,12 +61,7 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
     enterActionRef.current()
   }, [])
 
-  // Tiene que ser de LAYOUT y no un `useEffect`: al fijar la sección, ScrollTrigger la
-  // envuelve en un `.pin-spacer` y deja de ser hija del nodo que React registró. Si React
-  // la desmonta así, su `removeChild` falla y el árbol se queda a medias —la puerta
-  // pintada y la ruta nueva sin montar—. Los cleanups de `useEffect` corren DESPUÉS de
-  // quitar los nodos; los de layout, antes, que es cuando hay que deshacer el pin.
-  useLayoutEffect(() => {
+  useEffect(() => {
     const {
       sectionRef,
       interiorRef,
@@ -149,9 +140,6 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
       readyRef.current = true
       setIsReady(true)
 
-      // Se entra UNA vez, venga el aviso de donde venga. Son tres porque ninguno basta
-      // solo: con `scrub` la timeline es un tween que PERSIGUE al scroll y hay máquinas
-      // donde no remata, y el recorrido se puede soltar antes del final.
       const enterHall = () => {
         if (hasEnteredRef.current) return
         hasEnteredRef.current = true
@@ -192,38 +180,16 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
           },
         )
 
-        const [closedStart, closedEnd] = config.phases.closed
         const [openingStart, openingEnd] = config.phases.opening
         const [openStart, openEnd] = config.phases.open
         const [pushStart, pushEnd] = config.phases.push
 
-        const particlesProxy = { value: 0 }
+        const particlesProxy = { value: 0.02 }
         const syncParticles = () => particles?.setGlobalOpacity(particlesProxy.value)
+        gsap.set(glowRef.current, { opacity: config.glow.closed })
+        syncParticles()
 
-        const tl = gsap.timeline({
-          onComplete: enterHall,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: () => `+=${getEntranceScrollLength()}`,
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            // Pasarse de largo del recorrido es haber entrado, aunque la timeline venga
-            // detrás.
-            onLeave: enterHall,
-            onUpdate: (self) => {
-              if (enterButtonRef.current) {
-                enterButtonRef.current.style.pointerEvents = self.progress < 0.02 ? 'auto' : 'none'
-              }
-              if (self.progress >= config.scroll.enterAtProgress) enterHall()
-            },
-          },
-        })
-
-        tl.to(glowRef.current, { opacity: config.glow.closed, duration: closedEnd - closedStart, ease: 'none' }, closedStart)
-        tl.to(particlesProxy, { value: 0.02, duration: closedEnd - closedStart, ease: 'none', onUpdate: syncParticles }, closedStart)
+        const tl = gsap.timeline({ paused: true, onComplete: enterHall })
 
         const openingDuration = openingEnd - openingStart
         tl.to(doorLeftRef.current, { rotateY: config.doors.leftRotationOpen, duration: openingDuration, ease: 'power1.inOut' }, openingStart)
@@ -265,12 +231,13 @@ export function useLibraryEntranceAnimation(refs: LibraryEntranceRefs, onEnterCo
         tl.to(spillRef.current, { opacity: 0, duration: pushDuration, ease: 'none' }, pushStart)
         tl.to(particlesProxy, { value: 0.85, duration: pushDuration, ease: 'none', onUpdate: syncParticles }, pushStart)
 
-        ScrollTrigger.refresh()
+        // Las fases van en fracciones de 1; esto estira la timeline a los segundos reales.
+        tl.duration(config.enter.durationSeconds)
 
         enterActionRef.current = () => {
-          const st = tl.scrollTrigger
-          if (!st) return
-          gsap.to(window, { duration: 1.4, ease: 'power2.inOut', scrollTo: { y: st.end } })
+          if (tl.progress() > 0) return
+          if (enterButtonRef.current) enterButtonRef.current.style.pointerEvents = 'none'
+          tl.play()
         }
       }, sectionRef)
     }
