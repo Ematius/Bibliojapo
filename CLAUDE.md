@@ -303,11 +303,18 @@ clave. De ahí sale la regla de escritura: **una ruta del bloque 2 en adelante n
 empieza por `/`**; con barra delante, `media.ts` la busca en el despliegue y no la
 encuentra.
 
-A diferencia de las tablas, **el media se sube y se reemplaza, pero no se borra lo que
-sobre**: la carpeta se va vaciando según el media pasa al bucket, y un espejo lo
-borraría entero. Quitar un archivo del bucket se hace a mano, a conciencia. Ojo con lo
-que eso implica si se vacía la carpeta: el bucket pasa a ser la única copia viva, y el
-original solo queda en el historial de git.
+**La carpeta NO se vacía** (decidido 26-09-2026, cambia lo que decía antes este
+documento): los archivos se quedan ahí como copia viva. No cuestan nada —no están en
+`public/`, así que no viajan en ningún despliegue— y vaciarla dejaría el bucket como
+única copia, con el original solo en el historial de git.
+
+De ahí que, a diferencia de las tablas, **el media se sube y se reemplaza pero no se
+borra lo que sobre**: quitar un archivo del bucket se hace a mano, a conciencia.
+
+En desarrollo `content-media/` SÍ se sirve —Vite lee del disco, y responde tanto en
+`/content-media/…` como en `/@fs/…`—, y da igual: el servidor de desarrollo es la
+propia máquina. Lo único a tener presente es `vite --host`, que lo expone a la red
+local entera.
 
 **Todo el media pasa por UNA función que devuelve su URL.** Hoy devuelve la ruta
 pública; el día del bucket privado devuelve la URL firmada de vida corta. Con la
