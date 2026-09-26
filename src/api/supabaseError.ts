@@ -33,16 +33,22 @@ export function throwAuthError(error: AuthError): never {
   throw new ApiError(authErrorCode(error))
 }
 
-// El código de Postgres para RLS: una política que no deja pasar la fila, no un fallo
-// del servidor. https://postgrest.org/en/stable/api.html?highlight=options#errors-and-http-status-codes
-const RLS_DENIED = '42501'
+// Los SQLSTATE que hay que mirar por código y no por status: `42501` lo pone la RLS
+// cuando una política no deja pasar la fila, y los otros dos los levanta a mano
+// `volume()` en `content.sql`. El status no vale para distinguirlos —`not-found` viaja
+// como 500, que sin esto se leería como «el servidor está mal».
+// https://postgrest.org/en/stable/api.html?highlight=options#errors-and-http-status-codes
+const PG_CODES: Record<string, ApiErrorCode> = {
+  '42501': 'forbidden',
+  '28000': 'unauthorized',
+  P0002: 'not-found',
+}
 
 export function postgrestErrorCode(
   error: PostgrestError,
   status: number | undefined,
 ): ApiErrorCode {
-  if (error.code === RLS_DENIED) return 'forbidden'
-  return byStatus(status)
+  return PG_CODES[error.code ?? ''] ?? byStatus(status)
 }
 
 export function throwPostgrestError(error: PostgrestError, status: number | undefined): never {

@@ -2,10 +2,10 @@ import { AISLE_CONTENT } from '../content/aisleContent'
 import { readSeals } from '../shared/seals'
 import { getSession } from './account'
 import { BLOCK_CHAIN, type ChainedBlock } from './blockChain'
-import { FINAL_SEAL, type CurrentVolume } from './contract'
-import { mockServer } from './mockServer'
+import { FINAL_SEAL, type CurrentVolume, type VolumeContent } from './contract'
 import { fetchBadges } from './progress'
 import { supabase } from './supabase'
+import { throwPostgrestError } from './supabaseError'
 
 export type { CurrentVolume, VolumeContent } from './contract'
 
@@ -71,8 +71,13 @@ export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
   )
 }
 
-export function fetchVolume(blockId: string) {
-  return mockServer.volume(blockId)
+// El temario no se lee tabla a tabla: no tienen política de lectura, y es la función
+// la que comprueba el derecho al tomo antes de empaquetarlo. Ver «El tomo» en
+// `supabase/content.sql`.
+export async function fetchVolume(blockId: string): Promise<VolumeContent> {
+  const { data, error, status } = await supabase.rpc('volume', { requested_block: blockId })
+  if (error) throwPostgrestError(error, status)
+  return data as VolumeContent
 }
 
 // Por dónde sigue la lectura. `null` cuando no queda ninguno por sellar: lo escrito
