@@ -327,3 +327,23 @@ end;
 $$;
 
 grant execute on function public.volume(text) to anon, authenticated;
+
+-- Qué tomos están escritos. Es lo único del catálogo que el navegador necesita saber
+-- sin abrir nada: la balda los pinta apagados y al pulsarlos dicen «todavía no».
+--
+-- Devuelve ids y nada más. Títulos y resúmenes son contenido, y del bloque 2 en
+-- adelante ese contenido pide cuenta: si viajaran aquí, la portada del tomo siguiente
+-- se leería sin tenerla.
+create or replace function public.published_volumes()
+returns text[]
+language sql
+security definer
+stable
+set search_path = ''
+as $$
+  select coalesce(array_agg(b.id order by b.aisle_id, b.position), '{}')
+  from public.blocks b
+  where b.published;
+$$;
+
+grant execute on function public.published_volumes() to anon, authenticated;

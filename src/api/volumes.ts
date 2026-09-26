@@ -40,12 +40,21 @@ async function earnedBadges(): Promise<Set<string>> {
   return new Set((await fetchBadges()).map((badge) => badge.blockId))
 }
 
+// Qué tomos están escritos. El código solo sabe cuántos hay: el temario no viaja en el
+// despliegue, así que esto no se puede mirar en local.
+async function publishedBlocks(): Promise<Set<string>> {
+  const { data, error, status } = await supabase.rpc('published_volumes')
+  if (error) throwPostgrestError(error, status)
+  return new Set<string>(data ?? [])
+}
+
 // Quién abre qué lo decide el servidor. La app solo añade lo que él no puede saber:
 // que en ESTE navegador se selló el anterior sin cuenta. Eso no abre nada, pero
 // cambia el aviso: no «sella el anterior», sino «crea tu cuenta».
 export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
   const { account } = getSession()
-  let badges = await earnedBadges()
+  const [published, earned] = await Promise.all([publishedBlocks(), earnedBadges()])
+  let badges = earned
 
   // Un sello de aquí que no le llegó al servidor —sin conexión, o subida fallida—
   // dejaría cerrado un tomo ya ganado. Se sube y se vuelve a preguntar.
@@ -63,7 +72,7 @@ export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
       // Quién abre qué sigue decidiéndolo el servidor: aquí solo se lee la insignia
       // que él dio, nunca el sello que la provocó.
       if (index === 0 || badges.has(previous.blockId)) {
-        return [block.blockId, block.published ? 'open' : 'soon']
+        return [block.blockId, published.has(block.blockId) ? 'open' : 'soon']
       }
       if (!account && sealedHere(previous)) return [block.blockId, 'needsAccount']
       return [block.blockId, 'locked']
