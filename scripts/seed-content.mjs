@@ -7,6 +7,8 @@
 // Carga los módulos con Vite y no con Node a secas porque `content/` importa sin
 // extensión (`from './blocks'`), que Node no resuelve.
 import { existsSync, readFileSync } from 'node:fs'
+import { readdir, readFile } from 'node:fs/promises'
+import { join, relative, sep } from 'node:path'
 import { createClient } from '@supabase/supabase-js'
 import { createServer } from 'vite'
 
@@ -213,7 +215,60 @@ for (const block of blocks) {
   )
 }
 
+// El media del bloque 2 en adelante: se produce en `content-media/<pasillo>/<bloque>/`
+// y sube al bucket con esa misma ruta de clave. El del bloque 1 NO está aquí —se queda
+// en `public/`, que es gratis de servir y es el tomo que abre todo el mundo— y por eso
+// sus rutas llevan barra delante. Ver `api/media.ts`.
+const MEDIA_DIR = 'content-media'
+const MEDIA_BUCKET = 'content-media'
+
+const MIME = {
+  webp: 'image/webp',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  svg: 'image/svg+xml',
+  wav: 'audio/wav',
+  mp3: 'audio/mpeg',
+  ogg: 'audio/ogg',
+  m4a: 'audio/mp4',
+}
+
+async function uploadMedia() {
+  if (!existsSync(MEDIA_DIR)) return 0
+
+  const entries = await readdir(MEDIA_DIR, { recursive: true, withFileTypes: true })
+  let uploaded = 0
+
+  for (const entry of entries) {
+    if (!entry.isFile() || entry.name === '.gitkeep') continue
+
+    const file = join(entry.parentPath, entry.name)
+    // La clave del bucket va SIEMPRE con barras: en Windows `relative` devuelve
+    // separadores de Windows, y con ellos el bucket guardaría UN archivo con todo
+    // el camino en el nombre, en vez de las carpetas del pasillo y el bloque.
+    const key = relative(MEDIA_DIR, file).split(sep).join('/')
+
+    const extension = entry.name.split('.').pop()?.toLowerCase() ?? ''
+    const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(key, await readFile(file), {
+      upsert: true,
+      contentType: MIME[extension] ?? 'application/octet-stream',
+    })
+
+    if (error) throw new Error(`media ${key}: ${error.message}`)
+    uploaded++
+  }
+
+  return uploaded
+}
+
+// Sube y reemplaza, pero NO borra lo que sobre, al revés que las tablas: la carpeta se
+// vacía a medida que el media pasa al bucket, así que un espejo lo borraría entero.
+// Quitar algo del bucket se hace a mano, que es raro y conviene que sea a conciencia.
+const uploaded = await uploadMedia()
+
 console.log(
   `Volcado: ${blocks.length} bloques, ${lessons.length} lecciones, ${kana.length} kana, ` +
     `${words.length} palabras, ${sentences.length} frases, ${grammar.length} reglas.`,
 )
+console.log(uploaded ? `Media: ${uploaded} archivo(s) al bucket.` : 'Media: nada que subir.')
