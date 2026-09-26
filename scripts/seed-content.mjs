@@ -58,6 +58,7 @@ const vite = await createServer({
 const { AISLE_CONTENT, AISLE_ORDER, globalBlockId } = await vite.ssrLoadModule(
   '/src/content/aisleContent.ts',
 )
+const { LESSON_SOURCE } = await vite.ssrLoadModule('/src/content/lessonSource.ts')
 
 const aisles = []
 const blocks = []
@@ -98,7 +99,7 @@ for (const aisleId of AISLE_ORDER) {
     })
   })
 
-  const { kanaById, wordsById, sentencesById, grammarById } = await aisle.loadLessonContent()
+  const { kanaById, wordsById, sentencesById, grammarById } = await LESSON_SOURCE[aisleId]()
 
   for (const entry of kanaById.values()) {
     kana.push({

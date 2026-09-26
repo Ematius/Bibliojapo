@@ -1,9 +1,11 @@
-// Qué carpeta de `content/` alimenta cada pasillo: su plan de tomos, sus bloques
-// escritos y cómo pedir el resto —kana, vocabulario, frases— sin cargarlo entero en
-// el bundle inicial. `shelfConfig.ts` y la capa `api/` leen de aquí en vez de
-// importar `hiragana/` a pelo, que es lo único que les permite servir cualquier
-// pasillo sin saber de los demás.
-import type { Block, Grammar, Kana, Sentence, Word } from './types'
+// Qué tomos tiene cada pasillo y cuánto suma su parte del N5. `shelfConfig.ts` y la
+// capa `api/` leen de aquí en vez de importar `hiragana/` a pelo, que es lo único que
+// les permite servir cualquier pasillo sin saber de los demás.
+//
+// Solo lo que hace falta EN EL FRONT: el temario en crudo está en `lessonSource.ts`,
+// y este archivo no lo importa a propósito — lo que se importe aquí viaja en el
+// despliegue.
+import type { Block } from './types'
 import {
   BLOCK_PLAN as HIRAGANA_BLOCK_PLAN,
   BLOCKS_BY_ID as HIRAGANA_BLOCKS_BY_ID,
@@ -30,14 +32,6 @@ export interface AisleContent {
   // y una copia en SQL se quedaría vieja sin que nadie lo notase.
   kanaTotal: number
   wordTotal: number
-  // Lo pesado —trazos, mnemotecnias, audio— no viaja en el bundle inicial: se pide
-  // aparte, como ya hacía `packVolume` a mano solo para hiragana.
-  loadLessonContent: () => Promise<{
-    kanaById: ReadonlyMap<string, Kana>
-    wordsById: ReadonlyMap<string, Word>
-    sentencesById: ReadonlyMap<string, Sentence>
-    grammarById: ReadonlyMap<string, Grammar>
-  }>
 }
 
 // Un pasillo sin temario se registra con las listas vacías: la estantería no saca
@@ -50,12 +44,6 @@ function emptyAisle(kanaTotal: number): AisleContent {
     blocksById: new Map(),
     kanaTotal,
     wordTotal: N5_WORD_COUNT,
-    loadLessonContent: async () => ({
-      kanaById: new Map(),
-      wordsById: new Map(),
-      sentencesById: new Map(),
-      grammarById: new Map(),
-    }),
   }
 }
 
@@ -65,21 +53,6 @@ export const AISLE_CONTENT: Readonly<Record<AisleId, AisleContent>> = {
     blocksById: HIRAGANA_BLOCKS_BY_ID,
     kanaTotal: HIRAGANA_BASE_COUNT,
     wordTotal: N5_WORD_COUNT,
-    loadLessonContent: async () => {
-      const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }, { GRAMMAR_BY_ID }] =
-        await Promise.all([
-          import('./hiragana/kana'),
-          import('./hiragana/vocabulary'),
-          import('./hiragana/sentences'),
-          import('./hiragana/grammar'),
-        ])
-      return {
-        kanaById: HIRAGANA_BY_ID,
-        wordsById: VOCABULARY_BY_ID,
-        sentencesById: SENTENCES_BY_ID,
-        grammarById: GRAMMAR_BY_ID,
-      }
-    },
   },
   katakana: emptyAisle(KATAKANA_BASE_COUNT),
   kanji: emptyAisle(N5_KANJI_COUNT),
