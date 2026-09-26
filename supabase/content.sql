@@ -24,6 +24,15 @@ begin
 end
 $$;
 
+-- Los denominadores del N5 en cada pasillo: cuántos kana tiene y cuánto vocabulario.
+-- Son los de `content/aisleContent.ts` y llegan con el volcado — escribirlos aquí a
+-- mano dejaría dos copias, y la de SQL envejecería sin que nadie lo notase.
+create table if not exists public.aisles (
+  id public.aisle_id primary key,
+  kana_total int not null default 0,
+  word_total int not null default 0
+);
+
 -- ---------------------------------------------------------------------------
 -- Bloques
 -- ---------------------------------------------------------------------------
@@ -122,6 +131,7 @@ create table if not exists public.lessons (
 -- Activada y sin una sola política: nadie lee estas tablas con la clave publicable.
 -- El volcado entra con la `service_role`, que se las salta, y la lectura pasa por la
 -- función que comprueba el derecho al tomo.
+alter table public.aisles enable row level security;
 alter table public.blocks enable row level security;
 alter table public.kana enable row level security;
 alter table public.words enable row level security;
@@ -138,6 +148,7 @@ alter table public.lessons enable row level security;
 -- Solo sobre el temario, a propósito: los datos de usuario —perfiles, sellos,
 -- insignias— no los toca ningún script, así que ahí no hace falta abrir nada.
 grant select, insert, update, delete on table
+  public.aisles,
   public.blocks,
   public.kana,
   public.words,

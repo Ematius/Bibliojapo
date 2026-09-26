@@ -59,6 +59,7 @@ const { AISLE_CONTENT, AISLE_ORDER, globalBlockId } = await vite.ssrLoadModule(
   '/src/content/aisleContent.ts',
 )
 
+const aisles = []
 const blocks = []
 const lessons = []
 const kana = []
@@ -68,6 +69,8 @@ const grammar = []
 
 for (const aisleId of AISLE_ORDER) {
   const aisle = AISLE_CONTENT[aisleId]
+
+  aisles.push({ id: aisleId, kana_total: aisle.kanaTotal, word_total: aisle.wordTotal })
 
   aisle.blockPlan.forEach((localId, index) => {
     const block = aisle.blocksById.get(localId)
@@ -154,6 +157,7 @@ for (const aisleId of AISLE_ORDER) {
 await vite.close()
 
 // Los bloques van primero: las lecciones cuelgan de ellos por clave ajena.
+check('aisles', await supabase.from('aisles').upsert(aisles))
 check('blocks', await supabase.from('blocks').upsert(blocks))
 check('kana', await supabase.from('kana').upsert(kana))
 check('words', await supabase.from('words').upsert(words))

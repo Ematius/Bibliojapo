@@ -4,7 +4,14 @@
 // importar `hiragana/` a pelo, que es lo único que les permite servir cualquier
 // pasillo sin saber de los demás.
 import type { Block, Grammar, Kana, Sentence, Word } from './types'
-import { BLOCK_PLAN as HIRAGANA_BLOCK_PLAN, BLOCKS_BY_ID as HIRAGANA_BLOCKS_BY_ID } from './hiragana/blocks'
+import {
+  BLOCK_PLAN as HIRAGANA_BLOCK_PLAN,
+  BLOCKS_BY_ID as HIRAGANA_BLOCKS_BY_ID,
+  HIRAGANA_BASE_COUNT,
+  KATAKANA_BASE_COUNT,
+  N5_KANJI_COUNT,
+  N5_WORD_COUNT,
+} from './hiragana/blocks'
 
 // Mismos cuatro pasillos que `TrackId` en `api/contract.ts`. No se importa de allí
 // para no hacer depender `content/` de `api/` —la dirección es siempre al revés—,
@@ -18,6 +25,11 @@ export interface AisleContent {
   // Solo los bloques que ya tienen contenido. Un id en `blockPlan` sin entrada aquí
   // es un tomo sin escribir.
   blocksById: ReadonlyMap<string, Block>
+  // Los denominadores del N5 en ESTE pasillo: cuántos kana tiene y cuánto vocabulario.
+  // Viven aquí para no escribirlos dos veces, porque el volcado se los lleva a la base
+  // y una copia en SQL se quedaría vieja sin que nadie lo notase.
+  kanaTotal: number
+  wordTotal: number
   // Lo pesado —trazos, mnemotecnias, audio— no viaja en el bundle inicial: se pide
   // aparte, como ya hacía `packVolume` a mano solo para hiragana.
   loadLessonContent: () => Promise<{
@@ -32,21 +44,27 @@ export interface AisleContent {
 // tomos y el servidor no tiene nada que empaquetar, la misma regla que un bloque sin
 // escribir. Se sustituye por una entrada de verdad el día que exista su
 // `content/<pasillo>/blocks.ts`.
-const EMPTY_AISLE: AisleContent = {
-  blockPlan: [],
-  blocksById: new Map(),
-  loadLessonContent: async () => ({
-    kanaById: new Map(),
-    wordsById: new Map(),
-    sentencesById: new Map(),
-    grammarById: new Map(),
-  }),
+function emptyAisle(kanaTotal: number): AisleContent {
+  return {
+    blockPlan: [],
+    blocksById: new Map(),
+    kanaTotal,
+    wordTotal: N5_WORD_COUNT,
+    loadLessonContent: async () => ({
+      kanaById: new Map(),
+      wordsById: new Map(),
+      sentencesById: new Map(),
+      grammarById: new Map(),
+    }),
+  }
 }
 
 export const AISLE_CONTENT: Readonly<Record<AisleId, AisleContent>> = {
   hiragana: {
     blockPlan: HIRAGANA_BLOCK_PLAN,
     blocksById: HIRAGANA_BLOCKS_BY_ID,
+    kanaTotal: HIRAGANA_BASE_COUNT,
+    wordTotal: N5_WORD_COUNT,
     loadLessonContent: async () => {
       const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }, { GRAMMAR_BY_ID }] =
         await Promise.all([
@@ -63,9 +81,10 @@ export const AISLE_CONTENT: Readonly<Record<AisleId, AisleContent>> = {
       }
     },
   },
-  katakana: EMPTY_AISLE,
-  kanji: EMPTY_AISLE,
-  vocabulary: EMPTY_AISLE,
+  katakana: emptyAisle(KATAKANA_BASE_COUNT),
+  kanji: emptyAisle(N5_KANJI_COUNT),
+  // Vocabulario no cuenta kana: su arco del carné es la palabra sumada de los cuatro.
+  vocabulary: emptyAisle(0),
 }
 
 // El orden en el que un pasillo exige el anterior terminado del todo: katakana pide
