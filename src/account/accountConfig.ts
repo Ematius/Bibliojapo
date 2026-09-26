@@ -8,7 +8,9 @@ export const ACCOUNT_ERRORS: Record<ApiErrorCode, string> = {
   'missing-name': 'Falta tu nombre.',
   'invalid-email': 'Ese correo no parece válido.',
   'weak-password': `La contraseña necesita al menos ${PASSWORD_MIN_LENGTH} caracteres.`,
-  'email-taken': 'Ya hay una cuenta con ese correo. Prueba a entrar.',
+  // Las dos vías, porque desde aquí no se sabe cuál usó: una cuenta creada con Google
+  // no tiene contraseña, y mandarla solo a «entra» la deja fuera sin entender por qué.
+  'email-taken': 'Ya hay una cuenta con ese correo. Entra con tu contraseña o con Google.',
   'wrong-credentials': 'El correo o la contraseña no coinciden.',
   'email-not-confirmed': 'Te mandamos un correo para confirmar la cuenta. Ábrelo y vuelve a entrar.',
   'rate-limited': 'Demasiados intentos seguidos. Espera un minuto y vuelve a probar.',
