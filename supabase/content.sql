@@ -156,3 +156,174 @@ grant select, insert, update, delete on table
   public.sentences,
   public.lessons
   to service_role;
+
+-- ---------------------------------------------------------------------------
+-- El tomo
+-- ---------------------------------------------------------------------------
+
+-- La ÚNICA puerta al temario: las tablas no tienen política de lectura, así que sin
+-- esta función no se ve nada con la clave publicable.
+--
+-- Quién abre qué lo decide aquí el servidor, nunca el navegador: hace falta la
+-- insignia del tomo anterior de la cadena, y esa solo la escribe el trigger de
+-- `badges`. Si lo decidiera el cliente, bastaría con tocar sus datos para llevarse el
+-- tomo siguiente.
+--
+-- Las listas de kana, palabras, frases y reglas van sin orden a propósito: el lector
+-- las indexa por id en cuanto las recibe. El orden que importa —el de las lecciones—
+-- sí se respeta.
+create or replace function public.volume(requested_block text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  target public.blocks;
+  previous public.blocks;
+  totals public.aisles;
+  viewer uuid := auth.uid();
+  learned_kana int;
+  learned_words int;
+begin
+  select * into target from public.blocks b where b.id = requested_block;
+
+  -- Un tomo sin escribir no se abre en blanco: para quien pregunta, todavía no existe.
+  if not found or not target.published then
+    raise exception 'not-found' using errcode = 'P0002';
+  end if;
+
+  -- El anterior de la cadena, que cruza de pasillo: el primer tomo de katakana pide el
+  -- último de hiragana. El enum `aisle_id` ordena por su orden de declaración, que es
+  -- justo el del recorrido.
+  select * into previous
+  from public.blocks b
+  where (b.aisle_id, b.position) < (target.aisle_id, target.position)
+  order by b.aisle_id desc, b.position desc
+  limit 1;
+
+  -- Sin anterior es el primer tomo de todos: gratis y sin cuenta.
+  if found then
+    if viewer is null then
+      raise exception 'unauthorized' using errcode = '28000';
+    end if;
+    if not exists (
+      select 1 from public.badges g where g.user_id = viewer and g.block_id = previous.id
+    ) then
+      raise exception 'forbidden' using errcode = '42501';
+    end if;
+  end if;
+
+  select * into totals from public.aisles a where a.id = target.aisle_id;
+
+  -- Lo aprendido hasta ESTE tomo, sin contar dos veces lo que reaparece más adelante.
+  select count(distinct l.kana_id) into learned_kana
+  from public.blocks b
+  join public.lessons l on l.block_id = b.id
+  where b.aisle_id = target.aisle_id and b.position <= target.position;
+
+  select count(distinct word_id) into learned_words
+  from public.blocks b
+  cross join unnest(b.word_ids) as word_id
+  where b.aisle_id = target.aisle_id and b.position <= target.position;
+
+  -- Sin los nulos, para que un campo vacío llegue ausente y no como `null`: así el
+  -- paquete tiene la forma de los campos opcionales de `content/types.ts`.
+  return jsonb_strip_nulls(jsonb_build_object(
+    'block', jsonb_build_object(
+      'id', target.local_id,
+      'title', target.title,
+      'summary', target.summary,
+      'lessons', coalesce((
+        select jsonb_agg(
+          jsonb_build_object('kanaId', l.kana_id, 'wordIds', to_jsonb(l.word_ids))
+          order by l.position
+        )
+        from public.lessons l where l.block_id = target.id
+      ), '[]'::jsonb),
+      'wordIds', to_jsonb(target.word_ids),
+      'sentenceIds', to_jsonb(target.sentence_ids)
+    ),
+    'kana', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', k.id,
+        'character', k.character,
+        'romaji', k.romaji,
+        'audio', k.audio,
+        'mnemonic', k.mnemonic,
+        'strokeOrder', to_jsonb(k.stroke_order),
+        'image', k.image,
+        'imageAlt', k.image_alt,
+        'outline', k.outline,
+        'strokes', to_jsonb(k.strokes),
+        'strokeViewBox', k.stroke_view_box
+      ))
+      from public.lessons l
+      join public.kana k on k.aisle_id = target.aisle_id and k.id = l.kana_id
+      where l.block_id = target.id
+    ), '[]'::jsonb),
+    'words', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', w.id,
+        'units', w.units,
+        'meaning', w.meaning,
+        'swatch', w.swatch,
+        'image', w.image,
+        'imageAlt', w.image_alt,
+        'audio', w.audio
+      ))
+      from public.words w
+      where w.aisle_id = target.aisle_id
+        and w.id in (
+          select unnest(target.word_ids)
+          union
+          select unnest(l.word_ids) from public.lessons l where l.block_id = target.id
+          union
+          select unnest(s.word_ids) from public.sentences s
+            where s.aisle_id = target.aisle_id and s.id = any(target.sentence_ids)
+        )
+    ), '[]'::jsonb),
+    'sentences', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', s.id,
+        'text', s.text,
+        'meaning', s.meaning,
+        'units', s.units,
+        'wordIds', to_jsonb(s.word_ids),
+        'grammarId', s.grammar_id,
+        'audio', s.audio
+      ))
+      from public.sentences s
+      where s.aisle_id = target.aisle_id and s.id = any(target.sentence_ids)
+    ), '[]'::jsonb),
+    'grammar', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', g.id,
+        'character', g.character,
+        'romaji', g.romaji,
+        'explanation', g.explanation
+      ))
+      from public.grammar g
+      where g.aisle_id = target.aisle_id
+        and g.id in (
+          select s.grammar_id from public.sentences s
+          where s.aisle_id = target.aisle_id
+            and s.id = any(target.sentence_ids)
+            and s.grammar_id is not null
+        )
+    ), '[]'::jsonb),
+    'progress', jsonb_build_object(
+      'kana', learned_kana,
+      'kanaPercent',
+        case when totals.kana_total > 0
+          then learned_kana::numeric * 100 / totals.kana_total else 0 end,
+      'words', learned_words,
+      'wordsPercent',
+        case when totals.word_total > 0
+          then learned_words::numeric * 100 / totals.word_total else 0 end
+    )
+  ));
+end;
+$$;
+
+grant execute on function public.volume(text) to anon, authenticated;
