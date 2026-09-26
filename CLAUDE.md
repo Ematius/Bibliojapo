@@ -26,9 +26,9 @@ script vuelca a las tablas. El login con Google funciona, el dominio propio es
 `bibliojapo.app`, el SMTP propio de Resend está verificado, y borrar la cuenta ya se
 hace desde la pantalla — ver «Lo legal».
 
-**Lo que queda de esta fase**: el bucket de Storage, que es lo único del temario que
-no se ha montado y que hace falta para el media del bloque 2, y escribir los tomos que
-faltan, uno a uno y ya en la red.
+**Lo que queda de esta fase**: escribir los tomos que faltan, uno a uno y ya en la
+red. La tubería está entera —tablas, funciones, volcado y bucket—, así que un tomo
+nuevo es contenido y nada más.
 
 **Las dos formas de entrar acaban en UNA cuenta**, comprobado el 26-09-2026: quien se
 registró con correo y después pulsa «Continuar con Google» con ese mismo correo
@@ -289,14 +289,25 @@ vuelve a importarse `blocks.ts` o `kana.ts` desde `src/`, el temario regresa al 
 sin que salte ninguna alarma: se comprueba buscándolo en `dist/` tras `npm run build`.
 
 **Las imágenes y audios del bloque 2 en adelante van en `content-media/`, no en
-`public/`.** A una imagen no se la protege empaquetándola —Vite la mete en
-`dist/` con otro nombre, pero sigue siendo una URL pública—, así que mientras se
-producen se guardan en `content-media/<pasillo>/<bloque>/` en la raíz del repo:
-ni se importa desde `src/`, ni vive en `public/`, así que no viaja en ningún
-despliegue y solo queda versionada en el repo privado. El bloque 1 se queda en
-`public/`, porque es gratis y da igual. Cuando se monte Supabase, el mismo script
-que vuelca `content/` a las tablas sube estos archivos al bucket —público mientras
-sea gratis, privado el día del muro— y la carpeta se vacía.
+`public/`.** A una imagen no se la protege empaquetándola —Vite la mete en `dist/` con
+otro nombre, pero sigue siendo una URL pública—, así que se producen en
+`content-media/<pasillo>/<bloque>/`, en la raíz del repo: ni se importa desde `src/`,
+ni vive en `public/`, así que no viaja en ningún despliegue. El bloque 1 se queda en
+`public/`, porque es gratis y es el que abre todo el mundo: servirlo desde Vercel no
+gasta del egress de Supabase, que son 10 GB al mes compartidos con la base de datos.
+
+**El bucket ya está montado** (26-09-2026): se llama `content-media`, es público de
+momento —privado el día del muro, y ese día solo cambia `api/media.ts`— y
+`npm run seed:content` sube a él lo que haya en la carpeta, con la misma ruta de
+clave. De ahí sale la regla de escritura: **una ruta del bloque 2 en adelante nunca
+empieza por `/`**; con barra delante, `media.ts` la busca en el despliegue y no la
+encuentra.
+
+A diferencia de las tablas, **el media se sube y se reemplaza, pero no se borra lo que
+sobre**: la carpeta se va vaciando según el media pasa al bucket, y un espejo lo
+borraría entero. Quitar un archivo del bucket se hace a mano, a conciencia. Ojo con lo
+que eso implica si se vacía la carpeta: el bucket pasa a ser la única copia viva, y el
+original solo queda en el historial de git.
 
 **Todo el media pasa por UNA función que devuelve su URL.** Hoy devuelve la ruta
 pública; el día del bucket privado devuelve la URL firmada de vida corta. Con la
