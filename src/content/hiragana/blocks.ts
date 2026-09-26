@@ -1,3 +1,6 @@
+// El temario de hiragana: títulos, resúmenes y qué lleva cada tomo. SOLO lo lee el
+// script de volcado, a través de `lessonSource.ts` — el plan del pasillo, que sí viaja
+// en el despliegue, está en `plan.ts`.
 import type { Block } from '../types'
 
 export const BLOCKS: Block[] = [
@@ -475,45 +478,3 @@ export const BLOCKS: Block[] = [
 ]
 
 export const BLOCKS_BY_ID = new Map(BLOCKS.map((block) => [block.id, block]))
-
-// El temario completo en orden. B13 es el cruce explícito con la Fase 2.
-export const BLOCK_PLAN: readonly string[] = [
-  'b1',
-  'b2',
-  'b3',
-  'b4',
-  'b5',
-  'b6',
-  'b7',
-  'b8',
-  'b9',
-  'b10',
-  'b11',
-  'b12',
-  'b13',
-]
-
-// Los 46 kana base; las transformaciones de B10–B12 no incrementan este total base.
-export const HIRAGANA_BASE_COUNT = 46
-
-// Aproximado a propósito: el examen no publica su lista de vocabulario.
-export const N5_WORD_COUNT = 800
-
-export const KATAKANA_BASE_COUNT = 46
-export const N5_KANJI_COUNT = 100
-
-// Mide únicamente las lecciones que ya tienen sus parejas manuales de vocabulario.
-export function progressThrough(blockId: string) {
-  const upTo = BLOCKS.findIndex((block) => block.id === blockId)
-  const reached = upTo < 0 ? [] : BLOCKS.slice(0, upTo + 1)
-
-  const kana = new Set(reached.flatMap((block) => block.lessons.map((lesson) => lesson.kanaId)))
-  const words = new Set(reached.flatMap((block) => block.wordIds))
-
-  return {
-    kana: kana.size,
-    kanaPercent: (kana.size / HIRAGANA_BASE_COUNT) * 100,
-    words: words.size,
-    wordsPercent: (words.size / N5_WORD_COUNT) * 100,
-  }
-}

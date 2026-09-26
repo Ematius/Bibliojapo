@@ -1,4 +1,4 @@
-import { BLOCK_PLAN } from './blocks'
+import { BLOCK_PLAN } from './plan'
 
 // Plan exacto de caracteres por bloque. B10–B12 contienen transformaciones
 // explícitas y B13 no añade hiragana nuevo porque cruza con katakana.

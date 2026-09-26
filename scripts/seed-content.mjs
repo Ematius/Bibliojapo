@@ -70,11 +70,13 @@ const grammar = []
 
 for (const aisleId of AISLE_ORDER) {
   const aisle = AISLE_CONTENT[aisleId]
+  const { blocksById, kanaById, wordsById, sentencesById, grammarById } =
+    await LESSON_SOURCE[aisleId]()
 
   aisles.push({ id: aisleId, kana_total: aisle.kanaTotal, word_total: aisle.wordTotal })
 
   aisle.blockPlan.forEach((localId, index) => {
-    const block = aisle.blocksById.get(localId)
+    const block = blocksById.get(localId)
     blocks.push({
       id: globalBlockId(aisleId, localId),
       aisle_id: aisleId,
@@ -98,8 +100,6 @@ for (const aisleId of AISLE_ORDER) {
       })
     })
   })
-
-  const { kanaById, wordsById, sentencesById, grammarById } = await LESSON_SOURCE[aisleId]()
 
   for (const entry of kanaById.values()) {
     kana.push({

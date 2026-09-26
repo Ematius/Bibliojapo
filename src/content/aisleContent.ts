@@ -5,15 +5,13 @@
 // Solo lo que hace falta EN EL FRONT: el temario en crudo está en `lessonSource.ts`,
 // y este archivo no lo importa a propósito — lo que se importe aquí viaja en el
 // despliegue.
-import type { Block } from './types'
 import {
   BLOCK_PLAN as HIRAGANA_BLOCK_PLAN,
-  BLOCKS_BY_ID as HIRAGANA_BLOCKS_BY_ID,
   HIRAGANA_BASE_COUNT,
   KATAKANA_BASE_COUNT,
   N5_KANJI_COUNT,
   N5_WORD_COUNT,
-} from './hiragana/blocks'
+} from './hiragana/plan'
 
 // Mismos cuatro pasillos que `TrackId` en `api/contract.ts`. No se importa de allí
 // para no hacer depender `content/` de `api/` —la dirección es siempre al revés—,
@@ -24,9 +22,6 @@ export interface AisleContent {
   // El temario entero en orden, escrito o no: de aquí sale cuántos tomos tiene la
   // estantería del pasillo.
   blockPlan: readonly string[]
-  // Solo los bloques que ya tienen contenido. Un id en `blockPlan` sin entrada aquí
-  // es un tomo sin escribir.
-  blocksById: ReadonlyMap<string, Block>
   // Los denominadores del N5 en ESTE pasillo: cuántos kana tiene y cuánto vocabulario.
   // Viven aquí para no escribirlos dos veces, porque el volcado se los lleva a la base
   // y una copia en SQL se quedaría vieja sin que nadie lo notase.
@@ -41,7 +36,6 @@ export interface AisleContent {
 function emptyAisle(kanaTotal: number): AisleContent {
   return {
     blockPlan: [],
-    blocksById: new Map(),
     kanaTotal,
     wordTotal: N5_WORD_COUNT,
   }
@@ -50,7 +44,6 @@ function emptyAisle(kanaTotal: number): AisleContent {
 export const AISLE_CONTENT: Readonly<Record<AisleId, AisleContent>> = {
   hiragana: {
     blockPlan: HIRAGANA_BLOCK_PLAN,
-    blocksById: HIRAGANA_BLOCKS_BY_ID,
     kanaTotal: HIRAGANA_BASE_COUNT,
     wordTotal: N5_WORD_COUNT,
   },

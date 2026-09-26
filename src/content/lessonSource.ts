@@ -6,9 +6,12 @@
 // muro se saltaría abriendo el inspector. El front recibe el tomo ya empaquetado por
 // `fetchVolume`. Ver «El contenido de pago no puede vivir en `content/`» en CLAUDE.md.
 import type { AisleId } from './aisleContent'
-import type { Grammar, Kana, Sentence, Word } from './types'
+import type { Block, Grammar, Kana, Sentence, Word } from './types'
 
 export interface LessonContent {
+  // Los bloques escritos. Un id del plan sin entrada aquí es un tomo sin escribir, y
+  // el volcado lo marca como no publicado.
+  blocksById: ReadonlyMap<string, Block>
   kanaById: ReadonlyMap<string, Kana>
   wordsById: ReadonlyMap<string, Word>
   sentencesById: ReadonlyMap<string, Sentence>
@@ -19,6 +22,7 @@ export interface LessonContent {
 // escribir. Se sustituye por su carga de verdad el día que exista su `content/<pasillo>/`.
 async function emptyContent(): Promise<LessonContent> {
   return {
+    blocksById: new Map(),
     kanaById: new Map(),
     wordsById: new Map(),
     sentencesById: new Map(),
@@ -28,14 +32,22 @@ async function emptyContent(): Promise<LessonContent> {
 
 export const LESSON_SOURCE: Readonly<Record<AisleId, () => Promise<LessonContent>>> = {
   hiragana: async () => {
-    const [{ HIRAGANA_BY_ID }, { VOCABULARY_BY_ID }, { SENTENCES_BY_ID }, { GRAMMAR_BY_ID }] =
+    const [
+      { BLOCKS_BY_ID },
+      { HIRAGANA_BY_ID },
+      { VOCABULARY_BY_ID },
+      { SENTENCES_BY_ID },
+      { GRAMMAR_BY_ID },
+    ] =
       await Promise.all([
+        import('./hiragana/blocks'),
         import('./hiragana/kana'),
         import('./hiragana/vocabulary'),
         import('./hiragana/sentences'),
         import('./hiragana/grammar'),
       ])
     return {
+      blocksById: BLOCKS_BY_ID,
       kanaById: HIRAGANA_BY_ID,
       wordsById: VOCABULARY_BY_ID,
       sentencesById: SENTENCES_BY_ID,
