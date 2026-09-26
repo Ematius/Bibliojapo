@@ -13,20 +13,23 @@ de manga. Al elegir un tomo entra en una temática manga donde aprenderá
 el contenido correspondiente al pasillo: lee, hace ejercicios y pruebas,
 y al terminar guarda el tomo en su estantería personal.
 
-**Fase actual:** cerradas la 3 y la 4 (25-09-2026), lo siguiente es SALIR A LA RED. El
-recorrido está entero —intro en video, entrada, vestíbulo, pasillo y estantería—,
-el tomo del bloque 1 se lee de principio a fin, y Mi escritorio ya está en pie:
-la mesa con sus objetos encima, la chuleta, el álbum y el carné.
+**Fase actual:** la 5, SALIR A LA RED. El recorrido está entero —intro en video,
+entrada, vestíbulo, pasillo y estantería—, el tomo del bloque 1 se lee de principio a
+fin, y Mi escritorio ya está en pie: la mesa con sus objetos encima, la chuleta, el
+álbum y el carné.
 
-**Supabase ya está enchufado, y en producción.** `account.ts`, `progress.ts`,
-`feedback.ts` y `volumes.ts` hablan con él —sesión, sellos, insignias, tomos,
-carné, avisos—, con su esquema y sus políticas de RLS. Del simulado solo queda UNA
-llamada, `mockServer.volume(blockId)` dentro de `volumes.ts`: el temario sigue en
-`content/` a propósito hasta el bloque 2, y ahí se tira — ver «El contenido de pago
-no puede vivir en `content/`». El login con Google funciona, el dominio propio es
-`bibliojapo.app`, y borrar la cuenta ya se hace desde la pantalla — ver «Lo legal».
-Lo último que queda de esta fase es de CORREO, y espera a la fase 5 porque hasta
-que no haya usuarios de verdad no se nota: el SMTP propio y las plantillas.
+**Supabase está enchufado del todo, y en producción.** Del servidor simulado no queda
+nada: `mockServer.ts` se borró el 26-09-2026 y con él la última llamada que le
+quedaba. El temario ya no viaja en el despliegue —ver «El temario en la base»—, así
+que `content/` dejó de alimentar la app y pasó a ser la FUENTE DE AUTORÍA que un
+script vuelca a las tablas. El login con Google funciona, el dominio propio es
+`bibliojapo.app`, el SMTP propio de Resend está verificado, y borrar la cuenta ya se
+hace desde la pantalla — ver «Lo legal».
+
+**Lo que queda de esta fase**, en este orden: las plantillas de correo, que hoy son
+las de Supabase en inglés; el bucket de Storage, que es lo único del temario que no se
+ha montado y que hace falta para el media del bloque 2; y escribir los tomos que
+faltan, uno a uno y ya en la red.
 
 Falta una decisión que no se ha tomado y no se toma sola: **quién creó su cuenta con
 correo y meses después pulsa «Continuar con Google» con ESE MISMO correo**. O acaba
@@ -41,9 +44,10 @@ horizontal, y el paneo de la escena —`shared/useScenePan.ts`, con sus números
 escritorio, como manda su regla.
 **Stack:** React + Vite + SCSS + GSAP (sin CSS-in-JS, sin Tailwind).
 **Despliegue:** Vercel (equipo: ematius' projects).
-**Backend:** Supabase, decidido el 12-09-2026. El front se termina entero contra
-`src/api/mockServer.ts` y después se sustituye por Supabase sin tocar un
-componente. Ver «Supabase — las reglas que no se negocian» y la fase 3.
+**Backend:** Supabase, decidido el 12-09-2026 y terminado el 26-09-2026. El front se
+escribió entero contra un servidor simulado y se sustituyó por Supabase sin tocar un
+componente, que era el objetivo de tenerlo. Ver «Supabase — las reglas que no se
+negocian», «El temario en la base» y la fase 3.
 
 ---
 
@@ -179,18 +183,17 @@ todavía no están tomadas en la anterior.
    rompen las cosas de verdad — mejor romperlas antes de que haya dinero de por
    medio.
 
-   **El correo, ANTES de dar la dirección a nadie.** Supabase manda los correos de
-   confirmación con su servidor integrado, que es solo para desarrollo y lleva un
-   límite de unos pocos envíos por hora —`Authentication → Rate Limits`—. En cuanto
-   se registren varias personas seguidas los correos dejan de salir, y el efecto es
-   que crean la cuenta y NUNCA pueden entrar: no reciben nada, no hay a qué dar
-   clic, y desde fuera parece que la app está rota. No falla ruidosamente, falla en
-   silencio, y se lleva por delante justo a quien sí quería entrar. Se arregla con
-   un SMTP propio en `Authentication → Emails → SMTP Settings`, y Resend ya se usa
-   para los avisos de Contacta: es verificar `bibliojapo.app` ahí y reutilizarlo,
-   que sigue costando 0 €. Con ello van las PLANTILLAS, que hoy son las de Supabase
-   en inglés — es lo primero que recibe quien acaba de cruzar unas puertas de
-   madera tallada.
+   **El correo, ANTES de dar la dirección a nadie.** El SMTP propio ya está
+   (25-09-2026): `bibliojapo.app` verificado en Resend y enchufado en
+   `Authentication → Emails → SMTP Settings`, por 0 €. Era imprescindible porque el
+   servidor integrado de Supabase es solo para desarrollo y lleva un límite de unos
+   pocos envíos por hora —`Authentication → Rate Limits`—: en cuanto se registran
+   varias personas seguidas los correos dejan de salir, y el efecto es que crean la
+   cuenta y NUNCA pueden entrar. No falla ruidosamente, falla en silencio, y se lleva
+   por delante justo a quien sí quería entrar.
+
+   **Quedan las PLANTILLAS**, que hoy son las de Supabase en inglés — es lo primero
+   que recibe quien acaba de cruzar unas puertas de madera tallada.
 
    El resto de los tomos se escriben AQUÍ, uno a uno y ya en la red, contra
    Supabase. No esperan a nada: un tomo escrito y probado a solas es un tomo con
@@ -263,18 +266,18 @@ página con sombras es lo más pesado que tiene la app.
 
 De ahí salen cuatro reglas que afectan al código desde ya:
 
-**El contenido del bloque 2 en adelante no puede vivir en `content/`.** Todo lo que
-está ahí viaja dentro del bundle y se lee desde las herramientas del navegador, así
-que exigir cuenta para el tomo 2 no sirve de nada si su temario va en el
-despliegue: el muro se salta abriendo el inspector, y eso vale igual cuando el muro
-es una cuenta que cuando sea un pago. El bloque 1 puede quedarse donde está —es el
-gratuito sin cuenta y da igual que se lea—, pero del 2 en adelante hay que
-servirlo. Al escribir el bloque 2, tenerlo presente en vez de meterlo sin
-pensar junto al 1. Juega a favor que el temario solo lo lee el servidor simulado
-(`api/mockServer.ts`): el lector recibe el tomo ya empaquetado por `fetchVolume`,
-así que del bloque 2 en adelante basta con que ese paquete llegue del servidor de
-verdad. Los demás importan únicamente tipos —y la estantería, la lista de ids de
-`BLOCK_PLAN`, que no es contenido—.
+**El temario no puede viajar en el despliegue, y ya no viaja** (26-09-2026). Todo lo
+que se importa desde `src/` entra en el bundle, y el bundle se lee desde las
+herramientas del navegador: exigir cuenta para el tomo 2 no serviría de nada si su
+temario fuese en el despliegue, y eso vale igual cuando el muro es una cuenta que
+cuando sea un pago. Resuelto sacando el temario ENTERO —también el del bloque 1— a las
+tablas; ver «El temario en la base».
+
+Lo que esto obliga a recordar al escribir un tomo nuevo: se escribe en `content/` como
+siempre, pero **nada de `content/` se importa desde una pantalla**. Lo único que viaja
+es `hiragana/plan.ts`, la lista de ids y los totales, que no es contenido. Si algún día
+vuelve a importarse `blocks.ts` o `kana.ts` desde `src/`, el temario regresa al bundle
+sin que salte ninguna alarma: se comprueba buscándolo en `dist/` tras `npm run build`.
 
 **Las imágenes y audios del bloque 2 en adelante van en `content-media/`, no en
 `public/`.** A una imagen no se la protege empaquetándola —Vite la mete en
@@ -333,41 +336,38 @@ que bloquea también la vía de Google porque por ahí se crea cuenta igual.
   de ser «escríbenos», las dos páginas cambiaron con él. Lo que digan tiene que poder
   comprobarse en la app esa misma tarde.
 
-### La capa `api/` — el servidor, simulado
+### La capa `api/` — todo lo que habla con el servidor
 
-Todo lo que un día hablará con el backend vive en `src/api/`, y **es lo único que
-cambia el día que llegue**. Las pantallas no saben si detrás hay un servidor
-simulado o Supabase.
+Todo lo que habla con Supabase vive en `src/api/`, y **es lo único que cambiaría si
+cambiase el backend**. Ninguna pantalla sabe de dónde salen sus datos.
 
 ```text
 api/
   contract.ts      la forma de lo que va y viene: Account, VolumeContent, FINAL_SEAL…
   apiError.ts      los fallos con nombre: sin conexión, sin cuenta, correo cogido…
   apiChanges.ts    el aviso de que algo del usuario ha cambiado
+  supabase.ts      el cliente, con la clave publicable
+  supabaseError.ts lo ÚNICO que sabe leer un error de Supabase y ponerle nombre
   account.ts       la sesión, entrar, salir y crearla
-  progress.ts      los sellos y las insignias
+  progress.ts      los sellos, las insignias y los cuatro arcos del carné
   volumes.ts       qué tomos se abren y qué hay dentro de cada uno
+  blockChain.ts    la cadena de desbloqueo: cuántos tomos hay y en qué orden
+  media.ts         la URL de todo el media del temario, por una sola función
   feedback.ts      los avisos de quien la usa: qué se ha roto, qué se le ocurre
-  mockServer.ts    EL SERVIDOR SIMULADO: lo único que se tira
 ```
 
-- **Ningún componente importa `mockServer.ts`.** Se llama a `account`, `progress`
-  y `volumes`. El día del backend se reescriben esas tres por dentro, se borra el
-  simulado y no se toca ni un componente.
-- **El simulado tarda y puede fallar.** Cada llamada espera un rato al azar, y
-  `MOCK_SERVER.failureRate` hace que falle como sin conexión. Si respondiera al
-  instante y siempre bien, el front no tendría esperas ni errores que enseñar, y
-  habría que añadirlos pantalla a pantalla el día del servidor de verdad.
+- **Ningún componente importa `supabase.ts`.** Se llama a `account`, `progress` y
+  `volumes`, y el cliente no sale de `api/`. Lo mismo con los errores: el JSON de
+  Supabase se traduce en `supabaseError.ts` y de ahí en adelante solo corren los
+  códigos del contrato.
 - **Quién abre qué tomo lo decide el servidor**, nunca el navegador: si lo
   decidiera la app, bastaría con tocar sus datos para llevarse el tomo siguiente.
 - **Un sello se guarda primero en el navegador** y después en la cuenta, si la
   hay. Lo local es el progreso sin cuenta que la cuenta absorbe al crearse; si la
   subida falla, se reintenta al volver a entrar.
-- **La cuenta de prueba vive en este navegador**, y el panel lo dice. Es
-  «todavía no», y tiene que leerse así.
-- **`mockServer.ts` no sabe de hiragana**: lee `content/aisleContent.ts`, el
-  registro de qué pasillo tiene qué temario —ver «Cómo se arma un tomo»—, así que
-  darle temario a un pasillo nuevo no toca ni `mockServer.ts` ni `volumes.ts`.
+- **El servidor no sabe de hiragana**: sus funciones leen las tablas, y el pasillo es
+  una columna más. Darle temario a un pasillo nuevo no toca ni una función ni
+  `volumes.ts` — ver «Qué hay que rellenar para un PASILLO nuevo».
 - **El correo de Contacta llega hoy a la cuenta personal, no a
   `bibliojapo5@gmail.com`** (decidido 25-09-2026). Lo manda
   `supabase/functions/notify-feedback/index.ts` con Resend, y sin dominio propio
@@ -391,6 +391,45 @@ hasta el tomo más lejano sellado EN CADA pasillo, así que katakana y kanji dan
 progreso real en cuanto tengan temario, sin tocar código. «Vocabulario» es la
 excepción: no es el avance de ESE pasillo, es la palabra aprendida sumada de los
 cuatro —la misma cuenta acumulada de siempre, ahora generalizada—.
+
+### El temario en la base
+
+Desde el 26-09-2026 el temario vive en tablas y **no viaja en el despliegue**.
+`content/` sigue existiendo, pero cambió de papel: es la fuente de AUTORÍA —donde
+TypeScript comprueba que ninguna frase apunte a una palabra que no existe, que es lo
+único que mantiene honestas las referencias cruzadas— y un script la vuelca. Escribir
+un tomo sigue siendo escribir `.ts`; lo que cambió es quién los lee.
+
+```text
+content/<pasillo>/    se escribe aquí, y TypeScript lo comprueba
+      ↓  npm run seed:content
+tablas                aisles, blocks, lessons, kana, words, sentences, grammar
+      ↓  volume() · published_volumes() · journey()
+la app                que ya no sabe qué hay dentro de `content/`
+```
+
+- **Las tablas no tienen ni una política de lectura.** Con RLS activada y sin
+  políticas, la clave publicable no ve una sola fila. Se leen por esas tres funciones
+  `security definer`, y `volume()` comprueba la insignia del tomo anterior ANTES de
+  leer nada. El Security Advisor marcará esas tablas con «RLS enabled, no policy»:
+  **es esperado y no se arregla** — añadir ahí un `select` para `anon` regalaría el
+  catálogo entero.
+- **El volcado entra con la clave `service_role`**, que vive en `.env.local` y NUNCA
+  lleva prefijo `VITE_`: lo que lo lleva acaba en el bundle, y esa clave se salta todas
+  las políticas. Saltarse la RLS y tener privilegios de tabla son dos cosas distintas,
+  y este proyecto no traía los segundos: se conceden en `content.sql`, solo sobre el
+  temario.
+- **`content/` está partido en dos, y la frontera importa.** `hiragana/plan.ts`
+  —cuántos tomos hay y los totales del N5— no es temario y viaja en el despliegue;
+  `blocks.ts`, `kana.ts`, `vocabulary.ts` y `sentences.ts` sí lo son, y solo los lee
+  `content/lessonSource.ts`, que no se importa desde ningún sitio de `src/`.
+  Importarlos desde una pantalla los devuelve al bundle sin que salte ninguna alarma,
+  así que la comprobación es buscar su texto en `dist/` después de un `npm run build`.
+- **El volcado es un espejo.** Lo que se quita de `content/` se borra de la tabla, y se
+  borra DESPUÉS de subir, pasillo a pasillo: vaciar la tabla primero dejaría sin
+  contenido a quien tuviera un tomo abierto en ese momento.
+- **El SQL se ejecuta a mano** en el editor del panel, y por eso `schema.sql` y
+  `content.sql` son idempotentes de arriba abajo: relanzarlos enteros es la vía segura.
 
 ### Supabase — las reglas que no se negocian
 
@@ -417,7 +456,7 @@ la base de datos. De ahí estas reglas, que valen desde la primera línea:
   Es la misma regla que ya lleva escrita `VolumeGate`.
 - **El SELLO sí lo escribe el cliente, y se acepta a conciencia** (23-09-2026). El
   examen se corrige en el navegador, así que quien abra la consola puede darse las
-  insignias de los doce tomos. Se decidió que da igual: lo único que se salta es su
+  insignias de los trece tomos. Se decidió que da igual: lo único que se salta es su
   propio aprendizaje. El muro que importa es el del pago, y ese vive entero en el
   servidor. **No «arreglarlo»** subiendo la corrección de los exámenes: es trabajo
   grande, y la decisión ya está tomada.
@@ -621,10 +660,11 @@ src/
   desk/             ← Mi escritorio: la mesa vista desde el asiento, con sus
                       objetos encima —la chuleta, el álbum y el carné—, cada uno
                       una puerta
-  api/              ← excepción justificada: todo lo que habla con el servidor, y
-                      el servidor simulado. Es la única carpeta que cambia el día
-                      del backend — ver «La capa `api/`»
-  content/          ← el temario: kana, vocabulario, frases. Dato, no código
+  api/              ← excepción justificada: todo lo que habla con Supabase. La
+                      única carpeta que cambiaría si cambiase el backend — ver
+                      «La capa `api/`»
+  content/          ← el temario: kana, vocabulario, frases. Dato, no código, y no
+                      viaja en el despliegue — ver «El temario en la base»
   shared/           ← lo único que va fuera: usado en más de un dominio
   styles/           ← excepción justificada: tokens globales, reset, tipografía base
 ```
@@ -789,10 +829,10 @@ sus datos: no hay ni una línea de código por libro.
 `content/aisleContent.ts` registra, pasillo a pasillo, su `BLOCK_PLAN` y cómo pedir
 el resto de su temario. Un pasillo sin `content/<pasillo>/blocks.ts` se registra con
 la lista vacía: la balda se ve, pero sin tomos que sacar, hasta que tenga su
-carpeta. La capa `api/` —el servidor simulado, `fetchVolume`, los sellos, el
+carpeta. La capa `api/` —`fetchVolume`, los sellos, el
 carné— ya sabe servir cualquier pasillo que tenga temario, encadenado al anterior
 —ver «La capa `api/`»—: **de momento solo hiragana lo tiene**, así que es el único
-que se ve con tomos; darle temario a otro no exige tocar `mockServer.ts` ni
+que se ve con tomos; darle temario a otro no exige tocar ninguna función ni
 `volumes.ts`, solo `content/aisleContent.ts` y su propia rejilla —ver «Qué hay que
 rellenar para un pasillo nuevo»—.
 
@@ -865,34 +905,41 @@ bloque entero para poder abrirse.
 2. `content/hiragana/kana.ts` → la ficha de cada kana nuevo. Los trazos y la
    silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
 3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
-   `image`.
-4. Nada en la estantería: el tomo ya está, porque su bloque ya figura en
-   `BLOCK_PLAN`. Un bloque nuevo fuera de los doce se añade ahí, y la rejilla lo
+   `image`. Su media va a `content-media/hiragana/<bloque>/`, no a `public/`: ahí solo
+   se queda el del bloque 1.
+4. `npm run seed:content` → hasta que no se vuelca, el tomo no existe para la app.
+   Es el paso que se olvida, porque en `content/` ya se ve escrito y completo.
+5. Nada en la estantería: el tomo ya está, porque su bloque ya figura en
+   `BLOCK_PLAN`. Un bloque nuevo fuera de los trece se añade ahí, y la rejilla lo
    posa en el primer hueco libre.
 
 ### Qué hay que rellenar para un PASILLO nuevo
 
-Katakana, kanji y vocabulario ya tienen estantería, servidor simulado y carné
-listos para servirlos —ver «La capa `api/`»—: no hace falta tocar componentes,
-solo darles temario. Faltan tres cosas, en este orden:
+Katakana, kanji y vocabulario ya tienen estantería, servidor y carné listos para
+servirlos —ver «La capa `api/`»—: no hace falta tocar componentes, solo darles
+temario. Faltan cuatro cosas, en este orden:
 
 1. `content/<pasillo>/{blocks,kana,vocabulary,sentences}.ts` → el mismo patrón que
    `content/hiragana/`, con los tipos comunes de `content/types.ts`. Las
    imágenes de apoyo —la ilustración mnemotécnica de cada kana, en el campo
-   `image` de `Kana`— y el audio se cuelgan a mano en `public/images/<pasillo>/`
-   y `public/audio/<pasillo>/`, con la misma regla de encaje que hiragana:
-   centrado, al 60 % del dibujo. Eso no se genera solo, es arte.
-2. `content/aisleContent.ts` → sustituir el `EMPTY_AISLE` del pasillo por una
-   entrada real: su `blockPlan`, sus `blocksById` y su `loadLessonContent` —el
-   mismo import perezoso que ya tiene la entrada de hiragana—. Sin este paso el
-   temario existe pero la app sigue sin saber que está ahí: la balda se ve vacía
-   y el servidor no tiene qué empaquetar.
+   `image` de `Kana`— y el audio van a `content-media/<pasillo>/<bloque>/`, NO a
+   `public/`: solo el bloque 1 de hiragana se queda ahí, porque es el gratuito sin
+   cuenta. Misma regla de encaje que hiragana: centrado, al 60 % del dibujo. Eso no
+   se genera solo, es arte.
+2. `content/aisleContent.ts` → sustituir el `emptyAisle()` del pasillo por su
+   `blockPlan` y sus totales, y `content/lessonSource.ts` → su entrada real, con el
+   mismo import perezoso que la de hiragana. Sin lo primero la balda se ve vacía; sin
+   lo segundo el volcado no encuentra qué subir. Ojo con la frontera: `aisleContent.ts`
+   viaja en el despliegue y `lessonSource.ts` no, así que el temario va SIEMPRE en el
+   segundo — ver «El temario en la base».
 3. Medir `shelfGrid.ts` sobre la ilustración del pasillo —hoy solo está medida
    sobre `pasillo-hiragana.webp`—. Sin este paso los tomos del pasillo nuevo se
    colocarían con las coordenadas de la balda de hiragana, que no tiene por qué
    coincidir con la suya: se verían en cualquier sitio menos donde toca.
+4. `npm run seed:content` → sin esto no ha pasado nada: el temario está escrito y
+   comprobado, pero la app lee las tablas, no `content/`.
 
-Con los tres hechos, la estantería del pasillo saca sus tomos sola, el servidor
+Con los cuatro hechos, la estantería del pasillo saca sus tomos sola, el servidor
 los sirve y los desbloquea encadenados al pasillo anterior, y el carné cuenta su
 progreso — nada de eso se escribe a mano.
 
@@ -907,7 +954,8 @@ Nada más: ningún componente, ninguna página, ningún ejercicio.
 Cada tomo tiene su lomo, su tapa y su tapa girada, en `aisle/shelf/volumeArt.ts`,
 por orden: la primera entrada es la del tomo 1. Son tres imágenes por tomo —lomo,
 tapa y tapa girada— recortadas a su silueta en `books/volumes/`: doce juegos para
-doce bloques. Los renders originales sin recortar se quitaron de `public/` para no
+TRECE bloques, así que el tomo 13 enseña de momento las tapas del 12 —lo resuelve un
+`Math.min` en `shelfConfig.ts`— hasta que se le rendericen las suyas. Los renders originales sin recortar se quitaron de `public/` para no
 desplegarlos; si hay que recortar uno otra vez, se recupera del historial de git
 (`public/images/hallways/books/moreBoks/`).
 
