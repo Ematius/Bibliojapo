@@ -3,6 +3,7 @@ import { IntroToggle } from './IntroToggle'
 import { IntroVideo } from './IntroVideo'
 import { getAlwaysIntro, hasSeenIntro } from './introPreference'
 import { prefersReducedMotion } from '../shared/prefersReducedMotion'
+import { LoadingScreen } from '../shared/LoadingScreen'
 
 // El video no espera al trozo de la entrada: se monta ya y se descarga mientras el otro carga
 // detrás, y el fundido solo se hace cuando la entrada avisa de que está lista.
@@ -25,7 +26,7 @@ export function HomeRoute() {
 
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<LoadingScreen />}>
         <LibraryEntrance onReady={() => setEntranceReady(true)} />
       </Suspense>
 

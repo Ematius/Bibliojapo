@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { HomeRoute } from './intro/HomeRoute'
 import { AccountPanel } from './account/AccountPanel'
 import { ErrorBoundary } from './shared/ErrorBoundary'
+import { LoadingScreen } from './shared/LoadingScreen'
 import { useVh } from './shared/useVh'
 
 // Cargadas bajo demanda: la intro no necesita el lector, page-flip ni DrawSVGPlugin, así
@@ -37,7 +38,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Suspense fallback={null}>
+      <Suspense fallback={<LoadingScreen />}>
         <Routes>
           {/* El recorrido es entrada → vestíbulo → pasillo. La entrada lleva delante la
               intro en video; el vestíbulo es el sitio al que se vuelve. */}

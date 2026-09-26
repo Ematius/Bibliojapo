@@ -1,0 +1,135 @@
+// La escena trae su propio letrero de «Cargando contenido…» arriba en el centro, y el panel
+// cuelga justo debajo. Las cuentas de posición salen de la ilustración (1672 × 941): el
+// letrero acaba al 31 % de su alto, y el alto es el 56,3 % del ancho. Si se cambia la
+// imagen, hay que volver a medirlas.
+
+.loading-screen {
+  --sign-bottom: max(calc(var(--vh) * 31), 17.4vw);
+  --chain: 2.5rem;
+
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: calc(var(--sign-bottom) + var(--chain)) 1.25rem 1.5rem;
+  // Arriba y no al centro: al recortar la escena por abajo el letrero no se sale nunca.
+  background: var(--color-bg) url('/images/charging.webp') center top / cover no-repeat;
+  // Escena oscura, y declarado aquí: sin color propio, un sistema en modo oscuro pinta el
+  // texto blanco sobre lo que le venga.
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  // Lo muestra GSAP pasado el retraso; así el primer fotograma nunca sale a la vista.
+  visibility: hidden;
+
+  // El panel del cartel de error, pero dejando ver la escena: la tabla cuelga del letrero
+  // pintado con dos cadenas.
+  &__panel {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    max-width: 26rem;
+    padding: 1.5rem 2rem;
+    border: 2px solid var(--color-wood-dark);
+    border-radius: var(--radius-float);
+    background:
+      radial-gradient(circle at 1.5rem 1.4rem, var(--color-brass) 0 0.3rem, transparent 0.32rem),
+      radial-gradient(
+        circle at calc(100% - 1.5rem) 1.4rem,
+        var(--color-brass) 0 0.3rem,
+        transparent 0.32rem
+      ),
+      linear-gradient(
+        170deg,
+        color-mix(in srgb, var(--color-page) 78%, transparent),
+        color-mix(in srgb, var(--color-parchment) 70%, transparent)
+      );
+    box-shadow: var(--shadow-float);
+    color: var(--color-ink);
+    text-align: center;
+  }
+
+  &__panel::before,
+  &__panel::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--chain) * -1);
+    width: 0.125rem;
+    height: var(--chain);
+    background: linear-gradient(var(--color-brass-glow), var(--color-brass));
+    transform-origin: bottom center;
+  }
+
+  &__panel::before {
+    left: 1.5rem;
+    transform: rotate(-9deg);
+  }
+
+  &__panel::after {
+    right: 1.5rem;
+    transform: rotate(9deg);
+  }
+
+  &__title {
+    margin: 0;
+    color: var(--color-wood-deep);
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 1.625rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+}
+
+@media (max-width: 48rem), (max-height: 34rem) {
+  .loading-screen {
+    --chain: 1.75rem;
+
+    &__panel {
+      padding: 1rem 1.5rem;
+    }
+
+    &__text {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// De pie la escena cubriendo por alto se come el letrero por los lados. Se pinta entera a
+// lo ancho arriba, y debajo la misma escena velada rellena el resto; el velo de `::before`
+// funde el corte entre las dos.
+@media (max-aspect-ratio: 2/3) {
+  .loading-screen {
+    --sign-bottom: 17.4vw;
+
+    background:
+      // `100vw` y no `100%`: el velo cuenta en `vw`, y el hueco de la barra de scroll los
+      // descasaría unos píxeles justo en la costura.
+      url('/images/charging.webp') center top / 100vw auto no-repeat,
+      var(--color-bg) url('/images/charging.webp') center / cover no-repeat;
+    isolation: isolate;
+
+    // Más oscuro justo en la costura: las dos escenas no casan, y con el velo uniforme el
+    // corte se ve.
+    &::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(
+        transparent calc(56.3vw - 6rem),
+        rgba(var(--rgb-bg), 0.95) calc(56.3vw - 0.5rem),
+        rgba(var(--rgb-bg), 0.95) calc(56.3vw + 1rem),
+        rgba(var(--rgb-bg), 0.6) calc(56.3vw + 8rem)
+      );
+      pointer-events: none;
+    }
+  }
+}
