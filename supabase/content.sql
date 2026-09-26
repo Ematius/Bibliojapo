@@ -128,3 +128,20 @@ alter table public.words enable row level security;
 alter table public.grammar enable row level security;
 alter table public.sentences enable row level security;
 alter table public.lessons enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Permisos del volcado
+-- ---------------------------------------------------------------------------
+
+-- El volcado entra como `service_role`, que se salta la RLS pero necesita privilegios
+-- de tabla igual: son dos cosas distintas, y en este proyecto no los trae de serie.
+-- Solo sobre el temario, a propósito: los datos de usuario —perfiles, sellos,
+-- insignias— no los toca ningún script, así que ahí no hace falta abrir nada.
+grant select, insert, update, delete on table
+  public.blocks,
+  public.kana,
+  public.words,
+  public.grammar,
+  public.sentences,
+  public.lessons
+  to service_role;
