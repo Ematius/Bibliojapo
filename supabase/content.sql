@@ -347,3 +347,65 @@ as $$
 $$;
 
 grant execute on function public.published_volumes() to anon, authenticated;
+
+-- Los cuatro arcos del carné. La cuenta se hace aquí y no en el navegador porque
+-- traerse el temario entero solo para contarlo sería regalarlo.
+--
+-- Cuenta hasta el tomo más lejano CON INSIGNIA de cada pasillo, sin repetir lo que
+-- reaparece más adelante. Sin sesión da cuatro ceros, que es lo que corresponde: el
+-- progreso es de la cuenta, no del dispositivo.
+create or replace function public.journey()
+returns jsonb
+language plpgsql
+security definer
+stable
+set search_path = ''
+as $$
+declare
+  viewer uuid := auth.uid();
+  tracks jsonb := '[]'::jsonb;
+  aisle public.aisles;
+  furthest int;
+  learned_kana int;
+  learned_words int;
+  all_words int := 0;
+begin
+  for aisle in select * from public.aisles a order by a.id loop
+    select max(b.position) into furthest
+    from public.blocks b
+    join public.badges g on g.block_id = b.id and g.user_id = viewer
+    where b.aisle_id = aisle.id;
+
+    -- Sin insignia no se ha terminado ningún tomo: `-1` no alcanza ni al primero.
+    furthest := coalesce(furthest, -1);
+
+    select count(distinct l.kana_id) into learned_kana
+    from public.blocks b
+    join public.lessons l on l.block_id = b.id
+    where b.aisle_id = aisle.id and b.position <= furthest;
+
+    select count(distinct word_id) into learned_words
+    from public.blocks b
+    cross join unnest(b.word_ids) as word_id
+    where b.aisle_id = aisle.id and b.position <= furthest;
+
+    all_words := all_words + learned_words;
+
+    if aisle.id <> 'vocabulary'::public.aisle_id then
+      tracks := tracks || jsonb_build_object(
+        'id', aisle.id, 'learned', learned_kana, 'total', aisle.kana_total
+      );
+    end if;
+  end loop;
+
+  -- Vocabulario no es el avance de ESE pasillo: es la palabra aprendida sumada de los
+  -- cuatro. Va el último para que el orden sea el del recorrido.
+  return tracks || jsonb_build_object(
+    'id', 'vocabulary',
+    'learned', all_words,
+    'total', (select a.word_total from public.aisles a where a.id = 'vocabulary'::public.aisle_id)
+  );
+end;
+$$;
+
+grant execute on function public.journey() to anon, authenticated;

@@ -1,13 +1,6 @@
 // Un sello se guarda SIEMPRE en el navegador, y además en la cuenta si hay una
 // abierta. Lo local no es copia de seguridad: es el progreso de quien todavía no
 // tiene cuenta. Por eso se escribe primero, sin esperar al servidor.
-import { AISLE_CONTENT, AISLE_ORDER, type AisleId } from '../content/aisleContent'
-import {
-  HIRAGANA_BASE_COUNT,
-  KATAKANA_BASE_COUNT,
-  N5_KANJI_COUNT,
-  N5_WORD_COUNT,
-} from '../content/hiragana/blocks'
 import { addSeal, readSeals } from '../shared/seals'
 import { getSession } from './account'
 import { announceApiChange } from './apiChanges'
@@ -74,47 +67,10 @@ export async function fetchBadges(): Promise<Badge[]> {
     .filter((badge): badge is Badge => badge.volume !== undefined)
 }
 
-// Cuánto se ha aprendido de UN pasillo, contando hasta el bloque más lejano ya
-// sellado EN ESE pasillo. Sin repetir: un kana o una palabra que reaparece en un
-// bloque posterior no cuenta dos veces. Un pasillo sin temario da cero en los dos,
-// la misma regla que un bloque sin escribir.
-function aisleProgress(aisleId: AisleId, badges: Set<string>): { kana: number; words: number } {
-  const entries = BLOCK_CHAIN.filter((block) => block.aisleId === aisleId)
-  const furthest = entries.reduce(
-    (best, block, index) => (badges.has(block.blockId) ? index : best),
-    -1,
-  )
-
-  const { blocksById } = AISLE_CONTENT[aisleId]
-  const reached = entries.slice(0, furthest + 1).flatMap((entry) => {
-    const block = blocksById.get(entry.localId)
-    return block ? [block] : []
-  })
-
-  return {
-    kana: new Set(reached.flatMap((block) => block.lessons.map((lesson) => lesson.kanaId))).size,
-    words: new Set(reached.flatMap((block) => block.wordIds)).size,
-  }
-}
-
-// La cuenta se hace AQUÍ porque el temario todavía viaja en el bundle. El día que
-// del tomo 2 en adelante lo sirva el servidor, esta división sube con él: traerse el
-// temario entero al navegador solo para contarlo sería regalarlo.
+// Los cuatro arcos los cuenta el SERVIDOR: el temario ya no viaja en el despliegue,
+// así que aquí no hay nada que contar — y traérselo solo para eso sería regalarlo.
 export async function fetchJourney(): Promise<JourneyTrack[]> {
-  const badges = new Set((await fetchBadges()).map((badge) => badge.blockId))
-  const progress = Object.fromEntries(
-    AISLE_ORDER.map((aisleId) => [aisleId, aisleProgress(aisleId, badges)]),
-  ) as Record<AisleId, { kana: number; words: number }>
-
-  return [
-    { id: 'hiragana', learned: progress.hiragana.kana, total: HIRAGANA_BASE_COUNT },
-    { id: 'katakana', learned: progress.katakana.kana, total: KATAKANA_BASE_COUNT },
-    { id: 'kanji', learned: progress.kanji.kana, total: N5_KANJI_COUNT },
-    // No es el avance de ESE pasillo: es la palabra aprendida sumada de los cuatro.
-    {
-      id: 'vocabulary',
-      learned: AISLE_ORDER.reduce((sum, aisleId) => sum + progress[aisleId].words, 0),
-      total: N5_WORD_COUNT,
-    },
-  ]
+  const { data, error, status } = await supabase.rpc('journey')
+  if (error) throwPostgrestError(error, status)
+  return data as JourneyTrack[]
 }
