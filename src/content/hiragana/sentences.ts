@@ -274,22 +274,6 @@ export const SENTENCES: Sentence[] = [] = [
     units: [],
   },
   {
-    id: 'sore-wa-rei',
-    text: 'それはれい',
-    meaning: 'Eso es un ejemplo',
-    wordIds: ['sore', 'rei-2'],
-    grammarId: 'topic-wa',
-    units: [],
-  },
-  {
-    id: 'are-wa-hashi',
-    text: 'あれははし',
-    meaning: 'Aquello es un puente',
-    wordIds: ['are', 'hashi'],
-    grammarId: 'topic-wa',
-    units: [],
-  },
-  {
     id: 'toufu-wa-oishii',
     text: 'とうふはおいしい',
     meaning: 'El tofu está delicioso',

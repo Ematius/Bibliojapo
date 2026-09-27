@@ -56,7 +56,10 @@ export const BLOCKS: Block[] = [
   {
     id: 'b2',
     title: 'Bloque 2 · しるれとくそ',
-    summary: '',
+    summary:
+      'Seis kana sin patrón entre ellos, así que cada uno se aprende por su ' +
+      'cuenta. Con ellos ya se señala sin nombrar —esto, eso, aquello— y se ' +
+      'dice que algo existe, que se tiene o que hace falta.',
     lessons: [
     ],
     wordIds: [
@@ -71,7 +74,7 @@ export const BLOCKS: Block[] = [
       'osoku',
       'ototoi',
       'ototoshi',
-      'sou-sou-desu',
+      'sou',
       'sore',
       'tooku',
       'haku',
@@ -85,8 +88,6 @@ export const BLOCKS: Block[] = [
       'are-wa-ii',
       'sore-wa-oishii',
       'are-wa-oishii',
-      'sore-wa-rei',
-      'are-wa-hashi',
     ],
   },
   {

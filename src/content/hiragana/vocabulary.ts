@@ -335,7 +335,7 @@ export const VOCABULARY: Word[] = [
     meaning: 'año antepasado',
   },
   {
-    id: 'sou-sou-desu',
+    id: 'sou',
     units: [
       { kana: 'そ', romaji: 'so' },
       { kana: 'う', romaji: 'u' },
