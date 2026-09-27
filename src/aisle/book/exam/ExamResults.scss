@@ -38,13 +38,16 @@
     gap: 0.8cqh;
   }
 
+  // A la derecha y no a la izquierda: ahí cae la esquina con la que page-flip
+  // arranca el giro, y un botón pegado a ese borde se comía la mitad de sus
+  // pulsaciones con el gesto de pasar página.
   &__evaluate {
-    align-self: flex-start;
+    align-self: flex-end;
     margin-top: auto;
   }
 
   &__continue {
-    align-self: flex-start;
+    align-self: flex-end;
   }
 }
 
