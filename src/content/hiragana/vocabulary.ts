@@ -243,6 +243,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'る', romaji: 'ru' },
     ],
     meaning: 'haber, existir',
+    audio: 'hiragana/b2/audio/word/aru.wav',
+    image: 'hiragana/b2/images/imagesSupport/aru-exist.webp',
+    imageAlt:
+      'Un jarrón de porcelana con flores, solo en el centro de una sala de ' +
+      'tatami con las puertas abiertas al jardín.',
   },
   {
     id: 'aru-2',
@@ -251,6 +256,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'る', romaji: 'ru' },
     ],
     meaning: 'tener',
+    audio: 'hiragana/b2/audio/word/aru-2.wav',
+    image: 'hiragana/b2/images/imagesSupport/aru-2-have.webp',
+    imageAlt:
+      'Una chica en la calle de un santuario cargada con su bolso, un cuaderno, ' +
+      'un paraguas y una bolsa, con una flecha señalando cada cosa que lleva.',
   },
   {
     id: 'are',
@@ -267,6 +277,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'る', romaji: 'ru' },
     ],
     meaning: 'estar, existir',
+    audio: 'hiragana/b2/audio/word/iru.wav',
+    image: 'hiragana/b2/images/imagesSupport/iru-be.webp',
+    imageAlt:
+      'Un gato naranja sentado en el porche de madera de una casa japonesa, ' +
+      'frente a un jardín con estanque.',
   },
   {
     id: 'iru-2',
@@ -275,6 +290,11 @@ export const VOCABULARY: Word[] = [
       { kana: 'る', romaji: 'ru' },
     ],
     meaning: 'necesitar',
+    audio: 'hiragana/b2/audio/word/iru-2.wav',
+    image: 'hiragana/b2/images/imagesSupport/iru-2-need.webp',
+    imageAlt:
+      'Una chica empapada bajo la lluvia junto a un santuario, tapándose la ' +
+      'cabeza con una mano y alcanzando un paraguas del paragüero con la otra.',
   },
   {
     id: 'ureshii',

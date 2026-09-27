@@ -236,17 +236,32 @@ export const HIRAGANA: Kana[] = [
     id: 'ru',
     character: 'る',
     romaji: 'ru',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
+    audio: 'hiragana/b2/audio/ru.wav',
+    mnemonic:
+      'En Japón se llega a los santuarios por **RU**tas marcadas, y una buena ' +
+      '**RU**ta japonesa no es una carretera cualquiera: baja recta, gira, y al ' +
+      'final da una vuelta entera alrededor del templete. Vista desde arriba es ' +
+      'el kana calcado: el tramo que cae en diagonal y, abajo del todo, el ' +
+      'círculo cerrado del último giro.',
+    strokeOrder: [
+      'Un trazo corto hacia la derecha, el arranque de la ruta bajo el torii; ' +
+        'sin levantar el pincel, una diagonal larga que baja hacia la izquierda, ' +
+        'y de ahí una curva amplia que se abre a la derecha, cierra por abajo y ' +
+        'termina enroscada en el círculo del final.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-ru.webp',
+    imageAlt:
+      'Un camino de grava visto desde arriba que baja desde un torii entre ' +
+      'arces y cerezos y termina rodeando en círculo un pequeño templete.',
 
-    outline: '',
+    outline:
+      'M349,767Q248,767 200,731Q152,694 152,640Q152,606 169,583Q186,559 213,547Q240,534 270,534Q328,534 368,579Q407,624 411,697Q469,683 511,640Q553,597 553,527Q553,477 531,440Q508,403 469,383Q429,362 378,362Q312,362 254,383Q195,403 146,445Q129,460 98,485Q67,510 43,528L0,481Q50,451 106,404Q162,356 218,299Q274,242 323,182Q372,122 406,66Q376,73 336,81Q295,89 251,96Q207,102 167,107Q127,112 97,114L86,52Q113,53 153,50Q193,47 238,42Q283,37 326,30Q368,23 401,15Q434,7 450,0L497,33Q474,80 436,133Q397,186 351,240Q305,293 256,342Q285,328 321,319Q356,309 387,309Q454,309 507,337Q559,364 589,413Q619,462 619,527Q619,597 584,651Q549,705 488,736Q427,767 349,767M340,707L352,707Q351,655 328,623Q305,591 270,591Q245,591 229,604Q212,616 212,639Q212,667 242,687Q271,706 340,707',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M91,84L461,36L294,262L26,494L282,353L403,339L488,356L560,425L593,532L550,646L480,702L398,734L324,742L243,731L188,679L184,605L239,565L308,567L366,623L378,685',
+    ],
+    strokeViewBox: '0 0 619 767',
   },
   {
     id: 're',
