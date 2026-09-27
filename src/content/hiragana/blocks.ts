@@ -91,8 +91,8 @@ export const BLOCKS: Block[] = [
     ],
     sentenceIds: [
       'sore-wa-ii',
-      'are-wa-ii',
       'sore-wa-oishii',
+      'are-wa-ii',
       'are-wa-oishii',
     ],
   },

@@ -3,6 +3,7 @@ import { readSeals } from '../shared/seals'
 import { getSession } from './account'
 import { BLOCK_CHAIN, type ChainedBlock } from './blockChain'
 import { FINAL_SEAL, type CurrentVolume, type VolumeContent } from './contract'
+import { mediaUrls } from './media'
 import { fetchBadges } from './progress'
 import { supabase } from './supabase'
 import { throwPostgrestError } from './supabaseError'
@@ -86,7 +87,40 @@ export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
 export async function fetchVolume(blockId: string): Promise<VolumeContent> {
   const { data, error, status } = await supabase.rpc('volume', { requested_block: blockId })
   if (error) throwPostgrestError(error, status)
-  return data as VolumeContent
+  return resolveVolumeMedia(data as VolumeContent)
+}
+
+// El bloque 1 llega con rutas del despliegue, listas para pintarse; del bloque 2 en
+// adelante son claves del bucket, y sin pasarlas por `mediaUrls` el navegador intenta
+// cargarlas como si fueran relativas a la propia página. Se resuelve aquí, una sola
+// vez, para que ningún componente del lector tenga que saberlo.
+async function resolveVolumeMedia(content: VolumeContent): Promise<VolumeContent> {
+  const paths = [
+    ...content.kana.flatMap((kana) => [kana.audio, kana.image]),
+    ...content.words.flatMap((word) => [word.audio, word.image]),
+    ...content.sentences.map((sentence) => sentence.audio),
+  ].filter((path): path is string => Boolean(path))
+
+  const resolved = await mediaUrls(paths)
+  const at = (path: string): string => resolved.get(path) ?? path
+
+  return {
+    ...content,
+    kana: content.kana.map((kana) => ({
+      ...kana,
+      audio: at(kana.audio),
+      image: at(kana.image),
+    })),
+    words: content.words.map((word) => ({
+      ...word,
+      audio: word.audio ? at(word.audio) : word.audio,
+      image: word.image ? at(word.image) : word.image,
+    })),
+    sentences: content.sentences.map((sentence) => ({
+      ...sentence,
+      audio: sentence.audio ? at(sentence.audio) : sentence.audio,
+    })),
+  }
 }
 
 // Por dónde sigue la lectura. `null` cuando no queda ninguno por sellar: lo escrito
