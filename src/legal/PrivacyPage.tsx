@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { SiteFooter } from '../shared/SiteFooter'
 import { SiteNav } from '../shared/SiteNav'
 import {
   CONTACT_EMAIL,
@@ -16,10 +17,14 @@ import './LegalPage.scss'
 // una plantilla de bufete de ocho mil palabras no se lo cuenta.
 export function PrivacyPage() {
   const mailto = 'mailto:' + CONTACT_EMAIL
+  const navigate = useNavigate()
 
   return (
     <main className="legal-page">
       <article className="legal-page__sheet">
+        <button className="legal-page__back" type="button" onClick={() => navigate(-1)}>
+          ← Volver
+        </button>
         <h1 className="legal-page__title">Política de privacidad</h1>
         <p className="legal-page__updated">Última actualización: {LAST_UPDATED}</p>
 
@@ -181,6 +186,7 @@ export function PrivacyPage() {
         </p>
       </article>
 
+      <SiteFooter />
       <SiteNav />
     </main>
   )

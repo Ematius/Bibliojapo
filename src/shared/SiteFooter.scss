@@ -1,0 +1,31 @@
+// El aviso de derechos reservados, al pie de las pantallas de texto. Mismo ancho que la
+// hoja de papel de encima —`_paperPage.scss`—, para que quede bajo ella y no a lo ancho
+// de toda la pantalla.
+
+.site-footer {
+  // Vive sobre el fondo oscuro de la escena, no sobre el papel de la hoja: la tinta
+  // clara para texto sobre papel se perdería aquí, así que usa el crema de lámpara.
+  max-width: 34rem;
+  margin: 2rem auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(var(--rgb-lamplight), 0.2);
+  color: rgba(var(--rgb-lamplight), 0.55);
+  font-size: 0.8125rem;
+  text-align: center;
+
+  &__link {
+    color: rgba(var(--rgb-lamplight), 0.8);
+    text-decoration-color: var(--color-brass-glow);
+    text-underline-offset: 0.15em;
+
+    &:hover {
+      color: rgba(var(--rgb-lamplight), 1);
+      text-decoration-color: var(--color-brass-glow);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brass-glow);
+      outline-offset: 2px;
+    }
+  }
+}

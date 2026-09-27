@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { SiteFooter } from '../shared/SiteFooter'
 import { SiteNav } from '../shared/SiteNav'
 import { ContactForm } from './ContactForm'
 import './ContactPage.scss'
@@ -32,6 +33,7 @@ export function ContactPage() {
         </p>
       </div>
 
+      <SiteFooter />
       <SiteNav />
     </main>
   )

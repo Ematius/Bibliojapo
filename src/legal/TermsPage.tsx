@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { SiteFooter } from '../shared/SiteFooter'
 import { SiteNav } from '../shared/SiteNav'
 import { CONTACT_EMAIL, LAST_UPDATED, MINIMUM_AGE, RESPONSIBLE_NAME } from './legalInfo'
 import './LegalPage.scss'
@@ -11,10 +12,14 @@ import './LegalPage.scss'
 // condiciones de contratación, que son otra cosa y todavía no existen.
 export function TermsPage() {
   const mailto = 'mailto:' + CONTACT_EMAIL
+  const navigate = useNavigate()
 
   return (
     <main className="legal-page">
       <article className="legal-page__sheet">
+        <button className="legal-page__back" type="button" onClick={() => navigate(-1)}>
+          ← Volver
+        </button>
         <h1 className="legal-page__title">Aviso legal y condiciones</h1>
         <p className="legal-page__updated">Última actualización: {LAST_UPDATED}</p>
 
@@ -83,15 +88,15 @@ export function TermsPage() {
         <section className="legal-page__section">
           <h2 className="legal-page__heading">De quién es el contenido</h2>
           <p className="legal-page__text">
-            El japonés no es de nadie, pero las ilustraciones, los textos, las mnemotecnias, los
-            audios y el código de Bibliojapo sí. Puedes usarlos para aprender todo lo que
-            quieras; lo que no puedes es copiarlos, redistribuirlos ni publicarlos por tu cuenta
-            sin permiso.
+            El japonés no es de nadie. La mnemotecnia y el método de estudio son míos, igual que
+            el código de Bibliojapo. Las ilustraciones y el vídeo están generados con
+            herramientas de IA (ChatGPT, Gemini); los audios son de VOICEVOX, con sus créditos en
+            el panel de cuenta. Aun así, nada de lo que ves aquí está pensado para que te lo
+            lleves: puedes usarlo para aprender todo lo que quieras, pero no copiarlo,
+            redistribuirlo ni publicarlo por tu cuenta sin permiso.
           </p>
           <p className="legal-page__text">
-            Tampoco vale extraer el temario de forma automática ni volcarlo a otro sitio. Si
-            quieres usar algo de aquí para algo tuyo, pregunta: lo más probable es que la
-            respuesta sea sí.
+            Tampoco vale extraer el temario de forma automática ni volcarlo a otro sitio.
           </p>
         </section>
 
@@ -131,6 +136,7 @@ export function TermsPage() {
         </p>
       </article>
 
+      <SiteFooter />
       <SiteNav />
     </main>
   )

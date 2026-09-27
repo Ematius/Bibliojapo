@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { signOut } from '../api/account'
+import { SiteFooter } from '../shared/SiteFooter'
 import { SiteNav } from '../shared/SiteNav'
 import { getAlwaysIntro, setAlwaysIntro } from '../intro/introPreference'
 import { openAccountPanel } from './accountPanelState'
@@ -170,6 +171,7 @@ export function AccountPage() {
         </section>
       </div>
 
+      <SiteFooter />
       <SiteNav />
     </main>
   )
