@@ -32,9 +32,10 @@
   // El hueco. Hereda tamaño y familia del renglón, así que lo escrito cae exactamente sobre la
   // línea del resto de la palabra en vez de flotar dentro de una caja.
   &__input {
-    // El ancho NO sale del contenido: un campo que crece al teclear movería la palabra entera
-    // de sitio justo mientras se está escribiendo.
-    width: 1.6ch;
+    // El ancho NO sale del contenido —un campo que crece al teclear movería la palabra
+    // entera de sitio justo mientras se está escribiendo—, sino de `--gap-chars`, la
+    // longitud del rōmaji que se pide: sin ella, «shi» no cabría en una caja de una letra.
+    width: calc(var(--gap-chars, 1) * 1ch + 0.6ch);
     padding: 0;
     border: none;
     // La raya de un ejercicio de papel: lo único que marca que ahí falta algo.
@@ -85,7 +86,7 @@
     }
 
     .word-gap__input {
-      width: 1.8em;
+      width: calc(var(--gap-chars, 1) * 1em + 0.6em);
       padding: 0.15em 0;
       border: 2px solid var(--color-ink-soft);
       border-radius: 0.2em;

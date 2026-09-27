@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { wordReading, wordText, type Kana, type Word } from '../../../content/types'
 import './WordGap.scss'
 
@@ -37,6 +38,9 @@ export function WordGap({ word, kana, scope = 'studied' }: WordGapProps) {
               className="word-gap__input"
               key={`${word.id}-${index}`}
               type="text"
+              // El ancho depende de esto: sin la variable, «shi» no cabría en una caja
+              // pensada para una sola letra.
+              style={{ '--gap-chars': unit.romaji.length } as CSSProperties}
               // La respuesta viaja en un atributo: quien corrige es un clon fuera de React.
               data-answer={unit.romaji}
               maxLength={unit.romaji.length}
