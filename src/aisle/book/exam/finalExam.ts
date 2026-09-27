@@ -13,6 +13,7 @@ import type { Sentence } from '../../../content/types'
 import { writeBookmark } from '../../../shared/bookmark'
 import { fetchSeals, saveSeal, FINAL_SEAL } from '../../../api/progress'
 import { readSentenceSlots } from './sentenceTiles'
+import { readExamProgress, writeExamProgress, clearExamProgress } from './examProgress'
 import { stamp } from './examSeal'
 import { wakeEnvelope } from './giftOpening'
 import { prepareGiftLetter } from './giftLetter'
@@ -294,12 +295,40 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     })
   }
 
+  // Lo ya enviado antes de este montaje —de una visita anterior al mismo intento—:
+  // `writeExamProgress` lo deja aquí al pulsar «Hecho». Sin esto, salir del tomo y
+  // volver a entrar remonta el libro con las planas en blanco y obliga a repetirlas.
+  const progress = readExamProgress(blockId)
+
   const sentenceTeardowns = spreadGroups.flatMap(({ block, sentences, isLastOfBlock }) => {
     let submitted = 0
 
-    return sentences.map((sentenceEl) => {
+    const teardowns = sentences.map((sentenceEl) => {
       const next = sentenceEl.querySelector<HTMLButtonElement>('[data-exam-next]')
       if (!next) return null
+
+      // YA RESPONDIDA: se cierra igual que si se acabara de enviar, sin volver a pedir
+      // el gesto ni pasar página. Se enseña la respuesta correcta, no lo que se llegó a
+      // colocar entonces —ya está cerrada, no hay nada que corregir aquí—.
+      const storedSentence = sentencesById.get(sentenceEl.dataset.sentence ?? '')
+      const stored = progress[sentenceEl.dataset.sentence ?? '']
+      if (stored !== undefined && storedSentence) {
+        next.disabled = true
+        sentenceEl.dataset.locked = 'true'
+        if (stored) tallies[block].correct += 1
+        else tallies[block].wrong.push(storedSentence)
+
+        const slots = [...sentenceEl.querySelectorAll<HTMLElement>('.sentence-build__slot')]
+        storedSentence.units.forEach((unit, unitIndex) => {
+          const slot = slots[unitIndex]
+          if (!slot) return
+          slot.textContent = unit.kana
+          slot.dataset.filled = unit.kana
+          slot.classList.add('sentence-build__slot--filled')
+        })
+
+        submitted += 1
+      }
 
       const onNext = () => {
         // No se puede reenviar la misma frase ni tocar sus tarjetas: pulsado
@@ -313,6 +342,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
           const correct = slots.length > 0 && slots.every((slot) => slot.filled === slot.answer)
           if (correct) tallies[block].correct += 1
           else tallies[block].wrong.push(sentence)
+          writeExamProgress(blockId, sentence.id, correct)
         }
 
         submitted += 1
@@ -341,6 +371,17 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
       next.addEventListener('click', onNext)
       return () => next.removeEventListener('click', onNext)
     })
+
+    // La plana ya estaba resuelta entera de una visita anterior: «Evaluar» se
+    // habilita igual, sin que haga falta pulsar «Hecho» de nuevo para descubrirlo.
+    if (isLastOfBlock && submitted === sentences.length) {
+      const evaluateButton = resultsPanel(block)?.querySelector<HTMLButtonElement>(
+        '[data-exam-evaluate]',
+      )
+      if (evaluateButton) evaluateButton.disabled = false
+    }
+
+    return teardowns
   })
 
   // EVALUAR: obligatorio antes de seguir. Se habilita arriba, al terminar la última
@@ -403,6 +444,9 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
         // a caer en el aviso genérico — ver la rama de arriba, «¿YA ESTÁ SELLADO?».
         saveFinalExamScore(blockId, scores)
         void saveSeal(blockId, FINAL_SEAL).catch(() => undefined)
+        // Sellado, el intento en curso ya no hace falta: uno nuevo empezaría a
+        // puntuar frases que todavía no se han vuelto a hacer.
+        clearExamProgress(blockId)
         // El sello cae en esta hoja y el sobre de la de enfrente se enciende a la vez:
         // las dos están a la vista, así que el premio se ve llegar.
         unlockGift()
@@ -435,6 +479,9 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   const retryButton = reveal.querySelector<HTMLButtonElement>('[data-exam-retry]')
   const onRetry = () => {
     if (Number.isInteger(rulesFolio) && rulesFolio > 0) writeBookmark(blockId, rulesFolio)
+    // El intento que acaba de suspender no cuenta para el siguiente: sin esto, el
+    // reintento nacería con sus frases ya dadas por buenas o malas de antemano.
+    clearExamProgress(blockId)
     retry()
   }
   retryButton?.addEventListener('click', onRetry)
