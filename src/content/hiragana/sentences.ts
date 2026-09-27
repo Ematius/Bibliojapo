@@ -17,6 +17,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ie-wa-aoi.wav',
   },
   {
     id: 'ie-wa-ii',
@@ -31,6 +32,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ie-wa-ii.wav',
   },
   {
     id: 'ie-wa-ooi',
@@ -46,6 +48,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ie-wa-ooi.wav',
   },
   {
     id: 'e-wa-aoi',
@@ -60,6 +63,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/e-wa-aoi.wav',
   },
   {
     id: 'e-wa-ii',
@@ -73,6 +77,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/e-wa-ii.wav',
   },
   {
     id: 'e-wa-ooi',
@@ -87,6 +92,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/e-wa-ooi.wav',
   },
   {
     id: 'ue-wa-aoi',
@@ -102,6 +108,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ue-wa-aoi.wav',
   },
   {
     id: 'ue-wa-ii',
@@ -116,6 +123,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ue-wa-ii.wav',
   },
   {
     id: 'ao-wa-ii',
@@ -130,6 +138,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ao-wa-ii.wav',
   },
   {
     id: 'ao-wa-ooi',
@@ -145,6 +154,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ao-wa-ooi.wav',
   },
   {
     id: 'haha-wa-ii',
@@ -159,6 +169,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/haha-wa-ii.wav',
   },
   {
     id: 'haha-wa-au',
@@ -173,6 +184,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'あ', romaji: 'a' },
       { kana: 'う', romaji: 'u' },
     ],
+    audio: '/audio/hiragana/b1/sentence/haha-wa-au.wav',
   },
   {
     id: 'haha-wa-iu',
@@ -187,6 +199,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'う', romaji: 'u' },
     ],
+    audio: '/audio/hiragana/b1/sentence/haha-wa-iu.wav',
   },
   {
     id: 'ha-wa-ii',
@@ -202,6 +215,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ha-wa-ii.wav',
   },
   {
     id: 'ha-wa-ooi',
@@ -216,6 +230,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'お', romaji: 'o' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ha-wa-ooi.wav',
   },
   {
     id: 'aa-ii',
@@ -229,6 +244,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'い', romaji: 'i' },
       { kana: 'い', romaji: 'i' },
     ],
+    audio: '/audio/hiragana/b1/sentence/aa-ii.wav',
   },
   {
     id: 'ee',
@@ -240,6 +256,7 @@ export const SENTENCES: Sentence[] = [] = [
       { kana: 'え', romaji: 'e' },
       { kana: 'え', romaji: 'e' },
     ],
+    audio: '/audio/hiragana/b1/sentence/ee.wav',
   },
   {
     id: 'sore-wa-ii',
