@@ -295,6 +295,9 @@ export const VOCABULARY: Word[] = [
       { kana: 'い', romaji: 'i' },
     ],
     meaning: 'delicioso',
+    audio: 'hiragana/b2/audio/word/oishii.wav',
+    image: 'hiragana/b2/images/imagesSupport/oishii-delicious.webp',
+    imageAlt: 'Un cuenco de ramen humeante con chashu, huevo marinado y nori.',
   },
   {
     id: 'okuru',
@@ -374,6 +377,9 @@ export const VOCABULARY: Word[] = [
       { kana: 'し', romaji: 'shi' },
     ],
     meaning: 'puente',
+    audio: 'hiragana/b2/audio/word/hashi.wav',
+    image: 'hiragana/b2/images/imagesSupport/hashi-bridge.webp',
+    imageAlt: 'Un puente rojo curvado sobre un estanque, entre cerezos en flor.',
   },
   {
     id: 'hashi-2',
@@ -382,6 +388,9 @@ export const VOCABULARY: Word[] = [
       { kana: 'し', romaji: 'shi' },
     ],
     meaning: 'palillos',
+    audio: 'hiragana/b2/audio/word/hashi-2.wav',
+    image: 'hiragana/b2/images/imagesSupport/hashi-2-chopsticks.webp',
+    imageAlt: 'Una mano sujetando unos palillos, cogiendo una pieza de sushi de nigiri.',
   },
   {
     id: 'rei',

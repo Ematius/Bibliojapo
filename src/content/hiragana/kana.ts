@@ -205,17 +205,32 @@ export const HIRAGANA: Kana[] = [
     id: 'shi',
     character: 'し',
     romaji: 'shi',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
+    audio: 'hiragana/b2/audio/shi.wav',
+    mnemonic:
+      'Un campesino japonés encuentra un **SHI**itake enorme a punto de pudrirse ' +
+      'en el bosque, y no puede esperar más: agarra el tronco recto con las dos ' +
+      'manos y tira de golpe hacia el suelo, arrancándolo con un crujido ' +
+      'larguísimo —**SHIIII**— que sigue el mismo camino que hace su mano: recto ' +
+      'hacia abajo y, sin soltar, un tirón curvo hacia la derecha.',
+    strokeOrder: [
+      'De arriba abajo en línea recta, como el tronco del hongo, y sin levantar ' +
+        'el pincel, un giro curvo hacia la derecha que termina en gancho — el ' +
+        'sombrero del shiitake abriéndose.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-shi.webp',
+    imageAlt:
+      'Un campesino agachado en un bosque, tirando con las dos manos de un ' +
+      'shiitake enorme por el tronco, con el sombrero abriéndose hacia la derecha.',
 
-    outline: '',
+    outline:
+      'M196,809L196,809Q93,809 47,777Q0,744 0,656L0,656L0,0L71,4Q70,20 69,60Q67,100 ' +
+      '66,150L66,150Q65,187 65,231Q64,275 64,324L64,324L64,648Q64,703 94,725Q124,746 ' +
+      '199,746L199,746Q259,746 320,728Q380,710 434,681Q488,652 527,620L527,620Q527,626 ' +
+      '530,642Q532,658 535,673Q537,687 538,692L538,692Q490,726 433,753Q375,779 315,794Q254,809 196,809',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: ['M33,11L29,152L32,328L27,502L20,666L71,757L162,774L256,781L343,754L426,727L516,671'],
+    strokeViewBox: '0 0 538 809',
   },
   {
     id: 'ru',

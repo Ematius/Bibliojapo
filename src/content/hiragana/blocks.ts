@@ -61,6 +61,12 @@ export const BLOCKS: Block[] = [
       'cuenta. Con ellos ya se señala sin nombrar —esto, eso, aquello— y se ' +
       'dice que algo existe, que se tiene o que hace falta.',
     lessons: [
+      { kanaId: 'shi', wordIds: ['hashi', 'hashi-2', 'oishii'] },
+      { kanaId: 'ru', wordIds: ['aru', 'aru-2', 'iru', 'iru-2'] },
+      { kanaId: 're', wordIds: ['are', 'rei', 'rei-2', 'ureshii'] },
+      { kanaId: 'to', wordIds: ['ototoi', 'ototoshi'] },
+      { kanaId: 'ku', wordIds: ['tooku', 'okuru', 'haku'] },
+      { kanaId: 'so', wordIds: ['sore', 'osoku', 'sou'] },
     ],
     wordIds: [
       'aru',
