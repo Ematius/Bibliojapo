@@ -443,13 +443,18 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
         // Sin esto, reabrir el tomo más adelante solo encontraría el sello y volvería
         // a caer en el aviso genérico — ver la rama de arriba, «¿YA ESTÁ SELLADO?».
         saveFinalExamScore(blockId, scores)
-        void saveSeal(blockId, FINAL_SEAL).catch(() => undefined)
         // Sellado, el intento en curso ya no hace falta: uno nuevo empezaría a
         // puntuar frases que todavía no se han vuelto a hacer.
         clearExamProgress(blockId)
         // El sello cae en esta hoja y el sobre de la de enfrente se enciende a la vez:
-        // las dos están a la vista, así que el premio se ve llegar.
-        unlockGift()
+        // las dos están a la vista, así que el premio se ve llegar. Pero ESPERA a que
+        // el sello llegue al servidor antes de pedir el carné: si el sobre se abre
+        // antes, `fetchJourney` cuenta las insignias sin la que se acaba de ganar y la
+        // carta enseña un 0% que no es real —se ve bien al reabrir porque para
+        // entonces el sello ya está.
+        void saveSeal(blockId, FINAL_SEAL)
+          .catch(() => undefined)
+          .then(() => unlockGift())
       } else {
         retryButton?.removeAttribute('hidden')
       }
