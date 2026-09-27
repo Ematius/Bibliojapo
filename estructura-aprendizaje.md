@@ -432,7 +432,7 @@ pasillo. Los ejemplos con そ / そら son ilustrativos: el contenido real sale 
 | # | Caracteres | Nuevas | Acum. |
 |---|---|---:|---:|
 | B1 | あ い う え お は (6) | 13 | 13 |
-| B2 | け か し と き こ (6) | 25 | 38 |
+| B2 | け か し と き こ (6) | 15 | 38 |
 | B3 | ひ ふ へ ほ る た (6) | 25 | 63 |
 | B4 | く さ す せ そ ち +を (7) | 31 | 94 |
 | B5 | つ て ら り れ ろ (6) | 31 | 125 |
