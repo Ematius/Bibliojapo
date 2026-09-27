@@ -117,9 +117,13 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // no se ha dado es lo que este repaso llegó a hacer. Ver `finalReviewSpreads`.
     const reviewWordIds = [...new Set(lessons.flatMap((lesson) => lesson.wordIds))]
 
-    // Las frases del examen final: solo las que ya tienen su ficha, por la misma razón.
-    // Sin las 15 no hay examen — ver `finalSentenceExamSpreads`.
-    const examSentenceIds = block.sentenceIds.filter((sentenceId) => sentencesById.has(sentenceId))
+    // Las frases del examen final: solo las que ya tienen su ficha Y su desglose kana a
+    // kana —sin `units` no hay huecos que rellenar ni tarjetas que colocar, y la hoja
+    // saldría en blanco—. Sin las 15 no hay examen — ver `finalSentenceExamSpreads`.
+    const examSentenceIds = block.sentenceIds.filter((sentenceId) => {
+      const sentence = sentencesById.get(sentenceId)
+      return sentence !== undefined && sentence.units.length > 0
+    })
 
     // Las reglas de ortografía que el tomo ya puede enseñar. Se cae fuera por lo mismo que
     // una lección a medias: sin explicación escrita la plana saldría en blanco.

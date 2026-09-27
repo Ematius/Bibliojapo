@@ -223,7 +223,12 @@ export const SENTENCES: Sentence[] = [] = [
     meaning: 'Ah, bien',
     wordIds: ['aa', 'ii'],
     grammarId: '',
-    units: [],
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
   },
   {
     id: 'ee',
@@ -231,7 +236,10 @@ export const SENTENCES: Sentence[] = [] = [
     meaning: 'Sí',
     wordIds: ['ee'],
     grammarId: '',
-    units: [],
+    units: [
+      { kana: 'え', romaji: 'e' },
+      { kana: 'え', romaji: 'e' },
+    ],
   },
   {
     id: 'sore-wa-ii',
