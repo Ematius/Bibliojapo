@@ -207,21 +207,21 @@ export const HIRAGANA: Kana[] = [
     romaji: 'shi',
     audio: 'hiragana/b2/audio/shi.wav',
     mnemonic:
-      'Un campesino japonés encuentra un **SHI**itake enorme a punto de pudrirse ' +
-      'en el bosque, y no puede esperar más: agarra el tronco recto con las dos ' +
-      'manos y tira de golpe hacia el suelo, arrancándolo con un crujido ' +
-      'larguísimo —**SHIIII**— que sigue el mismo camino que hace su mano: recto ' +
-      'hacia abajo y, sin soltar, un tirón curvo hacia la derecha.',
+      'Vas caminando por un campo japonés y ves algo tirado en el suelo: una ' +
+      'seta enorme, caída y a punto de pudrirse. Estando en Japón, solo puede ' +
+      'ser un **SHI**itake. Te agachas a mirarla de cerca y ahí está, calcada: ' +
+      'el tronco recto cayendo hacia abajo y, justo donde el sombrero se le ha ' +
+      'vencido, el mismo gancho curvo hacia la derecha que traza el propio kana.',
     strokeOrder: [
-      'De arriba abajo en línea recta, como el tronco del hongo, y sin levantar ' +
-        'el pincel, un giro curvo hacia la derecha que termina en gancho — el ' +
-        'sombrero del shiitake abriéndose.',
+      'De arriba abajo en línea recta, como el tronco de la seta caída, y sin ' +
+        'levantar el pincel, un giro curvo hacia la derecha que termina en ' +
+        'gancho — el sombrero vencido del shiitake.',
     ],
 
     image: 'hiragana/b2/images/hiragana-shi.webp',
     imageAlt:
-      'Un campesino agachado en un bosque, tirando con las dos manos de un ' +
-      'shiitake enorme por el tronco, con el sombrero abriéndose hacia la derecha.',
+      'Un shiitake enorme visto desde abajo, con el tronco recto y el sombrero ' +
+      'vencido hacia un lado, como si acabara de caer al suelo.',
 
     outline:
       'M196,809L196,809Q93,809 47,777Q0,744 0,656L0,656L0,0L71,4Q70,20 69,60Q67,100 ' +
