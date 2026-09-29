@@ -95,8 +95,12 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // hoja en blanco, a propósito, para verlo al recorrer el tomo y no al llegar al examen.
     // Si esto vuelve a filtrar por completitud, el repaso final —que sale de aquí— filtra
     // igual, y un fallo deja de verse en su lección para desaparecer sin más.
+    // Solo las de kana: las de gramática no traen kana ni palabras, y sus planas las monta
+    // `rules`, no esto.
     const lessons = block.lessons.flatMap((lesson) =>
-      lesson.wordIds?.length ? [{ kanaId: lesson.kanaId, wordIds: lesson.wordIds }] : [],
+      lesson.type === 'kana' && lesson.kanaId && lesson.wordIds?.length
+        ? [{ kanaId: lesson.kanaId, wordIds: lesson.wordIds }]
+        : [],
     )
 
     // Los distractores de cada lección: los kana de esa lección y los de las anteriores,
@@ -344,7 +348,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                       <VolumeIntro
                         block={block}
                         characters={block.lessons.flatMap(
-                          (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
+                          (lesson) => (lesson.kanaId ? kanaById.get(lesson.kanaId)?.character ?? [] : []),
                         )}
                         progress={content.progress}
                       />
@@ -367,7 +371,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   if (page.shows === 'finalScope') {
                     const characters = block.lessons.flatMap(
-                      (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
+                      (lesson) => (lesson.kanaId ? kanaById.get(lesson.kanaId)?.character ?? [] : []),
                     )
                     return <FinalScope characters={characters} />
                   }
@@ -403,7 +407,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   if (page.shows === 'examReveal') {
                     const characters = block.lessons.flatMap(
-                      (lesson) => kanaById.get(lesson.kanaId)?.character ?? [],
+                      (lesson) => (lesson.kanaId ? kanaById.get(lesson.kanaId)?.character ?? [] : []),
                     )
                     return <ExamReveal characters={characters} />
                   }
