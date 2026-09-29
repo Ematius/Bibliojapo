@@ -3,7 +3,7 @@
 // despliegue mientras `blocks.ts` se queda fuera. Ver «El contenido de pago no puede
 // vivir en `content/`» en CLAUDE.md.
 
-// El temario completo en orden. B13 es el cruce explícito con la Fase 2.
+// El temario completo en orden.
 export const BLOCK_PLAN: readonly string[] = [
   'b1',
   'b2',
@@ -18,13 +18,20 @@ export const BLOCK_PLAN: readonly string[] = [
   'b11',
   'b12',
   'b13',
+  'b14',
+  'b15',
+  'b16',
+  'b17',
+  'b18',
 ]
 
-// Los 46 kana base; las transformaciones de B10–B12 no incrementan este total base.
-export const HIRAGANA_BASE_COUNT = 46
+// Cuántas LECCIONES de kana tiene el pasillo, que es lo que cuenta el carné: los 46
+// base, los 5 handakuten, っ, ー y ゃゅょ. Los 20 dakuten no suman — no son lección, se
+// aprenden sobre el kana base que ya se sabe, en el mismo bloque que él.
+export const HIRAGANA_BASE_COUNT = 56
 
-// Aproximado a propósito: el examen no publica su lista de vocabulario.
-export const N5_WORD_COUNT = 800
+// El vocabulario del N5 entero, del que la Fase 1 cubre 768.
+export const N5_WORD_COUNT = 846
 
 export const KATAKANA_BASE_COUNT = 46
 export const N5_KANJI_COUNT = 100

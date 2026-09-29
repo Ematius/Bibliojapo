@@ -98,18 +98,34 @@ export const SHELF_GRID = {
   // apoyados entre sí.
   gap: 0.35,
 
-  // Cuántos tomos van en cada vano antes de pasar al siguiente. Por ancho cabrían ocho,
-  // pero doce lomos apretados en un vano y siete vacíos se leen como un error. Es el
-  // número que hay que tocar para repartirlos de otra forma.
-  volumesPerBay: 2,
+  // Cuántos tomos caben COMO MUCHO en un vano. Por ancho cabrían ocho, pero un vano
+  // apretado junto a otros pelados se lee como un error. Es el tope, no el reparto: los
+  // tomos se distribuyen entre todos los vanos y solo se llega aquí si no caben de otra
+  // forma.
+  volumesPerBay: 3,
 }
 
 export const SHELF_CAPACITY =
   SHELF_GRID.shelves.length * SHELF_GRID.bays.length * SHELF_GRID.volumesPerBay
 
-// Se llena un vano, se pasa al siguiente, y al agotarse los dos de una balda se baja a
-// la de abajo.
+// Cuántos tomos van en cada vano, REPARTIDOS en vez de llenando uno y pasando al
+// siguiente: con dieciocho tomos y ocho vanos salen dos de tres y seis de dos, y las
+// cuatro baldas quedan pobladas. Llenándolos por orden, los dieciocho entraban en seis
+// vanos y la balda de abajo se quedaba vacía.
 //
+// Los que no caben ni así se amontonan en el último vano, a la vista: uno que
+// desapareciera en silencio sería más difícil de echar en falta.
+function volumesPerBayOf(total: number, bayCount: number, max: number): number[] {
+  const placed = Math.min(total, bayCount * max)
+  const base = Math.floor(placed / bayCount)
+  const extra = placed % bayCount
+
+  const counts = Array.from({ length: bayCount }, (_, bay) => base + (bay < extra ? 1 : 0))
+  counts[bayCount - 1] += total - placed
+
+  return counts
+}
+
 // `spineRatioOf` se pide por parámetro en vez de importarse para que este módulo no sepa
 // nada de cómo está dibujado el tomo: aquí solo hay un mueble con baldas y huecos.
 export function placeVolumes<Entry>(
@@ -118,16 +134,18 @@ export function placeVolumes<Entry>(
 ): (Entry & Placement)[] {
   const { shelves, bays, sceneRatio, nominalHeight, maxFill, gap, volumesPerBay } = SHELF_GRID
 
+  const bayCount = shelves.length * bays.length
+  // El vano de cada tomo, por su puesto en la colección.
+  const bayOf = volumesPerBayOf(entries.length, bayCount, volumesPerBay)
+    .flatMap((count, bay) => Array.from({ length: count }, () => bay))
+
   // Dónde acaba el último tomo del vano en curso. Se lleva a mano y no se calcula con el
   // puesto porque los lomos no miden igual: el tercero no está a dos lomos del primero.
   let bayInUse = -1
   let cursor = 0
 
   return entries.map((entry, index) => {
-    // Pasada la capacidad, los que sobran se salen por la derecha. Se ve, que es lo que
-    // hace falta: uno que desapareciera en silencio sería más difícil de echar en falta.
-    const slot = Math.min(index, SHELF_CAPACITY - 1)
-    const bayIndex = Math.floor(slot / volumesPerBay)
+    const bayIndex = bayOf[index] ?? bayCount - 1
     const shelf = shelves[Math.floor(bayIndex / bays.length)]
     const bay = bays[bayIndex % bays.length]
 
