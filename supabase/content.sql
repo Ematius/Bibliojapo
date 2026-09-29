@@ -57,6 +57,16 @@ create table if not exists public.blocks (
   unique (aisle_id, position)
 );
 
+-- Lo que sigue son columnas añadidas después de que la base estuviera desplegada. Van
+-- en `alter` y no dentro del `create` de arriba para no tener la lista escrita dos
+-- veces: en una base nueva se crea la tabla y estos `alter` la completan a
+-- continuación, con el mismo resultado.
+
+-- Los dakuten que estrena el bloque. No son lección —se enseñan inline, sobre el kana
+-- base que ya se sabe—, así que no caben en `lessons`, pero la plana recurrente del
+-- dakuten necesita saber cuáles tocan en ESTE tomo.
+alter table public.blocks add column if not exists dakuten text[] not null default '{}';
+
 -- ---------------------------------------------------------------------------
 -- Contenido
 -- ---------------------------------------------------------------------------
@@ -93,6 +103,53 @@ create table if not exists public.words (
   primary key (aisle_id, id)
 );
 
+-- `units` NO se sustituye por kana/romaji planos: los ejercicios parten la palabra en
+-- tarjetas de un kana, y con los yōon los tamaños ni coinciden.
+--
+-- `kanji` se guarda pero NO se pinta en la Fase 1: a nivel N5 estas palabras se leen y
+-- escriben en kana, y el kanji se reencuentra en el pasillo de kanji. La columna existe
+-- para que ese pasillo no tenga que volver a recogerlo.
+alter table public.words add column if not exists tipo text;
+alter table public.words add column if not exists grupo_verbal text;
+alter table public.words add column if not exists raiz_masu text;
+alter table public.words add column if not exists kanji text;
+
+-- La raíz de ～ない NO siempre sale de `raiz_masu` ni de la tabla de las «u». Se deja
+-- vacía en los verbos que sí se derivan —godan por su fila «a», ichidan quitando る— y
+-- se escribe a mano en los tres que no:
+--   ある → ない       el único godan que pierde la raíz entera; あらない no existe
+--   する → しない
+--   くる → こない     こ, no き: la raíz de ～ない no es la de ～ます
+alter table public.words add column if not exists raiz_nai text;
+
+-- Nullables a propósito: la tabla ya tiene filas de antes del volcado nuevo, y un `not
+-- null` sin valor por defecto no podría añadirse sobre ellas. El espejo las rellena.
+
+-- Los checks no son decoración: `conjugations.aplica_a` empareja contra `tipo` sin
+-- traducir nada, así que un tipo mal escrito no daría error, simplemente dejaría a esa
+-- palabra sin sus formas. Así el volcado se cae y se ve.
+alter table public.words drop constraint if exists words_tipo_check;
+alter table public.words add constraint words_tipo_check check (
+  tipo is null or tipo in (
+    'sustantivo', 'verbo-u', 'verbo-ru', 'verbo-irregular', 'adjetivo-i',
+    'adjetivo-na', 'adverbio', 'particula', 'conjuncion', 'expresion',
+    'contador', 'saludo', 'interrogativo', 'pronombre', 'numero'
+  )
+);
+
+alter table public.words drop constraint if exists words_grupo_verbal_check;
+alter table public.words add constraint words_grupo_verbal_check check (
+  grupo_verbal is null or grupo_verbal in ('godan', 'ichidan', 'irregular')
+);
+
+-- Un verbo sin raíz no se puede conjugar, y el fallo saldría tarde y en silencio: la
+-- palabra aparecería sin sus formas y nadie sabría por qué.
+alter table public.words drop constraint if exists words_verbo_check;
+alter table public.words add constraint words_verbo_check check (
+  (grupo_verbal is null and raiz_masu is null)
+  or (grupo_verbal is not null and raiz_masu is not null)
+);
+
 create table if not exists public.grammar (
   aisle_id public.aisle_id not null,
   id text not null,
@@ -101,6 +158,19 @@ create table if not exists public.grammar (
   explanation text not null default '',
   primary key (aisle_id, id)
 );
+
+-- `character` y `romaji` valen para una regla de ORTOGRAFÍA —は que suena «wa», を que
+-- suena «o»—, pero no para una de gramática: です no es un carácter, y ます tampoco. Por
+-- eso dejan de ser obligatorios y la regla gana título, cuerpo y ejemplos.
+--
+-- `examples` lleva las tablas de conjugación de G2 y G3, que no caben en un párrafo.
+-- Entrecomillado porque `character` es palabra clave de SQL: en el `create` de arriba el
+-- parser la admite por su sitio, pero en un `alter column` no.
+alter table public.grammar alter column "character" drop not null;
+alter table public.grammar alter column romaji drop not null;
+alter table public.grammar add column if not exists title text not null default '';
+alter table public.grammar add column if not exists body text not null default '';
+alter table public.grammar add column if not exists examples jsonb not null default '[]'::jsonb;
 
 create table if not exists public.sentences (
   aisle_id public.aisle_id not null,
@@ -124,6 +194,75 @@ create table if not exists public.lessons (
   primary key (block_id, position)
 );
 
+-- Una lección de gramática no enseña un kana, así que `kana_id` deja de ser
+-- obligatorio y `tipo` dice cuál de las dos es. La regla se ancla AQUÍ —al bloque y a
+-- su puesto en él— y no a una frase: así el tomo decide dónde va la plana, y una regla
+-- puede reaparecer en varios bloques, que es lo que hace falta para la del dakuten.
+alter table public.lessons alter column kana_id drop not null;
+alter table public.lessons add column if not exists tipo text not null default 'kana';
+alter table public.lessons add column if not exists grammar_id text;
+
+alter table public.lessons drop constraint if exists lessons_tipo_check;
+alter table public.lessons add constraint lessons_tipo_check check (
+  (tipo = 'kana' and kana_id is not null)
+  or (tipo = 'gramatica' and grammar_id is not null)
+);
+
+-- ---------------------------------------------------------------------------
+-- Conjugación
+-- ---------------------------------------------------------------------------
+
+-- Un verbo es UNA fila en `words`. します y しました no son vocabulario: son formas que
+-- se generan pegando un sufijo de aquí a la raíz de la palabra. Crearlas como palabras
+-- llenaría el temario de entradas que nadie escribió y que habría que mantener a mano.
+--
+-- Las once filas son fijas y no salen de `content/`, así que se escriben abajo en este
+-- mismo archivo en vez de viajar en el volcado.
+create table if not exists public.conjugations (
+  id text primary key,
+  position int not null,
+  nombre text not null,
+  -- Con `{raiz}`, `{raiz_nai}` o `{palabra}` dentro: lo que se sustituye al generar.
+  patron text not null,
+  registro text not null,
+  -- El id GLOBAL del primer bloque en que la forma se puede enseñar. Se compara contra
+  -- la posición del bloque en la CADENA entera —`(aisle_id, position)`, que el enum
+  -- ordena en el orden del recorrido—, nunca como texto: 'b10' < 'b3' alfabéticamente.
+  -- Y nunca contra la posición dentro del pasillo, o en katakana volverían a bloquearse
+  -- formas ya dominadas.
+  bloque_min text not null,
+  -- Los `tipo` de palabra a los que se aplica. Multivalor, y sus valores son los mismos
+  -- que `words.tipo`, así que el filtro es `w.tipo = any(c.aplica_a)` sin traducir.
+  aplica_a text[] not null,
+  -- El desglose kana a kana del sufijo, con la misma forma que `words.units`. Se escribe
+  -- una vez aquí para que generar los `units` de una forma sea concatenar, sin tener que
+  -- romanizar texto por tabla.
+  suffix_units jsonb not null default '[]'::jsonb
+);
+
+-- Las nueve filas de la tabla de las «u», que es lo único que hace falta para derivar
+-- la raíz de un godan: se sustituye el ÚLTIMO unit de la palabra por el de la columna
+-- que toque. Un ichidan no la usa —se le quita el último unit y ya—, y un irregular
+-- trae su raíz escrita.
+--
+-- Va aparte de `kana` a propósito: `kana` solo guarda los que son lección, y los
+-- dakuten no lo son, así que ぎ no estaría ahí — y およぐ → およぎます lo necesita.
+--
+-- っ y ー no caben aquí porque no son lecturas sino reglas: っ duplica la consonante
+-- siguiente y ー alarga la vocal anterior.
+create table if not exists public.kana_rows (
+  kana_u text primary key,
+  romaji_u text not null,
+  kana_i text not null,
+  romaji_i text not null,
+  -- La fila «a», que pide el negativo llano ～ない. Ojo con う → わ, que no es あ.
+  --
+  -- Derivar por aquí NO basta para ～ない: hay tres verbos que no salen de ninguna
+  -- tabla, y por eso existe `words.raiz_nai`.
+  kana_a text not null,
+  romaji_a text not null
+);
+
 -- ---------------------------------------------------------------------------
 -- RLS
 -- ---------------------------------------------------------------------------
@@ -138,6 +277,8 @@ alter table public.words enable row level security;
 alter table public.grammar enable row level security;
 alter table public.sentences enable row level security;
 alter table public.lessons enable row level security;
+alter table public.conjugations enable row level security;
+alter table public.kana_rows enable row level security;
 
 -- ---------------------------------------------------------------------------
 -- Permisos del volcado
@@ -154,8 +295,83 @@ grant select, insert, update, delete on table
   public.words,
   public.grammar,
   public.sentences,
-  public.lessons
+  public.lessons,
+  public.conjugations,
+  public.kana_rows
   to service_role;
+
+-- ---------------------------------------------------------------------------
+-- Las once formas
+-- ---------------------------------------------------------------------------
+
+-- Fijas: no son temario de ningún pasillo, son la gramática del japonés. Por eso se
+-- escriben aquí y no en `content/`, y por eso el volcado no las toca.
+--
+-- `suffix_units` lleva el sufijo desglosado kana a kana. Dos lecturas no son la del
+-- kana suelto y van a conciencia: は dentro de ではありません suena «wa» porque ahí es
+-- partícula, y ょう se lee «sho» + «u» — el alargamiento, no una sílaba aparte.
+insert into public.conjugations (id, position, nombre, patron, registro, bloque_min, aplica_a, suffix_units) values
+  ('masu-pres-af',  1, 'Presente afirmativo', '{raiz}ます',                  'cortes', 'b2',  '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"ま","romaji":"ma"},{"kana":"す","romaji":"su"}]'),
+  ('masu-pres-neg', 2, 'Presente negativo',   '{raiz}ません',                'cortes', 'b2',  '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"}]'),
+  ('masu-pas-af',   3, 'Pasado afirmativo',   '{raiz}ました',                'cortes', 'b5',  '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"ま","romaji":"ma"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
+  ('masu-pas-neg',  4, 'Pasado negativo',     '{raiz}ませんでした',          'cortes', 'b5',  '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"},{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
+  ('tai',           5, 'Querer hacer',        '{raiz}たい',                  'neutro', 'b6',  '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"た","romaji":"ta"},{"kana":"い","romaji":"i"}]'),
+  ('nai',           6, 'Negativo llano',      '{raiz_nai}ない',              'llano',  'b13', '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"な","romaji":"na"},{"kana":"い","romaji":"i"}]'),
+  ('masho',         7, 'Invitación',          '{raiz}ましょう',              'cortes', 'b18', '{verbo-u,verbo-ru,verbo-irregular}',
+   '[{"kana":"ま","romaji":"ma"},{"kana":"しょ","romaji":"sho"},{"kana":"う","romaji":"u"}]'),
+  ('copula-pres-af',  8, 'Es',     '{palabra}です',                   'cortes', 'b2', '{sustantivo,adjetivo-na,adjetivo-i}',
+   '[{"kana":"で","romaji":"de"},{"kana":"す","romaji":"su"}]'),
+  ('copula-pres-neg', 9, 'No es',  '{palabra}ではありません',         'cortes', 'b3', '{sustantivo,adjetivo-na}',
+   '[{"kana":"で","romaji":"de"},{"kana":"は","romaji":"wa"},{"kana":"あ","romaji":"a"},{"kana":"り","romaji":"ri"},{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"}]'),
+  ('copula-pas-af',  10, 'Era',    '{palabra}でした',                 'cortes', 'b5', '{sustantivo,adjetivo-na,adjetivo-i}',
+   '[{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
+  ('copula-pas-neg', 11, 'No era', '{palabra}ではありませんでした',   'cortes', 'b5', '{sustantivo,adjetivo-na}',
+   '[{"kana":"で","romaji":"de"},{"kana":"は","romaji":"wa"},{"kana":"あ","romaji":"a"},{"kana":"り","romaji":"ri"},{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"},{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]')
+on conflict (id) do update set
+  position = excluded.position,
+  nombre = excluded.nombre,
+  patron = excluded.patron,
+  registro = excluded.registro,
+  bloque_min = excluded.bloque_min,
+  aplica_a = excluded.aplica_a,
+  suffix_units = excluded.suffix_units;
+
+-- Con una errata en `bloque_min` la forma no fallaría: quedaría inalcanzable en
+-- silencio, que es peor. La clave ajena lo caza.
+--
+-- `not valid` es lo que la hace compatible con el orden de arranque: este archivo corre
+-- ANTES del volcado, así que la primera vez `b18` todavía no existe en `blocks` y una
+-- clave normal rechazaría el insert de arriba. `not valid` no mira las filas que ya
+-- están, pero sí valida toda escritura posterior, que es donde aparecen las erratas.
+-- Una vez volcados los 18 bloques se puede cerrar del todo con:
+--   alter table public.conjugations validate constraint conjugations_bloque_min_fkey;
+alter table public.conjugations drop constraint if exists conjugations_bloque_min_fkey;
+alter table public.conjugations add constraint conjugations_bloque_min_fkey
+  foreign key (bloque_min) references public.blocks (id) not valid;
+
+-- Las nueve «u» con su fila «i» —la de ～ます— y su fila «a» —la de ～ない—.
+insert into public.kana_rows (kana_u, romaji_u, kana_i, romaji_i, kana_a, romaji_a) values
+  ('う', 'u',   'い', 'i',   'わ', 'wa'),
+  ('く', 'ku',  'き', 'ki',  'か', 'ka'),
+  ('ぐ', 'gu',  'ぎ', 'gi',  'が', 'ga'),
+  ('す', 'su',  'し', 'shi', 'さ', 'sa'),
+  ('つ', 'tsu', 'ち', 'chi', 'た', 'ta'),
+  ('ぬ', 'nu',  'に', 'ni',  'な', 'na'),
+  ('ぶ', 'bu',  'び', 'bi',  'ば', 'ba'),
+  ('む', 'mu',  'み', 'mi',  'ま', 'ma'),
+  ('る', 'ru',  'り', 'ri',  'ら', 'ra')
+on conflict (kana_u) do update set
+  romaji_u = excluded.romaji_u,
+  kana_i = excluded.kana_i,
+  romaji_i = excluded.romaji_i,
+  kana_a = excluded.kana_a,
+  romaji_a = excluded.romaji_a;
 
 -- ---------------------------------------------------------------------------
 -- El tomo
