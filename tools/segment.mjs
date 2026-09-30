@@ -7,7 +7,7 @@
 //
 // De regalo valida el contenido: una frase que no se puede segmentar con el vocabulario
 // disponible es una frase a la que le falta una palabra o le sobra un carácter.
-import { tokenize } from './romaji.mjs'
+import { tokenizeWord } from './romaji.mjs'
 
 // Se leen distinto de lo que dicen sus kana, y solo cuando hacen de partícula.
 export const PARTICLES = {
@@ -128,7 +128,9 @@ export function sentenceUnits(pieces) {
       units.push({ kana: piece.text, romaji: PARTICLES[piece.text] })
       continue
     }
-    units.push(...tokenize(piece.text))
+    // `tokenizeWord` y no `tokenize`: una PALABRA puede llevar dentro una は que se lee
+    // «wa» —では、また—, y esas excepciones son por palabra entera.
+    units.push(...tokenizeWord(piece.text))
   }
   return units
 }

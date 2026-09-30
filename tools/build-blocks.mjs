@@ -6,11 +6,16 @@
 // sus frases. Lo único que NO trae es con QUÉ palabra se enseña cada kana, así que eso
 // se deriva con la regla de abajo y se revisa mirando el archivo.
 import fs from 'fs'
-import { segment } from './segment.mjs'
-import { reading, tokenize } from './romaji.mjs'
+import { readDocument, allWords, DOC } from './doc.mjs'
+import { segment, sentenceUnits } from './segment.mjs'
+import { reading } from './romaji.mjs'
 
-const DOC = 'docs/FASE1_DEFINITIVO.md'
 const OUT = 'src/content/hiragana/blocks.ts'
+
+// Un kana que no aparece dentro de NINGUNA palabra del temario no puede tener lección de
+// vocabulario: no hay con qué enseñarlo. を es así por naturaleza —solo existe como
+// partícula—, y su plana es la de su regla. Ver la nota de ぺ en el documento.
+const TAUGHT_BY_RULE = { wo: 'particle-o' }
 
 // La portada de un tomo lleva dos cosas escritas a mano; las cuentas se derivan solas.
 // De momento solo B1 las tiene, porque es el único tomo que se lee entero.
@@ -39,39 +44,6 @@ const B1_LESSONS = {
 // y la segunda demuestra que se reconoce el carácter en otra palabra.
 const WORDS_PER_LESSON = 2
 
-function readDoc() {
-  const blocks = new Map()
-  let id = null
-  let mode = null
-  for (const line of fs.readFileSync(DOC, 'utf8').split(/\r?\n/)) {
-    const heading = line.match(/^### B(\d+)/)
-    if (heading) {
-      id = 'b' + heading[1]
-      blocks.set(id, { id, kana: [], dakuten: [], words: [], sentences: [], title: line.replace(/^### /, '') })
-      continue
-    }
-    if (!id) continue
-    const k = line.match(/^\*\*Kana nuevos:\*\* (.*)/)
-    if (k) blocks.get(id).kana = [...k[1]].filter((c) => /[ぁ-ゖー]/.test(c))
-    const d = line.match(/^\*\*Dakuten que traen:\*\* (.*)/)
-    if (d) blocks.get(id).dakuten = [...d[1]].filter((c) => /[ぁ-ゖー]/.test(c))
-    if (line.startsWith('```csv')) { mode = 'csv'; continue }
-    if (line.startsWith('```text')) { mode = 'text'; continue }
-    if (line.startsWith('```')) { mode = null; continue }
-    if (mode === 'csv' && line.includes('|') && !line.startsWith('id|')) {
-      const c = line.split('|')
-      if (c.length < 9) continue
-      blocks.get(id).words.push({
-        id: c[0],
-        text: c[1].split('/')[0].replace(/[（）～〜・]/g, '').trim(),
-        type: c[5], verbGroup: c[6], masuStem: c[7],
-      })
-    }
-    if (mode === 'text' && line.trim()) blocks.get(id).sentences.push(line.trim())
-  }
-  return [...blocks.values()]
-}
-
 // El id del kana, por su carácter, leído de `kana.ts`: es el que guardan los sellos.
 function kanaIds() {
   const src = fs.readFileSync('src/content/hiragana/kana.ts', 'utf8')
@@ -96,22 +68,20 @@ function pickWords(kana, words, produced, taken) {
   return holds.sort((a, b) => score(a) - score(b)).slice(0, WORDS_PER_LESSON).map((w) => w.id)
 }
 
-const doc = readDoc()
+const doc = readDocument()
 const idOf = kanaIds()
 const produced = producedIds()
+const words = allWords(doc)
 
-// El id de una frase, por sus palabras: `kasa-wa-arimasen`. Es el patrón que ya usaban
-// las frases escritas a mano y se lee sin tener que abrir el temario.
-const allWords = doc.flatMap((b) => b.words.map((w) => ({ ...w, block: +b.id.slice(1) })))
-const NAI_STEM = { aru: '', 'aru-2': '', suru: 'し', kuru: 'こ' }
-for (const w of allWords) if (w.id in NAI_STEM) w.naiStem = NAI_STEM[w.id]
-
+// El id de una frase, por sus palabras: `kasa-wa-arimasen`. Es el mismo que calcula
+// `build-sentences.mjs`, y tiene que seguir siéndolo: si los dos dejaran de coincidir,
+// los bloques pedirían frases que no existen.
 const seenIds = new Map()
 function sentenceId(text, block) {
-  const pieces = segment(text, allWords.filter((w) => w.block <= block))
+  const pieces = segment(text, words.filter((w) => w.blockNumber <= block))
   const base = pieces
-    ? pieces.filter((p) => !p.punctuation).map((p) => reading(tokenize(p.text)) || p.text).join('-')
-    : reading(tokenize(text))
+    ? pieces.filter((p) => !p.punctuation).map((p) => reading(sentenceUnits([p]))).join('-')
+    : ''
   const count = seenIds.get(base) ?? 0
   seenIds.set(base, count + 1)
   return count ? `${base}-${count + 1}` : base
@@ -128,15 +98,22 @@ for (const block of doc) {
   for (const ch of block.kana) {
     const kanaId = idOf.get(ch)
     if (!kanaId) { warnings.push(`${block.id}: ${ch} no tiene ficha en kana.ts`); continue }
+
+    // El que solo existe como partícula se enseña con su regla, no con vocabulario.
+    if (TAUGHT_BY_RULE[kanaId]) {
+      lessons.push({ type: 'grammar', grammarId: TAUGHT_BY_RULE[kanaId] })
+      continue
+    }
+
     const wordIds = block.id === 'b1'
       ? B1_LESSONS[kanaId]
       : pickWords(ch, block.words, produced, taken)
     wordIds?.forEach((id) => taken.add(id))
     if (!wordIds?.length) warnings.push(`${block.id}: ${ch} (${kanaId}) sin palabra que lo contenga`)
-    lessons.push({ kanaId, wordIds: wordIds ?? [] })
+    lessons.push({ type: 'kana', kanaId, wordIds: wordIds ?? [] })
   }
 
-  const sentenceIds = block.sentences.map((s) => sentenceId(s, n))
+  const sentenceIds = block.sentences.map((s) => sentenceId(s.text, n))
   rendered.push({ ...block, lessons, sentenceIds, wordIds: block.words.map((w) => w.id) })
 }
 
@@ -148,7 +125,9 @@ const list = (items, indent) =>
 
 const body = rendered.map((b) => {
   const lessons = b.lessons
-    .map((l) => `      { type: 'kana', kanaId: ${q(l.kanaId)}, wordIds: [${l.wordIds.map(q).join(', ')}] },`)
+    .map((l) => l.type === 'grammar'
+      ? `      { type: 'grammar', grammarId: ${q(l.grammarId)} },`
+      : `      { type: 'kana', kanaId: ${q(l.kanaId)}, wordIds: [${l.wordIds.map(q).join(', ')}] },`)
     .join('\n')
   const cover = COVER[b.id] ?? {}
   return `  {

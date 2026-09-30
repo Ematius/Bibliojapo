@@ -1,7 +1,7 @@
 # OtakuN5 — Fase 1: Hiragana
 ## Documento definitivo · pool 768 · 18 bloques
 
-> **Verificado por script.** 768 filas, 768 ids únicos, 145 frases sin un solo
+> **Verificado por script.** 768 filas, 768 ids únicos, 156 frases sin un solo
 > kana fuera de su bloque, 126 verbos con raíz derivada por regla y ninguno sin
 > ella. Cobertura 768/768, sin residuo.
 >
@@ -56,7 +56,7 @@ Fase 1*.
 | Dakuten | 20, **inline, no son lección** |
 | Palabras | **768** |
 | Verbos | **126** (85 godan · 32 ichidan · 9 irregulares) |
-| Frases objetivo | **145** |
+| Frases objetivo | **156** |
 | Cobertura | **90,8 % del vocabulario N5** (768 / 846) |
 
 **Denominadores para la app:** `N5_WORD_COUNT = 846` · `HIRAGANA_BASE_COUNT = 56`.
@@ -400,13 +400,14 @@ haha|はは|母|haha|madre propia|sustantivo|||b1
 
 **Frases objetivo**
 
-```text
-はい。
-いいえ。
-ええ。
-あおい。
-おおい。
-いい。
+```csv
+frase|romaji|espanol|particula
+はい。|hai.|Sí.|—
+いいえ。|iie.|No.|—
+ええ。|ee.|Sí.|—
+あおい。|aoi.|Es azul.|—
+おおい。|ooi.|Hay muchos.|—
+いい。|ii.|Está bien.|—
 ```
 
 ### B2 · ますてせん
@@ -446,21 +447,22 @@ man|まん|万|man|diez mil|numero|||b2
 
 **Frases objetivo**
 
-```text
-あいます。
-あいません。
-いいます。
-あおいです。
-おおいです。
-いえです。
-ははです。
-うえです。
-まずいです。
-あまいです。
-せまいです。
-うすいです。
-せんせいです。
-いすです。
+```csv
+frase|romaji|espanol|particula
+あいます。|aimasu.|Me encuentro con alguien.|—
+あいません。|aimasen.|No me encuentro con nadie.|—
+いいます。|iimasu.|Lo digo.|—
+あおいです。|aoi desu.|Es azul.|—
+おおいです。|ooi desu.|Hay muchos.|—
+いえです。|ie desu.|Es una casa.|—
+ははです。|haha desu.|Es mi madre.|—
+うえです。|ue desu.|Está encima.|—
+まずいです。|mazui desu.|Está malo.|—
+あまいです。|amai desu.|Es dulce.|—
+せまいです。|semai desu.|Es estrecho.|—
+うすいです。|usui desu.|Es fino.|—
+せんせいです。|sensei desu.|Es profesor.|—
+いすです。|isu desu.|Es una silla.|—
 ```
 
 ### B3 · りしるか
@@ -536,21 +538,23 @@ marui|まるい|丸い/円い|marui|redondo, circular|adjetivo-i|||b3
 
 **Frases objetivo**
 
-```text
-あります。
-ありません。
-います。
-いません。
-します。
-しません。
-かいます。
-あかいです。
-おいしいです。
-えいがです。
-あしです。
-うります。
-おしえます。
-おります。
+```csv
+frase|romaji|espanol|particula
+あります。|arimasu.|Hay.|—
+ありません。|arimasen.|No hay.|—
+います。|imasu.|Está.|—
+いません。|imasen.|No está.|—
+します。|shimasu.|Lo hago.|—
+しません。|shimasen.|No lo hago.|—
+かいます。|kaimasu.|Lo compro.|—
+あかいです。|akai desu.|Es rojo.|—
+おいしいです。|oishii desu.|Está delicioso.|—
+えいがです。|eiga desu.|Es una película.|—
+あしです。|ashi desu.|Es el pie.|—
+うります。|urimasu.|Lo vendo.|—
+おしえます。|oshiemasu.|Lo enseño.|—
+おります。|orimasu.|Me bajo.|—
+いえはしずかです。|ie wa shizuka desu.|La casa es tranquila.|は
 ```
 
 ### B4 · こなさわ
@@ -633,15 +637,16 @@ warui|わるい|悪い|warui|malo|adjetivo-i|||b4
 
 **Frases objetivo**
 
-```text
-おなじです。
-かわいいです。
-うるさいです。
-おわります。
-あさごはんです。
-かさはありません。
-かないです。
-こうえんです。
+```csv
+frase|romaji|espanol|particula
+おなじです。|onaji desu.|Es lo mismo.|—
+かわいいです。|kawaii desu.|Es bonito.|—
+うるさいです。|urusai desu.|Es ruidoso.|—
+おわります。|owarimasu.|Se termina.|—
+あさごはんです。|asagohan desu.|Es el desayuno.|—
+かさはありません。|kasa wa arimasen.|No hay paraguas.|は
+かないです。|kanai desu.|Es mi esposa.|—
+こうえんです。|kouen desu.|Es un parque.|—
 ```
 
 ### B5 · たみそね
@@ -724,16 +729,18 @@ dewa-mata|では、また||dewa mata|hasta luego|saludo|||b5
 
 **Frases objetivo**
 
-```text
-あしたです。
-あたまがいたいです。
-うたいます。
-うみです。
-おかねがあります。
-おそいです。
-かんたんです。
-あなたです。
-では、また。
+```csv
+frase|romaji|espanol|particula
+あしたです。|ashita desu.|Es mañana.|—
+あたまがいたいです。|atama ga itai desu.|Me duele la cabeza.|が
+うたいます。|utaimasu.|Canto.|—
+うみです。|umi desu.|Es el mar.|—
+おかねがあります。|okane ga arimasu.|Hay dinero.|が
+おそいです。|osoi desu.|Es tarde.|—
+かんたんです。|kantan desu.|Es fácil.|—
+あなたです。|anata desu.|Eres tú.|—
+では、また。|dewa, mata.|Hasta luego.|—
+あなたはせんせいですか。|anata wa sensei desu ka.|¿Eres profesor?|は · か
 ```
 
 ### B6 · くきら
@@ -821,15 +828,16 @@ watakushi|わたくし|私|watakushi|yo, formal|pronombre|||b6
 
 **Frases objetivo**
 
-```text
-いきます。
-かきます。
-あるきます。
-あらいます。
-おおきいです。
-おきます。
-おくります。
-えきです。
+```csv
+frase|romaji|espanol|particula
+いきます。|ikimasu.|Voy.|—
+かきます。|kakimasu.|Escribo.|—
+あるきます。|arukimasu.|Camino.|—
+あらいます。|araimasu.|Lavo.|—
+おおきいです。|ookii desu.|Es grande.|—
+おきます。|okimasu.|Me levanto.|—
+おくります。|okurimasu.|Lo envío.|—
+えきです。|eki desu.|Es la estación.|—
 ```
 
 ### B7 · とち
@@ -913,15 +921,17 @@ midori|みどり|緑|midori|verde|sustantivo|||b7
 
 **Frases objetivo**
 
-```text
-いちです。
-おとこです。
-くちです。
-こちらです。
-ことばです。
-あとでします。
-おとうとがいます。
-うちです。
+```csv
+frase|romaji|espanol|particula
+いちです。|ichi desu.|Es uno.|—
+おとこです。|otoko desu.|Es un hombre.|—
+くちです。|kuchi desu.|Es la boca.|—
+こちらです。|kochira desu.|Es por aquí.|—
+ことばです。|kotoba desu.|Es una palabra.|—
+あとでします。|ato de shimasu.|Lo hago después.|で
+おとうとがいます。|otouto ga imasu.|Tengo un hermano menor.|が
+うちです。|uchi desu.|Es mi casa.|—
+おとうとはうちです。|otouto wa uchi desu.|Mi hermano menor está en casa.|は
 ```
 
 ### B8 · つけ
@@ -987,15 +997,16 @@ raigetsu|らいげつ|来月|raigetsu|mes próximo|sustantivo|||b8
 
 **Frases objetivo**
 
-```text
-あけます。
-あげます。
-あついです。
-かけます。
-けします。
-いつですか。
-けさです。
-くつです。
+```csv
+frase|romaji|espanol|particula
+あけます。|akemasu.|Lo abro.|—
+あげます。|agemasu.|Lo doy.|—
+あついです。|atsui desu.|Hace calor.|—
+かけます。|kakemasu.|Me las pongo.|—
+けします。|keshimasu.|Lo apago.|—
+いつですか。|itsu desu ka.|¿Cuándo es?|か
+けさです。|kesa desu.|Es esta mañana.|—
+くつです。|kutsu desu.|Son zapatos.|—
 ```
 
 ### B9 · ふひ
@@ -1057,15 +1068,17 @@ mannenhitsu|まんねんひつ|万年筆|mannenhitsu|pluma estilográfica|sustan
 
 **Frases objetivo**
 
-```text
-あそびます。
-えらびます。
-あぶないです。
-とびます。
-ならびます。
-ひがしです。
-とうふです。
-かぶります。
+```csv
+frase|romaji|espanol|particula
+あそびます。|asobimasu.|Juego.|—
+えらびます。|erabimasu.|Lo elijo.|—
+あぶないです。|abunai desu.|Es peligroso.|—
+とびます。|tobimasu.|Vuela.|—
+ならびます。|narabimasu.|Me pongo en fila.|—
+ひがしです。|higashi desu.|Es el este.|—
+とうふです。|toufu desu.|Es tofu.|—
+かぶります。|kaburimasu.|Me lo pongo en la cabeza.|—
+とうふはおいしいです。|toufu wa oishii desu.|El tofu está delicioso.|は
 ```
 
 ### B10 · れも
@@ -1123,15 +1136,18 @@ wasureru|わすれる|忘れる|wasureru|olvidar|verbo-ru|ichidan|わすれ|b10
 
 **Frases objetivo**
 
-```text
-これです。
-それです。
-だれですか。
-いもうとがいます。
-きれいです。
-こどもがいます。
-うれしいです。
-つかれます。
+```csv
+frase|romaji|espanol|particula
+これです。|kore desu.|Es esto.|—
+それです。|sore desu.|Es eso.|—
+だれですか。|dare desu ka.|¿Quién es?|か
+いもうとがいます。|imouto ga imasu.|Tengo una hermana menor.|が
+きれいです。|kirei desu.|Es bonito.|—
+こどもがいます。|kodomo ga imasu.|Hay niños.|が
+うれしいです。|ureshii desu.|Estoy contento.|—
+つかれます。|tsukaremasu.|Me canso.|—
+これはなんですか。|kore wa nan desu ka.|¿Qué es esto?|は · か
+それはだれですか。|sore wa dare desu ka.|¿Quién es ese?|は · か
 ```
 
 ### B11 · によ
@@ -1190,15 +1206,16 @@ sugu-ni|すぐ・に||sugu/ni|inmediatamente|adverbio|||b11
 
 **Frases objetivo**
 
-```text
-およぎます。
-かようびです。
-つよいです。
-なにかありますか。
-おにぎりです。
-くにです。
-にちようびです。
-すぐにします。
+```csv
+frase|romaji|espanol|particula
+およぎます。|oyogimasu.|Nado.|—
+かようびです。|kayoubi desu.|Es martes.|—
+つよいです。|tsuyoi desu.|Es fuerte.|—
+なにかありますか。|nanika arimasu ka.|¿Hay algo?|か
+おにぎりです。|onigiri desu.|Es una bola de arroz.|—
+くにです。|kuni desu.|Es mi país.|—
+にちようびです。|nichiyoubi desu.|Es domingo.|—
+すぐにします。|sugu ni shimasu.|Lo hago enseguida.|に
 ```
 
 ### B12 · ろの
@@ -1254,14 +1271,16 @@ roku|ろく|六|roku|seis|numero|||b12
 
 **Frases objetivo**
 
-```text
-いろがいいです。
-おもしろいです。
-きのうです。
-くろいです。
-うしろにあります。
-おふろにはいります。
-くだものです。
+```csv
+frase|romaji|espanol|particula
+いろがいいです。|iro ga ii desu.|El color está bien.|が
+おもしろいです。|omoshiroi desu.|Es interesante.|—
+きのうです。|kinou desu.|Fue ayer.|—
+くろいです。|kuroi desu.|Es negro.|—
+うしろにあります。|ushiro ni arimasu.|Está detrás.|に
+おふろにはいります。|ofuro ni hairimasu.|Me meto en el baño.|に
+くだものです。|kudamono desu.|Es fruta.|—
+くだものはおいしいです。|kudamono wa oishii desu.|La fruta está deliciosa.|は
 ```
 
 ### B13 · やほ
@@ -1308,14 +1327,15 @@ yaru|やる||yaru|hacer|verbo-u|godan|やり|b13
 
 **Frases objetivo**
 
-```text
-ほしいです。
-はやいです。
-のぼります。
-なつやすみです。
-おぼえます。
-ほんです。
-ほんやにいきます。
+```csv
+frase|romaji|espanol|particula
+ほしいです。|hoshii desu.|Lo quiero.|—
+はやいです。|hayai desu.|Es rápido.|—
+のぼります。|noborimasu.|Subo.|—
+なつやすみです。|natsuyasumi desu.|Son las vacaciones de verano.|—
+おぼえます。|oboemasu.|Lo memorizo.|—
+ほんです。|hon desu.|Es un libro.|—
+ほんやにいきます。|honya ni ikimasu.|Voy a la librería.|に
 ```
 
 ### B14 · めむ
@@ -1354,14 +1374,15 @@ yomu|よむ|読む|yomu|leer|verbo-u|godan|よみ|b14
 
 **Frases objetivo**
 
-```text
-のみます。
-さむいです。
-つめたいです。
-むずかしいです。
-たのみます。
-はじめまして。
-めがねです。
+```csv
+frase|romaji|espanol|particula
+のみます。|nomimasu.|Bebo.|—
+さむいです。|samui desu.|Hace frío.|—
+つめたいです。|tsumetai desu.|Está frío al tacto.|—
+むずかしいです。|muzukashii desu.|Es difícil.|—
+たのみます。|tanomimasu.|Lo pido.|—
+はじめまして。|hajimemashite.|Encantado de conocerte.|—
+めがねです。|megane desu.|Son unas gafas.|—
 ```
 
 ### B15 · へゆ
@@ -1393,13 +1414,18 @@ yuki|ゆき|雪|yuki|nieve|sustantivo|||b15
 
 **Frases objetivo**
 
-```text
-たべます。
-へやにいます。
-べんりです。
-ゆきがふります。
-ゆうめいです。
-たいへんです。
+```csv
+frase|romaji|espanol|particula
+たべます。|tabemasu.|Como.|—
+へやにいます。|heya ni imasu.|Estoy en la habitación.|に
+べんりです。|benri desu.|Es práctico.|—
+ゆきがふります。|yuki ga furimasu.|Nieva.|が
+ゆうめいです。|yuumei desu.|Es famoso.|—
+たいへんです。|taihen desu.|Es difícil.|—
+へやへいきます。|heya e ikimasu.|Voy a la habitación.|へ
+うちへかえります。|uchi e kaerimasu.|Vuelvo a casa.|へ
+みせへいきます。|mise e ikimasu.|Voy a la tienda.|へ
+にほんへいきます。|nihon e ikimasu.|Voy a Japón.|へ
 ```
 
 ### B16 · ぬを
@@ -1419,12 +1445,13 @@ nurui|ぬるい|温い|nurui|tibio, templado|adjetivo-i|||b16
 
 **Frases objetivo**
 
-```text
-いぬがいます。
-ぬぎます。
-ぬります。
-ほんをよみます。
-みずをのみます。
+```csv
+frase|romaji|espanol|particula
+いぬがいます。|inu ga imasu.|Hay un perro.|が
+ぬぎます。|nugimasu.|Me lo quito.|—
+ぬります。|nurimasu.|Lo pinto.|—
+ほんをよみます。|hon o yomimasu.|Leo un libro.|を
+みずをのみます。|mizu o nomimasu.|Bebo agua.|を
 ```
 
 ### B17 · っぱぴぷぺぽ
@@ -1432,6 +1459,16 @@ nurui|ぬるい|温い|nurui|tibio, templado|adjetivo-i|||b16
 **Kana nuevos:** っ ぱ ぴ ぷ ぺ ぽ  
 **Gramática:** El handakuten ° (っ + ぱぴぷぺぽ)  
 **Vocabulario:** +29 · acumulado 707 (83.6 % del N5)
+
+> **ぺ no tiene ninguna palabra en las 768, y es correcto.** No hay ninguna en el
+> N5 escrita en hiragana que lo lleve, así que no se puede enseñar con vocabulario
+> sin inventar una palabra fuera del examen. Se aprende por completitud del
+> silabario, y su ejemplo real llega en la Fase 2 con ページ y ペン, que sí son N5
+> en katakana.
+>
+> **ぱ, ぴ y ぷ tienen una sola palabra cada uno** —りっぱ, えんぴつ, きっぷ—, así que
+> su ejercicio final se apoya en las frases del bloque en vez de en una segunda
+> palabra.
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque
@@ -1468,13 +1505,14 @@ yukkuri-to|ゆっくり・と||yukkuri to|despacio, tranquilamente|adverbio|||b1
 
 **Frases objetivo**
 
-```text
-きっぷをかいます。
-えんぴつです。
-さんぽします。
-りっぱです。
-ろっぽんあります。
-ゆっくりとあるきます。
+```csv
+frase|romaji|espanol|particula
+きっぷをかいます。|kippu o kaimasu.|Compro un billete.|を
+えんぴつです。|enpitsu desu.|Es un lápiz.|—
+さんぽします。|sanpo shimasu.|Doy un paseo.|—
+りっぱです。|rippa desu.|Es espléndido.|—
+ろっぽんあります。|roppon arimasu.|Hay seis.|—
+ゆっくりとあるきます。|yukkuri to arukimasu.|Camino despacio.|と
 ```
 
 ### B18 · ーゃゅょ
@@ -1550,15 +1588,16 @@ ee-2|えー||ee|mmm, veamos|expresion|||b18
 
 **Frases objetivo**
 
-```text
-きょうです。
-でんしゃにのります。
-びょういんにいきます。
-がっこうにいきます。
-しゃしんをとります。
-じょうずです。
-うーん、どうしましょう。
-えー、ほんとうですか。
+```csv
+frase|romaji|espanol|particula
+きょうです。|kyou desu.|Es hoy.|—
+でんしゃにのります。|densha ni norimasu.|Subo al tren.|に
+びょういんにいきます。|byouin ni ikimasu.|Voy al hospital.|に
+がっこうにいきます。|gakkou ni ikimasu.|Voy a la escuela.|に
+しゃしんをとります。|shashin o torimasu.|Hago una foto.|を
+じょうずです。|jouzu desu.|Se le da bien.|—
+うーん、どうしましょう。|uun, dou shimashou.|Mmm, ¿qué hacemos?|—
+えー、ほんとうですか。|ee, hontou desu ka.|Eh, ¿de verdad?|か
 ```
 ---
 

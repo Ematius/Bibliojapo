@@ -196,6 +196,7 @@ export const BLOCKS: Block[] = [
       'urimasu',
       'oshiemasu',
       'orimasu',
+      'ie-wa-shizukadesu',
     ],
   },
   {
@@ -284,7 +285,7 @@ export const BLOCKS: Block[] = [
       'urusaidesu',
       'owarimasu',
       'asagohandesu',
-      'kasa-ha-arimasen',
+      'kasa-wa-arimasen',
       'kanaidesu',
       'kouendesu',
     ],
@@ -378,7 +379,8 @@ export const BLOCKS: Block[] = [
       'osoidesu',
       'kantandesu',
       'anatadesu',
-      'dehamata',
+      'dewamata',
+      'anata-wa-senseidesu-ka',
     ],
   },
   {
@@ -564,6 +566,7 @@ export const BLOCKS: Block[] = [
       'ato-de-shimasu',
       'otouto-ga-imasu',
       'uchidesu',
+      'otouto-wa-uchidesu',
     ],
   },
   {
@@ -704,6 +707,7 @@ export const BLOCKS: Block[] = [
       'higashidesu',
       'toufudesu',
       'kaburimasu',
+      'toufu-wa-oishiidesu',
     ],
   },
   {
@@ -769,6 +773,8 @@ export const BLOCKS: Block[] = [
       'kodomo-ga-imasu',
       'ureshiidesu',
       'tsukaremasu',
+      'kore-wa-nandesu-ka',
+      'sore-wa-daredesu-ka',
     ],
   },
   {
@@ -897,6 +903,7 @@ export const BLOCKS: Block[] = [
       'ushiro-ni-arimasu',
       'ofuro-ni-hairimasu',
       'kudamonodesu',
+      'kudamono-wa-oishiidesu',
     ],
   },
   {
@@ -1030,6 +1037,10 @@ export const BLOCKS: Block[] = [
       'yuki-ga-furimasu',
       'yuumeidesu',
       'taihendesu',
+      'heya-e-ikimasu',
+      'uchi-e-kaerimasu',
+      'mise-e-ikimasu',
+      'nihon-e-ikimasu',
     ],
   },
   {
@@ -1038,7 +1049,7 @@ export const BLOCKS: Block[] = [
     summary: '',
     lessons: [
       { type: 'kana', kanaId: 'nu', wordIds: ['inu', 'shinu'] },
-      { type: 'kana', kanaId: 'wo', wordIds: [] },
+      { type: 'grammar', grammarId: 'particle-o' },
     ],
     dakuten: [],
     wordIds: [

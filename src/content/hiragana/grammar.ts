@@ -12,6 +12,21 @@ export const GRAMMAR: Grammar[] = [
       ' y sirve para marcar el tema principal o de lo que se va a hablar en la oración'
   },
   {
+    id: 'particle-e',
+    character: 'へ',
+    romaji: 'e',
+    title: 'La partícula へ — dirección',
+    explanation:
+      '「へ」 se escribe como el kana «he», pero cuando funciona como partícula se ' +
+      'pronuncia «e».\n\n' +
+      'Marca la dirección hacia la que se va: へやへいきます = «voy a la habitación». ' +
+      'Fíjate en que la misma へ aparece dos veces en esa frase y suena distinto cada ' +
+      'vez — la primera es parte de la palabra へや (habitación) y suena «he»; la ' +
+      'segunda es partícula y suena «e».\n\n' +
+      'Es la tercera de las tres partículas que no se leen como su kana: ' +
+      'は → wa · を → o · へ → e.',
+  },
+  {
     id: 'particle-no',
     character: 'の',
     romaji: 'no',
