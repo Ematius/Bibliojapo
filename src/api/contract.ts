@@ -1,5 +1,6 @@
 import type { AisleId } from '../content/aisleContent'
 import type { Block, Grammar, Kana, Sentence, Word } from '../content/types'
+import type { Conjugation } from '../content/conjugations'
 
 // El mismo id con el que el lector agrupa las hojas del examen final: el sello
 // que estampa el libro y el que reconoce el servidor son la misma cosa.
@@ -85,6 +86,10 @@ export interface VolumeContent {
   // lector no mira `content/` por su cuenta: sin esto, la explicación de por qué は se
   // lee «wa» de partícula no tendría forma de llegar a la hoja.
   grammar: Grammar[]
+  // Las formas conjugadas que a esta altura del recorrido ya se saben leer, filtradas por
+  // el servidor. Viajan como PATRÓN y no como palabras: そうじします no es una entrada del
+  // temario, se compone de そうじし y un sufijo — ver `content/conjugations.ts`.
+  conjugations: Conjugation[]
   // Viene calculado: cuenta también los tomos anteriores, que no están en el paquete.
   progress: {
     kana: number

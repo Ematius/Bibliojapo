@@ -6,6 +6,7 @@
 import { readDocument, allWords } from './doc.mjs'
 import { segment, sentenceUnits, ambiguities, PARTICLES } from './segment.mjs'
 import { reading, normalise } from './romaji.mjs'
+import { FORM_BY_SUFFIX, chainPosition } from './conjugate.mjs'
 
 const blocks = readDocument()
 const words = allWords(blocks)
@@ -40,6 +41,7 @@ const failures = []
 const badRomaji = []
 const ambiguous = []
 const particleUse = new Map()
+const tooEarly = []
 
 for (const s of sentences) {
   const available = words.filter((w) => w.blockNumber <= s.block)
@@ -54,6 +56,16 @@ for (const s of sentences) {
   const dubious = ambiguities(pieces, available)
   if (dubious.length) ambiguous.push({ ...s, dubious, pieces })
 
+  // Una frase no puede usar una forma que su bloque todavía no enseña: se leería con un
+  // sufijo que nadie ha explicado. Es el mismo criterio que el de los distractores —
+  // reconocer, nunca adivinar.
+  for (const p of pieces) {
+    const form = p.form && FORM_BY_SUFFIX.get(p.form)
+    if (form && chainPosition(form.bloqueMin) > chainPosition('b' + s.block)) {
+      tooEarly.push(`  b${s.block}  ${s.text.padEnd(20)} usa ${form.id} (${form.nombre}), que no llega hasta ${form.bloqueMin}`)
+    }
+  }
+
   for (const p of pieces) {
     if (!p.particle || !PARTICLES[p.text]) continue
     if (!particleUse.has(p.text)) particleUse.set(p.text, [])
@@ -64,6 +76,10 @@ for (const s of sentences) {
 console.log(`segmentadas: ${sentences.length - failures.length} · sin segmentar: ${failures.length}`)
 console.log(`rōmaji que no coincide: ${badRomaji.length}`)
 for (const b of badRomaji) console.log('  ' + b)
+
+console.log(tooEarly.length ? `
+── FORMAS USADAS ANTES DE ENSEÑARSE (${tooEarly.length}) ──` : 'formas usadas antes de enseñarse: ninguna')
+for (const line of tooEarly) console.log(line)
 
 console.log('\n── partículas que cambian de lectura ──')
 for (const [p, list] of particleUse) {

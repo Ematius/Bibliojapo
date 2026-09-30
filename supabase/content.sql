@@ -545,6 +545,26 @@ begin
             and s.grammar_id is not null
         )
     ), '[]'::jsonb),
+    -- Las formas conjugadas que a esta altura del recorrido ya se saben LEER. El filtro
+    -- compara el puesto del bloque en la CADENA entera —`(aisle_id, position)`, que el
+    -- enum ordena en el orden del recorrido—, nunca el id como texto: 'b10' va detrás de
+    -- 'b3' en el recorrido y delante alfabéticamente.
+    --
+    -- Van con el tomo y no con la palabra porque una forma no es vocabulario: そうじします
+    -- no es una entrada del temario, es そうじし más un sufijo. La plana las compone.
+    'conjugations', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', c.id,
+        'nombre', c.nombre,
+        'patron', c.patron,
+        'registro', c.registro,
+        'aplicaA', to_jsonb(c.aplica_a),
+        'suffixUnits', c.suffix_units
+      ) order by c.position)
+      from public.conjugations c
+      join public.blocks origin on origin.id = c.bloque_min
+      where (origin.aisle_id, origin.position) <= (target.aisle_id, target.position)
+    ), '[]'::jsonb),
     'progress', jsonb_build_object(
       'kana', learned_kana,
       'kanaPercent',

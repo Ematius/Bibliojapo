@@ -9,8 +9,30 @@
 import { CONJUGATIONS, KANA_ROW_BY_U, stemKind } from '../src/content/conjugations.ts'
 import { tokenize, tokenizeWord, reading } from './romaji.mjs'
 import { readDocument, allWords } from './doc.mjs'
+import { BLOCK_PLAN } from '../src/content/hiragana/plan.ts'
 
 const kanaOf = (units) => units.map((unit) => unit.kana).join('')
+
+// El puesto de un bloque en la CADENA, que es contra lo que se compara `bloqueMin`. Nunca
+// como texto: 'b10' va detrás de 'b3' en el recorrido y delante alfabéticamente.
+//
+// Hoy la cadena es solo hiragana, que es el único pasillo con temario. Cuando katakana
+// tenga el suyo, esto pasa a ser la concatenación de los planes en el orden de los
+// pasillos, igual que hace `journey()`.
+export function chainPosition(blockId) {
+  return BLOCK_PLAN.indexOf(blockId)
+}
+
+// El sufijo escrito de cada forma, que es por donde la reconoce el segmentador.
+export const FORM_BY_SUFFIX = new Map(
+  CONJUGATIONS.map((form) => [form.suffixUnits.map((unit) => unit.kana).join(''), form]),
+)
+
+// Una forma no se enseña antes de poder LEERSE: かったです lleva っ, que no llega hasta
+// B17, así que en B5 sería una plana de caracteres desconocidos.
+export function isAvailableAt(form, blockId) {
+  return chainPosition(form.bloqueMin) <= chainPosition(blockId)
+}
 
 // Los units de la raíz de ～ます. Se derivan de la REGLA del grupo, no de la raíz escrita,
 // y después se comprueban contra ella: así una raíz mal copiada en el documento sale como
@@ -70,9 +92,13 @@ export function conjugate(word, form) {
   }
 }
 
-// Todas las formas de una palabra, en el orden en que se enseñan.
-export function formsOf(word) {
-  return CONJUGATIONS.map((form) => conjugate(word, form)).filter(Boolean)
+// Las formas de una palabra, en el orden en que se enseñan. Con `at` —el id de un
+// bloque—, solo las que a esa altura del recorrido ya se saben leer.
+export function formsOf(word, at) {
+  return CONJUGATIONS
+    .filter((form) => at === undefined || isAvailableAt(form, at))
+    .map((form) => conjugate(word, form))
+    .filter(Boolean)
 }
 
 // Por qué una palabra no da una forma. Solo para el informe: distinguir «no le toca» de
@@ -119,13 +145,25 @@ if (import.meta.url === `file:///${process.argv[1].replace(/\\/g, '/')}`) {
   console.log(badStems.length ? `raíces que no cuadran con la regla: ${badStems.length}` : 'raíces: las derivadas coinciden con las del documento')
   for (const line of badStems) console.log(line)
 
-  const generated = words.flatMap(formsOf)
+  const generated = words.flatMap((word) => formsOf(word))
   console.log(`\npalabras: ${words.length} · formas generadas: ${generated.length}`)
 
   console.log('\n── por forma ──')
   for (const form of CONJUGATIONS) {
     const mine = generated.filter((g) => g.formId === form.id)
     console.log(`  ${form.id.padEnd(16)} ${String(mine.length).padStart(4)}  desde ${form.bloqueMin.padEnd(4)} ej. ${mine[0]?.text ?? '—'}`)
+  }
+
+  // Lo que el filtro de `bloqueMin` deja pasar tomo a tomo: es lo que puede pintar la
+  // plana de conjugación de cada bloque.
+  console.log('')
+  console.log('── formas disponibles por bloque ──')
+  let last = null
+  for (const blockId of BLOCK_PLAN) {
+    const open = CONJUGATIONS.filter((form) => isAvailableAt(form, blockId))
+    const names = open.map((f) => f.id).join(' ')
+    if (names !== last) console.log(`  ${blockId.padEnd(4)} ${String(open.length).padStart(2)}  ${open.filter((f) => f.bloqueMin === blockId).map((f) => '+' + f.id).join(' ') || '—'}`)
+    last = names
   }
 
   const blocked = []
