@@ -109,6 +109,11 @@ create table if not exists public.words (
 -- `kanji` se guarda pero NO se pinta en la Fase 1: a nivel N5 estas palabras se leen y
 -- escriben en kana, y el kanji se reencuentra en el pasillo de kanji. La columna existe
 -- para que ese pasillo no tenga que volver a recogerlo.
+-- Cómo se ESCRIBE la palabra, solo cuando no es la suma de sus `units`: la coma de
+-- では、また se escribe y no se lee, así que no es un unit y sin esta columna la palabra
+-- llegaría al lector como «ではまた».
+alter table public.words add column if not exists text text;
+
 alter table public.words add column if not exists tipo text;
 alter table public.words add column if not exists grupo_verbal text;
 alter table public.words add column if not exists raiz_masu text;
@@ -433,10 +438,16 @@ begin
   select * into totals from public.aisles a where a.id = target.aisle_id;
 
   -- Lo aprendido hasta ESTE tomo, sin contar dos veces lo que reaparece más adelante.
+  --
+  -- Solo las lecciones de KANA: una de gramática no enseña ninguno, y contarla inflaría
+  -- el arco con caracteres que nadie ha visto. を es el caso que lo destapó —se enseña
+  -- con su regla porque no aparece dentro de ninguna palabra—, y con G0–G7 el error
+  -- habría sido de ocho.
   select count(distinct l.kana_id) into learned_kana
   from public.blocks b
   join public.lessons l on l.block_id = b.id
-  where b.aisle_id = target.aisle_id and b.position <= target.position;
+  where b.aisle_id = target.aisle_id and b.position <= target.position
+    and l.tipo = 'kana';
 
   select count(distinct word_id) into learned_words
   from public.blocks b
@@ -482,7 +493,13 @@ begin
       select jsonb_agg(jsonb_build_object(
         'id', w.id,
         'units', w.units,
+        'text', w.text,
         'meaning', w.meaning,
+        'type', w.tipo,
+        'kanji', w.kanji,
+        'verbGroup', w.grupo_verbal,
+        'masuStem', w.raiz_masu,
+        'naiStem', w.raiz_nai,
         'swatch', w.swatch,
         'image', w.image,
         'imageAlt', w.image_alt,
@@ -595,10 +612,13 @@ begin
     -- Sin insignia no se ha terminado ningún tomo: `-1` no alcanza ni al primero.
     furthest := coalesce(furthest, -1);
 
+    -- Solo las de KANA, por lo mismo que en `volume()`: una lección de gramática no
+    -- enseña ninguno y sumaría al arco caracteres que nadie ha visto.
     select count(distinct l.kana_id) into learned_kana
     from public.blocks b
     join public.lessons l on l.block_id = b.id
-    where b.aisle_id = aisle.id and b.position <= furthest;
+    where b.aisle_id = aisle.id and b.position <= furthest
+      and l.tipo = 'kana';
 
     select count(distinct word_id) into learned_words
     from public.blocks b

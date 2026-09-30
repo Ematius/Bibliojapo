@@ -62,6 +62,32 @@ const { AISLE_CONTENT, AISLE_ORDER, globalBlockId } = await vite.ssrLoadModule(
 )
 const { LESSON_SOURCE } = await vite.ssrLoadModule('/src/content/lessonSource.ts')
 
+// Un tomo se publica cuando se puede LEER ENTERO, no cuando alguien ha escrito su
+// entrada. Es el mismo criterio que ya aplica el lector lección a lección —ver
+// «Una lección entra solo si está COMPLETA» en CLAUDE.md—, subido al tomo: si se
+// publicara por tener entrada, con el temario entero escrito de golpe se abrirían
+// dieciocho tomos y diecisiete saldrían en blanco.
+function isComplete(block, kanaById, wordsById, grammarById) {
+  if (!block || !block.lessons.length) return false
+
+  return block.lessons.every((lesson) => {
+    if (lesson.type === 'grammar') {
+      return Boolean(grammarById.get(lesson.grammarId ?? '')?.explanation.trim())
+    }
+
+    const kana = kanaById.get(lesson.kanaId ?? '')
+    // Sin trazos ni dibujo no hay ni pauta de escritura ni plana mnemotécnica.
+    if (!kana?.strokes?.length || !kana.image || !kana.mnemonic.trim()) return false
+
+    // Y cada palabra con la que se enseña necesita sonar y poder enseñarse sin
+    // escribirla: un color o un dibujo.
+    return Boolean(lesson.wordIds?.length) && lesson.wordIds.every((id) => {
+      const word = wordsById.get(id)
+      return Boolean(word?.audio) && Boolean(word.image || word.swatch)
+    })
+  })
+}
+
 const aisles = []
 const blocks = []
 const lessons = []
@@ -88,7 +114,10 @@ for (const aisleId of AISLE_ORDER) {
       summary: block?.summary ?? '',
       // Un bloque del plan sin entrada escrita es un tomo que se ve en la balda y dice
       // «todavía no». Sigue teniendo fila: de aquí sale cuántos tomos hay.
-      published: Boolean(block),
+      published: isComplete(block, kanaById, wordsById, grammarById),
+      // Los dakuten que estrena. No son lección —se aprenden sobre su kana base— pero la
+      // plana que los explica necesita saber cuáles tocan en ESTE tomo.
+      dakuten: block?.dakuten ?? [],
       word_ids: block?.wordIds ?? [],
       sentence_ids: block?.sentenceIds ?? [],
     })
@@ -97,7 +126,11 @@ for (const aisleId of AISLE_ORDER) {
       lessons.push({
         block_id: globalBlockId(aisleId, localId),
         position,
-        kana_id: lesson.kanaId,
+        // Una lección de gramática no enseña un kana: trae regla en vez de carácter, y
+        // `tipo` es lo que distingue una de otra.
+        tipo: lesson.type,
+        kana_id: lesson.kanaId ?? null,
+        grammar_id: lesson.grammarId ?? null,
         word_ids: lesson.wordIds ?? [],
       })
     })
@@ -125,7 +158,18 @@ for (const aisleId of AISLE_ORDER) {
       aisle_id: aisleId,
       id: entry.id,
       units: entry.units,
+      // Solo las que llevan un signo que se escribe y no se lee, como la coma de
+      // では、また: sin esto la palabra llegaría al lector escrita «ではまた».
+      text: entry.text ?? null,
       meaning: entry.meaning,
+      tipo: entry.type,
+      kanji: entry.kanji ?? null,
+      // Un verbo es UNA fila: します y しました se generan de la raíz, no se guardan.
+      grupo_verbal: entry.verbGroup ?? null,
+      raiz_masu: entry.masuStem ?? null,
+      // Vacía en los que se derivan por regla, escrita en los tres que no. Ojo: la de
+      // ある es la cadena vacía, que NO es lo mismo que no tenerla.
+      raiz_nai: entry.naiStem ?? null,
       swatch: entry.swatch ?? null,
       image: entry.image ?? null,
       image_alt: entry.imageAlt ?? null,
@@ -150,14 +194,38 @@ for (const aisleId of AISLE_ORDER) {
     grammar.push({
       aisle_id: aisleId,
       id: entry.id,
-      character: entry.character,
-      romaji: entry.romaji,
+      // Nulos en las de gramática: です no es un carácter y ～ます tampoco.
+      character: entry.character ?? null,
+      romaji: entry.romaji ?? null,
+      title: entry.title ?? '',
       explanation: entry.explanation ?? '',
+      // Las tablas de conjugación, que no caben en un párrafo.
+      examples: entry.examples ?? [],
     })
   }
 }
 
 await vite.close()
+
+// `--dry-run` lee el temario, dice qué subiría y no toca la base. El volcado escribe en
+// PRODUCCIÓN, así que conviene poder comprobar un cambio de este script sin estrenarlo
+// contra el contenido de verdad.
+if (process.argv.includes('--dry-run')) {
+  const sample = words.find((w) => w.text) ?? words[0]
+  console.log(
+    `Sin escribir nada. Subiría: ${blocks.length} bloques, ${lessons.length} lecciones, ` +
+    `${kana.length} kana, ${words.length} palabras, ${sentences.length} frases, ` +
+    `${grammar.length} reglas.`,
+  )
+  console.log(`  bloques publicados: ${blocks.filter((b) => b.published).length}`)
+  console.log(`  palabras con tipo: ${words.filter((w) => w.tipo).length}`)
+  console.log(`  verbos con raíz: ${words.filter((w) => w.grupo_verbal && w.raiz_masu).length}`)
+  console.log(`  palabras con kanji guardado: ${words.filter((w) => w.kanji).length}`)
+  console.log(`  lecciones de gramática: ${lessons.filter((l) => l.tipo === 'grammar').length}`)
+  console.log(`  bloques con dakuten: ${blocks.filter((b) => b.dakuten.length).length}`)
+  console.log(`  ejemplo de fila: ${JSON.stringify(sample)}`)
+  process.exit(0)
+}
 
 // Los bloques van primero: las lecciones cuelgan de ellos por clave ajena.
 check('aisles', await supabase.from('aisles').upsert(aisles))
