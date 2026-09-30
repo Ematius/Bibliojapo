@@ -62,6 +62,30 @@ const { AISLE_CONTENT, AISLE_ORDER, globalBlockId } = await vite.ssrLoadModule(
 )
 const { LESSON_SOURCE } = await vite.ssrLoadModule('/src/content/lessonSource.ts')
 
+// Las formas conjugadas no son de ningún pasillo: un verbo conjuga igual se escriba en
+// hiragana, en katakana o en kanji. Por eso no llevan `aisle_id`, y por eso viven junto a
+// `types.ts` y no dentro de `hiragana/`.
+const { CONJUGATIONS, KANA_ROWS } = await vite.ssrLoadModule('/src/content/conjugations.ts')
+
+// El puesto sale del orden de la lista, que es el orden en que se enseñan: escrito aparte
+// se quedaría desfasado en cuanto alguien meta una forma por el medio.
+const conjugations = CONJUGATIONS.map((form, position) => ({
+  id: form.id,
+  position,
+  nombre: form.nombre,
+  patron: form.patron,
+  registro: form.registro,
+  bloque_min: form.bloqueMin,
+  aplica_a: form.aplicaA,
+  suffix_units: form.suffixUnits,
+}))
+
+const kanaRows = KANA_ROWS.map((row) => ({
+  kana_u: row.u.kana, romaji_u: row.u.romaji,
+  kana_i: row.i.kana, romaji_i: row.i.romaji,
+  kana_a: row.a.kana, romaji_a: row.a.romaji,
+}))
+
 // Un tomo se publica cuando se puede LEER ENTERO, no cuando alguien ha escrito su
 // entrada. Es el mismo criterio que ya aplica el lector lección a lección —ver
 // «Una lección entra solo si está COMPLETA» en CLAUDE.md—, subido al tomo: si se
@@ -215,7 +239,7 @@ if (process.argv.includes('--dry-run')) {
   console.log(
     `Sin escribir nada. Subiría: ${blocks.length} bloques, ${lessons.length} lecciones, ` +
     `${kana.length} kana, ${words.length} palabras, ${sentences.length} frases, ` +
-    `${grammar.length} reglas.`,
+    `${grammar.length} reglas, ${conjugations.length} formas, ${kanaRows.length} filas de kana.`,
   )
   console.log(`  bloques publicados: ${blocks.filter((b) => b.published).length}`)
   console.log(`  palabras con tipo: ${words.filter((w) => w.tipo).length}`)
@@ -230,6 +254,10 @@ if (process.argv.includes('--dry-run')) {
 // Los bloques van primero: las lecciones cuelgan de ellos por clave ajena.
 check('aisles', await supabase.from('aisles').upsert(aisles))
 check('blocks', await supabase.from('blocks').upsert(blocks))
+// Detrás de los bloques: `conjugations.bloque_min` es clave ajena a `blocks`, así que
+// delante fallaría en el primer volcado de una base vacía.
+check('conjugations', await supabase.from('conjugations').upsert(conjugations))
+check('kana_rows', await supabase.from('kana_rows').upsert(kanaRows))
 check('kana', await supabase.from('kana').upsert(kana))
 check('words', await supabase.from('words').upsert(words))
 check('grammar', await supabase.from('grammar').upsert(grammar))

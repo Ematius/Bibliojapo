@@ -11,7 +11,30 @@ const blocks = readDocument()
 const words = allWords(blocks)
 const sentences = blocks.flatMap((b) => b.sentences.map((s) => ({ ...s, block: b.number })))
 
+// では、また se leía «dehamata» porque `sentenceUnits` tokenizaba pieza a pieza en vez de
+// por palabra entera: la は de DENTRO de una palabra también puede sonar «wa», y eso solo
+// se sabe de la palabra completa. Es el mismo fallo que ya se arregló en el vocabulario,
+// reaparecido por otra ruta — fijo aquí para que no vuelva por una tercera.
+function checkHa() {
+  const cases = [
+    // Dentro de la palabra, y suena «wa».
+    { pieces: [{ text: 'では、また' }], want: 'dewamata' },
+    // Dentro de la palabra, y suena «ha»: la excepción es por palabra, no por kana.
+    { pieces: [{ text: 'はし' }], want: 'hashi' },
+    // Suelta entre dos palabras: partícula, y suena «wa».
+    { pieces: [{ text: 'かさ' }, { text: 'は', particle: true }, { text: 'あります' }], want: 'kasawaarimasu' },
+  ]
+
+  const bad = cases.filter((c) => reading(sentenceUnits(c.pieces)) !== c.want)
+  for (const c of bad) {
+    const got = reading(sentenceUnits(c.pieces))
+    console.log(`  は FALLA ${c.pieces.map((p) => p.text).join('')}: esperado ${c.want}, sale ${got}`)
+  }
+  console.log(bad.length ? `は: ${bad.length} fallos` : 'は: las tres lecturas de prueba cuadran (de dentro, de palabra y de partícula)')
+}
+
 console.log(`palabras: ${words.length} · frases: ${sentences.length}`)
+checkHa()
 
 const failures = []
 const badRomaji = []

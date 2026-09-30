@@ -6,9 +6,20 @@ import fs from 'fs'
 
 export const DOC = 'docs/FASE1_DEFINITIVO.md'
 
-// Los tres verbos cuya raíz de ～ない no sale de ninguna tabla. El documento no trae
-// columna para ellos, así que se escriben aquí: ver `naiStem` en `content/types.ts`.
-export const NAI_STEM = { aru: '', 'aru-2': '', suru: 'し', kuru: 'こ' }
+// Los verbos cuya raíz de ～ない no sale de ninguna tabla NI de la de ～ます. El documento
+// no trae columna para ellos, así que se escriben aquí: ver `naiStem` en
+// `content/types.ts`.
+export const NAI_STEM = { aru: '', 'aru-2': '', kuru: 'こ' }
+
+// La raíz de ～ない de una palabra, o `undefined` si sale de las tablas y no hay que
+// escribirla. する y sus compuestos NO son excepción: la suya es la misma que la de ～ます
+// —そうじし da そうじします y そうじしない—, así que se deriva en vez de escribirse siete
+// veces. くる sí lo es —き para ～ます, こ para ～ない— y por eso sigue en el mapa.
+export function naiStemFor(word) {
+  if (word.id in NAI_STEM) return NAI_STEM[word.id]
+  if (word.verbGroup === 'irregular' && word.text.endsWith('する')) return word.masuStem
+  return undefined
+}
 
 // Cómo se ESCRIBE una palabra: la primera de sus lecturas alternativas, sin la notación
 // del documento —～ de sufijo, ・ de separación, los paréntesis de ～する— y CON la coma,
@@ -73,7 +84,8 @@ export function readDocument(path = DOC) {
         block: block.id,
         blockNumber: block.number,
       }
-      if (word.id in NAI_STEM) word.naiStem = NAI_STEM[word.id]
+      const nai = naiStemFor(word)
+      if (nai !== undefined) word.naiStem = nai
       block.words.push(word)
     }
   }

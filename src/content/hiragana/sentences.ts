@@ -550,7 +550,7 @@ export const SENTENCES: Sentence[] = [
       { kana: 'で', romaji: 'de' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['atama', 'iru'],
+    wordIds: ['atama', 'itai'],
     grammarId: 'particle-ga',
   },
   {

@@ -40,7 +40,26 @@ export const GRAMMAR: Grammar[] = [
   },
   { id: 'particle-mo', character: 'も', romaji: 'mo', explanation: '' },
   { id: 'particle-ne', character: 'ね', romaji: 'ne', explanation: '' },
-  { id: 'particle-o', character: 'を', romaji: 'o', explanation: '' },
+  {
+    id: 'particle-o',
+    character: 'を',
+    romaji: 'o',
+    title: 'La partícula を — el objeto directo',
+    explanation:
+      '「を」 se escribe con un kana propio, pero se pronuncia «o», igual que お. Es el ' +
+      'único kana del silabario que no se usa nunca dentro de una palabra: existe solo ' +
+      'para esto.\n\n' +
+      'Marca sobre qué recae la acción del verbo: ほんをよみます = «leo un libro». Lo que ' +
+      'va delante de を es lo que se lee, se compra o se bebe.\n\n' +
+      'Es la tercera de las tres partículas que no se leen como su kana: ' +
+      'は → wa · を → o · へ → e.',
+    examples: [
+      { label: 'ほんをよみます。', forms: ['hon o yomimasu.', 'Leo un libro.'] },
+      { label: 'みずをのみます。', forms: ['mizu o nomimasu.', 'Bebo agua.'] },
+      { label: 'きっぷをかいます。', forms: ['kippu o kaimasu.', 'Compro un billete.'] },
+      { label: 'しゃしんをとります。', forms: ['shashin o torimasu.', 'Hago una foto.'] },
+    ],
+  },
   { id: 'particle-ga', character: 'が', romaji: 'ga', explanation: '' },
   { id: 'particle-de', character: 'で', romaji: 'de', explanation: '' },
   { id: 'particle-ka', character: 'か', romaji: 'ka', explanation: '' },

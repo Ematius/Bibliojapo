@@ -8,6 +8,7 @@
 // De regalo valida el contenido: una frase que no se puede segmentar con el vocabulario
 // disponible es una frase a la que le falta una palabra o le sobra un carácter.
 import { tokenizeWord } from './romaji.mjs'
+import { CONJUGATIONS, KANA_ROW_BY_U, stemKind } from '../src/content/conjugations.ts'
 
 // Se leen distinto de lo que dicen sus kana, y solo cuando hacen de partícula.
 export const PARTICLES = {
@@ -22,59 +23,56 @@ const PLAIN_PARTICLES = ['が', 'に', 'で', 'と', 'も', 'の', 'か', 'ね',
 
 const PUNCTUATION = ['。', '、']
 
-// Los once sufijos, con el tipo de palabra al que se pegan. Los mismos que las once
-// filas de `conjugations` en la base: si se toca uno, se tocan los dos.
-const SUFFIXES = [
-  { suffix: 'ます', on: 'verb', stem: 'masu' },
-  { suffix: 'ません', on: 'verb', stem: 'masu' },
-  { suffix: 'ました', on: 'verb', stem: 'masu' },
-  { suffix: 'ませんでした', on: 'verb', stem: 'masu' },
-  { suffix: 'たい', on: 'verb', stem: 'masu' },
-  { suffix: 'たいです', on: 'verb', stem: 'masu' },
-  { suffix: 'ない', on: 'verb', stem: 'nai' },
-  { suffix: 'ましょう', on: 'verb', stem: 'masu' },
-  { suffix: 'です', on: 'copula' },
-  { suffix: 'でした', on: 'copula' },
-  { suffix: 'ではありません', on: 'copula' },
-  { suffix: 'ではありませんでした', on: 'copula' },
-]
+// Los sufijos salen de `content/conjugations.ts`, que es la única lista que hay: el texto
+// es la suma de los kana de su desglose, y `patron` dice de qué raíz cuelga. Antes estaban
+// copiados aquí, y una corrección en la tabla no llegaba al segmentador.
+const SUFFIXES = CONJUGATIONS.map((form) => ({
+  suffix: form.suffixUnits.map((unit) => unit.kana).join(''),
+  stem: stemKind(form),
+  types: form.aplicaA,
+}))
 
-const VERB_TYPES = new Set(['verbo-u', 'verbo-ru', 'verbo-irregular'])
-// です se pega a más cosas que las tres de `conjugations.aplica_a`: いつですか lleva un
-// interrogativo y ほんとうですか un adverbio. Aquí interesa poder SEGMENTAR la frase, no
-// decidir qué formas se le enseñan al alumno, que es lo que dice la tabla.
+// です se pega a más cosas que las que dice `aplica_a`: いつですか lleva un interrogativo y
+// ほんとうですか un adverbio. Aquí interesa poder SEGMENTAR la frase, no decidir qué formas
+// se le enseñan al alumno, que es lo que dice la tabla — así que para la cópula manda esta
+// lista, más ancha a propósito.
 const COPULA_TYPES = new Set([
   'sustantivo', 'adjetivo-na', 'adjetivo-i', 'pronombre', 'numero',
   'interrogativo', 'adverbio', 'expresion',
 ])
-
-// La fila «a», para el negativo llano de un godan. Las mismas nueve de `kana_rows`.
-const ROW_A = { う: 'わ', く: 'か', ぐ: 'が', す: 'さ', つ: 'た', ぬ: 'な', ぶ: 'ば', む: 'ま', る: 'ら' }
 
 function naiStemOf(word) {
   if (word.naiStem !== undefined) return word.naiStem
   const text = word.text
   if (word.verbGroup === 'ichidan') return text.slice(0, -1)
   if (word.verbGroup === 'godan') {
-    const last = text.slice(-1)
-    return ROW_A[last] ? text.slice(0, -1) + ROW_A[last] : null
+    // La fila «a» de las nueve, la misma tabla que usa el generador.
+    const row = KANA_ROW_BY_U.get(text.slice(-1))
+    return row ? text.slice(0, -1) + row.a.kana : null
   }
   return null
+}
+
+// La raíz de かったです: la palabra sin su い final.
+function iStemOf(word) {
+  return word.text.endsWith('い') ? word.text.slice(0, -1) : null
 }
 
 // Todas las formas escritas con las que una palabra puede aparecer en una frase.
 export function formsOf(word) {
   const forms = [{ text: word.text, wordId: word.id, form: null }]
 
-  for (const { suffix, on, stem } of SUFFIXES) {
-    if (on === 'verb' && VERB_TYPES.has(word.type)) {
-      const base = stem === 'nai' ? naiStemOf(word) : word.masuStem
-      if (base === null || base === undefined) continue
-      forms.push({ text: base + suffix, wordId: word.id, form: suffix })
-    }
-    if (on === 'copula' && COPULA_TYPES.has(word.type)) {
-      forms.push({ text: word.text + suffix, wordId: word.id, form: suffix })
-    }
+  for (const { suffix, stem, types } of SUFFIXES) {
+    const fits = stem === 'palabra' ? COPULA_TYPES.has(word.type) : types.includes(word.type)
+    if (!fits) continue
+
+    const base = stem === 'palabra' ? word.text
+      : stem === 'nai' ? naiStemOf(word)
+        : stem === 'i' ? iStemOf(word)
+          : word.masuStem
+    if (base === null || base === undefined) continue
+
+    forms.push({ text: base + suffix, wordId: word.id, form: suffix })
   }
 
   // Un adjetivo-i no lleva ではありません sino くないです; hasta que el temario lo pida,

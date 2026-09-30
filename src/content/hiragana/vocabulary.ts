@@ -1223,6 +1223,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '電話する',
     verbGroup: 'irregular',
     masuStem: 'でんわし',
+    naiStem: 'でんわし',
   },
   {
     id: 'denwa-bangou',
@@ -1678,6 +1679,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '掃除',
     verbGroup: 'irregular',
     masuStem: 'そうじし',
+    naiStem: 'そうじし',
   },
   {
     id: 'sou-desu-ka',
@@ -6022,6 +6024,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '結婚',
     verbGroup: 'irregular',
     masuStem: 'けっこんし',
+    naiStem: 'けっこんし',
   },
   {
     id: 'kocchi',
@@ -6043,6 +6046,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '散歩',
     verbGroup: 'irregular',
     masuStem: 'さんぽし',
+    naiStem: 'さんぽし',
   },
   {
     id: 'zasshi',
@@ -6639,6 +6643,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '勉強',
     verbGroup: 'irregular',
     masuStem: 'べんきょうし',
+    naiStem: 'べんきょうし',
   },
   {
     id: 'maishuu',
@@ -6744,6 +6749,7 @@ export const VOCABULARY: Word[] = withMedia([
     type: 'verbo-irregular',
     verbGroup: 'irregular',
     masuStem: 'りょこうし',
+    naiStem: 'りょこうし',
   },
   {
     id: 'renshuu-suru',
@@ -6760,6 +6766,7 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '練習',
     verbGroup: 'irregular',
     masuStem: 'れんしゅうし',
+    naiStem: 'れんしゅうし',
   },
   {
     id: 'uun',

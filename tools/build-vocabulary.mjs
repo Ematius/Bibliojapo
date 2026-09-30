@@ -11,19 +11,10 @@
 // reproducir el campo `romaji` de su fila. Si una sola falla, no se escribe nada.
 import fs from 'fs'
 import { tokenizeWord, reading, normalise } from './romaji.mjs'
+import { naiStemFor } from './doc.mjs'
 
 const DOC = 'docs/FASE1_DEFINITIVO.md'
 const OUT = 'src/content/hiragana/vocabulary.ts'
-
-// La raíz de ～ない de los tres verbos que no salen de ninguna tabla. Ver `naiStem` en
-// `content/types.ts`: la de ある es la cadena VACÍA, porque ある → ない pierde la raíz
-// entera; no es lo mismo que no tenerla.
-const NAI_STEM = {
-  aru: '',
-  'aru-2': '',
-  suru: 'し',
-  kuru: 'こ',
-}
 
 function csvRows(markdown) {
   const rows = []
@@ -79,7 +70,10 @@ for (const row of rows) {
   if (row.kanji) word.kanji = row.kanji
   if (row.verbGroup) word.verbGroup = row.verbGroup
   if (row.masuStem) word.masuStem = row.masuStem
-  if (row.id in NAI_STEM) word.naiStem = NAI_STEM[row.id]
+  // La de ～ない solo cuando no sale de las tablas. Ojo: la de ある es la cadena VACÍA
+  // —ある → ない pierde la raíz entera—, que no es lo mismo que no tenerla.
+  const naiStem = naiStemFor({ ...row, text })
+  if (naiStem !== undefined) word.naiStem = naiStem
   words.push(word)
 }
 
