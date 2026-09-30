@@ -2,6 +2,14 @@
 // recorrido del pincel, como camino abierto. Un contorno NO sirve —convertir una
 // letra a curvas da el borde, y al animarlo se dibujaría la silueta del kana en vez
 // del kana—. El orden del array y el sentido de cada camino son los de escritura.
+//
+// Están los 56 que son LECCIÓN. Los veinte dakuten no faltan por descuido: se aprenden
+// sobre su kana base, en el mismo bloque que él, y no tienen trazo propio —son dos
+// rayitas—. Qué dakuten estrena cada tomo lo dice `BLOCK_PLAN_DAKUTEN`.
+//
+// El `id` es lo que guardan los sellos, así que NO se cambia nunca: un kana puede pasar
+// de un bloque a otro —し se fue al B3—, pero si cambiara su id, los exámenes ya
+// superados dejarían de reconocerse.
 import type { Kana } from '../types'
 
 export const HIRAGANA: Kana[] = [
@@ -200,7 +208,6 @@ export const HIRAGANA: Kana[] = [
     ],
     strokeViewBox: '0 0 760 775',
   },
-  // Recursos pendientes: se mantienen vacíos hasta su creación manual.
   {
     id: 'shi',
     character: 'し',
@@ -872,326 +879,6 @@ export const HIRAGANA: Kana[] = [
     strokeViewBox: '',
   },
   {
-    id: 'ga',
-    character: 'が',
-    romaji: 'ga',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'gi',
-    character: 'ぎ',
-    romaji: 'gi',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'gu',
-    character: 'ぐ',
-    romaji: 'gu',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'ge',
-    character: 'げ',
-    romaji: 'ge',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'go',
-    character: 'ご',
-    romaji: 'go',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'za',
-    character: 'ざ',
-    romaji: 'za',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'ji',
-    character: 'じ',
-    romaji: 'ji',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'zu',
-    character: 'ず',
-    romaji: 'zu',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'ze',
-    character: 'ぜ',
-    romaji: 'ze',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'zo',
-    character: 'ぞ',
-    romaji: 'zo',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'da',
-    character: 'だ',
-    romaji: 'da',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'ji-2',
-    character: 'ぢ',
-    romaji: 'ji',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'zu-2',
-    character: 'づ',
-    romaji: 'zu',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'de',
-    character: 'で',
-    romaji: 'de',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'do',
-    character: 'ど',
-    romaji: 'do',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'ba',
-    character: 'ば',
-    romaji: 'ba',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'bi',
-    character: 'び',
-    romaji: 'bi',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'bu',
-    character: 'ぶ',
-    romaji: 'bu',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'be',
-    character: 'べ',
-    romaji: 'be',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
-    id: 'bo',
-    character: 'ぼ',
-    romaji: 'bo',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
-
-    image: '',
-    imageAlt: '',
-
-    outline: '',
-
-    strokes: [],
-    strokeViewBox: '',
-  },
-  {
     id: 'pa',
     character: 'ぱ',
     romaji: 'pa',
@@ -1351,7 +1038,6 @@ export const HIRAGANA: Kana[] = [
     strokes: [],
     strokeViewBox: '',
   },
-
 ]
 
 export const HIRAGANA_BY_ID = new Map(HIRAGANA.map((kana) => [kana.id, kana]))
