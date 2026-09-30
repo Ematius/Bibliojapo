@@ -221,13 +221,15 @@ alter table public.lessons add constraint lessons_tipo_check check (
 -- se generan pegando un sufijo de aquí a la raíz de la palabra. Crearlas como palabras
 -- llenaría el temario de entradas que nadie escribió y que habría que mantener a mano.
 --
--- Las once filas son fijas y no salen de `content/`, así que se escriben abajo en este
--- mismo archivo en vez de viajar en el volcado.
+-- La tabla no lleva `aisle_id`: un verbo conjuga igual se escriba en hiragana, en
+-- katakana o en kanji. Sus filas las vuelca `npm run seed:content` desde
+-- `content/conjugations.ts`, que es la única lista de sufijos del proyecto.
 create table if not exists public.conjugations (
   id text primary key,
   position int not null,
   nombre text not null,
-  -- Con `{raiz}`, `{raiz_nai}` o `{palabra}` dentro: lo que se sustituye al generar.
+  -- Con `{raiz}`, `{raiz_nai}`, `{raiz_i}` o `{palabra}` dentro: lo que se sustituye al
+  -- generar. `{raiz_i}` es la palabra sin su い final, de donde cuelga かったです.
   patron text not null,
   registro text not null,
   -- El id GLOBAL del primer bloque en que la forma se puede enseñar. Se compara contra
@@ -306,77 +308,26 @@ grant select, insert, update, delete on table
   to service_role;
 
 -- ---------------------------------------------------------------------------
--- Las once formas
+-- Las formas conjugadas
 -- ---------------------------------------------------------------------------
 
--- Fijas: no son temario de ningún pasillo, son la gramática del japonés. Por eso se
--- escriben aquí y no en `content/`, y por eso el volcado no las toca.
---
--- `suffix_units` lleva el sufijo desglosado kana a kana. Dos lecturas no son la del
--- kana suelto y van a conciencia: は dentro de ではありません suena «wa» porque ahí es
--- partícula, y ょう se lee «sho» + «u» — el alargamiento, no una sílaba aparte.
-insert into public.conjugations (id, position, nombre, patron, registro, bloque_min, aplica_a, suffix_units) values
-  ('masu-pres-af',  1, 'Presente afirmativo', '{raiz}ます',                  'cortes', 'b2',  '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"ま","romaji":"ma"},{"kana":"す","romaji":"su"}]'),
-  ('masu-pres-neg', 2, 'Presente negativo',   '{raiz}ません',                'cortes', 'b2',  '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"}]'),
-  ('masu-pas-af',   3, 'Pasado afirmativo',   '{raiz}ました',                'cortes', 'b5',  '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"ま","romaji":"ma"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
-  ('masu-pas-neg',  4, 'Pasado negativo',     '{raiz}ませんでした',          'cortes', 'b5',  '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"},{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
-  ('tai',           5, 'Querer hacer',        '{raiz}たい',                  'neutro', 'b6',  '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"た","romaji":"ta"},{"kana":"い","romaji":"i"}]'),
-  ('nai',           6, 'Negativo llano',      '{raiz_nai}ない',              'llano',  'b13', '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"な","romaji":"na"},{"kana":"い","romaji":"i"}]'),
-  ('masho',         7, 'Invitación',          '{raiz}ましょう',              'cortes', 'b18', '{verbo-u,verbo-ru,verbo-irregular}',
-   '[{"kana":"ま","romaji":"ma"},{"kana":"しょ","romaji":"sho"},{"kana":"う","romaji":"u"}]'),
-  ('copula-pres-af',  8, 'Es',     '{palabra}です',                   'cortes', 'b2', '{sustantivo,adjetivo-na,adjetivo-i}',
-   '[{"kana":"で","romaji":"de"},{"kana":"す","romaji":"su"}]'),
-  ('copula-pres-neg', 9, 'No es',  '{palabra}ではありません',         'cortes', 'b3', '{sustantivo,adjetivo-na}',
-   '[{"kana":"で","romaji":"de"},{"kana":"は","romaji":"wa"},{"kana":"あ","romaji":"a"},{"kana":"り","romaji":"ri"},{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"}]'),
-  ('copula-pas-af',  10, 'Era',    '{palabra}でした',                 'cortes', 'b5', '{sustantivo,adjetivo-na,adjetivo-i}',
-   '[{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]'),
-  ('copula-pas-neg', 11, 'No era', '{palabra}ではありませんでした',   'cortes', 'b5', '{sustantivo,adjetivo-na}',
-   '[{"kana":"で","romaji":"de"},{"kana":"は","romaji":"wa"},{"kana":"あ","romaji":"a"},{"kana":"り","romaji":"ri"},{"kana":"ま","romaji":"ma"},{"kana":"せ","romaji":"se"},{"kana":"ん","romaji":"n"},{"kana":"で","romaji":"de"},{"kana":"し","romaji":"shi"},{"kana":"た","romaji":"ta"}]')
-on conflict (id) do update set
-  position = excluded.position,
-  nombre = excluded.nombre,
-  patron = excluded.patron,
-  registro = excluded.registro,
-  bloque_min = excluded.bloque_min,
-  aplica_a = excluded.aplica_a,
-  suffix_units = excluded.suffix_units;
+-- Ni las once formas ni las nueve filas de kana se escriben aquí: llegan con el volcado,
+-- desde `content/conjugations.ts`. Escritas además en este archivo, relanzarlo pisaría
+-- con la versión vieja cualquier forma que se hubiera corregido allí — que es la única
+-- razón por la que este archivo solo crea las dos tablas y las deja vacías.
 
 -- Con una errata en `bloque_min` la forma no fallaría: quedaría inalcanzable en
 -- silencio, que es peor. La clave ajena lo caza.
 --
 -- `not valid` es lo que la hace compatible con el orden de arranque: este archivo corre
--- ANTES del volcado, así que la primera vez `b18` todavía no existe en `blocks` y una
--- clave normal rechazaría el insert de arriba. `not valid` no mira las filas que ya
--- están, pero sí valida toda escritura posterior, que es donde aparecen las erratas.
--- Una vez volcados los 18 bloques se puede cerrar del todo con:
+-- ANTES del volcado, y relanzarlo sobre una base a medio poblar —`conjugations` con sus
+-- filas y `blocks` todavía sin las suyas— haría fallar a una clave normal al recrearse.
+-- `not valid` no mira las filas que ya están, pero sí valida toda escritura posterior,
+-- que es donde aparecen las erratas. Con los 18 bloques ya volcados se cierra del todo:
 --   alter table public.conjugations validate constraint conjugations_bloque_min_fkey;
 alter table public.conjugations drop constraint if exists conjugations_bloque_min_fkey;
 alter table public.conjugations add constraint conjugations_bloque_min_fkey
   foreign key (bloque_min) references public.blocks (id) not valid;
-
--- Las nueve «u» con su fila «i» —la de ～ます— y su fila «a» —la de ～ない—.
-insert into public.kana_rows (kana_u, romaji_u, kana_i, romaji_i, kana_a, romaji_a) values
-  ('う', 'u',   'い', 'i',   'わ', 'wa'),
-  ('く', 'ku',  'き', 'ki',  'か', 'ka'),
-  ('ぐ', 'gu',  'ぎ', 'gi',  'が', 'ga'),
-  ('す', 'su',  'し', 'shi', 'さ', 'sa'),
-  ('つ', 'tsu', 'ち', 'chi', 'た', 'ta'),
-  ('ぬ', 'nu',  'に', 'ni',  'な', 'na'),
-  ('ぶ', 'bu',  'び', 'bi',  'ば', 'ba'),
-  ('む', 'mu',  'み', 'mi',  'ま', 'ma'),
-  ('る', 'ru',  'り', 'ri',  'ら', 'ra')
-on conflict (kana_u) do update set
-  romaji_u = excluded.romaji_u,
-  kana_i = excluded.kana_i,
-  romaji_i = excluded.romaji_i,
-  kana_a = excluded.kana_a,
-  romaji_a = excluded.romaji_a;
 
 -- ---------------------------------------------------------------------------
 -- El tomo
