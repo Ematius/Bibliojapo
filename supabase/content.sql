@@ -208,9 +208,15 @@ alter table public.lessons add column if not exists tipo text not null default '
 alter table public.lessons add column if not exists grammar_id text;
 
 alter table public.lessons drop constraint if exists lessons_tipo_check;
+--
+-- Los valores son los de `Lesson.type` en `content/types.ts` SIN traducir, al revés que
+-- los de `words.tipo`: aquellos son español porque la palabra es contenido —«sustantivo»,
+-- «adjetivo-i»—, y estos son del contrato y cruzan la frontera en los dos sentidos. Con
+-- 'gramatica' aquí y 'grammar' allí habría que traducir al subir y al leer, y es ahí
+-- donde nacen los desajustes.
 alter table public.lessons add constraint lessons_tipo_check check (
   (tipo = 'kana' and kana_id is not null)
-  or (tipo = 'gramatica' and grammar_id is not null)
+  or (tipo = 'grammar' and grammar_id is not null)
 );
 
 -- ---------------------------------------------------------------------------
@@ -412,13 +418,25 @@ begin
       'id', target.local_id,
       'title', target.title,
       'summary', target.summary,
+      -- `type` no es decorativo: el lector descarta la lección que no sea de kana, así
+      -- que sin él NINGUNA genera planas y el tomo sale con la gramática y el examen a
+      -- secas. `grammarId` es el ancla de la plana de una regla, y llega null —y por
+      -- tanto ausente— en las de kana, igual que `kanaId` en las de gramática.
       'lessons', coalesce((
         select jsonb_agg(
-          jsonb_build_object('kanaId', l.kana_id, 'wordIds', to_jsonb(l.word_ids))
+          jsonb_build_object(
+            'type', l.tipo,
+            'kanaId', l.kana_id,
+            'grammarId', l.grammar_id,
+            'wordIds', to_jsonb(l.word_ids)
+          )
           order by l.position
         )
         from public.lessons l where l.block_id = target.id
       ), '[]'::jsonb),
+      -- Los dakuten que estrena el tomo. `Block` los declara obligatorios, así que sin
+      -- esta línea llegan `undefined` y la plana que los explica no sabe cuáles tocan.
+      'dakuten', to_jsonb(target.dakuten),
       'wordIds', to_jsonb(target.word_ids),
       'sentenceIds', to_jsonb(target.sentence_ids)
     ),
@@ -485,6 +503,11 @@ begin
         'id', g.id,
         'character', g.character,
         'romaji', g.romaji,
+        -- Solo las de gramática los llevan: una de ortografía se titula con su propio
+        -- carácter y no tiene tabla que pintar. Sin ellos, la plana de を saldría sin
+        -- encabezado y sin sus cuatro frases.
+        'title', nullif(g.title, ''),
+        'examples', g.examples,
         'explanation', g.explanation
       ))
       from public.grammar g
