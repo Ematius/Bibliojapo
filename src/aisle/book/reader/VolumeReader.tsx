@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { PageFlip } from 'page-flip'
 import type { VolumeContent } from '../../../api/volumes'
 import { readBookmark, writeBookmark } from '../../../shared/bookmark'
-import { READER, buildVolumePages } from './readerConfig'
+import { READER, buildVolumePages, type ReadyItem } from './readerConfig'
 import { ContentText } from '../parts/ContentText'
 import { WordCard } from '../recognition/WordCard'
 import { WordGap } from '../recognition/WordGap'
@@ -93,15 +93,71 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
   const { pages: readerPages, pools, reviewWordIds } = useMemo(() => {
     // Entra toda lección con palabras, esté su ficha entera o no: lo que falte sale como
     // hoja en blanco, a propósito, para verlo al recorrer el tomo y no al llegar al examen.
+    // Las frases del tomo con las que se ve una regla, hasta tres y de temas distintos. Una
+    // regla de GRAMÁTICA no tiene ninguna —です no sale nombrada en ninguna frase— y se
+    // explica igual con su tabla, así que volver vacío no la descarta.
+    const examplesFor = (ruleId: string): string[] => {
+      // Un ejemplo por TEMA distinto: el tomo tiene tres frases seguidas de いえ, y tres
+      // veces la misma palabra se leen como una sola. Las frases salen del temario, nunca
+      // se arman aquí juntando palabras.
+      const byTopic = new Map<string, string>()
+      for (const id of block.sentenceIds) {
+        const sentence = sentencesById.get(id)
+        if (sentence?.grammarId !== ruleId) continue
+        // Sin el desglose kana a kana no hay nada que enseñar: la hoja saldría con los
+        // renglones en blanco. Las frases de los tomos por escribir todavía no lo tienen.
+        if (sentence.units.length === 0) continue
+
+        const topic = sentence.wordIds[0] ?? id
+        if (!byTopic.has(topic)) byTopic.set(topic, id)
+      }
+
+      // El primero, el de en medio y el último, y no los tres primeros: repartidos así
+      // entran temas de todo el tomo, y el último suele ser el que más enseña —en 「ははいい」
+      // el mismo carácter sale dos veces y solo uno es la partícula—.
+      const topics = [...byTopic.values()]
+      return topics.length <= 3
+        ? topics
+        : [topics[0], topics[Math.floor((topics.length - 1) / 2)], topics[topics.length - 1]]
+    }
+
+    // Sin explicación escrita la plana saldría en blanco, igual que una lección a medias.
+    const ready = (ruleId: string | undefined) => {
+      const rule = ruleId ? grammarById.get(ruleId) : undefined
+      return rule?.explanation.trim() ? rule : undefined
+    }
+
+    // Lo que el tomo enseña, EN EL ORDEN DEL TEMARIO. La plana de una regla cae donde su
+    // lección la puso, no detrás del kana del que habla: así se puede explicar です o ～ます,
+    // que no son un carácter y antes no tenían dónde ponerse.
+    //
     // Si esto vuelve a filtrar por completitud, el repaso final —que sale de aquí— filtra
     // igual, y un fallo deja de verse en su lección para desaparecer sin más.
-    // Solo las de kana: las de gramática no traen kana ni palabras, y sus planas las monta
-    // `rules`, no esto.
-    const lessons = block.lessons.flatMap((lesson) =>
-      lesson.type === 'kana' && lesson.kanaId && lesson.wordIds?.length
-        ? [{ kanaId: lesson.kanaId, wordIds: lesson.wordIds }]
-        : [],
-    )
+    const anchored = new Set<string>()
+    const items = block.lessons.flatMap((lesson): ReadyItem[] => {
+      if (lesson.type === 'kana') {
+        return lesson.kanaId && lesson.wordIds?.length
+          ? [{ kind: 'kana', kanaId: lesson.kanaId, wordIds: lesson.wordIds }]
+          : []
+      }
+
+      const rule = ready(lesson.grammarId)
+      if (!rule) return []
+      anchored.add(rule.id)
+      return [{ kind: 'rule', grammarId: rule.id, sentenceIds: examplesFor(rule.id) }]
+    })
+
+    // Las de ORTOGRAFÍA que el temario todavía no ancla a ninguna lección: se reconocen
+    // porque alguna frase del tomo las nombra, y van detrás de las lecciones. Es el camino
+    // viejo, y sigue vivo porque sin él el tomo 1 perdería la plana de は — su regla no
+    // está anclada, y ese tomo está publicado y no se toca.
+    const loose = [...grammarById.values()].flatMap((rule): ReadyItem[] => {
+      if (anchored.has(rule.id) || !ready(rule.id)) return []
+      const sentenceIds = examplesFor(rule.id)
+      return sentenceIds.length ? [{ kind: 'rule', grammarId: rule.id, sentenceIds }] : []
+    })
+
+    const lessons = items.flatMap((item) => (item.kind === 'kana' ? [item] : []))
 
     // Los distractores de cada lección: los kana de esa lección y los de las anteriores,
     // nunca uno que aún no se haya dado —descartar una tarjeta tiene que ser reconocerla—.
@@ -129,43 +185,6 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       return sentence !== undefined && sentence.units.length > 0
     })
 
-    // Las reglas de ortografía que el tomo ya puede enseñar. Se cae fuera por lo mismo que
-    // una lección a medias: sin explicación escrita la plana saldría en blanco.
-    const rules = [...grammarById.values()].flatMap((rule) => {
-      if (!rule.explanation.trim()) return []
-
-      // Un ejemplo por TEMA distinto: el tomo tiene tres frases seguidas de いえ, y tres
-      // veces la misma palabra se leen como una sola. Las frases salen del temario, nunca
-      // se arman aquí juntando palabras.
-      const byTopic = new Map<string, string>()
-      for (const id of block.sentenceIds) {
-        const sentence = sentencesById.get(id)
-        if (sentence?.grammarId !== rule.id) continue
-        // Sin el desglose kana a kana no hay nada que enseñar: la hoja saldría con los
-        // renglones en blanco. Las frases de los tomos por escribir todavía no lo tienen.
-        if (sentence.units.length === 0) continue
-
-        const topic = sentence.wordIds[0] ?? id
-        if (!byTopic.has(topic)) byTopic.set(topic, id)
-      }
-
-      // El primero, el de en medio y el último, y no los tres primeros: repartidos así
-      // entran temas de todo el tomo, y el último suele ser el que más enseña —en 「ははいい」
-      // el mismo carácter sale dos veces y solo uno es la partícula—.
-      const topics = [...byTopic.values()]
-      const sentenceIds =
-        topics.length <= 3
-          ? topics
-          : [topics[0], topics[Math.floor((topics.length - 1) / 2)], topics[topics.length - 1]]
-
-      if (sentenceIds.length === 0) return []
-
-      const kanaId = [...kanaById.values()].find(
-        (kana) => kana.character === rule.character,
-      )?.id
-
-      return [{ grammarId: rule.id, kanaId, sentenceIds }]
-    })
 
     // Sin usarlo dentro: solo está en las dependencias para forzar este cálculo de
     // nuevo en cada reintento del examen final. `finalSentenceExamSpreads` sortea el
@@ -173,7 +192,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     void examAttempt
 
     return {
-      pages: buildVolumePages(lessons, reviewWordIds, examSentenceIds, rules),
+      pages: buildVolumePages([...items, ...loose], reviewWordIds, examSentenceIds),
       pools,
       reviewWordIds,
     }

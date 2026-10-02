@@ -120,18 +120,23 @@ export interface ReadyLesson {
   wordIds: string[]
 }
 
-// Una regla de ortografía que el tomo ya puede enseñar. Como con `ReadyLesson`, filtrar
-// las que no tienen explicación escrita es cosa de quien llama; aquí solo se colocan.
+// Una regla que el tomo ya puede enseñar. Como con `ReadyLesson`, filtrar las que no
+// tienen explicación escrita es cosa de quien llama; aquí solo se colocan.
 export interface ReadyRule {
   grammarId: string
-  // El kana del que la regla habla, si ESTE tomo lo enseña: su plana va detrás de esa
-  // lección, que es cuando el carácter acaba de aprenderse. Sin él —el carácter viene de
-  // un tomo anterior— cierra las lecciones.
-  kanaId?: string
-  // Las frases con las que se enseña. Nunca vacía: una regla llega aquí porque alguna
-  // frase del tomo la nombra. Quién las elige es quien llama.
+  // Las frases del tomo con las que se enseña. Puede venir VACÍA: una regla de ortografía
+  // —は que suena «wa»— se ve en una frase, pero です o ～ます se explican con su tabla y
+  // no hay frase del temario que las nombre.
   sentenceIds: string[]
 }
+
+// Lo que el tomo enseña, en el ORDEN del temario: o un kana, o una regla. Ese orden es lo
+// único que decide dónde cae cada plana. Antes la regla se pegaba detrás de la lección del
+// carácter del que hablaba, y una regla que no habla de ningún carácter —です, ～ます— no
+// tenía dónde ponerse y acababa al final del tomo.
+export type ReadyItem =
+  | ({ kind: 'kana' } & ReadyLesson)
+  | ({ kind: 'rule' } & ReadyRule)
 
 // Las siete planas con las que se enseña UN kana, en orden de lectura, y detrás su repaso
 // y su examen. Es una función y no una lista escrita a mano porque el tomo repite esta
@@ -278,24 +283,18 @@ function introSpread(): Spread {
 // kana del que habla, que es cuando el carácter acaba de aprenderse y todavía no ha aparecido
 // como partícula en ninguna frase. Por eso no van todas juntas ni al principio ni al final.
 export function buildVolumePages(
-  lessons: ReadyLesson[],
+  items: ReadyItem[],
   wordIds: string[],
   sentenceIds: string[],
-  rules: ReadyRule[],
 ): ReaderPage[] {
-  const taughtKana = new Set(lessons.map((lesson) => lesson.kanaId))
+  // El repaso y el examen final son de KANA: una regla no se repasa, se consulta.
+  const lessons = items.flatMap((item) => (item.kind === 'kana' ? [item] : []))
 
   const spreads = [
     introSpread(),
-    ...lessons.flatMap((lesson) => [
-      ...kanaSpreads(lesson.kanaId, lesson.wordIds),
-      ...rules.filter((rule) => rule.kanaId === lesson.kanaId).map(grammarSpread),
-    ]),
-    // Las que hablan de un carácter que este tomo no enseña —se dio en uno anterior— no
-    // tienen lección detrás de la que ponerse, así que cierran las lecciones.
-    ...rules
-      .filter((rule) => !rule.kanaId || !taughtKana.has(rule.kanaId))
-      .map(grammarSpread),
+    ...items.flatMap((item) =>
+      item.kind === 'kana' ? kanaSpreads(item.kanaId, item.wordIds) : [grammarSpread(item)],
+    ),
     ...completeReviewSpreads(lessons),
     ...finalReviewSpreads(lessons, wordIds),
     ...finalSentenceExamSpreads(sentenceIds),
