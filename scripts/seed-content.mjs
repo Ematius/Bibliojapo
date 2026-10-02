@@ -105,7 +105,11 @@ function isComplete(block, kanaById, wordsById, grammarById) {
 
     // Y cada palabra con la que se enseña necesita sonar y poder enseñarse sin
     // escribirla: un color o un dibujo.
-    return Boolean(lesson.wordIds?.length) && lesson.wordIds.every((id) => {
+    //
+    // SIN palabras también cuenta como completa: ぺ no aparece en ninguna de las 768, y su
+    // lección se queda en el dibujo y la pauta —ver `kanaSpreads`—. Exigirlas dejaría a B17
+    // sin publicar para siempre por un kana que no tiene con qué enseñarse.
+    return (lesson.wordIds ?? []).every((id) => {
       const word = wordsById.get(id)
       return Boolean(word?.audio) && Boolean(word.image || word.swatch)
     })

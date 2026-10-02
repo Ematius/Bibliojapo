@@ -128,7 +128,7 @@ for (const block of doc) {
       ? B1_LESSONS[kanaId]
       : pickWords(ch, block.words, produced, taken)
     wordIds?.forEach((id) => taken.add(id))
-    if (!wordIds?.length) warnings.push(`${block.id}: ${ch} (${kanaId}) sin palabra que lo contenga`)
+    if (!wordIds?.length) warnings.push(`${block.id}: ${ch} (${kanaId}) se presenta sin palabra: ninguna del pool lo contiene`)
     lessons.push({ type: 'kana', kanaId, wordIds: wordIds ?? [] })
   }
 

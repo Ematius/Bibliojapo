@@ -45,7 +45,7 @@ for (const block of blocks) {
       // vocabulario sin avisar.
       else if (!knownWords.has(id)) problems.push(`${block.id}: ${lesson.kanaId} enseña con ${id}, de un bloque posterior`)
     }
-    if (!lesson.wordIds.length) problems.push(`${block.id}: ${lesson.kanaId} no tiene con qué enseñarse`)
+    if (!lesson.wordIds.length) problems.push(`${block.id}: ${lesson.kanaId} se presenta sin palabra (dibujo y pauta, sin ejercicios)`)
   }
   for (const id of block.sentences) {
     if (seenSentence.has(id)) problems.push(`${block.id}: la frase ${id} ya estaba en ${seenSentence.get(id)}`)

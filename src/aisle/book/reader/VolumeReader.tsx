@@ -140,9 +140,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // igual, y un fallo deja de verse en su lección para desaparecer sin más.
     const anchored = new Set<string>()
     const items = block.lessons.flatMap((lesson): ReadyItem[] => {
+      // Sin palabras entra igual: `kanaSpreads` le da sus dos planas de presentación. Lo
+      // que no puede faltar es el kana, que es lo que la lección enseña.
       if (lesson.type === 'kana') {
-        return lesson.kanaId && lesson.wordIds?.length
-          ? [{ kind: 'kana', kanaId: lesson.kanaId, wordIds: lesson.wordIds }]
+        return lesson.kanaId
+          ? [{ kind: 'kana', kanaId: lesson.kanaId, wordIds: lesson.wordIds ?? [] }]
           : []
       }
 

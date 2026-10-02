@@ -145,6 +145,24 @@ export type ReadyItem =
 // y su examen. Es una función y no una lista escrita a mano porque el tomo repite esta
 // secuencia para cada kana del bloque.
 export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[]): Spread[] {
+  // Sin una sola palabra con la que enseñarlo, la lección se queda en PRESENTAR el
+  // carácter: su dibujo mnemotécnico y su pauta de escritura, que son las dos únicas planas
+  // que no necesitan vocabulario. Le pasa a ぺ, que no aparece en ninguna de las 768
+  // palabras del temario. Es poco, pero dejarlo fuera lo borraría del tomo, y el carné
+  // contaría un kana que nadie ha visto.
+  if (wordId === undefined) {
+    return [
+      {
+        right: { kanaId, title: 'Ejercicio mnemotécnico', shows: 'mnemonic' },
+        left: { kanaId, title: 'Imagen mnemotécnica', shows: 'illustration' },
+      },
+      {
+        right: { kanaId, title: 'Ver y escuchar', shows: 'card' },
+        left: { kanaId, title: 'Pauta de escritura', shows: 'trace' },
+      },
+    ]
+  }
+
   // Las últimas planas piden el kana dentro de OTRA palabra, una plana por cada una. Sin
   // otra, repiten la primera.
   const drillWordIds = otherWordIds.length > 0 ? otherWordIds : [wordId]
@@ -419,7 +437,9 @@ function finalSentenceExamSpreads(sentenceIds: string[]): Spread[] {
 // repaso y del de vocabulario — ver «Cómo se arma un tomo» en CLAUDE.md cuando se actualice.
 //
 // Un tomo sin lecciones listas no tiene repaso.
-function completeReviewSpreads(lessons: ReadyLesson[]): Spread[] {
+function completeReviewSpreads(all: ReadyLesson[]): Spread[] {
+  // Las que no tienen palabra no se repasan: no hay de qué examinar. Ver `kanaSpreads`.
+  const lessons = all.filter((lesson) => lesson.wordIds.length > 0)
   if (lessons.length === 0) return []
 
   const reviews = lessons.map<Spread>((lesson) => ({
