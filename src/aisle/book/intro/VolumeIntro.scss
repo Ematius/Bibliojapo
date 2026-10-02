@@ -240,6 +240,25 @@
     line-height: 1.2;
   }
 
+  // Una tira que fluye, no una rejilla: con columnas fijas hay que elegir cuántas, y la
+  // buena cambia entre veinte palabras y setenta y seis. Así se reparte sola.
+  &__words {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    // La separación hace de puntuación: sin ella あお y あおい se leen como una palabra.
+    column-gap: 0.9em;
+    row-gap: 0.2cqh;
+    font-family: var(--font-body);
+    // Un punto por debajo de las frases: son el apoyo de la hoja, no su titular.
+    font-size: clamp(0.42rem, 3cqmin, 0.72rem);
+    line-height: 1.45;
+  }
+
+  &__word {
+    white-space: nowrap;
+  }
+
   &__lines {
     margin: 0;
     padding: 0;

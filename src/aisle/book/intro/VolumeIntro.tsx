@@ -1,4 +1,4 @@
-import type { Block } from '../../../content/types'
+import type { Block, Word } from '../../../content/types'
 import { wordText } from '../../../content/types'
 import type { GoalGroup } from './goalGroups'
 import './VolumeIntro.scss'
@@ -107,6 +107,9 @@ export function VolumeIntro({ block, characters, progress }: VolumeIntroProps) {
 
 interface VolumeGoalProps {
   groups: GoalGroup[]
+  // Todo el vocabulario que el tomo desbloquea, no solo el que tiene ficha: es lo que
+  // cuenta la portada de al lado, y sin verlo el número prometía más de lo que se veía.
+  words: Word[]
 }
 
 // La otra mitad de la portada: las frases del bloque, que todavía no se pueden leer. Esa es
@@ -116,9 +119,29 @@ interface VolumeGoalProps {
 // Van por temas y no de corrido: quince líneas seguidas se leían como un muro. Y cada frase
 // ocupa UNA línea, con la traducción al lado: apiladas eran treinta y las últimas se salían
 // de la hoja, y en un libro de papel no hay a dónde desplazarse.
-export function VolumeGoal({ groups }: VolumeGoalProps) {
+export function VolumeGoal({ groups, words }: VolumeGoalProps) {
   return (
     <div className="volume-goal">
+      {/* Las palabras van SIN traducir y en una sola tira que fluye. Con el significado al
+          lado, los bloques de setenta y seis palabras no caben en la hoja; y el sentido de
+          esta plana es ver que se van a poder LEER, no aprenderlas aquí — eso es lo que
+          hacen las fichas. Fluye en vez de ir en columnas: así se reparte sola en cualquier
+          ancho, que es lo que pide una hoja que no puede desplazarse. */}
+      {words.length ? (
+        <section className="volume-goal__group">
+          <h3 className="volume-goal__topic">
+            <span className="volume-goal__topic-meaning">Palabras</span>
+          </h3>
+          <p className="volume-goal__words" lang="ja">
+            {words.map((word) => (
+              <span className="volume-goal__word" key={word.id}>
+                {wordText(word)}
+              </span>
+            ))}
+          </p>
+        </section>
+      ) : null}
+
       {groups.map((group) => (
         <section className="volume-goal__group" key={group.id}>
           <h3 className="volume-goal__topic">

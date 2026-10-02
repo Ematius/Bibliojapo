@@ -362,6 +362,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                           block.sentenceIds.flatMap((id) => sentencesById.get(id) ?? []),
                           (id) => wordsById.get(id),
                         )}
+                        words={block.wordIds.flatMap((id) => wordsById.get(id) ?? [])}
                       />
                     )
                   }
