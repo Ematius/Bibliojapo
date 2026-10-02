@@ -124,6 +124,9 @@ export interface ReadyLesson {
 // tienen explicación escrita es cosa de quien llama; aquí solo se colocan.
 export interface ReadyRule {
   grammarId: string
+  // Con qué se encabeza su plana. «Ortografía» habla de un carácter y sus dos lecturas;
+  // です no es un carácter, y bajo ese encabezado el alumno buscaría uno.
+  heading: string
   // Las frases del tomo con las que se enseña. Puede venir VACÍA: una regla de ortografía
   // —は que suena «wa»— se ve en una frase, pero です o ～ます se explican con su tabla y
   // no hay frase del temario que las nombre.
@@ -246,11 +249,13 @@ function examSpread(kanaId: string, wordId: string): Spread {
 // después, en el examen final de frases.
 function grammarSpread(rule: ReadyRule): Spread {
   return {
-    right: { grammarId: rule.grammarId, title: 'Ortografía', shows: 'grammar' },
+    right: { grammarId: rule.grammarId, title: rule.heading, shows: 'grammar' },
     left: {
       grammarId: rule.grammarId,
       sentenceIds: rule.sentenceIds,
-      title: 'En una frase',
+      // Sin frases del tomo la hoja enseña la tabla de la regla, que es lo que tienen las
+      // de gramática: ～ます no sale nombrada en ninguna frase y se explica igual.
+      title: rule.sentenceIds.length ? 'En una frase' : 'Cómo se usa',
       shows: 'grammarExample',
     },
   }

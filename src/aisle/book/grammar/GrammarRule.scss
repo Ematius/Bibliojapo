@@ -20,6 +20,19 @@
     line-height: 1;
   }
 
+  // El de una regla de gramática, que no tiene carácter que poner en grande. Mucho menor
+  // que el carácter: es una frase, y al tamaño de un kana suelto se partiría en cuatro
+  // renglones y empujaría la explicación fuera de la hoja.
+  &__title {
+    margin: 0;
+    max-width: 22ch;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 9cqmin, 2rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
   &__romaji {
     margin: 0;
     color: var(--color-brass);
@@ -110,5 +123,57 @@
     font-size: clamp(0.55rem, 3.8cqmin, 0.9rem);
     font-style: italic;
     text-align: center;
+  }
+}
+
+// Las filas de una regla que no se ve en una frase del tomo: la tabla de ～ます, los pares
+// del dakuten, las frases de ejemplo de です. Una rejilla y no una tabla de verdad porque
+// el número de columnas cambia con la regla —dos en el dakuten, cuatro en ～ます—, y dejar
+// que se midan solas es lo que la hace servir para las dos.
+.grammar-table {
+  width: 100%;
+  margin: 0;
+  flex: 1;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1cqh;
+
+  font-family: var(--font-body);
+  font-size: clamp(0.6rem, 4.2cqmin, 1rem);
+  line-height: 1.5;
+
+  // La etiqueta manda en la primera columna y cada forma se lleva una propia: la tabla de
+  // ～ます trae tres y la del dakuten una, y así las dos salen bien sin decir cuántas hay.
+  &__row {
+    display: grid;
+    grid-template-columns: minmax(6ch, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0 1.2em;
+    padding-bottom: 0.6cqh;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-brass) 35%, transparent);
+  }
+
+  // La cabecera de la tabla cuando la regla la trae. Se reconoce por ser la primera fila
+  // sin etiqueta, no por un campo aparte: ver `GrammarTable`.
+  &__row--head {
+    color: var(--color-ink-soft);
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__label {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  &__form {
+    margin: 0;
+    color: var(--color-ink);
   }
 }

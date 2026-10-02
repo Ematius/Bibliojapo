@@ -75,14 +75,32 @@ export const GRAMMAR: Grammar[] = [
       'cero — es el mismo kana que ya sabes, con la voz activada.\n\n' +
       'Pon la mano en la garganta y di «sa» y luego «za»: en la segunda notas la ' +
       'vibración. Eso es el dakuten.',
-    // La plantilla entera. La plana enseña SOLO los que estrena su tomo — `block.dakuten`—,
-    // así que en B2 no salen が ni だ, que todavía no se pueden leer.
+    // Los veinte del temario, y no una muestra: la plana enseña SOLO los que estrena su
+    // tomo —`block.dakuten`—, así que en B2 salen で ぜ ず ば y ninguno más. Con cinco de
+    // ejemplo, los diez bloques enseñarían los mismos cinco.
+    //
+    // ぱ ぴ ぷ ぺ ぽ no están aquí: el handakuten es otro signo y además son LECCIÓN, en B17.
     examples: [
       { label: 'て → で', forms: ['te → de'] },
+      { label: 'せ → ぜ', forms: ['se → ze'] },
+      { label: 'す → ず', forms: ['su → zu'] },
       { label: 'は → ば', forms: ['ha → ba'] },
+      { label: 'し → じ', forms: ['shi → ji'] },
       { label: 'か → が', forms: ['ka → ga'] },
+      { label: 'こ → ご', forms: ['ko → go'] },
       { label: 'さ → ざ', forms: ['sa → za'] },
       { label: 'た → だ', forms: ['ta → da'] },
+      { label: 'そ → ぞ', forms: ['so → zo'] },
+      { label: 'く → ぐ', forms: ['ku → gu'] },
+      { label: 'き → ぎ', forms: ['ki → gi'] },
+      { label: 'と → ど', forms: ['to → do'] },
+      { label: 'ち → ぢ', forms: ['chi → ji'] },
+      { label: 'つ → づ', forms: ['tsu → zu'] },
+      { label: 'け → げ', forms: ['ke → ge'] },
+      { label: 'ふ → ぶ', forms: ['fu → bu'] },
+      { label: 'ひ → び', forms: ['hi → bi'] },
+      { label: 'ほ → ぼ', forms: ['ho → bo'] },
+      { label: 'へ → べ', forms: ['he → be'] },
     ],
   },
   {
@@ -100,6 +118,25 @@ export const GRAMMAR: Grammar[] = [
       { label: 'あおいです。', forms: ['aoi desu.', 'Es azul.'] },
       { label: 'ははです。', forms: ['haha desu.', 'Es mi madre.'] },
       { label: 'いすです。', forms: ['isu desu.', 'Es una silla.'] },
+    ],
+  },
+  {
+    id: 'copula-neg',
+    romaji: 'dewa arimasen',
+    title: 'ではありません — «no es»',
+    explanation:
+      'Para negar です no se cambia です: se sustituye entero por ではありません.\n\n' +
+      'Fíjate en una cosa al leerlo: esa は no suena «ha», suena «wa» — es la misma ' +
+      'partícula del tema que ya conoces del primer tomo, escondida dentro de la ' +
+      'expresión. Se lee «dewa arimasen».\n\n' +
+      'Y mira la terminación: ありません. Es el ません que ya sabes, pegado a あり, que ' +
+      'es la raíz del verbo ある. No es una fórmula nueva que haya que memorizar: son dos ' +
+      'piezas que ya tienes.',
+    examples: [
+      { label: 'いすではありません。', forms: ['isu dewa arimasen.', 'No es una silla.'] },
+      { label: 'いえではありません。', forms: ['ie dewa arimasen.', 'No es una casa.'] },
+      { label: 'ははではありません。', forms: ['haha dewa arimasen.', 'No es mi madre.'] },
+      { label: 'あかではありません。', forms: ['aka dewa arimasen.', 'No es rojo.'] },
     ],
   },
   {

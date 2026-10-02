@@ -21,6 +21,8 @@ const TAUGHT_BY_RULE = { wo: 'particle-o' }
 // primero los caracteres, despues lo que se construye con ellos.
 const RULES_BY_BLOCK = {
   b2: ['desu', 'masu'],
+  // La negacion espera a B3 porque necesita り: en B2 no se podria leer.
+  b3: ['copula-neg'],
   b5: ['pasado'],
   b6: ['tai'],
   b13: ['nai'],

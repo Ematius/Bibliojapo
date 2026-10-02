@@ -121,6 +121,7 @@ export const BLOCKS: Block[] = [
       { type: 'kana', kanaId: 'shi', wordIds: ['hashi', 'hashi-2'] },
       { type: 'kana', kanaId: 'ru', wordIds: ['aru', 'aru-2'] },
       { type: 'kana', kanaId: 'ka', wordIds: ['ka', 'aka'] },
+      { type: 'grammar', grammarId: 'copula-neg' },
     ],
     dakuten: ['じ', 'が'],
     wordIds: [

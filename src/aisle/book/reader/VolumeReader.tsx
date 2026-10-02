@@ -121,6 +121,11 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
         : [topics[0], topics[Math.floor((topics.length - 1) / 2)], topics[topics.length - 1]]
     }
 
+    // Una regla de ORTOGRAFÍA habla de un carácter y de sus dos lecturas; una de gramática
+    // no es un carácter, y bajo ese encabezado el alumno buscaría uno que no existe.
+    const headingOf = (rule: { character?: string }) =>
+      rule.character ? 'Ortografía' : 'Gramática'
+
     // Sin explicación escrita la plana saldría en blanco, igual que una lección a medias.
     const ready = (ruleId: string | undefined) => {
       const rule = ruleId ? grammarById.get(ruleId) : undefined
@@ -144,7 +149,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       const rule = ready(lesson.grammarId)
       if (!rule) return []
       anchored.add(rule.id)
-      return [{ kind: 'rule', grammarId: rule.id, sentenceIds: examplesFor(rule.id) }]
+      return [{ kind: 'rule', grammarId: rule.id, heading: headingOf(rule), sentenceIds: examplesFor(rule.id) }]
     })
 
     // Las de ORTOGRAFÍA que el temario todavía no ancla a ninguna lección: se reconocen
@@ -154,7 +159,9 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     const loose = [...grammarById.values()].flatMap((rule): ReadyItem[] => {
       if (anchored.has(rule.id) || !ready(rule.id)) return []
       const sentenceIds = examplesFor(rule.id)
-      return sentenceIds.length ? [{ kind: 'rule', grammarId: rule.id, sentenceIds }] : []
+      return sentenceIds.length
+        ? [{ kind: 'rule', grammarId: rule.id, heading: headingOf(rule), sentenceIds }]
+        : []
     })
 
     const lessons = items.flatMap((item) => (item.kind === 'kana' ? [item] : []))
@@ -446,8 +453,19 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
                     const sentences = (page.sentenceIds ?? []).flatMap(
                       (id) => sentencesById.get(id) ?? [],
                     )
-                    return rule && sentences.length > 0 ? (
-                      <GrammarExample rule={rule} sentences={sentences} />
+                    if (!rule) return null
+
+                    // La del dakuten reaparece en diez tomos y en cada uno enseña los
+                    // SUYOS: con la tabla entera, el de B2 estrenaría cuatro y leería veinte.
+                    const examples =
+                      rule.id === 'dakuten'
+                        ? (rule.examples ?? []).filter((example) =>
+                            block.dakuten.some((kana) => example.label.endsWith(kana)),
+                          )
+                        : rule.examples
+
+                    return sentences.length > 0 || examples?.length ? (
+                      <GrammarExample rule={rule} sentences={sentences} examples={examples} />
                     ) : null
                   }
 
