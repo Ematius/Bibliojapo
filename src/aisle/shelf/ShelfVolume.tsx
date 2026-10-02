@@ -225,7 +225,9 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
       text:
         access === 'soon'
           ? `El tomo ${volume.number} todavía se está escribiendo.`
-          : `Se abre al sellar el tomo ${volume.number - 1}.`,
+          // Nombra los DOS: «Se abre al sellar el tomo 2» en el tomo 3 se lee como si el
+          // cerrado fuera el 2, que es el que acaba de nombrar.
+          : `El tomo ${volume.number} se abre al sellar el ${volume.number - 1}.`,
     })
   }
 
