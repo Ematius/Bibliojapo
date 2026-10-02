@@ -58,11 +58,14 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 2 · ますてせん',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ma', wordIds: ['ima', 'mai'] },
       { type: 'kana', kanaId: 'su', wordIds: ['isu', 'osu'] },
       { type: 'kana', kanaId: 'te', wordIds: ['te'] },
       { type: 'kana', kanaId: 'se', wordIds: ['sei', 'sen'] },
       { type: 'kana', kanaId: 'n', wordIds: ['en', 'han'] },
+      { type: 'grammar', grammarId: 'desu' },
+      { type: 'grammar', grammarId: 'masu' },
     ],
     dakuten: ['で', 'ぜ', 'ず', 'ば'],
     wordIds: [
@@ -113,6 +116,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 3 · りしるか',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ri', wordIds: ['amari', 'oriru'] },
       { type: 'kana', kanaId: 'shi', wordIds: ['hashi', 'hashi-2'] },
       { type: 'kana', kanaId: 'ru', wordIds: ['aru', 'aru-2'] },
@@ -204,6 +208,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 4 · こなさわ',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ko', wordIds: ['ko', 'koe'] },
       { type: 'kana', kanaId: 'na', wordIds: ['nai', 'naka'] },
       { type: 'kana', kanaId: 'sa', wordIds: ['asa', 'kasa'] },
@@ -295,10 +300,12 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 5 · たみそね',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ta', wordIds: ['uta', 'kata'] },
       { type: 'kana', kanaId: 'mi', wordIds: ['imi', 'umi'] },
       { type: 'kana', kanaId: 'so', wordIds: ['sou-sou-desu', 'soko'] },
       { type: 'kana', kanaId: 'ne', wordIds: ['ane', 'neko'] },
+      { type: 'grammar', grammarId: 'pasado' },
     ],
     dakuten: ['だ', 'ぞ'],
     wordIds: [
@@ -388,9 +395,11 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 6 · くきら',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ku', wordIds: ['ku', 'aku'] },
       { type: 'kana', kanaId: 'ki', wordIds: ['ki', 'aki'] },
       { type: 'kana', kanaId: 'ra', wordIds: ['sora', 'arau'] },
+      { type: 'grammar', grammarId: 'tai' },
     ],
     dakuten: ['ぐ', 'ぎ'],
     wordIds: [
@@ -483,6 +492,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 7 · とち',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'to', wordIds: ['to', 'ato'] },
       { type: 'kana', kanaId: 'chi', wordIds: ['ichi', 'uchi'] },
     ],
@@ -574,6 +584,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 8 · つけ',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'tsu', wordIds: ['tsu', 'itsu'] },
       { type: 'kana', kanaId: 'ke', wordIds: ['ike', 'kesa'] },
     ],
@@ -646,6 +657,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 9 · ふひ',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'fu', wordIds: ['fuku', 'fuku-2'] },
       { type: 'kana', kanaId: 'hi', wordIds: ['hi', 'hiki'] },
     ],
@@ -911,8 +923,10 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 13 · やほ',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ya', wordIds: ['ya', 'iya'] },
       { type: 'kana', kanaId: 'ho', wordIds: ['hou', 'hoka'] },
+      { type: 'grammar', grammarId: 'nai' },
     ],
     dakuten: ['ぼ'],
     wordIds: [
@@ -1008,6 +1022,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 15 · へゆ',
     summary: '',
     lessons: [
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'he', wordIds: ['heta', 'heya'] },
       { type: 'kana', kanaId: 'yu', wordIds: ['fuyu', 'yuki'] },
     ],
@@ -1129,6 +1144,7 @@ export const BLOCKS: Block[] = [
       { type: 'kana', kanaId: 'small-ya', wordIds: ['ja-jaa', 'isha'] },
       { type: 'kana', kanaId: 'small-yu', wordIds: ['kyuu', 'shuu'] },
       { type: 'kana', kanaId: 'small-yo', wordIds: ['kyou', 'jisho'] },
+      { type: 'grammar', grammarId: 'masho' },
     ],
     dakuten: [],
     wordIds: [

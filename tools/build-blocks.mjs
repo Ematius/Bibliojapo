@@ -17,6 +17,21 @@ const OUT = 'src/content/hiragana/blocks.ts'
 // partícula—, y su plana es la de su regla. Ver la nota de ぺ en el documento.
 const TAUGHT_BY_RULE = { wo: 'particle-o' }
 
+// Las reglas de gramatica que estrena cada bloque. Van DETRAS de sus lecciones de kana:
+// primero los caracteres, despues lo que se construye con ellos.
+const RULES_BY_BLOCK = {
+  b2: ['desu', 'masu'],
+  b5: ['pasado'],
+  b6: ['tai'],
+  b13: ['nai'],
+  b18: ['masho'],
+}
+
+// La del dakuten no se explica UNA vez: reaparece en cada bloque que estrene alguno, con
+// los de ese tomo. Y va DELANTE de las lecciones, no detras: en B2 la primera palabra que
+// se lee es です, y sin el dakuten explicado su で es un caracter que nadie ha enseñado.
+const DAKUTEN_RULE = 'dakuten'
+
 // La portada de un tomo lleva dos cosas escritas a mano; las cuentas se derivan solas.
 // De momento solo B1 las tiene, porque es el único tomo que se lee entero.
 const COVER = {
@@ -95,6 +110,8 @@ for (const block of doc) {
   const taken = new Set()
   const lessons = []
 
+  if (block.dakuten.length) lessons.push({ type: 'grammar', grammarId: DAKUTEN_RULE })
+
   for (const ch of block.kana) {
     const kanaId = idOf.get(ch)
     if (!kanaId) { warnings.push(`${block.id}: ${ch} no tiene ficha en kana.ts`); continue }
@@ -112,6 +129,8 @@ for (const block of doc) {
     if (!wordIds?.length) warnings.push(`${block.id}: ${ch} (${kanaId}) sin palabra que lo contenga`)
     lessons.push({ type: 'kana', kanaId, wordIds: wordIds ?? [] })
   }
+
+  for (const id of RULES_BY_BLOCK[block.id] ?? []) lessons.push({ type: 'grammar', grammarId: id })
 
   const sentenceIds = block.sentences.map((s) => sentenceId(s.text, n))
   rendered.push({ ...block, lessons, sentenceIds, wordIds: block.words.map((w) => w.id) })
