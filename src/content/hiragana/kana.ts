@@ -515,32 +515,80 @@ export const HIRAGANA: Kana[] = [
     character: 'す',
     romaji: 'su',
     audio: 'hiragana/b2/audio/su.wav',
-    mnemonic: '',
-    strokeOrder: [],
+    mnemonic:
+      'Estás en una habitación tranquila de hospital en Japón y ves un **SU**ero ' +
+      'colgado de un soporte metálico. La barra de arriba está recta, sosteniendo ' +
+      'la bolsa, pero lo que más te llama la atención es el tubo: baja desde el ' +
+      'suero, da una vuelta formando un círculo y después sigue cayendo hacia abajo.',
+    strokeOrder: [
+      'La línea superior, de izquierda a derecha, como la parte alta del soporte.',
+      'De arriba abajo: baja y hace el círculo central, como el tubo del suero al ' +
+        'enrollarse, y sin romper el trazo sigue cayendo hacia abajo.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-su.webp',
+    imageAlt:
+      'Un gotero de suero colgado de un soporte metálico en una habitación de ' +
+      'hospital luminosa, con la bolsa transparente llena de líquido y un tubo que ' +
+      'da una vuelta en círculo antes de seguir cayendo.',
 
-    outline: '',
+    outline:
+      'M268,848Q263,838 252,824Q241,809 227,797Q342,762 404,700Q466,638 476,5' +
+      '53Q458,575 432,588Q406,601 376,601Q315,601 279,564Q243,526 242,471Q242' +
+      ',431 260,400Q278,369 310,351Q342,332 383,332Q415,332 439,342Q436,312 4' +
+      '33,280Q430,248 430,215Q348,218 270,224Q191,229 125,236Q58,243 12,252L0' +
+      ',189Q45,185 113,180Q180,175 262,171Q344,166 430,162L430,0L492,0L492,15' +
+      '9Q603,154 704,152Q805,149 869,151L865,215Q801,209 702,209Q602,208 492,' +
+      '212Q493,255 496,301Q498,347 500,389Q518,413 528,446Q538,479 538,519Q53' +
+      '8,632 466,719Q394,806 268,848ZM376,544Q408,544 430,525Q451,505 451,473' +
+      'Q451,446 448,418Q423,390 383,390Q349,390 326,412Q302,434 302,469Q303,5' +
+      '03 323,524Q343,545 376,544Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M9,214L862,183',
+      'M460,0L466,525L416,560L337,567L276,508L279,421L344,367L428,364L511,453L515,543L493,619L454,703L414,738L358,776L252,821',
+    ],
+    strokeViewBox: '0 0 869 848',
   },
   {
     id: 'se',
     character: 'せ',
     romaji: 'se',
     audio: 'hiragana/b2/audio/se.wav',
-    mnemonic: '',
-    strokeOrder: [],
+    mnemonic:
+      'Después de 3 días en Japón, tus rodillas no aguantan más esa forma de ' +
+      '**SE**ntarte con las piernas cruzadas, así que a escondidas coges un libro y ' +
+      'te sientas con las piernas estiradas: prefieres **SE**ntarte así para descansar.',
+    strokeOrder: [
+      'Un trazo horizontal, casi recto, de izquierda a derecha.',
+      'A la derecha, un trazo corto de arriba abajo que remata en un gancho ' +
+        'hacia la izquierda.',
+      'A la izquierda, el trazo más largo: de arriba abajo y, cerca del final, ' +
+        'una curva que se extiende hacia la derecha.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-se.webp',
+    imageAlt:
+      'Una chica sentada en un cojín rojo con las piernas estiradas, leyendo un ' +
+      'libro sujeto con los dos brazos extendidos hacia delante, sobre un fondo claro.',
 
-    outline: '',
+    outline:
+      'M456,746Q376,746 329,732Q281,718 261,684Q241,650 241,590L241,318Q170,3' +
+      '25 110,334Q50,342 10,351L0,286Q44,279 106,272Q168,265 241,258L241,31L3' +
+      '03,31L303,252Q367,247 433,242Q499,236 562,232L562,0L625,0L625,228Q693,' +
+      '224 751,222Q808,220 848,221L848,286Q762,283 625,289L625,363Q625,408 60' +
+      '9,438Q592,467 553,483Q514,499 446,505Q443,490 437,473Q431,455 423,445Q' +
+      '506,443 534,424Q562,405 562,363L562,292Q499,296 433,301Q366,306 303,31' +
+      '2L303,585Q303,626 317,648Q331,669 365,677Q398,684 457,684Q490,684 536,' +
+      '681Q581,678 630,672Q678,665 718,656Q713,670 710,692Q706,714 706,725Q64' +
+      '5,735 576,741Q507,746 456,746Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M8,316L839,248',
+      'M589,0L594,404L535,457L441,475',
+      'M267,34L277,630L292,689L342,702L408,711L706,698',
+    ],
+    strokeViewBox: '0 0 848 746',
   },
   {
     id: 'ta',
@@ -595,16 +643,34 @@ export const HIRAGANA: Kana[] = [
     character: 'て',
     romaji: 'te',
     audio: 'hiragana/b2/audio/te.wav',
-    mnemonic: '',
-    strokeOrder: [],
+    mnemonic:
+      'Vas caminando por un antiguo pueblo japonés cuando levantas la vista y ves el ' +
+      '**TE**jado de un pequeño templo. Hay algo extraño en él: el borde comienza casi ' +
+      'recto, pero al llegar al extremo se vence y cae en una gran curva, como si el ' +
+      'peso de las tejas lo hubiera doblado con los años.',
+    strokeOrder: [
+      'Un único trazo: de arriba abajo con un giro hacia la izquierda, que baja ' +
+        'recto y remata en un gancho hacia arriba a la derecha.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-te.webp',
+    imageAlt:
+      'El borde de un tejado de templo japonés, de tejas grises, que empieza recto ' +
+      'y se vence en una gran curva hacia abajo, con cerezos en flor al fondo.',
 
-    outline: '',
+    outline:
+      'M623,765Q528,754 454,707Q379,659 337,586Q295,512 295,423Q295,372 314,3' +
+      '15Q333,257 372,203Q411,148 472,108Q408,119 340,132Q272,144 209,156Q146' +
+      ',167 96,177Q46,187 17,194L0,123Q33,120 89,112Q145,104 214,93Q283,82 35' +
+      '6,70Q429,57 498,44Q567,31 623,20Q679,8 712,0L729,67Q716,68 697,71Q677,' +
+      '74 652,79Q592,88 539,120Q486,152 446,200Q406,247 384,305Q361,362 361,4' +
+      '23Q361,505 402,564Q443,622 511,656Q579,690 660,700Q649,713 638,732Q627' +
+      ',751 623,765Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M6,148L713,33L481,132L366,264L331,420L328,495L357,553L387,608L453,656L514,703L578,723L635,737',
+    ],
+    strokeViewBox: '0 0 729 765',
   },
   {
     id: 'na',
@@ -707,16 +773,36 @@ export const HIRAGANA: Kana[] = [
     character: 'ん',
     romaji: 'n',
     audio: 'hiragana/b2/audio/n.wav',
-    mnemonic: '',
-    strokeOrder: [],
+    mnemonic:
+      'Un perfil de cara de anime. La frente baja hasta la **NA**riz, y el contorno ' +
+      'continúa curvándose hacia la boca y la barbilla, siguiendo el trazo de ん.',
+    strokeOrder: [
+      'Un único trazo: una diagonal hacia abajo a la izquierda, y sin levantar ' +
+        'el pincel, una curva larga hacia la derecha que vuelve a subir y ' +
+        'remata enroscándose hacia la izquierda.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-n.webp',
+    imageAlt:
+      'Perfil de una chica de anime, con la frente, la nariz, la boca y la barbilla ' +
+      'formando una curva continua, al atardecer frente a un paisaje con cerezos y ' +
+      'una pagoda.',
 
-    outline: '',
+    outline:
+      'M62,796L0,769Q12,743 35,695Q58,647 89,585Q119,523 153,454Q187,384 221,' +
+      '315Q255,245 286,183Q317,121 342,73Q367,25 381,0L444,29Q428,53 403,97Q3' +
+      '78,141 348,198Q318,254 286,318Q254,382 222,447Q255,416 292,398Q329,380' +
+      ' 368,380Q433,380 458,418Q483,455 483,525Q483,541 482,569Q480,596 480,6' +
+      '13Q480,671 496,692Q511,713 554,713Q613,713 662,661Q711,608 744,517Q755' +
+      ',529 771,543Q787,556 797,564Q747,669 687,723Q627,777 547,777Q478,777 4' +
+      '49,743Q419,708 419,628Q419,620 420,603Q420,585 421,566Q422,547 422,535' +
+      'Q422,486 407,463Q391,440 353,440Q311,440 271,463Q231,485 200,520Q168,5' +
+      '55 151,593Q119,662 97,713Q74,763 62,796Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M404,21L31,770L300,415L418,412L455,560L469,696L492,744L579,740L694,678L772,546',
+    ],
+    strokeViewBox: '0 0 797 796',
   },
   {
     id: 'mo',
