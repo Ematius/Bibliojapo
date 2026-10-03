@@ -212,7 +212,7 @@ export const HIRAGANA: Kana[] = [
     id: 'shi',
     character: 'し',
     romaji: 'shi',
-    audio: 'hiragana/b2/audio/shi.wav',
+    audio: 'hiragana/b3/audio/shi.wav',
     mnemonic:
       'Vas caminando por un campo japonés y ves algo tirado en el suelo: una ' +
       'seta enorme, caída y a punto de pudrirse. Estando en Japón, solo puede ' +
@@ -225,7 +225,7 @@ export const HIRAGANA: Kana[] = [
         'gancho — el sombrero vencido del shiitake.',
     ],
 
-    image: 'hiragana/b2/images/hiragana-shi.webp',
+    image: 'hiragana/b3/images/hiragana-shi.webp',
     imageAlt:
       'Un shiitake enorme visto desde abajo, con el tronco recto y el sombrero ' +
       'vencido hacia un lado, como si acabara de caer al suelo.',
@@ -243,7 +243,7 @@ export const HIRAGANA: Kana[] = [
     id: 'ru',
     character: 'る',
     romaji: 'ru',
-    audio: 'hiragana/b2/audio/ru.wav',
+    audio: 'hiragana/b3/audio/ru.wav',
     mnemonic:
       'En Japón se llega a los santuarios por **RU**tas marcadas, y una buena ' +
       '**RU**ta japonesa no es una carretera cualquiera: baja recta, gira, y al ' +
@@ -257,7 +257,7 @@ export const HIRAGANA: Kana[] = [
         'termina enroscada en el círculo del final.',
     ],
 
-    image: 'hiragana/b2/images/hiragana-ru.webp',
+    image: 'hiragana/b3/images/hiragana-ru.webp',
     imageAlt:
       'Un camino de grava visto desde arriba que baja desde un torii entre ' +
       'arces y cerezos y termina rodeando en círculo un pequeño templete.',

@@ -128,36 +128,36 @@ const MEDIA: Record<string, WordMedia> = {
       'ríe apoyada contra ella, en un salón luminoso con un osito de peluche al lado',
   },
   'aru': {
-    audio: 'hiragana/b2/audio/word/aru.wav',
-    image: 'hiragana/b2/images/imagesSupport/aru-exist.webp',
+    audio: 'hiragana/b3/audio/word/aru.wav',
+    image: 'hiragana/b3/images/imagesSupport/aru-exist.webp',
     imageAlt:
       'Un jarrón de porcelana con flores, solo en el centro de una sala de ' +
       'tatami con las puertas abiertas al jardín.',
   },
   'aru-2': {
-    audio: 'hiragana/b2/audio/word/aru-2.wav',
-    image: 'hiragana/b2/images/imagesSupport/aru-2-have.webp',
+    audio: 'hiragana/b3/audio/word/aru-2.wav',
+    image: 'hiragana/b3/images/imagesSupport/aru-2-have.webp',
     imageAlt:
       'Una chica en la calle de un santuario cargada con su bolso, un cuaderno, ' +
       'un paraguas y una bolsa, con una flecha señalando cada cosa que lleva.',
   },
   'iru': {
-    audio: 'hiragana/b2/audio/word/iru.wav',
-    image: 'hiragana/b2/images/imagesSupport/iru-be.webp',
+    audio: 'hiragana/b3/audio/word/iru.wav',
+    image: 'hiragana/b3/images/imagesSupport/iru-be.webp',
     imageAlt:
       'Un gato naranja sentado en el porche de madera de una casa japonesa, ' +
       'frente a un jardín con estanque.',
   },
   'iru-2': {
-    audio: 'hiragana/b2/audio/word/iru-2.wav',
-    image: 'hiragana/b2/images/imagesSupport/iru-2-need.webp',
+    audio: 'hiragana/b3/audio/word/iru-2.wav',
+    image: 'hiragana/b3/images/imagesSupport/iru-2-need.webp',
     imageAlt:
       'Una chica empapada bajo la lluvia junto a un santuario, tapándose la ' +
       'cabeza con una mano y alcanzando un paraguas del paragüero con la otra.',
   },
   'oishii': {
-    audio: 'hiragana/b2/audio/word/oishii.wav',
-    image: 'hiragana/b2/images/imagesSupport/oishii-delicious.webp',
+    audio: 'hiragana/b3/audio/word/oishii.wav',
+    image: 'hiragana/b3/images/imagesSupport/oishii-delicious.webp',
     imageAlt: 'Un cuenco de ramen humeante con chashu, huevo marinado y nori.',
   },
   // LOS DOS はし VAN CRUZADOS, y está bien: el temario intercambió sus ids. Antes
@@ -169,14 +169,14 @@ const MEDIA: Record<string, WordMedia> = {
   // `public/` y en el bucket— y se cambian estas rutas a la vez.
   'hashi': {
     // Los palillos, que antes eran `hashi-2`.
-    audio: 'hiragana/b2/audio/word/hashi-2.wav',
-    image: 'hiragana/b2/images/imagesSupport/hashi-2-chopsticks.webp',
+    audio: 'hiragana/b3/audio/word/hashi-2.wav',
+    image: 'hiragana/b3/images/imagesSupport/hashi-2-chopsticks.webp',
     imageAlt: 'Una mano sujetando unos palillos, cogiendo una pieza de sushi de nigiri.',
   },
   'hashi-2': {
     // El puente, que antes era `hashi`.
-    audio: 'hiragana/b2/audio/word/hashi.wav',
-    image: 'hiragana/b2/images/imagesSupport/hashi-bridge.webp',
+    audio: 'hiragana/b3/audio/word/hashi.wav',
+    image: 'hiragana/b3/images/imagesSupport/hashi-bridge.webp',
     imageAlt: 'Un puente rojo curvado sobre un estanque, entre cerezos en flor.',
   },
 }
