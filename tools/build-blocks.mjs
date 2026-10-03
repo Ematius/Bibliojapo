@@ -43,6 +43,12 @@ const COVER = {
       'Cinco vocales y un kana más. Son pocos, pero con ellos ya se escriben ' +
       'frases enteras: por eso は se adelanta a su sitio en la tabla tradicional.',
   },
+  b2: {
+    summary:
+      'Cinco kana más, y las dos rayitas que cambian el sonido de los que ya se ' +
+      'saben. Con ellos se escriben です y ます: de aquí en adelante una frase no ' +
+      'solo nombra cosas, también dice algo de ellas.',
+  },
 }
 
 // B1 NO SE TOCA: es el tomo gratuito, está publicado y sus seis lecciones tienen sus

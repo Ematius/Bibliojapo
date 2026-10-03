@@ -56,7 +56,8 @@ export const BLOCKS: Block[] = [
   {
     id: 'b2',
     title: 'Bloque 2 · ますてせん',
-    summary: '',
+    summary:
+      'Cinco kana más, y las dos rayitas que cambian el sonido de los que ya se saben. Con ellos se escriben です y ます: de aquí en adelante una frase no solo nombra cosas, también dice algo de ellas.',
     lessons: [
       { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ma', wordIds: ['ima', 'mai'] },
