@@ -201,18 +201,19 @@
   flex: 1;
   min-height: 0;
 
-  display: flex;
-  flex-direction: column;
-  // Arriba y sin centrar, igual que la portada de al lado: centrar una lista que no cabe la
-  // recorta por los DOS lados. Un pelo de holgura sobre lo que mide el contenido, porque
-  // quince frases en seis grupos caben justas y cualquier redondeo corta la última línea.
-  justify-content: flex-start;
-  gap: 1cqh;
+  // Dos columnas: con una sola, las frases de un tomo grande no caben en la hoja y se
+  // cortan. Un grupo nunca se parte entre columnas, así que el tema y sus frases siempre
+  // van juntos.
+  columns: 2;
+  column-gap: 4cqw;
+  column-fill: balance;
 
   &__group {
     display: flex;
     flex-direction: column;
     gap: 0.45cqh;
+    break-inside: avoid;
+    margin-bottom: 1cqh;
   }
 
   // El tema del grupo. Es el ancla que rompe el muro: de arriba abajo se leen seis, no quince.
