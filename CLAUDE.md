@@ -26,9 +26,16 @@ script vuelca a las tablas. El login con Google funciona, el dominio propio es
 `bibliojapo.app`, el SMTP propio de Resend está verificado, y borrar la cuenta ya se
 hace desde la pantalla — ver «Lo legal».
 
-**Lo que queda de esta fase**: escribir los tomos que faltan, uno a uno y ya en la
-red. La tubería está entera —tablas, funciones, volcado y bucket—, así que un tomo
-nuevo es contenido y nada más.
+**El temario de hiragana está reconstruido y volcado** (02-10-2026): pasó de 13
+bloques y 210 palabras a **18 bloques, 768 palabras y 156 frases**, con su gramática
+—G0 a G7— y sus formas conjugadas. `docs/FASE1_DEFINITIVO.md` es la fuente, y los
+`.ts` del temario se generan de ahí; ver «Qué hay que rellenar para un tomo nuevo».
+
+**Lo que queda de esta fase**: el ARTE de los tomos, uno a uno y ya en la red. El
+texto está escrito y comprobado entero; lo que falta de cada bloque son las fichas
+de sus kana, sus ilustraciones y sus audios. Hoy solo B1 los tiene, y por eso es el
+único publicado. La tubería está entera —tablas, funciones, volcado y bucket—, así
+que un tomo nuevo es dibujo y grabación, no código.
 
 **Las dos formas de entrar acaban en UNA cuenta**, comprobado el 26-09-2026: quien se
 registró con correo y después pulsa «Continuar con Google» con ese mismo correo
@@ -483,7 +490,7 @@ la base de datos. De ahí estas reglas, que valen desde la primera línea:
   Es la misma regla que ya lleva escrita `VolumeGate`.
 - **El SELLO sí lo escribe el cliente, y se acepta a conciencia** (23-09-2026). El
   examen se corrige en el navegador, así que quien abra la consola puede darse las
-  insignias de los trece tomos. Se decidió que da igual: lo único que se salta es su
+  insignias de los dieciocho tomos. Se decidió que da igual: lo único que se salta es su
   propio aprendizaje. El muro que importa es el del pago, y ese vive entero en el
   servidor. **No «arreglarlo»** subiendo la corrección de los exámenes: es trabajo
   grande, y la decisión ya está tomada.
@@ -782,8 +789,10 @@ Ahora el aspecto vive en `BookButton.scss` y cada hoja solo dice dónde va el su
 ## Contenido del curso
 
 Qué se enseña, en qué orden, con qué vocabulario y qué frases vive en su propio
-documento: `docs/estructura-aprendizaje.md`. No se carga solo — se pide cuando
-haga falta consultarlo, para no gastar tokens de sesión con él si no toca.
+documento, uno por fase: `docs/FASE1_DEFINITIVO.md` es el de hiragana —18 bloques,
+768 palabras, 156 frases— y los otros tres son de katakana, kanji y vocabulario.
+No se cargan solos, y NO se leen enteros: se pide la sección que haga falta, porque
+cada uno se lleva por delante media sesión de tokens.
 
 Ese archivo es la referencia del contenido y va a cambiar a menudo. CLAUDE.md no:
 aquí solo están las reglas que se derivan de él.
@@ -815,6 +824,8 @@ hiragana como en katakana o kanji. Por eso viven en sitios distintos.
 src/
   content/            ← el temario, un subdirectorio por pasillo
     types.ts          ← Kana, Word, Lesson, Sentence, Grammar, Block
+    conjugations.ts   ← los sufijos del N5 y las nueve filas de kana. No es de ningún
+                        pasillo: un verbo conjuga igual en hiragana que en kanji
     hiragana/
       kana.ts         ← la ficha de cada kana: trazos, mnemotecnia, audio
       vocabulary.ts   ← las palabras, con su audio y su color o su dibujo
@@ -892,8 +903,11 @@ apagados, y al pulsarlos dan un tirón y dicen qué les falta. Ver `VolumeAccess
 ### Dónde se posa un tomo tampoco se escribe a mano
 
 `shelfGrid.ts` tiene la estantería pintada medida una sola vez —cuatro baldas, dos
-vanos limpios en cada una— y `placeVolumes` reparte la colección por orden: llena
-un vano, pasa al siguiente, y al agotar los dos de una balda baja a la de abajo.
+vanos limpios en cada una, doce en total— y `placeVolumes` REPARTE la colección
+entre todos: con dieciocho tomos salen seis vanos de dos y seis de uno, y las cuatro
+baldas quedan pobladas. Llenando un vano y pasando al siguiente, los dieciocho
+entraban en seis y la balda de abajo se quedaba vacía. `volumesPerBay` es el tope de
+cada vano, no el reparto.
 
 De ahí salen el centro del lomo, la balda y el alto de cada tomo. **Ninguno de los
 tres se escribe**, igual que no se escribe una página suelta: si hiciera falta
@@ -901,34 +915,76 @@ recolocar la estantería entera se tocan los números del mueble, no los tomos.
 
 ### Las páginas se generan, nunca se escriben a mano
 
-`kanaSpreads(kanaId, wordId, wordId2)` devuelve las nueve planas de una lección:
-siete de estudio, un repaso sorteado entre ellas y el examen. `buildVolumePages`
-las encadena para todas las lecciones del bloque, pone la portada delante y el
-examen final detrás, y numera de corrido. Cada lección son 18 páginas; seis son
-108, más la portada y el examen final.
+`kanaSpreads(kanaId, wordIds)` devuelve las nueve planas de una lección: siete de
+estudio, un repaso sorteado entre ellas y el examen. Sin palabras devuelve solo dos
+—ver arriba—. `buildVolumePages` encadena las lecciones Y las reglas del bloque EN
+EL ORDEN DEL TEMARIO, pone la portada delante y el examen final detrás, y numera de
+corrido. Cada lección son 18 páginas; seis son 108, más la portada y el examen.
 
 **Nunca escribir una página suelta con su `kanaId` y su `wordId` puestos a mano.**
 Un ejercicio nuevo se añade a `kanaSpreads` y aparece en todos los tomos a la vez.
 
-### Una lección entra solo si está COMPLETA
+### Un tomo se publica cuando se puede LEER ENTERO
 
-`VolumeReader` deja fuera la lección cuyo contenido no esté listo —mirando el
-paquete que le llega, no el temario—, y hacen falta
-las tres cosas:
+`published` no significa «alguien escribió su entrada»: significa que el tomo se
+puede leer de principio a fin. Lo decide `isComplete` en `scripts/seed-content.mjs`,
+y por cada lección de kana hacen falta las tres cosas:
 
 - la ficha del kana en `kana.ts` —mnemotecnia, trazos, ilustración, audio—;
-- el audio de su palabra;
+- el audio de cada palabra con la que se enseña;
 - la representación de esa palabra: `swatch` si es un color, `image` si no.
 
-Media lección son planas en blanco, y quien lee no distingue una página vacía de
-una rota. Así el tomo crece según se va cerrando el contenido, en vez de exigir el
-bloque entero para poder abrirse.
+Si se publicara por tener entrada, con el temario entero escrito de golpe se
+abrirían dieciocho tomos y diecisiete saldrían en blanco. Y quien lee no distingue
+una página vacía de una rota: un tomo que dice «todavía no» es mejor que uno que se
+abre y no tiene nada.
+
+**Una lección sin palabras cuenta como completa.** ぺ no aparece en ninguna de las
+768 palabras del temario, y exigírselas habría dejado B17 sin publicar para siempre
+por un solo carácter. `kanaSpreads` le da las dos planas que no necesitan
+vocabulario —el dibujo mnemotécnico y la pauta de escritura— y queda fuera del
+repaso y de los exámenes, que es la mitad honesta: no hay palabra de la que
+examinar.
+
+### Una lección puede ser un KANA o una REGLA
+
+`Lesson.type` dice cuál de las dos. Una de gramática no trae carácter ni palabras:
+trae `grammarId`, y su plana sale de la regla.
+
+- **El orden de `block.lessons` es lo único que coloca las planas.** La de una regla
+  cae donde el temario la ancló, no detrás del kana del que habla — です no es un
+  carácter y antes no tenía dónde ponerse.
+- **Una regla no necesita una frase.** Las de ortografía se ven dentro de una frase
+  del tomo; las de gramática se explican con su tabla, y ninguna frase las nombra.
+- **La del dakuten reaparece** en cada bloque que estrene alguno, con los de ESE
+  tomo. Por eso se ancla al bloque y no a una frase: de una frase colgaría una vez.
+- **Los contadores filtran por `tipo = 'kana'`.** Una lección de gramática no enseña
+  ningún carácter, y contarla inflaría el carné con kana que nadie ha visto.
+
+### Un verbo es UNA fila, y sus formas se generan
+
+します y しました no son vocabulario: son la raíz del verbo más un sufijo. Crearlas
+como palabras llenaría el temario de entradas que nadie ha escrito.
+
+Los sufijos viven en `content/conjugations.ts` y **es la única lista que hay**: la
+leen el generador y el segmentador, y el volcado la sube a la tabla. Escrita dos
+veces se desincroniza en cuanto alguien corrija una — ya pasó.
+
+**Una forma llega cuando se puede LEER, no cuando vendría bien.** El pasado de un
+adjetivo-い necesita っ, que no se enseña hasta B17, así que espera ahí por tarde que
+sea. Lo decide `bloque_min`, comparado contra el puesto del bloque en la CADENA
+entera —`(aisle_id, position)`—, nunca como texto: `b10` va detrás de `b3` en el
+recorrido y delante alfabéticamente.
 
 ### Qué hay que rellenar para un tomo nuevo
 
-1. `content/hiragana/blocks.ts` → una entrada de `Block`: `title`, `summary`,
-   `lessons` (cada kana con la palabra con la que se enseña), `wordIds`,
-   `sentenceIds`.
+0. `docs/FASE1_DEFINITIVO.md` → el bloque entero: sus kana, sus dakuten, su
+   vocabulario y sus frases. **Es la fuente, y lo demás se genera de ahí.**
+1. `node tools/build-blocks.mjs`, `build-vocabulary.mjs` y `build-sentences.mjs` →
+   reescriben `blocks.ts`, `vocabulary.ts` y `sentences.ts`. Esos tres llevan
+   GENERADO en la cabecera y **no se tocan a mano**: lo que se escriba en ellos se
+   pierde en el siguiente build. Los comprobadores —`check-romaji`,
+   `check-sentences`, `check-blocks`— dicen qué no cuadra antes de escribir nada.
 2. `content/hiragana/kana.ts` → la ficha de cada kana nuevo. Los trazos y la
    silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
 3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
@@ -937,7 +993,7 @@ bloque entero para poder abrirse.
 4. `npm run seed:content` → hasta que no se vuelca, el tomo no existe para la app.
    Es el paso que se olvida, porque en `content/` ya se ve escrito y completo.
 5. Nada en la estantería: el tomo ya está, porque su bloque ya figura en
-   `BLOCK_PLAN`. Un bloque nuevo fuera de los trece se añade ahí, y la rejilla lo
+   `BLOCK_PLAN`. Un bloque nuevo fuera de los dieciocho se añade ahí, y la rejilla lo
    posa en el primer hueco libre.
 
 ### Qué hay que rellenar para un PASILLO nuevo
@@ -981,8 +1037,8 @@ Nada más: ningún componente, ninguna página, ningún ejercicio.
 Cada tomo tiene su lomo, su tapa y su tapa girada, en `aisle/shelf/volumeArt.ts`,
 por orden: la primera entrada es la del tomo 1. Son tres imágenes por tomo —lomo,
 tapa y tapa girada— recortadas a su silueta en `books/volumes/`: doce juegos para
-TRECE bloques, así que el tomo 13 enseña de momento las tapas del 12 —lo resuelve un
-`Math.min` en `shelfConfig.ts`— hasta que se le rendericen las suyas. Los renders originales sin recortar se quitaron de `public/` para no
+DIECIOCHO bloques, así que del 13 al 18 enseñan de momento las tapas del 12 —lo
+resuelve un `Math.min` en `shelfConfig.ts`— hasta que se les rendericen las suyas. Los renders originales sin recortar se quitaron de `public/` para no
 desplegarlos; si hay que recortar uno otra vez, se recupera del historial de git
 (`public/images/hallways/books/moreBoks/`).
 
@@ -1015,7 +1071,7 @@ tarjeta tiene que ser reconocerla, no adivinar.
 ## Ejercicios
 
 Los diez tipos —qué aparece, qué hace el usuario y para qué sirve cada uno— están
-en el anexo de `docs/estructura-aprendizaje.md`. Cada uno se escribe UNA sola vez
+en el anexo de `docs/FASE1_DEFINITIVO.md`. Cada uno se escribe UNA sola vez
 y vale para cualquier pasillo; hoy viven en `aisle/book/`, y se moverán a
 `src/exercises/` cuando haya un segundo pasillo.
 

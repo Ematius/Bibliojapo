@@ -744,7 +744,14 @@ export const HIRAGANA: Kana[] = [
       'horizontales en la parte superior. El poste central baja atravesándolos y, ' +
       'al llegar abajo, una gruesa cuerda se enrolla formando el círculo de ま y ' +
       'sale ligeramente hacia la derecha.',
-    strokeOrder: [],
+    strokeOrder: [
+      'De izquierda a derecha, el travesaño de arriba.',
+      'De izquierda a derecha, el travesaño de abajo, algo más largo que el ' +
+        'primero.',
+      'El poste central: de arriba abajo atravesando los dos travesaños, y sin ' +
+        'levantar el pincel, la cuerda que se enrolla en círculo al llegar abajo y ' +
+        'sale ligeramente hacia la derecha.',
+    ],
 
     image: 'hiragana/b2/images/hiragana-ma.webp',
     imageAlt:
@@ -752,10 +759,28 @@ export const HIRAGANA: Kana[] = [
       'horizontales cruzándolo arriba y una gruesa cuerda enrollada en círculo en ' +
       'la base, saliendo ligeramente hacia la derecha.',
 
-    outline: '',
+    outline:
+      'M141,818Q70,816 35,780Q-1,743 0,697Q0,649 45,613Q90,577 173,579Q196,57' +
+      '9 220,581Q244,583 267,587Q266,552 265,509Q263,465 261,415Q212,418 163,' +
+      '418Q121,418 95,411Q68,404 51,387Q33,369 18,340L70,313Q85,341 105,350Q1' +
+      '24,358 164,358Q211,358 260,355Q259,318 258,279Q257,240 256,200Q185,204' +
+      ' 119,206Q53,208 14,207L11,144Q44,147 112,146Q179,145 255,141Q255,106 2' +
+      '55,71Q254,35 254,0L317,0Q317,34 317,69Q317,103 318,137Q383,132 439,126' +
+      'Q495,119 524,112L524,174Q496,180 440,186Q384,191 318,196Q319,236 320,2' +
+      '75Q320,313 321,351Q380,346 431,338Q481,329 513,319L514,383Q479,391 429' +
+      ',399Q379,406 323,411Q325,467 327,516Q328,564 329,601Q399,619 464,650Q5' +
+      '28,681 582,719Q577,722 568,735Q559,747 551,760Q542,772 540,777Q497,741' +
+      ' 444,712Q390,682 331,663Q332,672 332,679Q332,685 332,689Q332,725 312,7' +
+      '56Q292,786 250,803Q208,820 141,818ZM143,759Q212,761 241,739Q269,717 26' +
+      '9,688Q269,681 269,671Q269,660 268,647Q217,635 167,635Q114,635 88,654Q6' +
+      '1,672 61,698Q61,720 81,739Q101,757 143,759Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M12,174L275,172L520,143',
+      'M46,334L98,384L250,384L408,375L513,355',
+      'M282,2L300,627L298,719L268,761L207,789L124,782L71,775L28,710L50,647L101,609L166,606L250,611L367,637L417,665L480,692L560,744',
+    ],
+    strokeViewBox: '0 0 582 818',
   },
   {
     id: 'yo',
