@@ -514,7 +514,7 @@ export const HIRAGANA: Kana[] = [
     id: 'su',
     character: 'す',
     romaji: 'su',
-    audio: '',
+    audio: 'hiragana/b2/audio/su.wav',
     mnemonic: '',
     strokeOrder: [],
 
@@ -530,7 +530,7 @@ export const HIRAGANA: Kana[] = [
     id: 'se',
     character: 'せ',
     romaji: 'se',
-    audio: '',
+    audio: 'hiragana/b2/audio/se.wav',
     mnemonic: '',
     strokeOrder: [],
 
@@ -594,7 +594,7 @@ export const HIRAGANA: Kana[] = [
     id: 'te',
     character: 'て',
     romaji: 'te',
-    audio: '',
+    audio: 'hiragana/b2/audio/te.wav',
     mnemonic: '',
     strokeOrder: [],
 
@@ -706,7 +706,7 @@ export const HIRAGANA: Kana[] = [
     id: 'n',
     character: 'ん',
     romaji: 'n',
-    audio: '',
+    audio: 'hiragana/b2/audio/n.wav',
     mnemonic: '',
     strokeOrder: [],
 
@@ -738,12 +738,19 @@ export const HIRAGANA: Kana[] = [
     id: 'ma',
     character: 'ま',
     romaji: 'ma',
-    audio: '',
-    mnemonic: '',
+    audio: 'hiragana/b2/audio/ma.wav',
+    mnemonic:
+      'Un viejo **MÁ**stil de barco visto frontalmente. Tiene dos travesaños ' +
+      'horizontales en la parte superior. El poste central baja atravesándolos y, ' +
+      'al llegar abajo, una gruesa cuerda se enrolla formando el círculo de ま y ' +
+      'sale ligeramente hacia la derecha.',
     strokeOrder: [],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b2/images/hiragana-ma.webp',
+    imageAlt:
+      'Un viejo mástil de barco de madera visto de frente, con dos travesaños ' +
+      'horizontales cruzándolo arriba y una gruesa cuerda enrollada en círculo en ' +
+      'la base, saliendo ligeramente hacia la derecha.',
 
     outline: '',
 

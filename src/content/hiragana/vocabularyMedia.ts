@@ -179,6 +179,63 @@ const MEDIA: Record<string, WordMedia> = {
     image: 'hiragana/b3/images/imagesSupport/hashi-bridge.webp',
     imageAlt: 'Un puente rojo curvado sobre un estanque, entre cerezos en flor.',
   },
+  'ima': {
+    audio: 'hiragana/b2/audio/word/ima.wav',
+    image: 'hiragana/b2/images/imagesSupport/ima-now.webp',
+    imageAlt:
+      'Un niño sonriente señalando con el dedo su propio reloj de pulsera, con ' +
+      'unas rayas de énfasis junto a la muñeca.',
+  },
+  'mai': {
+    audio: 'hiragana/b2/audio/word/mai.wav',
+    image: 'hiragana/b2/images/imagesSupport/mai-flat.webp',
+    imageAlt:
+      'Un abanico de hojas de papel y tarjetas de colores junto a una pila de ' +
+      'platos blancos, todos lisos y planos.',
+  },
+  'isu': {
+    audio: 'hiragana/b2/audio/word/isu.wav',
+    image: 'hiragana/b2/images/imagesSupport/isu-chair.webp',
+    imageAlt: 'Una silla escolar con asiento y respaldo de madera clara sobre patas metálicas.',
+  },
+  'osu': {
+    audio: 'hiragana/b2/audio/word/osu.wav',
+    image: 'hiragana/b2/images/imagesSupport/osu-push.webp',
+    imageAlt:
+      'Una mano con el dedo índice presionando un botón rojo grande, con rayas ' +
+      'de énfasis alrededor.',
+  },
+  'te': {
+    audio: 'hiragana/b2/audio/word/te.wav',
+    image: 'hiragana/b2/images/imagesSupport/te-hand.webp',
+    imageAlt: 'Una mano abierta mostrando la palma y los cinco dedos extendidos.',
+  },
+  'sei': {
+    audio: 'hiragana/b2/audio/word/sei.wav',
+    image: 'hiragana/b2/images/imagesSupport/sei-height.webp',
+    imageAlt:
+      'Un niño sonriente de pie bajo un medidor de estatura, con rayas de ' +
+      'énfasis sobre la cabeza.',
+  },
+  'sen': {
+    audio: 'hiragana/b2/audio/word/sen.wav',
+    image: 'hiragana/b2/images/imagesSupport/sen-thousand.webp',
+    imageAlt:
+      'Un cubo formado por cientos de cubitos amarillos apilados, con el ' +
+      'número 1000 flotando encima.',
+  },
+  'en': {
+    audio: 'hiragana/b2/audio/word/en.wav',
+    image: 'hiragana/b2/images/imagesSupport/en-yen.webp',
+    imageAlt:
+      'Varios billetes japoneses de distinto valor en abanico, con monedas ' +
+      'delante y un símbolo de yen grande al lado.',
+  },
+  'han': {
+    audio: 'hiragana/b2/audio/word/han.wav',
+    image: 'hiragana/b2/images/imagesSupport/han-half.webp',
+    imageAlt: 'Una manzana roja cortada en dos mitades iguales, una junto a la otra.',
+  },
 }
 
 // Se la pega a las palabras generadas. Una palabra sin media se queda como está: el
