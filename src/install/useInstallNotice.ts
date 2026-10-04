@@ -1,12 +1,6 @@
-import { useEffect, useState } from 'react'
-import { isAppInstalled, markAppInstalled } from './installPreference'
-
-// Lo que Chrome lanza cuando la app ya se puede instalar. Se guarda para lanzarlo desde el
-// botón del aviso: el navegador no deja pedirlo en cualquier otro momento.
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
-}
+import { useState, useSyncExternalStore } from 'react'
+import { isAppInstalled } from './installPreference'
+import { getInstallPrompt, subscribeInstallPrompt } from './installPrompt'
 
 export type InstallMode = 'hidden' | 'android' | 'ios'
 
@@ -34,28 +28,11 @@ export function useInstallNotice() {
     () => isTouchScreen() && !isInstalled() && !isAppInstalled(),
   )
   const [ios] = useState(isIos)
-  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null)
+  // El evento lo recoge `installPrompt.ts` desde que arranca la app, así que llega aunque
+  // Chrome lo lanzara antes de que este aviso existiera.
+  const deferred = useSyncExternalStore(subscribeInstallPrompt, getInstallPrompt)
   // Cerrado solo para esta entrada: al volver a la entrada el aviso se monta de nuevo.
   const [closed, setClosed] = useState(false)
-
-  useEffect(() => {
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault()
-      setDeferred(event as BeforeInstallPromptEvent)
-    }
-    // Lo lanza el navegador cuando la instalación se completa, también si se hizo desde su
-    // menú: es lo único que marca la app como instalada.
-    const onInstalled = () => {
-      markAppInstalled()
-      setClosed(true)
-    }
-    window.addEventListener('beforeinstallprompt', onBeforeInstall)
-    window.addEventListener('appinstalled', onInstalled)
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstall)
-      window.removeEventListener('appinstalled', onInstalled)
-    }
-  }, [])
 
   let mode: InstallMode = 'hidden'
   if (eligible && !closed) {
