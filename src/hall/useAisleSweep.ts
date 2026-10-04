@@ -35,8 +35,8 @@ export function useAisleSweep(stageRef: RefObject<HTMLDivElement | null>) {
 
       tl.set(sweepEl, { xPercent: fromRight ? 100 : -100, autoAlpha: 1 })
 
-      // Se anima `x` en píxeles y no `xPercent` porque el stage ya usa xPercent para
-      // centrarse; tocarlo lo descolocaría.
+      // Se anima `x` en píxeles y no `xPercent` porque esa misma `x` la lleva el paneo del
+      // dedo (`shared/useScenePan.ts`), y mezclar las dos unidades descolocaría la escena.
       //
       // Se suma a la `x` que haya: la escena se puede haber recorrido a mano antes de
       // elegir pasillo, y un destino absoluto la traería de vuelta de un latigazo.

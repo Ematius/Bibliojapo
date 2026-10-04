@@ -9,9 +9,9 @@ interface ScenePanOptions {
   landing?: 'center' | 'left'
 }
 
-// Se anima `x` y nunca el `transform`: hay stages que se centran con un `translate` de
-// media caja, que GSAP guarda como `xPercent`, y escribir el transform entero los
-// descentraría.
+// Se anima `x` y nunca el `transform` entero: en esa misma propiedad escribe el barrido del
+// vestíbulo, y escribirla a pelo se lo llevaría por delante. El centrado de la escena NO está
+// aquí: va en márgenes, en `styles/_stage.scss`, así que una `x` de 0 es el centro.
 export function useScenePan(
   stageRef: RefObject<HTMLElement | null>,
   { landing = 'center' }: ScenePanOptions = {},

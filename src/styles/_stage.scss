@@ -9,13 +9,20 @@
 //
 // El fallback de `--vh` se queda: `useVh` lo escribe en el primer efecto, y sin él el primer
 // fotograma de la primera carga se calcularía con la variable vacía.
+// El centrado va en MÁRGENES y no en `translate(-50%, -50%)`: el `transform` de este elemento
+// es de GSAP —el paneo del dedo y el barrido al elegir pasillo—, y basta con que lo escriba
+// una vez sin la parte en porcentaje para que la escena se vaya media pantalla a la derecha y
+// deje el fondo al descubierto. Con márgenes, una `x` de 0 siempre es el centro.
 @mixin scene-stage($width: 1672, $height: 941) {
+  --scene-width: max(100vw, calc(var(--vh, 1vh) * 100 * #{$width} / #{$height}));
+
   position: absolute;
   top: 50%;
   left: 50%;
   aspect-ratio: #{$width} / #{$height};
-  width: max(100vw, calc(var(--vh, 1vh) * 100 * #{$width} / #{$height}));
-  transform: translate(-50%, -50%);
+  width: var(--scene-width);
+  margin-left: calc(var(--scene-width) / -2);
+  margin-top: calc(var(--scene-width) * #{$height} / #{$width} / -2);
   overflow: hidden;
 }
 
