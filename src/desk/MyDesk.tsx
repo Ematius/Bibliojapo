@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { openAccountPanel } from '../account/accountPanelState'
 import { useSession } from '../account/useSession'
 import { onApiChange } from '../api/apiChanges'
+import { mediaUrls } from '../api/media'
 import { fetchBadges, fetchJourney, type Badge, type JourneyTrack } from '../api/progress'
 import { RotateNotice } from '../shared/RotateNotice'
 import { SiteNav } from '../shared/SiteNav'
@@ -108,10 +109,7 @@ export function MyDesk() {
   // llegada de las insignias —si no, cerrar el tomo 2 antes de que el 1 responda las
   // colaría delante—. Un tomo sin arte todavía —ver `animePages.ts`— no aporta páginas, y
   // no rompe nada: el álbum sigue creciendo solo en cuanto esas páginas existan.
-  //
-  // Memorizado: el álbum vuelve a montar page-flip cada vez que la lista cambia de
-  // referencia, y esta pantalla se repinta con cada objeto que se levanta.
-  const animeChapters = useMemo<AnimeChapter[]>(() => {
+  const chapterPaths = useMemo(() => {
     const passedIds = new Set((Array.isArray(badges) ? badges : []).map((badge) => badge.blockId))
     return BLOCK_PLAN.flatMap((blockId, index) => {
       const images = ANIME_PAGES[blockId]
@@ -119,6 +117,35 @@ export function MyDesk() {
       return [{ blockId, volumeNumber: index + 1, images }]
     })
   }, [badges])
+
+  // Del bloque 2 en adelante las páginas son claves del bucket, no rutas del despliegue, así
+  // que hay que pedirles su URL antes de ponerlas en un `src`.
+  const [pageUrls, setPageUrls] = useState<ReadonlyMap<string, string>>(new Map())
+
+  useEffect(() => {
+    if (!chapterPaths.length) return
+
+    let current = true
+
+    void mediaUrls(chapterPaths.flatMap((chapter) => chapter.images)).then((urls) => {
+      if (current) setPageUrls(urls)
+    })
+
+    return () => {
+      current = false
+    }
+  }, [chapterPaths])
+
+  // Un tomo entra en el álbum cuando TODAS sus páginas tienen ya URL: media resuelta sería
+  // media rota en pantalla, y page-flip vuelve a montarse con cada cambio de esta lista.
+  const animeChapters = useMemo<AnimeChapter[]>(
+    () =>
+      chapterPaths.flatMap((chapter) => {
+        const images = chapter.images.flatMap((path) => pageUrls.get(path) ?? [])
+        return images.length === chapter.images.length ? [{ ...chapter, images }] : []
+      }),
+    [chapterPaths, pageUrls],
+  )
 
   // Va DESPUÉS de todos los hooks: cortar antes cambiaría cuántos se llaman al girar la
   // pantalla. La mesa se queda pintada detrás, sin objetos ni invitación.
