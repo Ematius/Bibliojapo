@@ -4,6 +4,7 @@ import { IntroVideo } from './IntroVideo'
 import { getAlwaysIntro, hasSeenIntro } from './introPreference'
 import { prefersReducedMotion } from '../shared/prefersReducedMotion'
 import { LoadingScreen } from '../shared/LoadingScreen'
+import { InstallNotice } from '../install/InstallNotice'
 
 // El video no espera al trozo de la entrada: se monta ya y se descarga mientras el otro carga
 // detrás, y el fundido solo se hace cuando la entrada avisa de que está lista.
@@ -33,6 +34,9 @@ export function HomeRoute() {
       <IntroToggle />
 
       {playing && <IntroVideo entranceReady={entranceReady} onDone={handleDone} />}
+
+      {/* Después de la intro: el aviso no compite con el video de apertura. */}
+      {!playing && <InstallNotice />}
     </>
   )
 }

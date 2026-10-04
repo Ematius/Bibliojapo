@@ -1,0 +1,74 @@
+// El aviso de instalar: un velo sobre la entrada y un papel encima. El color va declarado en
+// el panel para que el modo oscuro del sistema no lo vuelva blanco.
+
+.install-notice {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(26, 18, 8, 0.82);
+
+  &__panel {
+    display: grid;
+    gap: 1rem;
+    max-width: 26rem;
+    padding: 1.75rem 1.5rem;
+    border: 2px solid var(--color-brass);
+    border-radius: 6px;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  &__button {
+    min-height: 44px;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid var(--color-brass);
+    border-radius: 4px;
+    background: var(--color-brass);
+    color: var(--color-ink);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter var(--duration-fast) var(--ease-book);
+
+    &:hover,
+    &:focus-visible {
+      filter: brightness(1.08);
+    }
+
+    // Lo que no es lo que se quiere: se ve como opción, sin competir con instalar.
+    &--quiet {
+      background: transparent;
+      color: var(--color-ink);
+      border-color: transparent;
+      font-weight: 400;
+    }
+  }
+}
