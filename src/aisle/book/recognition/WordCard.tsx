@@ -14,8 +14,31 @@ interface WordCardProps {
 // Qué destacar no lo decide este componente: destaca lo que coincida con el kana que se está
 // estudiando, así que la misma hoja sirve para cualquier kana de cualquier pasillo.
 export function WordCard({ word, kana }: WordCardProps) {
+  // El color manda sobre el dibujo, igual que en `WordPrompt`: a una palabra que ES un
+  // color, ilustrarla sería decir lo mismo dos veces.
+  const swatch = word.swatch
+  const image = !swatch ? word.image : undefined
+
   return (
     <div className="word-card">
+      {/* Lo que la palabra significa, visto antes de leerla. Esta hoja es su DEBUT, y
+          las cinco planas siguientes la reconocen y la escriben: sin saber de qué habla,
+          lo único que se practica en ellas es copiar caracteres.
+
+          No destripa nada que no dijera ya el significado escrito justo debajo. */}
+      {swatch ? (
+        <span
+          className="word-card__swatch"
+          style={{ background: swatch }}
+          role="img"
+          aria-label={word.meaning}
+        />
+      ) : null}
+
+      {image ? (
+        <img className="word-card__image" src={image} alt={word.imageAlt ?? word.meaning} />
+      ) : null}
+
       <p className="word-card__word" lang="ja">
         {word.units.map((unit, index) => (
           <span
