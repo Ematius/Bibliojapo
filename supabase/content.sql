@@ -513,6 +513,15 @@ begin
       from public.grammar g
       where g.aisle_id = target.aisle_id
         and g.id in (
+          -- Las que el temario ANCLA a una lección del bloque. Sin esta mitad, una
+          -- regla que ninguna frase nombra no llega nunca: `desu` y `masu` no los
+          -- apunta ninguna frase, y el lector descarta la regla que no recibe, así
+          -- que el tomo pasaba de los kana al examen sin explicar la conjugación que
+          -- ese examen pide.
+          select l.grammar_id from public.lessons l
+          where l.block_id = target.id
+            and l.grammar_id is not null
+          union
           select s.grammar_id from public.sentences s
           where s.aisle_id = target.aisle_id
             and s.id = any(target.sentence_ids)
