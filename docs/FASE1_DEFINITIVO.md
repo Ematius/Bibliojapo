@@ -327,14 +327,23 @@ dakuten nuevos, con el ejemplo de ese bloque, no un texto copiado.
 > «yo me encuentro», «tú te encuentras» y «él se encuentra». Solo cambian por
 > **tiempo** y por **afirmativo/negativo**.
 >
-> Cada verbo tiene una **raíz**:
+> Lo que se conjuga no es el verbo entero: es su **raíz**, y hay que sacarla.
+> あう, いう y すう acaban los tres en う —la marca del verbo sin conjugar—, y
+> esa う se cambia por い. Cambia solo el último carácter.
 >
-> | Verbo | Raíz | +ます | +ません |
+> | Verbo | Raíz · う → い | +ます | +ません |
 > |---|---|---|---|
 > | あう (encontrarse) | あい | あいます | あいません |
 > | いう (decir) | いい | いいます | いいません |
+> | すう (fumar) | すい | すいます | すいません |
 >
-> Fíjate: son los verbos que ya aprendiste en B1. No hay palabra nueva.
+> No es una regla de la う: es la tabla u→i de §2.3 entera —todo verbo acaba en
+> un carácter que suena con «u» y pasa al de su familia con «i»—. Los otros dos
+> grupos —ichidan, que pierde su última sílaba, y los irregulares— se nombran
+> pero no se ejemplifican: たべる y する piden kana que B2 no ha dado.
+>
+> Los tres verbos ya están en el temario: あう e いう son de B1 y すう es de B2.
+> No hay palabra nueva.
 
 **G3 · El pasado — B5**
 

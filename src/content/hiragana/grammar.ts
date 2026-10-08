@@ -147,13 +147,27 @@ export const GRAMMAR: Grammar[] = [
       'Los verbos japoneses no cambian según quién habla: あいます vale para «me ' +
       'encuentro», «te encuentras» y «se encuentra». Solo cambian por dos cosas: el ' +
       'tiempo y si son afirmativos o negativos.\n\n' +
-      'Cada verbo tiene una raíz. A esa raíz se le pega la terminación. Y los dos verbos ' +
-      'de la tabla ya los conoces: son de tu primer tomo.',
+      'Lo que se conjuga no es el verbo entero: es su raíz, y hay que sacarla. Mira ' +
+      'あう e いう, de tu primer tomo, y すう: los tres acaban en う. Esa う es la marca ' +
+      'del verbo sin conjugar, y para tener la raíz se cambia por い: あう → あい, ' +
+      'いう → いい, すう → すい. Cambia solo el último carácter; lo de delante se ' +
+      'queda igual. A esa raíz se le pega ます o ません.\n\n' +
+      'No es una regla de la う: todos los verbos acaban en un carácter que suena con ' +
+      '«u», y en todos ese carácter pasa al de su familia que suena con «i». Con los ' +
+      'que terminen en otro harás lo mismo.\n\n' +
+      'Hay un segundo tipo de verbo que forma la raíz quitando su última sílaba en vez ' +
+      'de cambiarla, y dos que no siguen ninguna regla. Llegan en tomos siguientes, con ' +
+      'los caracteres que hacen falta para leerlos.',
     // La primera fila es la CABECERA, y la plana la pinta como tal.
+    //
+    // Los tres verbos acaban en う, y no es pereza: enseñar aquí otra terminación pide
+    // kana que este tomo no ha dado —おす → おします necesita し, de B3—, y un ejemplo que
+    // no se puede leer esconde la regla en vez de enseñarla.
     examples: [
-      { label: 'Verbo', forms: ['Raíz', '+ ます', '+ ません'] },
+      { label: 'Verbo', forms: ['Raíz · う → い', '+ ます', '+ ません'] },
       { label: 'あう', forms: ['あい', 'あいます', 'あいません'] },
       { label: 'いう', forms: ['いい', 'いいます', 'いいません'] },
+      { label: 'すう', forms: ['すい', 'すいます', 'すいません'] },
     ],
   },
   {
