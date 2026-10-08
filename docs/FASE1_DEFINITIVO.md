@@ -317,7 +317,10 @@ dakuten que estrene él mismo.
 
 **G1 · La cópula です — B2**
 
-> **A は B です** = «A es B». です no es un verbo: enlaza dos cosas.
+> **A は B です** = «A es B»: es lo que en español hacen «ser» y «estar». Pero
+> no es un verbo, es un enlace, y no se conjuga: no tiene raíz ni terminaciones.
+> Es además la forma **cortés**, y ahí está su pareja con G2: です cierra lo que
+> algo ES y 〜ます lo que se HACE. Esa relación se dice, no se deja al contexto.
 > Se escribe で + す, y で es て con dakuten.
 > - いえです。 → Es una casa.
 > - あおいです。 → Es azul.
@@ -340,10 +343,12 @@ dakuten que estrene él mismo.
 > | いう (decir) | いい | いいます | いいません |
 > | すう (fumar) | すい | すいます | すいません |
 >
-> No es una regla de la う: es la tabla u→i de §2.3 entera —todo verbo acaba en
-> un carácter que suena con «u» y pasa al de su familia con «i»—. Los otros dos
-> grupos —ichidan, que pierde su última sílaba, y los irregulares— se nombran
-> pero no se ejemplifican: たべる y する piden kana que B2 no ha dado.
+> Con los acabados en う no hay **ni una excepción**, y la plana lo dice: un godan
+> en う siempre hace う→い. Tampoco hay verbos acabados en あ, え ni ん —todos
+> terminan en la línea «u», y cada uno pasa al de su familia con «i», que es la
+> tabla u→i de §2.3 entera—. Los otros dos grupos —ichidan, que PIERDE su última
+> sílaba, y los irregulares— se avisan pero no se ejemplifican: たべる y する piden
+> kana que B2 no ha dado.
 >
 > Los tres verbos ya están en el temario: あう e いう son de B1 y すう es de B2.
 > No hay palabra nueva.

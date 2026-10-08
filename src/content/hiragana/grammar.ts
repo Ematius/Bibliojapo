@@ -108,8 +108,12 @@ export const GRAMMAR: Grammar[] = [
     romaji: 'desu',
     title: 'です — «es»',
     explanation:
-      'A は B です significa «A es B». です no es un verbo: es el enlace que une dos ' +
-      'cosas.\n\n' +
+      'です es lo que en español hacen «ser» y «estar»: A は B です es «A es B». Pero ' +
+      'no es un verbo, es un ENLACE, y por eso no se conjuga como ellos: no tiene raíz ' +
+      'ni terminaciones que pegarle.\n\n' +
+      'Es además la forma CORTÉS. Con です la frase está bien dicha delante de ' +
+      'cualquiera; lo que hace です por las cosas que SON, lo hace 〜ます por lo que se ' +
+      'HACE, y es la regla que viene a continuación.\n\n' +
       'Se escribe で + す. Y で es て con dakuten: la primera vez que lo usas.\n\n' +
       'No cambia según quién habla: いえです vale para «es una casa», «soy una casa» o ' +
       '«son casas». El japonés deja eso al contexto.',
@@ -144,20 +148,22 @@ export const GRAMMAR: Grammar[] = [
     romaji: 'masu',
     title: 'ます — el presente cortés',
     explanation:
-      'Los verbos japoneses no cambian según quién habla: あいます vale para «me ' +
-      'encuentro», «te encuentras» y «se encuentra». Solo cambian por dos cosas: el ' +
-      'tiempo y si son afirmativos o negativos.\n\n' +
-      'Lo que se conjuga no es el verbo entero: es su raíz, y hay que sacarla. Mira ' +
-      'あう e いう, de tu primer tomo, y すう: los tres acaban en う. Esa う es la marca ' +
-      'del verbo sin conjugar, y para tener la raíz se cambia por い: あう → あい, ' +
-      'いう → いい, すう → すい. Cambia solo el último carácter; lo de delante se ' +
-      'queda igual. A esa raíz se le pega ます o ません.\n\n' +
-      'No es una regla de la う: todos los verbos acaban en un carácter que suena con ' +
-      '«u», y en todos ese carácter pasa al de su familia que suena con «i». Con los ' +
-      'que terminen en otro harás lo mismo.\n\n' +
-      'Hay un segundo tipo de verbo que forma la raíz quitando su última sílaba en vez ' +
-      'de cambiarla, y dos que no siguen ninguna regla. Llegan en tomos siguientes, con ' +
-      'los caracteres que hacen falta para leerlos.',
+      'です dice lo que algo ES; 〜ます dice lo que alguien HACE. Son las dos marcas de ' +
+      'cortesía del japonés, y por eso se aprenden juntas: con una de las dos, la frase ' +
+      'ya está bien dicha.\n\n' +
+      'Los verbos no cambian según quién habla: あいます vale para «me encuentro», «te ' +
+      'encuentras» y «se encuentra». Solo cambian por el tiempo y por si son ' +
+      'afirmativos o negativos.\n\n' +
+      'Lo que se conjuga no es el verbo entero: es su RAÍZ, y hay que sacarla. あう e ' +
+      'いう, de tu primer tomo, y すう acaban los tres en う, que es la marca del verbo ' +
+      'sin conjugar. Esa う se cambia por い: あう → あい, いう → いい, すう → すい. ' +
+      'Cambia solo el último carácter; lo de delante se queda igual. Y a la raíz se le ' +
+      'pega ます o ません.\n\n' +
+      'Con los verbos acabados en う esto no falla nunca: no hay excepciones. Y ninguno ' +
+      'acaba en あ, en え ni en ん —todos terminan en un carácter que suena con «u», y ' +
+      'cada uno pasa al de su familia que suena con «i»—. Lo que sí hay es un grupo de ' +
+      'verbos que en vez de cambiar esa sílaba la PIERDE, y dos que no siguen ninguna ' +
+      'regla: los verás cuando tengas los caracteres para leerlos.',
     // La primera fila es la CABECERA, y la plana la pinta como tal.
     //
     // Los tres verbos acaban en う, y no es pereza: enseñar aquí otra terminación pide
