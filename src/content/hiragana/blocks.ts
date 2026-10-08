@@ -59,12 +59,12 @@ export const BLOCKS: Block[] = [
     summary:
       'Cinco kana más, y las dos rayitas que cambian el sonido de los que ya se saben. Con ellos se escriben です y ます: de aquí en adelante una frase no solo nombra cosas, también dice algo de ellas.',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ma', wordIds: ['ima', 'mai'] },
       { type: 'kana', kanaId: 'su', wordIds: ['isu', 'osu'] },
       { type: 'kana', kanaId: 'te', wordIds: ['te'] },
       { type: 'kana', kanaId: 'se', wordIds: ['sei', 'sen'] },
       { type: 'kana', kanaId: 'n', wordIds: ['en', 'han'] },
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'desu' },
       { type: 'grammar', grammarId: 'masu' },
     ],
@@ -117,11 +117,11 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 3 · りしるか',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ri', wordIds: ['amari', 'oriru'] },
       { type: 'kana', kanaId: 'shi', wordIds: ['hashi', 'hashi-2'] },
       { type: 'kana', kanaId: 'ru', wordIds: ['aru', 'aru-2'] },
       { type: 'kana', kanaId: 'ka', wordIds: ['ka', 'aka'] },
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'copula-neg' },
     ],
     dakuten: ['じ', 'が'],
@@ -210,11 +210,11 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 4 · こなさわ',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ko', wordIds: ['ko', 'koe'] },
       { type: 'kana', kanaId: 'na', wordIds: ['nai', 'naka'] },
       { type: 'kana', kanaId: 'sa', wordIds: ['asa', 'kasa'] },
       { type: 'kana', kanaId: 'wa', wordIds: ['kawa', 'gawa'] },
+      { type: 'grammar', grammarId: 'dakuten' },
     ],
     dakuten: ['ご', 'ざ'],
     wordIds: [
@@ -302,11 +302,11 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 5 · たみそね',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ta', wordIds: ['uta', 'kata'] },
       { type: 'kana', kanaId: 'mi', wordIds: ['imi', 'umi'] },
       { type: 'kana', kanaId: 'so', wordIds: ['sou-sou-desu', 'soko'] },
       { type: 'kana', kanaId: 'ne', wordIds: ['ane', 'neko'] },
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'pasado' },
     ],
     dakuten: ['だ', 'ぞ'],
@@ -397,10 +397,10 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 6 · くきら',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ku', wordIds: ['ku', 'aku'] },
       { type: 'kana', kanaId: 'ki', wordIds: ['ki', 'aki'] },
       { type: 'kana', kanaId: 'ra', wordIds: ['sora', 'arau'] },
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'tai' },
     ],
     dakuten: ['ぐ', 'ぎ'],
@@ -494,9 +494,9 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 7 · とち',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'to', wordIds: ['to', 'ato'] },
       { type: 'kana', kanaId: 'chi', wordIds: ['ichi', 'uchi'] },
+      { type: 'grammar', grammarId: 'dakuten' },
     ],
     dakuten: ['ど', 'ぢ'],
     wordIds: [
@@ -586,9 +586,9 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 8 · つけ',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'tsu', wordIds: ['tsu', 'itsu'] },
       { type: 'kana', kanaId: 'ke', wordIds: ['ike', 'kesa'] },
+      { type: 'grammar', grammarId: 'dakuten' },
     ],
     dakuten: ['づ', 'げ'],
     wordIds: [
@@ -659,9 +659,9 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 9 · ふひ',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'fu', wordIds: ['fuku', 'fuku-2'] },
       { type: 'kana', kanaId: 'hi', wordIds: ['hi', 'hiki'] },
+      { type: 'grammar', grammarId: 'dakuten' },
     ],
     dakuten: ['ぶ', 'び'],
     wordIds: [
@@ -925,9 +925,9 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 13 · やほ',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'ya', wordIds: ['ya', 'iya'] },
       { type: 'kana', kanaId: 'ho', wordIds: ['hou', 'hoka'] },
+      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'nai' },
     ],
     dakuten: ['ぼ'],
@@ -1024,9 +1024,9 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 15 · へゆ',
     summary: '',
     lessons: [
-      { type: 'grammar', grammarId: 'dakuten' },
       { type: 'kana', kanaId: 'he', wordIds: ['heta', 'heya'] },
       { type: 'kana', kanaId: 'yu', wordIds: ['fuyu', 'yuki'] },
+      { type: 'grammar', grammarId: 'dakuten' },
     ],
     dakuten: ['べ'],
     wordIds: [

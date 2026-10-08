@@ -30,8 +30,10 @@ const RULES_BY_BLOCK = {
 }
 
 // La del dakuten no se explica UNA vez: reaparece en cada bloque que estrene alguno, con
-// los de ese tomo. Y va DELANTE de las lecciones, no detras: en B2 la primera palabra que
-// se lee es です, y sin el dakuten explicado su で es un caracter que nadie ha enseñado.
+// los de ese tomo. Y va detrás de los kana, pegada a las reglas del bloque: lo primero
+// que los usa es です, y delante de las lecciones quedaban 90 páginas entre explicarlos y
+// leerlos. Ningún bloque enseña una palabra con un dakuten que estrene él mismo, así que
+// nada se adelanta; si algún día la hubiera, esta regla tendría que volver arriba.
 const DAKUTEN_RULE = 'dakuten'
 
 // La portada de un tomo lleva dos cosas escritas a mano; las cuentas se derivan solas.
@@ -118,8 +120,6 @@ for (const block of doc) {
   const taken = new Set()
   const lessons = []
 
-  if (block.dakuten.length) lessons.push({ type: 'grammar', grammarId: DAKUTEN_RULE })
-
   for (const ch of block.kana) {
     const kanaId = idOf.get(ch)
     if (!kanaId) { warnings.push(`${block.id}: ${ch} no tiene ficha en kana.ts`); continue }
@@ -138,6 +138,7 @@ for (const block of doc) {
     lessons.push({ type: 'kana', kanaId, wordIds: wordIds ?? [] })
   }
 
+  if (block.dakuten.length) lessons.push({ type: 'grammar', grammarId: DAKUTEN_RULE })
   for (const id of RULES_BY_BLOCK[block.id] ?? []) lessons.push({ type: 'grammar', grammarId: id })
 
   const sentenceIds = block.sentences.map((s) => sentenceId(s.text, n))

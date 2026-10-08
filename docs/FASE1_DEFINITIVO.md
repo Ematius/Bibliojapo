@@ -302,9 +302,12 @@ renshuu-suru|れんしゅう（する）|practicar, práctica|irregular|れん�
 
 ## 3. Lecciones de gramática
 
-Se insertan como lección propia (`tipo: gramatica`) dentro de su bloque, antes
-de las frases. **G0 es página recurrente:** reaparece en cada bloque que trae
-dakuten nuevos, con el ejemplo de ese bloque, no un texto copiado.
+Se insertan como lección propia (`tipo: gramatica`) dentro de su bloque, **detrás
+de las lecciones de kana**, antes de las frases. **G0 es página recurrente:**
+reaparece en cada bloque que trae dakuten nuevos, con el ejemplo de ese bloque, no
+un texto copiado — y cae junto a las demás reglas, no al principio del tomo: lo
+primero que usa un dakuten es です, y ningún bloque enseña una palabra con un
+dakuten que estrene él mismo.
 
 **G0 · El dakuten " — recurrente desde B2**
 
