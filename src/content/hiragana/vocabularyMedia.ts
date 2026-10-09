@@ -236,6 +236,50 @@ const MEDIA: Record<string, WordMedia> = {
     image: 'hiragana/b2/images/imagesSupport/han-half.webp',
     imageAlt: 'Una manzana roja cortada en dos mitades iguales, una junto a la otra.',
   },
+  'sensei': {
+    audio: 'hiragana/b2/audio/word/sensei.wav',
+    image: 'hiragana/b2/images/imagesSupport/sensei-teacher.webp',
+    imageAlt:
+      'Un maestro de pie ante una pizarra en un aula tradicional japonesa, ' +
+      'señalando lo escrito mientras sus alumnos lo miran desde sus pupitres bajos.',
+  },
+  'usui': {
+    audio: 'hiragana/b2/audio/word/usui.wav',
+    image: 'hiragana/b2/images/imagesSupport/usui-thin.webp',
+    imageAlt:
+      'Una hoja de papel washi sostenida al trasluz, tan fina que se transparenta ' +
+      'la luz y la silueta de los dedos que la sujetan.',
+  },
+  'semai': {
+    audio: 'hiragana/b2/audio/word/semai.wav',
+    image: 'hiragana/b2/images/imagesSupport/semai-narrow.webp',
+    imageAlt:
+      'Dos niños cruzando de lado un callejón japonés tan estrecho que casi rozan ' +
+      'las paredes de madera de las dos casas.',
+  },
+  'amai': {
+    audio: 'hiragana/b2/audio/word/amai.wav',
+    image: 'hiragana/b2/images/imagesSupport/amai-sweet.webp',
+    imageAlt:
+      'Una niña sonriente a punto de morder una brocheta de dango, con los ojos ' +
+      'cerrados de gusto.',
+  },
+  'mazui': {
+    audio: 'hiragana/b2/audio/word/mazui.wav',
+    image: 'hiragana/b2/images/imagesSupport/mazui-nasty.webp',
+    imageAlt:
+      'Una niña con la cara arrugada de asco, apartando una ciruela encurtida que ' +
+      'acaba de probar.',
+  },
+  // «no», no la casa: esa es `ie-2`. Y el dibujo lo dice con un gesto porque una
+  // negación no es una cosa que se pueda poner delante del lector.
+  'ie': {
+    audio: 'hiragana/b2/audio/word/ie.wav',
+    image: 'hiragana/b2/images/imagesSupport/ie-no.webp',
+    imageAlt:
+      'Una niña negando con la cabeza y las manos cruzadas delante del pecho, el ' +
+      'gesto japonés de decir que no.',
+  },
 }
 
 // Se la pega a las palabras generadas. Una palabra sin media se queda como está: el
