@@ -249,7 +249,7 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   const preloadFullArt = () => {
     if (preloadedRef.current || access !== 'open') return
     preloadedRef.current = true
-    for (const src of [volume.art.spine, volume.art.cover, volume.art.coverTurned]) {
+    for (const src of [volume.art.spine, volume.art.cover, volume.art.coverTurned, FORE_EDGE]) {
       new Image().src = src
     }
   }
@@ -402,8 +402,11 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
 
           {/* El canto cuelga de la portada y no de la caja: es la única forma de
               llevarlo al fondo con medidas en proporción. */}
+          {/* Sin `src` en la balda, igual que la tapa girada: ahí el canto queda detrás de la
+              portada y no se ve, pero su render pesa 196 kB —la cuarta parte de lo que pide el
+              pasillo entero—. Llega al salir el tomo, con los dos giros de margen. */}
           <span className="shelf-volume__face shelf-volume__face--edge">
-            <img src={FORE_EDGE} alt="" draggable="false" />
+            <img src={onShelf ? undefined : FORE_EDGE} alt="" draggable="false" />
           </span>
         </span>
 
