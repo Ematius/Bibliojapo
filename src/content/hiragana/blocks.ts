@@ -18,7 +18,7 @@ export const BLOCKS: Block[] = [
       { type: 'kana', kanaId: 'i', wordIds: ['ie-2', 'ii-yoi'] },
       { type: 'kana', kanaId: 'u', wordIds: ['ue', 'iu', 'au'] },
       { type: 'kana', kanaId: 'e', wordIds: ['iie', 'ie-2', 'e-2', 'ie', 'ue', 'e', 'ee'] },
-      { type: 'kana', kanaId: 'o', wordIds: ['ooi', 'ao', 'aoi', 'o'] },
+      { type: 'kana', kanaId: 'o', wordIds: ['ooi', 'ao', 'aoi'] },
       { type: 'kana', kanaId: 'ha', wordIds: ['haha', 'hai', 'ha', 'hai-2'] },
     ],
     dakuten: [],

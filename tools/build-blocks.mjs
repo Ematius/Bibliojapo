@@ -17,6 +17,15 @@ const OUT = 'src/content/hiragana/blocks.ts'
 // partícula—, y su plana es la de su regla. Ver la nota de ぺ en el documento.
 const TAUGHT_BY_RULE = { wo: 'particle-o' }
 
+// Entradas del temario que NO se enseñan con ficha propia. Cuentan para el N5 y se leen
+// dentro de las palabras que las llevan, pero solas no son nada que se pueda dibujar ni
+// pronunciar: お〜 es un prefijo, no una palabra, y el tomo 1 no tiene aún ninguna frase
+// donde la cortesía signifique algo.
+//
+// La lista es a mano y corta a propósito. Llevar 〜 no basta como regla: 〜えん es «yen»
+// y 〜まい cuenta objetos planos, y las dos se enseñan con su dibujo sin problema.
+const NOT_TAUGHT_ALONE = new Set(['o'])
+
 // Las reglas de gramatica que estrena cada bloque. Van DETRAS de sus lecciones de kana:
 // primero los caracteres, despues lo que se construye con ellos.
 const RULES_BY_BLOCK = {
@@ -96,6 +105,7 @@ function shareWords(block, produced) {
   const score = (w) => (produced.has(w.id) ? -100 : 0) + w.text.length
 
   for (const word of [...block.words].sort((a, b) => score(a) - score(b))) {
+    if (NOT_TAUGHT_ALONE.has(word.id)) continue
     let last
     for (const ch of block.kana) if (word.text.includes(ch)) last = ch
     if (last) byKana.get(last).push(word.id)
