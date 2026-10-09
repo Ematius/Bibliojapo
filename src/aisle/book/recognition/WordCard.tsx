@@ -4,7 +4,9 @@ import './WordCard.scss'
 
 interface WordCardProps {
   word: Word
-  kana: Kana
+  // Sin kana que estudiar la palabra se lee entera, en tinta plena: así se presentan
+  // las que vienen de las frases del tomo, que no cuelgan de ninguna lección.
+  kana?: Kana
 }
 
 // Una palabra de verdad, con el kana que se estudia destacado dentro. Los kana que todavía
@@ -43,7 +45,7 @@ export function WordCard({ word, kana }: WordCardProps) {
         {word.units.map((unit, index) => (
           <span
             className={
-              unit.kana === kana.character
+              kana === undefined || unit.kana === kana.character
                 ? 'word-card__unit word-card__unit--known'
                 : 'word-card__unit'
             }

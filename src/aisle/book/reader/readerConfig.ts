@@ -311,6 +311,7 @@ export function buildVolumePages(
   items: ReadyItem[],
   wordIds: string[],
   sentenceIds: string[],
+  sentenceWordIds: string[],
 ): ReaderPage[] {
   // El repaso y el examen final son de KANA: una regla no se repasa, se consulta.
   const lessons = items.flatMap((item) => (item.kind === 'kana' ? [item] : []))
@@ -320,6 +321,7 @@ export function buildVolumePages(
     ...items.flatMap((item) =>
       item.kind === 'kana' ? kanaSpreads(item.kanaId, item.wordIds) : [grammarSpread(item)],
     ),
+    ...sentenceWordSpreads(sentenceWordIds, lessons),
     ...completeReviewSpreads(lessons),
     ...finalReviewSpreads(lessons, wordIds),
     ...finalSentenceExamSpreads(sentenceIds),
@@ -432,6 +434,25 @@ function finalSentenceExamSpreads(sentenceIds: string[]): Spread[] {
   }
 
   return [rules, ...blockSpreads, reveal]
+}
+
+// Las palabras que las FRASES del tomo usan y que ninguna lección ha enseñado —ni esta ni
+// las de los tomos de antes—. El examen final las pide escribir enteras, así que el tomo
+// se las presenta: a la derecha la palabra con su dibujo y su sonido, a la izquierda
+// escribirla. Quién entra aquí lo decide el volcado y llega en `block.sentenceWordIds`.
+//
+// Van detrás de las lecciones y de las reglas, no mezcladas con ellas: no son de ningún
+// kana en concreto, y el kana que se les pasa es solo el de la última lección, por su
+// bolsa de tarjetas — la misma razón que en `finalReviewSpreads`.
+function sentenceWordSpreads(wordIds: string[], lessons: ReadyLesson[]): Spread[] {
+  if (wordIds.length === 0 || lessons.length === 0) return []
+
+  const kanaId = lessons[lessons.length - 1].kanaId
+
+  return wordIds.map<Spread>((wordId) => ({
+    right: { wordId, title: 'Las palabras de las frases', shows: 'word' },
+    left: { kanaId, wordId, title: 'Escribe la palabra', shows: 'build' },
+  }))
 }
 
 // Una plana por kana, así que el repaso crece con el bloque: repasa TODOS los kana que el

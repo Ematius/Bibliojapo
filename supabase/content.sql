@@ -67,6 +67,12 @@ create table if not exists public.blocks (
 -- dakuten necesita saber cuáles tocan en ESTE tomo.
 alter table public.blocks add column if not exists dakuten text[] not null default '{}';
 
+-- Las palabras que las FRASES del tomo usan y que ninguna lección ha enseñado todavía,
+-- ni aquí ni antes. El examen final las pide escribir enteras, así que el tomo las
+-- presenta antes. La calcula el volcado y no se escribe a mano: hace falta ver la cadena
+-- entera de bloques, y el lector solo recibe el suyo.
+alter table public.blocks add column if not exists sentence_word_ids text[] not null default '{}';
+
 -- ---------------------------------------------------------------------------
 -- Contenido
 -- ---------------------------------------------------------------------------
@@ -438,7 +444,8 @@ begin
       -- esta línea llegan `undefined` y la plana que los explica no sabe cuáles tocan.
       'dakuten', to_jsonb(target.dakuten),
       'wordIds', to_jsonb(target.word_ids),
-      'sentenceIds', to_jsonb(target.sentence_ids)
+      'sentenceIds', to_jsonb(target.sentence_ids),
+      'sentenceWordIds', to_jsonb(target.sentence_word_ids)
     ),
     'kana', coalesce((
       select jsonb_agg(jsonb_build_object(

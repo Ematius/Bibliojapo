@@ -181,10 +181,22 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       )
     })
 
-    // Las palabras del repaso final son las de las lecciones, nunca las de `block.wordIds`:
-    // esa lista es lo que el bloque desbloquea, no lo que se enseña, y examinar de lo que
-    // no se ha dado es lo que este repaso llegó a hacer. Ver `finalReviewSpreads`.
-    const reviewWordIds = [...new Set(lessons.flatMap((lesson) => lesson.wordIds))]
+    // Las palabras que las frases del tomo usan sin que ninguna lección las haya dado.
+    // Solo las que ya tienen con qué enseñarse —dibujo o color, y sonido—: igual que una
+    // lección a medias, una ficha sin dibujo saldría en blanco. Las que esperan arte se
+    // quedan fuera y aparecen solas el día que lo tengan.
+    const sentenceWordIds = (block.sentenceWordIds ?? []).filter((id) => {
+      const word = wordsById.get(id)
+      return Boolean(word?.audio) && Boolean(word?.image || word?.swatch)
+    })
+
+    // Las palabras del repaso final son las de las lecciones y las de las frases, nunca
+    // las de `block.wordIds`: esa lista es lo que el bloque desbloquea, no lo que se
+    // enseña, y examinar de lo que no se ha dado es lo que este repaso llegó a hacer.
+    // Ver `finalReviewSpreads`.
+    const reviewWordIds = [
+      ...new Set([...lessons.flatMap((lesson) => lesson.wordIds), ...sentenceWordIds]),
+    ]
 
     // Las frases del examen final: solo las que ya tienen su ficha Y su desglose kana a
     // kana —sin `units` no hay huecos que rellenar ni tarjetas que colocar, y la hoja
@@ -201,7 +213,12 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     void examAttempt
 
     return {
-      pages: buildVolumePages([...items, ...loose], reviewWordIds, examSentenceIds),
+      pages: buildVolumePages(
+        [...items, ...loose],
+        reviewWordIds,
+        examSentenceIds,
+        sentenceWordIds,
+      ),
       pools,
       reviewWordIds,
     }
@@ -473,10 +490,20 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   const word = page.wordId ? wordsById.get(page.wordId) : undefined
 
-                  // El enunciado sin palabras va SOLO de la palabra: es la única hoja del tomo
-                  // que no lleva kana.
+                  // Las dos hojas que pueden ir SIN kana, y por eso van antes de exigirlo: el
+                  // enunciado sin palabras, que nunca lo lleva, y la tarjeta de una palabra,
+                  // que lo lleva en una lección y no cuando presenta una de las frases.
                   if (page.shows === 'prompt') {
                     return word ? <WordPrompt word={word} /> : null
+                  }
+
+                  if (page.shows === 'word') {
+                    return word ? (
+                      <WordCard
+                        word={word}
+                        kana={page.kanaId ? kanaById.get(page.kanaId) : undefined}
+                      />
+                    ) : null
                   }
 
                   const kana = page.kanaId
@@ -499,10 +526,6 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   if (page.shows === 'trace') {
                     return <KanaTrace kana={kana} />
-                  }
-
-                  if (page.shows === 'word') {
-                    return word ? <WordCard word={word} kana={kana} /> : null
                   }
 
                   if (page.shows === 'gap') {

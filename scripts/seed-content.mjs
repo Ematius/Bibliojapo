@@ -131,8 +131,28 @@ for (const aisleId of AISLE_ORDER) {
 
   aisles.push({ id: aisleId, kana_total: aisle.kanaTotal, word_total: aisle.wordTotal })
 
+  // Lo enseñado con ficha hasta el bloque que se esté volcando. Se acumula al recorrer
+  // el plan en orden, que es lo único que ve la cadena entera: el lector solo recibe SU
+  // tomo y no puede saber qué se dio en los anteriores.
+  const taught = new Set()
+
   aisle.blockPlan.forEach((localId, index) => {
     const block = blocksById.get(localId)
+    block?.lessons.forEach((lesson) => (lesson.wordIds ?? []).forEach((id) => taught.add(id)))
+
+    // Las palabras que las frases del tomo usan sin que ninguna lección las haya
+    // presentado. El examen final las pide escribir enteras, así que el tomo las
+    // enseña antes — ver `sentenceWordSpreads` en `readerConfig.ts`.
+    const fromSentences = new Set()
+    for (const id of block?.sentenceIds ?? []) {
+      const sentence = sentencesById.get(id)
+      // Sin desglose kana a kana la frase no entra en el examen, y lo que use no hace
+      // falta todavía.
+      if (!sentence || sentence.units.length === 0) continue
+      for (const wordId of sentence.wordIds ?? []) {
+        if (!taught.has(wordId)) fromSentences.add(wordId)
+      }
+    }
     blocks.push({
       id: globalBlockId(aisleId, localId),
       aisle_id: aisleId,
@@ -148,6 +168,7 @@ for (const aisleId of AISLE_ORDER) {
       dakuten: block?.dakuten ?? [],
       word_ids: block?.wordIds ?? [],
       sentence_ids: block?.sentenceIds ?? [],
+      sentence_word_ids: [...fromSentences],
     })
 
     block?.lessons.forEach((lesson, position) => {

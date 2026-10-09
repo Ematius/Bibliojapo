@@ -178,6 +178,13 @@ export interface Block {
   // otro es compararlo con el bloque anterior, no un campo aparte.
   wordIds: string[]
   sentenceIds: string[]
+  // Las palabras que sus FRASES usan y que ninguna lección ha enseñado todavía, ni
+  // aquí ni en los tomos de antes. El examen final las pide escribir, así que el tomo
+  // tiene que presentárlas antes — ver `sentenceWordSpreads`.
+  //
+  // No se escribe en `content/`: lo calcula el volcado, que es lo único que ve la
+  // cadena entera de bloques. Por eso es opcional: `blocks.ts` no lo trae.
+  sentenceWordIds?: string[]
 }
 
 export interface Kana {
