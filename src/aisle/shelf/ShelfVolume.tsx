@@ -408,11 +408,11 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
             pinta encima si el navegador no puede desempatar por profundidad. */}
         {/* La contra reutiliza la portada: todavía no hay dibujo propio. */}
         <span className="shelf-volume__face shelf-volume__face--back">
-          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" decoding="async" />
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--cover">
-          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.coverThumb : volume.art.cover} alt="" draggable="false" decoding="async" />
 
           {/* La misma portada, pero pintada de tres cuartos y con el bloque de
               hojas. Vive dentro de la cara, así que gira con ella; solo se
@@ -424,6 +424,7 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
             src={onShelf ? undefined : volume.art.coverTurned}
             alt=""
             draggable="false"
+            decoding="async"
             ref={turnedRef}
           />
 
@@ -433,12 +434,12 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
               portada y no se ve, pero su render pesa 196 kB —la cuarta parte de lo que pide el
               pasillo entero—. Llega al salir el tomo, con los dos giros de margen. */}
           <span className="shelf-volume__face shelf-volume__face--edge">
-            <img src={onShelf ? undefined : FORE_EDGE} alt="" draggable="false" />
+            <img src={onShelf ? undefined : FORE_EDGE} alt="" draggable="false" decoding="async" />
           </span>
         </span>
 
         <span className="shelf-volume__face shelf-volume__face--spine">
-          <img src={onShelf ? volume.art.spineThumb : volume.art.spine} alt="" draggable="false" />
+          <img src={onShelf ? volume.art.spineThumb : volume.art.spine} alt="" draggable="false" decoding="async" />
         </span>
       </span>
     </button>
