@@ -91,17 +91,31 @@ const kanaRows = KANA_ROWS.map((row) => ({
 // «Una lección entra solo si está COMPLETA» en CLAUDE.md—, subido al tomo: si se
 // publicara por tener entrada, con el temario entero escrito de golpe se abrirían
 // dieciocho tomos y diecisiete saldrían en blanco.
-function isComplete(block, kanaById, wordsById, grammarById) {
-  if (!block || !block.lessons.length) return false
+// Devuelve QUÉ le falta al bloque, no si está completo: esa lista es lo que se imprime al
+// terminar el volcado, y de ella sale `isComplete`. Dos funciones separadas acabarían
+// desincronizadas, y el informe mentiría justo sobre lo que nadie puede ver.
+function missingPieces(block, kanaById, wordsById, grammarById) {
+  if (!block || !block.lessons.length) return ['sin entrada escrita en el temario']
 
-  return block.lessons.every((lesson) => {
+  const faltas = []
+
+  for (const lesson of block.lessons) {
     if (lesson.type === 'grammar') {
-      return Boolean(grammarById.get(lesson.grammarId ?? '')?.explanation.trim())
+      if (!grammarById.get(lesson.grammarId ?? '')?.explanation.trim()) {
+        faltas.push(`regla ${lesson.grammarId}: sin explicación escrita`)
+      }
+      continue
     }
 
     const kana = kanaById.get(lesson.kanaId ?? '')
     // Sin trazos ni dibujo no hay ni pauta de escritura ni plana mnemotécnica.
-    if (!kana?.strokes?.length || !kana.image || !kana.mnemonic.trim()) return false
+    const kanaGaps = []
+    if (!kana?.strokes?.length) kanaGaps.push('trazos')
+    if (!kana?.image) kanaGaps.push('dibujo')
+    if (!kana?.mnemonic.trim()) kanaGaps.push('mnemotecnia')
+    if (kanaGaps.length) {
+      faltas.push(`kana ${kana?.character ?? lesson.kanaId}: sin ${kanaGaps.join(', ')}`)
+    }
 
     // Y cada palabra con la que se enseña necesita sonar y poder enseñarse sin
     // escribirla: un color o un dibujo.
@@ -109,15 +123,43 @@ function isComplete(block, kanaById, wordsById, grammarById) {
     // SIN palabras también cuenta como completa: ぺ no aparece en ninguna de las 768, y su
     // lección se queda en el dibujo y la pauta —ver `kanaSpreads`—. Exigirlas dejaría a B17
     // sin publicar para siempre por un kana que no tiene con qué enseñarse.
-    return (lesson.wordIds ?? []).every((id) => {
-      const word = wordsById.get(id)
-      return Boolean(word?.audio) && Boolean(word.image || word.swatch)
-    })
-  })
+    for (const id of lesson.wordIds ?? []) {
+      const gaps = wordGaps(wordsById.get(id))
+      if (gaps.length) faltas.push(`palabra ${wordLabel(id, wordsById)}: sin ${gaps.join(', ')}`)
+    }
+  }
+
+  return faltas
+}
+
+// Lo que le falta a una palabra para poder enseñarse en una ficha. Lo usan el inventario
+// del tomo y el de las palabras de las frases, que piden lo mismo.
+function wordGaps(word) {
+  if (!word) return ['entrada en vocabulary.ts']
+  const gaps = []
+  if (!word.audio) gaps.push('audio')
+  if (!word.image && !word.swatch) gaps.push('dibujo')
+  return gaps
+}
+
+// La palabra en kana con su significado, para que el informe se pueda leer sin abrir
+// el temario al lado.
+function wordLabel(id, wordsById) {
+  const word = wordsById.get(id)
+  const text = (word?.units ?? []).map((unit) => unit.kana).join('')
+  return text ? `${text} (${word.meaning})` : id
+}
+
+// Un tomo se publica cuando se puede LEER ENTERO, no cuando alguien ha escrito su
+// entrada.
+function isComplete(block, kanaById, wordsById, grammarById) {
+  return missingPieces(block, kanaById, wordsById, grammarById).length === 0
 }
 
 const aisles = []
 const blocks = []
+// Qué le falta a cada tomo, por si nadie se acuerda de preguntarlo.
+const blockGaps = []
 const lessons = []
 const kana = []
 const words = []
@@ -169,6 +211,20 @@ for (const aisleId of AISLE_ORDER) {
       word_ids: block?.wordIds ?? [],
       sentence_ids: block?.sentenceIds ?? [],
       sentence_word_ids: [...fromSentences],
+    })
+
+    // El inventario de lo que le falta a este tomo. Se guarda aquí y se imprime al
+    // final: lo que no tiene dibujo o audio NO sale en la app, y sin esta lista la
+    // única señal de que algo se quedó fuera es que nadie lo eche de menos.
+    blockGaps.push({
+      id: globalBlockId(aisleId, localId),
+      blocking: missingPieces(block, kanaById, wordsById, grammarById),
+      // Estas NO impiden publicar —el tomo se lee igual—, pero el examen final pide
+      // escribirlas, así que mientras les falte arte el tomo las examina sin enseñarlas.
+      pending: [...fromSentences]
+        .map((id) => ({ id, gaps: wordGaps(wordsById.get(id)) }))
+        .filter((entry) => entry.gaps.length)
+        .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`),
     })
 
     block?.lessons.forEach((lesson, position) => {
@@ -256,6 +312,48 @@ for (const aisleId of AISLE_ORDER) {
 
 await vite.close()
 
+// El inventario de lo que falta. Se imprime SIEMPRE, con el volcado y con `--dry-run`,
+// y es a propósito: una pieza que falta no da error en ninguna parte —la ficha sin
+// dibujo sencillamente no se genera, y el tomo se lee sin ella—, así que sin esto el
+// único aviso de que algo se quedó fuera sería que alguien lo echara de menos leyendo.
+//
+// Con `--faltas` se ve el detalle de los tomos sin publicar, que son 16 y llenan la
+// pantalla; sin él salen contados, y entero el de los publicados, que es el que importa:
+// esos tomos ya se están leyendo.
+function reportGaps() {
+  const verbose = process.argv.includes('--faltas')
+  const lines = []
+  const detail = (items) => items.map((g) => `      ${g}`).join('\n')
+
+  for (const block of blockGaps) {
+    if (block.blocking.length) {
+      lines.push(
+        verbose
+          ? `  ${block.id} — SIN PUBLICAR:\n${detail(block.blocking)}`
+          : `  ${block.id} — sin publicar: ${block.blocking.length} piezas sin hacer`,
+      )
+    }
+
+    // Las de las frases van siempre enteras, publicado el tomo o no: son pocas y son
+    // justo las que se olvidan, porque no cuelgan de ninguna lección que las reclame.
+    if (block.pending.length) {
+      lines.push(
+        `  ${block.id} — palabras de sus frases que el tomo aún no puede enseñar ` +
+          `(${block.pending.length}):\n${detail(block.pending)}`,
+      )
+    }
+  }
+
+  if (lines.length === 0) {
+    console.log('\nNo falta nada: todos los tomos están completos.')
+    return
+  }
+
+  console.log('\nLo que falta:')
+  lines.forEach((line) => console.log(line))
+  if (!verbose) console.log('\n  (el detalle de los tomos sin publicar, con --faltas)')
+}
+
 // `--dry-run` lee el temario, dice qué subiría y no toca la base. El volcado escribe en
 // PRODUCCIÓN, así que conviene poder comprobar un cambio de este script sin estrenarlo
 // contra el contenido de verdad.
@@ -273,6 +371,7 @@ if (process.argv.includes('--dry-run')) {
   console.log(`  lecciones de gramática: ${lessons.filter((l) => l.tipo === 'grammar').length}`)
   console.log(`  bloques con dakuten: ${blocks.filter((b) => b.dakuten.length).length}`)
   console.log(`  ejemplo de fila: ${JSON.stringify(sample)}`)
+  reportGaps()
   process.exit(0)
 }
 
@@ -393,3 +492,5 @@ console.log(
     `${words.length} palabras, ${sentences.length} frases, ${grammar.length} reglas.`,
 )
 console.log(uploaded ? `Media: ${uploaded} archivo(s) al bucket.` : 'Media: nada que subir.')
+
+reportGaps()
