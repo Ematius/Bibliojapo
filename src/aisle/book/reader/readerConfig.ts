@@ -163,9 +163,11 @@ export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[])
     ]
   }
 
-  // Las últimas planas piden el kana dentro de OTRA palabra, una plana por cada una. Sin
-  // otra, repiten la primera.
-  const drillWordIds = otherWordIds.length > 0 ? otherWordIds : [wordId]
+  // Las últimas planas piden el kana dentro de OTRA palabra, una plana por cada una. Si
+  // no hay otra no hay plana: repitiendo la primera salen dos «Escucha» seguidos con el
+  // mismo dibujo, y lo que se practica deja de ser reconocer el kana para ser recordar la
+  // hoja anterior — justo lo que estas planas existen para evitar.
+  const drillWordIds = otherWordIds
 
   const taught: Spread[] = [
     {
@@ -212,7 +214,7 @@ export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[])
 
     // Aquí cambia la palabra: se ha encontrado は dentro de はは cuatro veces y ahora hay que
     // encontrarla en はい. Eso es reconocer el carácter; repetirla por quinta vez era
-    // recordar un dibujo.
+    // recordar un dibujo. Una lección de una sola palabra —て, ぱ— se queda sin ellas.
     ...drillWordIds.map<Spread>((drillWordId) => ({
       right: { wordId: drillWordId, title: 'Escucha', shows: 'prompt' },
       left: { kanaId, wordId: drillWordId, title: 'Escribe y lee', shows: 'drill' },
