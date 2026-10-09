@@ -287,12 +287,14 @@ const MEDIA: Record<string, WordMedia> = {
   // El sustantivo 前: el concepto de «antes». El sufijo 〜前 es `mae-2`, y van con
   // dibujos distintos porque en el ejercicio solo se oyen — las dos suenan «mae».
   'mae': {
+    audio: 'hiragana/b2/audio/word/mae.wav',
     image: 'hiragana/b2/images/imagesSupport/mae-before.webp',
     imageAlt:
       'Un aula de terakoya al amanecer, con los pupitres y los pinceles ya puestos ' +
       'antes de que lleguen los alumnos.',
   },
   'mae-2': {
+    audio: 'hiragana/b2/audio/word/mae-2.wav',
     image: 'hiragana/b2/images/imagesSupport/mae-2-in-front.webp',
     imageAlt: 'Un niño de pie justo delante de la entrada de una casa japonesa.',
   },
