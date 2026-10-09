@@ -65,9 +65,6 @@ const B1_LESSONS = {
   ha: ['haha', 'hai'],
 }
 
-// Cuántas palabras lleva una lección. Dos es lo que hay en B1: la primera lleva el grueso
-// y la segunda demuestra que se reconoce el carácter en otra palabra.
-const WORDS_PER_LESSON = 2
 
 // El id del kana, por su carácter, leído de `kana.ts`: es el que guardan los sellos.
 function kanaIds() {
@@ -82,15 +79,29 @@ function producedIds() {
   return new Set([...src.matchAll(/^ {2}'([a-z0-9-]+)': \{/gm)].map((m) => m[1]))
 }
 
-// LA REGLA: se enseña un kana con palabras de SU bloque que lo contengan. Entre varias,
-// primero la que ya tiene dibujo y audio, y luego la más corta — cuantos menos kana
-// desconocidos arrastre, mejor. Es un punto de partida derivado, no una decisión del
-// temario: para cambiar una pareja, se cambia aquí y se regenera.
-function pickWords(kana, words, produced, taken) {
-  const holds = words.filter((w) => w.text.includes(kana))
-  const score = (w) =>
-    (produced.has(w.id) ? -100 : 0) + (taken.has(w.id) ? 50 : 0) + w.text.length
-  return holds.sort((a, b) => score(a) - score(b)).slice(0, WORDS_PER_LESSON).map((w) => w.id)
+// LA REGLA: TODAS las palabras que el bloque estrena se enseñan, cada una en la lección
+// de uno de sus kana. Sin tope: si un kana trae dieciséis palabras nuevas, su lección
+// enseña dieciséis. Lo que no se reparta aquí solo aparecería si alguna frase lo usa, y
+// llegaría al examen sin haberse presentado.
+//
+// Cada palabra va a la lección de su kana MÁS TARDE enseñado, no a la del primero: así,
+// cuando aparece, ya se han visto todos los caracteres nuevos que lleva. Con el primero,
+// せんせい caería en せ arrastrando una ん que nadie ha enseñado todavía.
+//
+// Dentro de la lección manda el orden: la PRIMERA se lleva las seis planas de
+// reconocimiento y las demás una cada una, así que delante va la que ya tiene dibujo y
+// audio, y entre iguales la más corta —cuantos menos kana desconocidos arrastre, mejor—.
+function shareWords(block, produced) {
+  const byKana = new Map(block.kana.map((ch) => [ch, []]))
+  const score = (w) => (produced.has(w.id) ? -100 : 0) + w.text.length
+
+  for (const word of [...block.words].sort((a, b) => score(a) - score(b))) {
+    let last
+    for (const ch of block.kana) if (word.text.includes(ch)) last = ch
+    if (last) byKana.get(last).push(word.id)
+  }
+
+  return byKana
 }
 
 const doc = readDocument()
@@ -117,7 +128,7 @@ const warnings = []
 
 for (const block of doc) {
   const n = +block.id.slice(1)
-  const taken = new Set()
+  const shared = shareWords(block, produced)
   const lessons = []
 
   for (const ch of block.kana) {
@@ -130,10 +141,11 @@ for (const block of doc) {
       continue
     }
 
-    const wordIds = block.id === 'b1'
-      ? B1_LESSONS[kanaId]
-      : pickWords(ch, block.words, produced, taken)
-    wordIds?.forEach((id) => taken.add(id))
+    // B1 lleva escrito con qué par se presenta cada kana y eso no se toca; las demás
+    // palabras que le tocan van detrás, sin repetirse.
+    const mine = shared.get(ch) ?? []
+    const fixed = block.id === 'b1' ? (B1_LESSONS[kanaId] ?? []) : []
+    const wordIds = [...fixed, ...mine.filter((id) => !fixed.includes(id))]
     if (!wordIds?.length) warnings.push(`${block.id}: ${ch} (${kanaId}) se presenta sin palabra: ninguna del pool lo contiene`)
     lessons.push({ type: 'kana', kanaId, wordIds: wordIds ?? [] })
   }

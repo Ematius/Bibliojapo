@@ -132,19 +132,29 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       return rule?.explanation.trim() ? rule : undefined
     }
 
+    // Las palabras que ya tienen con qué enseñarse: dibujo o color, y sonido. Una ficha
+    // sin ellos saldría en blanco, así que la palabra espera y aparece sola el día que
+    // tenga su arte.
+    //
+    // Filtrar aquí escondería un olvido —lo que falta no da error, simplemente no sale—,
+    // y por eso no se hacía. Lo que lo hace seguro es que `npm run seed:content` lista al
+    // terminar, tomo a tomo, todo lo que se ha quedado fuera.
+    const teachable = (ids: string[]) =>
+      ids.filter((id) => {
+        const word = wordsById.get(id)
+        return Boolean(word?.audio) && Boolean(word?.image || word?.swatch)
+      })
+
     // Lo que el tomo enseña, EN EL ORDEN DEL TEMARIO. La plana de una regla cae donde su
     // lección la puso, no detrás del kana del que habla: así se puede explicar です o ～ます,
     // que no son un carácter y antes no tenían dónde ponerse.
-    //
-    // Si esto vuelve a filtrar por completitud, el repaso final —que sale de aquí— filtra
-    // igual, y un fallo deja de verse en su lección para desaparecer sin más.
     const anchored = new Set<string>()
     const items = block.lessons.flatMap((lesson): ReadyItem[] => {
       // Sin palabras entra igual: `kanaSpreads` le da sus dos planas de presentación. Lo
       // que no puede faltar es el kana, que es lo que la lección enseña.
       if (lesson.type === 'kana') {
         return lesson.kanaId
-          ? [{ kind: 'kana', kanaId: lesson.kanaId, wordIds: lesson.wordIds ?? [] }]
+          ? [{ kind: 'kana', kanaId: lesson.kanaId, wordIds: teachable(lesson.wordIds ?? []) }]
           : []
       }
 
@@ -182,13 +192,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     })
 
     // Las palabras que las frases del tomo usan sin que ninguna lección las haya dado.
-    // Solo las que ya tienen con qué enseñarse —dibujo o color, y sonido—: igual que una
-    // lección a medias, una ficha sin dibujo saldría en blanco. Las que esperan arte se
-    // quedan fuera y aparecen solas el día que lo tengan.
-    const sentenceWordIds = (block.sentenceWordIds ?? []).filter((id) => {
-      const word = wordsById.get(id)
-      return Boolean(word?.audio) && Boolean(word?.image || word?.swatch)
-    })
+    const sentenceWordIds = teachable(block.sentenceWordIds ?? [])
 
     // Las palabras del repaso final son las de las lecciones y las de las frases, nunca
     // las de `block.wordIds`: esa lista es lo que el bloque desbloquea, no lo que se

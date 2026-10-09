@@ -117,15 +117,21 @@ function missingPieces(block, kanaById, wordsById, grammarById) {
       faltas.push(`kana ${kana?.character ?? lesson.kanaId}: sin ${kanaGaps.join(', ')}`)
     }
 
-    // Y cada palabra con la que se enseña necesita sonar y poder enseñarse sin
-    // escribirla: un color o un dibujo.
+    // Una palabra necesita sonar y poder enseñarse sin escribirla —un color o un dibujo—,
+    // pero lo que IMPIDE publicar es quedarse sin ninguna: con una basta para que la
+    // lección se lea entera, y las demás se van sumando según tengan su arte. Exigirlas
+    // todas despublicaría los tomos de golpe el día que cada lección pasó de dos palabras
+    // a todas las que estrena su kana.
     //
     // SIN palabras también cuenta como completa: ぺ no aparece en ninguna de las 768, y su
     // lección se queda en el dibujo y la pauta —ver `kanaSpreads`—. Exigirlas dejaría a B17
     // sin publicar para siempre por un kana que no tiene con qué enseñarse.
-    for (const id of lesson.wordIds ?? []) {
-      const gaps = wordGaps(wordsById.get(id))
-      if (gaps.length) faltas.push(`palabra ${wordLabel(id, wordsById)}: sin ${gaps.join(', ')}`)
+    const words = lesson.wordIds ?? []
+    if (words.length && words.every((id) => wordGaps(wordsById.get(id)).length)) {
+      faltas.push(
+        `kana ${kana?.character ?? lesson.kanaId}: ninguna de sus ${words.length} palabras ` +
+          'se puede enseñar todavía',
+      )
     }
   }
 
@@ -219,9 +225,16 @@ for (const aisleId of AISLE_ORDER) {
     blockGaps.push({
       id: globalBlockId(aisleId, localId),
       blocking: missingPieces(block, kanaById, wordsById, grammarById),
-      // Estas NO impiden publicar —el tomo se lee igual—, pero el examen final pide
-      // escribirlas, así que mientras les falte arte el tomo las examina sin enseñarlas.
-      pending: [...fromSentences]
+      // Lo que el tomo PROMETE y todavía no puede enseñar: las palabras de sus lecciones
+      // sin arte y las que solo aparecen en sus frases. No impiden publicar —el tomo se
+      // lee igual—, pero sin esta lista desaparecen sin que nadie se entere, que es el
+      // único modo en que este temario puede fallar en silencio.
+      pending: [
+        ...new Set([
+          ...(block?.lessons ?? []).flatMap((lesson) => lesson.wordIds ?? []),
+          ...fromSentences,
+        ]),
+      ]
         .map((id) => ({ id, gaps: wordGaps(wordsById.get(id)) }))
         .filter((entry) => entry.gaps.length)
         .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`),
@@ -338,7 +351,7 @@ function reportGaps() {
     // justo las que se olvidan, porque no cuelgan de ninguna lección que las reclame.
     if (block.pending.length) {
       lines.push(
-        `  ${block.id} — palabras de sus frases que el tomo aún no puede enseñar ` +
+        `  ${block.id} — palabras que promete y aún no puede enseñar ` +
           `(${block.pending.length}):\n${detail(block.pending)}`,
       )
     }
