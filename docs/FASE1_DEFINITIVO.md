@@ -317,25 +317,28 @@ dakuten que estrene él mismo.
 
 **G1 · La cópula です — B2**
 
-> **A は B です** = «A es B»: es lo que en español hacen «ser» y «estar». Pero
-> no es un verbo, es un enlace, y no se conjuga: no tiene raíz ni terminaciones.
-> Es además la forma **cortés**, y ahí está su pareja con G2: です cierra lo que
-> algo ES y 〜ます lo que se HACE. Esa relación se dice, no se deja al contexto.
-> Se escribe で + す, y で es て con dakuten.
+> **A は B です** = «A es B»: cierra la frase y afirma lo que dice. Hace el
+> trabajo de «ser» y «estar», pero no es un verbo: no tiene raíz ni se conjuga.
+> Vale detrás de una cosa o de una cualidad, y no cambia con la persona.
+> Es además la forma **cortés**. Se escribe で + す —で es て con dakuten— y la す
+> final casi no suena: «des».
 > - いえです。 → Es una casa.
 > - あおいです。 → Es azul.
 >
 > Negación: **ではありません** (disponible desde B3, necesita り).
+>
+> **La plana no menciona 〜ます, y G2 no menciona です.** Cada una explicando a la
+> otra llenaba la hoja y dejaba fuera lo suyo — y en móvil no cabe.
 
 **G2 · La forma ます — B2**
 
-> Los verbos japoneses **no cambian según quién habla**: あいます vale para
-> «yo me encuentro», «tú te encuentras» y «él se encuentra». Solo cambian por
-> **tiempo** y por **afirmativo/negativo**.
+> 〜ます vuelve **cortés** un verbo: con un profesor, un jefe o un desconocido.
 >
-> Lo que se conjuga no es el verbo entero: es su **raíz**, y hay que sacarla.
-> あう, いう y すう acaban los tres en う —la marca del verbo sin conjugar—, y
-> esa う se cambia por い. Cambia solo el último carácter.
+> No se pega al verbo entero: se pega a su **raíz**, y hay que sacarla. あう,
+> いう y すう acaban en う —la marca del verbo sin conjugar— y esa う se cambia
+> por い; lo de delante se queda igual. ます afirma y ません niega, y las dos
+> valen para el **presente y el futuro**: あいます es «me encuentro» y «me
+> encontraré». Tampoco cambian con la persona.
 >
 > | Verbo | Raíz · う → い | +ます | +ません |
 > |---|---|---|---|
@@ -349,6 +352,10 @@ dakuten que estrene él mismo.
 > tabla u→i de §2.3 entera—. Los otros dos grupos —ichidan, que PIERDE su última
 > sílaba, y los irregulares— se avisan pero no se ejemplifican: たべる y する piden
 > kana que B2 no ha dado.
+>
+> **Lo que NO entra en B2, y dónde entra:** ました y ませんでした piden し y た (G3,
+> B5), ましょう pide el ょ pequeño (G7, B18) y la pregunta con か pide か (B3).
+> Cada una se explica en el tomo que trae sus caracteres, no antes.
 >
 > Los tres verbos ya están en el temario: あう e いう son de B1 y すう es de B2.
 > No hay palabra nueva.

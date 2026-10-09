@@ -108,15 +108,13 @@ export const GRAMMAR: Grammar[] = [
     romaji: 'desu',
     title: 'です — «es»',
     explanation:
-      'です es lo que en español hacen «ser» y «estar»: A は B です es «A es B». Pero ' +
-      'no es un verbo, es un ENLACE, y por eso no se conjuga como ellos: no tiene raíz ' +
-      'ni terminaciones que pegarle.\n\n' +
-      'Es además la forma CORTÉS. Con です la frase está bien dicha delante de ' +
-      'cualquiera; lo que hace です por las cosas que SON, lo hace 〜ます por lo que se ' +
-      'HACE, y es la regla que viene a continuación.\n\n' +
-      'Se escribe で + す. Y で es て con dakuten: la primera vez que lo usas.\n\n' +
-      'No cambia según quién habla: いえです vale para «es una casa», «soy una casa» o ' +
-      '«son casas». El japonés deja eso al contexto.',
+      'です cierra la frase y afirma lo que dice: A は B です es «A es B». Hace el ' +
+      'trabajo de «ser» y de «estar», pero no es un verbo: no tiene raíz ni se ' +
+      'conjuga.\n\n' +
+      'Vale detrás de una cosa o de una cualidad —いえです, あおいです— y no cambia con ' +
+      'la persona: いえです es «es una casa» y también «soy una casa».\n\n' +
+      'Y es la forma CORTÉS, con quien no es de confianza. Se escribe で + す —で es ' +
+      'て con dakuten— y esa す final casi no suena: se dice «des».',
     examples: [
       { label: 'いえです。', forms: ['ie desu.', 'Es una casa.'] },
       { label: 'あおいです。', forms: ['aoi desu.', 'Es azul.'] },
@@ -148,22 +146,17 @@ export const GRAMMAR: Grammar[] = [
     romaji: 'masu',
     title: 'ます — el presente cortés',
     explanation:
-      'です dice lo que algo ES; 〜ます dice lo que alguien HACE. Son las dos marcas de ' +
-      'cortesía del japonés, y por eso se aprenden juntas: con una de las dos, la frase ' +
-      'ya está bien dicha.\n\n' +
-      'Los verbos no cambian según quién habla: あいます vale para «me encuentro», «te ' +
-      'encuentras» y «se encuentra». Solo cambian por el tiempo y por si son ' +
-      'afirmativos o negativos.\n\n' +
-      'Lo que se conjuga no es el verbo entero: es su RAÍZ, y hay que sacarla. あう e ' +
-      'いう, de tu primer tomo, y すう acaban los tres en う, que es la marca del verbo ' +
-      'sin conjugar. Esa う se cambia por い: あう → あい, いう → いい, すう → すい. ' +
-      'Cambia solo el último carácter; lo de delante se queda igual. Y a la raíz se le ' +
-      'pega ます o ません.\n\n' +
-      'Con los verbos acabados en う esto no falla nunca: no hay excepciones. Y ninguno ' +
-      'acaba en あ, en え ni en ん —todos terminan en un carácter que suena con «u», y ' +
-      'cada uno pasa al de su familia que suena con «i»—. Lo que sí hay es un grupo de ' +
-      'verbos que en vez de cambiar esa sílaba la PIERDE, y dos que no siguen ninguna ' +
-      'regla: los verás cuando tengas los caracteres para leerlos.',
+      '〜ます vuelve cortés un verbo: es como se habla con un profesor, un jefe o ' +
+      'alguien a quien acabas de conocer. ます afirma y ません niega, y las dos valen ' +
+      'para el presente y para el futuro: あいます es «me encuentro» y «me ' +
+      'encontraré».\n\n' +
+      'No se pegan al verbo entero, sino a su RAÍZ. あう, いう y すう acaban en う —la ' +
+      'marca del verbo sin conjugar— y esa う se cambia por い: あう → あい. Cambia ' +
+      'solo el último carácter.\n\n' +
+      'Todo verbo acaba en un carácter que suena con «u» —ninguno en あ, え ni ん— y ' +
+      'pasa al de su familia que suena con «i». Con los de う no hay excepciones. Otro ' +
+      'grupo pierde esa sílaba en vez de cambiarla, y dos no siguen regla: llegan con ' +
+      'sus caracteres.',
     // La primera fila es la CABECERA, y la plana la pinta como tal.
     //
     // Los tres verbos acaban en う, y no es pereza: enseñar aquí otra terminación pide
