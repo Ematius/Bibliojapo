@@ -3,6 +3,14 @@ import { PageFlip } from 'page-flip'
 import type { VolumeContent } from '../../../api/volumes'
 import { readBookmark, writeBookmark } from '../../../shared/bookmark'
 import { READER, buildVolumePages, type ReadyItem } from './readerConfig'
+
+// Por dónde se reconoce una regla dentro de una frase, cuando no es un carácter suelto.
+// です y 〜ます no tienen `character`, y sin esto sus frases no se encontrarían.
+const GRAMMAR_MARK: Record<string, string> = {
+  desu: 'です',
+  masu: 'ます',
+  'copula-neg': 'ではありません',
+}
 import { ContentText } from '../parts/ContentText'
 import { WordCard } from '../recognition/WordCard'
 import { WordGap } from '../recognition/WordGap'
@@ -23,6 +31,7 @@ import { ExamResults } from '../exam/ExamResults'
 import { ExamReveal } from '../exam/ExamReveal'
 import { ExamGift } from '../exam/ExamGift'
 import { mountSentenceTiles } from '../exam/sentenceTiles'
+import { mountSentenceDrill } from '../grammar/sentenceDrill'
 import { mountFinalExam } from '../exam/finalExam'
 import { mountGiftOpening } from '../exam/giftOpening'
 import { GrammarRule, GrammarExample } from '../grammar/GrammarRule'
@@ -121,6 +130,29 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
         : [topics[0], topics[Math.floor((topics.length - 1) / 2)], topics[topics.length - 1]]
     }
 
+    // Las frases del tomo que USAN la regla. No se puede preguntar por `grammarId`: el
+    // generador solo se lo pone a las partículas, así que です, 〜ます y el dakuten no lo
+    // llevan nunca y sus frases no aparecerían. Se buscan por el texto, que además deja
+    // que una frase sirva a dos reglas —あおいです lleva で y です—.
+    //
+    // Sin desglose kana a kana no hay huecos que rellenar: la hoja saldría en blanco.
+    const practiceFor = (rule: { id: string; character?: string }) => {
+      const marks =
+        rule.id === 'dakuten'
+          ? block.dakuten
+          : [GRAMMAR_MARK[rule.id] ?? rule.character]
+
+      // Una regla sin marca reconocible no practica nada: mejor eso que colarle todas
+      // las frases del tomo.
+      if (!marks.length || marks.some((mark) => !mark)) return []
+
+      return block.sentenceIds.filter((id) => {
+        const sentence = sentencesById.get(id)
+        if (!sentence || sentence.units.length === 0) return false
+        return marks.some((mark) => sentence.text.includes(mark))
+      })
+    }
+
     // Una regla de ORTOGRAFÍA habla de un carácter y de sus dos lecturas; una de gramática
     // no es un carácter, y bajo ese encabezado el alumno buscaría uno que no existe.
     const headingOf = (rule: { character?: string }) =>
@@ -161,7 +193,15 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       const rule = ready(lesson.grammarId)
       if (!rule) return []
       anchored.add(rule.id)
-      return [{ kind: 'rule', grammarId: rule.id, heading: headingOf(rule), sentenceIds: examplesFor(rule.id) }]
+      return [
+        {
+          kind: 'rule',
+          grammarId: rule.id,
+          heading: headingOf(rule),
+          sentenceIds: examplesFor(rule.id),
+          practiceIds: practiceFor(rule),
+        },
+      ]
     })
 
     // Las de ORTOGRAFÍA que el temario todavía no ancla a ninguna lección: se reconocen
@@ -172,7 +212,15 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       if (anchored.has(rule.id) || !ready(rule.id)) return []
       const sentenceIds = examplesFor(rule.id)
       return sentenceIds.length
-        ? [{ kind: 'rule', grammarId: rule.id, heading: headingOf(rule), sentenceIds }]
+        ? [
+            {
+              kind: 'rule',
+              grammarId: rule.id,
+              heading: headingOf(rule),
+              sentenceIds,
+              practiceIds: practiceFor(rule),
+            },
+          ]
         : []
     })
 
@@ -320,6 +368,8 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     // Las tarjetas de las frases del examen final: mismo gesto, sin corrección al
     // momento. Ver `sentenceTiles.ts`.
     const unmountSentenceTiles = mountSentenceTiles(holder)
+    // Las frases que se practican detrás de cada regla, que sí se corrigen al momento.
+    const unmountSentenceDrill = mountSentenceDrill(holder)
     // El examen final en sí: bloquea el giro mientras se hace, puntúa cada frase al
     // pulsar «Siguiente» y decide él mismo cuándo se pasa de hoja. Va DESPUÉS de
     // `mountSentenceTiles`, que es quien deja el estado de cada hueco listo para leer.
@@ -347,6 +397,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       unmountPairing?.()
       unmountSeal?.()
       unmountSentenceTiles?.()
+      unmountSentenceDrill?.()
       unmountFinalExam?.()
       unmountGift?.()
       flipRef.current = null
@@ -435,6 +486,16 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
 
                   if (page.shows === 'examRules') return <ExamRules />
                   if (page.shows === 'examScope') return <ExamScope />
+
+                  // La misma hoja del examen, pero de práctica: con el significado
+                  // delante, sin bloque y sin cuenta de frases. Se corrige al pulsar
+                  // «Hecho» — ver `sentenceDrill.ts`.
+                  if (page.shows === 'sentenceDrill') {
+                    const sentence = page.sentenceId
+                      ? sentencesById.get(page.sentenceId)
+                      : undefined
+                    return sentence ? <SentenceBuild sentence={sentence} cue="meaning" /> : null
+                  }
 
                   if (page.shows === 'examSentence') {
                     const sentence = page.sentenceId ? sentencesById.get(page.sentenceId) : undefined

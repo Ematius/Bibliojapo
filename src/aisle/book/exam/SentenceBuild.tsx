@@ -11,13 +11,16 @@ interface SentenceBuildProps {
   // Qué se da como pista: la lectura, el significado, o solo el sonido. Es lo único
   // que cambia entre los tres bloques del examen — el ejercicio es el mismo.
   cue: ExamCue
-  // A qué bloque pertenece. Viaja en un atributo porque `finalExam.ts` agrupa las
-  // frases por bloque para saber cuál es la última de cada uno, sin necesidad de
-  // leer el DOM en el mismo orden en que React las montó.
-  examBlock: 1 | 2 | 3
+  // A qué bloque del examen pertenece. Viaja en un atributo porque `finalExam.ts`
+  // agrupa las frases por bloque para saber cuál es la última de cada uno, sin
+  // necesidad de leer el DOM en el mismo orden en que React las montó.
+  //
+  // SIN él la hoja es de práctica, no de examen: `finalExam.ts` solo recoge las que lo
+  // llevan, así que ni la puntúa ni la bloquea.
+  examBlock?: 1 | 2 | 3
   // Para el «Frase X de 15» de arriba: en un examen conviene saber cuánto queda.
-  index: number
-  total: number
+  index?: number
+  total?: number
 }
 
 // Una frase entera por reconstruir, con tarjetas de un solo kana. Sin pool de
@@ -46,9 +49,13 @@ export function SentenceBuild({ sentence, cue, examBlock, index, total }: Senten
       // revés, ver `VolumeReader`—.
       data-exam-index={index}
     >
-      <p className="sentence-build__progress">
-        Frase {index} de {total}
-      </p>
+      {/* Solo en el examen: ahí conviene saber cuánto queda. En una hoja de práctica
+          no hay cuenta atrás que dar. */}
+      {total ? (
+        <p className="sentence-build__progress">
+          Frase {index} de {total}
+        </p>
+      ) : null}
 
       {cue === 'romaji' && <p className="sentence-build__cue">{romaji}</p>}
       {cue === 'meaning' && <p className="sentence-build__cue">{sentence.meaning}</p>}

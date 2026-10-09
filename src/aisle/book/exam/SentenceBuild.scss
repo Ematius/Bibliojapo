@@ -132,3 +132,19 @@
     transition: background var(--duration-fast) ease;
   }
 }
+
+// El resultado de una hoja de PRÁCTICA, la que va detrás de cada regla —las del examen
+// no se corrigen al momento—. Lo pone `sentenceDrill.ts` en el atributo, porque
+// page-flip clona las hojas y un estado de React no viajaría al clon.
+//
+// Se tiñen los huecos y no se añade un cartel: la frase ya está escrita ahí, y lo que
+// se quiere mirar al fallar es ELLA, no un mensaje debajo.
+.sentence-build[data-drill='right'] .sentence-build__slot {
+  color: var(--color-ivy-dark);
+  border-color: var(--color-ivy);
+}
+
+.sentence-build[data-drill='wrong'] .sentence-build__slot {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}

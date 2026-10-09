@@ -25,6 +25,7 @@ import { shuffle } from '../parts/shuffle'
 //   drill         dos preguntas en una hoja: reconstruirla y escribir su lectura
 //   grammar           la regla de ortografía: el carácter y la lectura que toma de partícula
 //   grammarExample    esa misma regla dentro de una frase del tomo, kana a kana
+//   sentenceDrill     esa frase por escribir con tarjetas, con su significado delante
 //   finalNotice       la hoja que anuncia el repaso completo
 //   finalScope        lo que entra en ese repaso: los kana del tomo
 //   finalReviewNotice la hoja que anuncia el repaso final
@@ -55,6 +56,7 @@ export type PageContent =
   | 'drill'
   | 'grammar'
   | 'grammarExample'
+  | 'sentenceDrill'
   | 'examKana'
   | 'examWord'
   | 'finalNotice'
@@ -127,6 +129,9 @@ export interface ReadyRule {
   // Con qué se encabeza su plana. «Ortografía» habla de un carácter y sus dos lecturas;
   // です no es un carácter, y bajo ese encabezado el alumno buscaría uno.
   heading: string
+  // Las frases del tomo que USAN la regla, para leerlas y escribirlas aquí. Sin esto, la
+  // primera vez que se ve あおいです es en el examen final, pidiéndola de memoria.
+  practiceIds?: string[]
   // Las frases del tomo con las que se enseña. Puede venir VACÍA: una regla de ortografía
   // —は que suena «wa»— se ve en una frase, pero です o ～ます se explican con su tabla y
   // no hay frase del temario que las nombre.
@@ -281,6 +286,26 @@ function grammarSpread(rule: ReadyRule): Spread {
   }
 }
 
+// La sección de una regla: su plana y, detrás, una por cada frase del tomo que la usa.
+// A la derecha la frase kana a kana para leerla, a la izquierda para escribirla — el
+// mismo par de ver y hacer que lleva cada kana en su lección.
+//
+// Una frase puede salir en dos reglas: あおいです lleva で —dakuten— y です, y se practica
+// en las dos. Lo que se mira en cada una es distinto.
+function grammarSpreads(rule: ReadyRule): Spread[] {
+  const practice = (rule.practiceIds ?? []).map<Spread>((sentenceId) => ({
+    right: {
+      grammarId: rule.grammarId,
+      sentenceIds: [sentenceId],
+      title: 'Léela',
+      shows: 'grammarExample',
+    },
+    left: { sentenceId, title: 'Escríbela', shows: 'sentenceDrill' },
+  }))
+
+  return [grammarSpread(rule), ...practice]
+}
+
 // El folio que se recibe es el de la DERECHA, que es la que se lee primero.
 function placeSpread(spread: Spread, key: string, rightFolio: number): ReaderPage[] {
   return [
@@ -319,7 +344,7 @@ export function buildVolumePages(
   const spreads = [
     introSpread(),
     ...items.flatMap((item) =>
-      item.kind === 'kana' ? kanaSpreads(item.kanaId, item.wordIds) : [grammarSpread(item)],
+      item.kind === 'kana' ? kanaSpreads(item.kanaId, item.wordIds) : grammarSpreads(item),
     ),
     ...sentenceWordSpreads(sentenceWordIds, lessons),
     ...completeReviewSpreads(lessons),

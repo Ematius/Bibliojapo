@@ -219,7 +219,9 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   // exactamente las que comparten plana en `readerConfig.ts`. Las dos hojas de una
   // misma plana ya se ven a la vez —no hace falta pasar página para ver la
   // izquierda—, así que el giro espera a que las DOS estén enviadas, no a la primera.
-  const sentenceEls = [...root.querySelectorAll<HTMLElement>('.sentence-build')]
+  // Solo las del EXAMEN: la misma hoja se usa para practicar detrás de cada regla, y
+  // esas no llevan bloque. Sin el filtro, el examen las contaría entre sus frases.
+  const sentenceEls = [...root.querySelectorAll<HTMLElement>('.sentence-build[data-exam-block]')]
   const byBlock: Record<BlockId, HTMLElement[]> = { 1: [], 2: [], 3: [] }
   sentenceEls.forEach((el) => {
     const block = Number(el.dataset.examBlock) as BlockId
