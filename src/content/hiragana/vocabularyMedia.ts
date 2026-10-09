@@ -326,6 +326,20 @@ const MEDIA: Record<string, WordMedia> = {
     imageAlt:
       'Un comerciante mostrando con las dos manos un billete japonés de diez mil yenes.',
   },
+  'oozei': {
+    audio: 'hiragana/b2/audio/word/oozei.wav',
+    image: 'hiragana/b2/images/imagesSupport/oozei-crowd.webp',
+    imageAlt:
+      'Una calle de mercado japonesa llena de gente entre los puestos y los ' +
+      'farolillos.',
+  },
+  'dewa': {
+    audio: 'hiragana/b2/audio/word/dewa.wav',
+    image: 'hiragana/b2/images/imagesSupport/dewa-then.webp',
+    imageAlt:
+      'Dos amigas que se ponen en marcha juntas, una señalando el camino, al salir ' +
+      'de una tienda.',
+  },
   // «no», no la casa: esa es `ie-2`. Y el dibujo lo dice con un gesto porque una
   // negación no es una cosa que se pueda poner delante del lector.
   'ie': {
