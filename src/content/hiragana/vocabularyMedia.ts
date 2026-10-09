@@ -272,11 +272,13 @@ const MEDIA: Record<string, WordMedia> = {
       'acaba de probar.',
   },
   'sui': {
+    audio: 'hiragana/b2/audio/word/sui.wav',
     image: 'hiragana/b2/images/imagesSupport/sui-wednesday.webp',
     imageAlt:
       'Un calendario japonés de pared con la tercera columna de la semana señalada.',
   },
   'suu': {
+    audio: 'hiragana/b2/audio/word/suu.wav',
     image: 'hiragana/b2/images/imagesSupport/suu-smoke.webp',
     imageAlt:
       'Un hombre con kimono aspirando de una pipa kiseru, con el humo subiendo en ' +
@@ -296,24 +298,28 @@ const MEDIA: Record<string, WordMedia> = {
   },
   // El sustantivo 晩, la noche. El contador 〜番 —turno, número— es `ban-2`.
   'ban': {
+    audio: 'hiragana/b2/audio/word/ban.wav',
     image: 'hiragana/b2/images/imagesSupport/ban-night.webp',
     imageAlt:
       'Una aldea japonesa de noche bajo la luna llena, con los farolillos ' +
       'encendidos en las casas.',
   },
   'ban-2': {
+    audio: 'hiragana/b2/audio/word/ban-2.wav',
     image: 'hiragana/b2/images/imagesSupport/ban-2-turn.webp',
     imageAlt:
       'Una mano sosteniendo un número de turno con el 3 en la sala de espera de ' +
       'una clínica.',
   },
   'maiban': {
+    audio: 'hiragana/b2/audio/word/maiban.wav',
     image: 'hiragana/b2/images/imagesSupport/maiban-every-night.webp',
     imageAlt:
       'Una madre leyendo un cuento a su hija ya acostada, con la lámpara de la ' +
       'mesilla encendida.',
   },
   'man': {
+    audio: 'hiragana/b2/audio/word/man.wav',
     image: 'hiragana/b2/images/imagesSupport/man-ten-thousand.webp',
     imageAlt:
       'Un comerciante mostrando con las dos manos un billete japonés de diez mil yenes.',

@@ -6,9 +6,13 @@
 // Los `units` y los `wordIds` salen de segmentar cada frase contra el vocabulario que
 // el alumno ya tiene: así una は de partícula se lee «wa» y la de はい se lee «ha», sin
 // que nadie tenga que decidirlo carácter a carácter.
+//
+// El audio va aparte, en sentenceMedia.ts, y este archivo no lo conoce: regenerar el
+// temario no puede llevarse por delante las grabaciones.
 import type { Sentence } from '../types'
+import { withAudio } from './sentenceMedia'
 
-export const SENTENCES: Sentence[] = [
+export const SENTENCES: Sentence[] = withAudio([
   {
     id: 'hai',
     text: 'はい。',
@@ -2133,6 +2137,6 @@ export const SENTENCES: Sentence[] = [
     wordIds: ['ee-2', 'hontou'],
     grammarId: 'particle-ka',
   },
-]
+])
 
 export const SENTENCES_BY_ID = new Map(SENTENCES.map((sentence) => [sentence.id, sentence]))

@@ -237,7 +237,15 @@ for (const aisleId of AISLE_ORDER) {
       ]
         .map((id) => ({ id, gaps: wordGaps(wordsById.get(id)) }))
         .filter((entry) => entry.gaps.length)
-        .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`),
+        .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`)
+        // El tercer bloque del examen final da la frase SOLO en audio: sin grabación,
+        // su botón sale apagado y la frase hay que componerla sin una sola pista.
+        .concat(
+          (block?.sentenceIds ?? [])
+            .map((id) => sentencesById.get(id))
+            .filter((sentence) => sentence && sentence.units.length && !sentence.audio)
+            .map((sentence) => `frase ${sentence.text}: sin audio`),
+        ),
     })
 
     block?.lessons.forEach((lesson, position) => {
