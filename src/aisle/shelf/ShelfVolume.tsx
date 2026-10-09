@@ -246,13 +246,40 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
   // Los renders grandes se piden al acercarse, no al pulsar: si esperaran al clic, el giro
   // arrancaría con la miniatura estirada. Un tomo que no puede salir no gasta nada.
   const preloadedRef = useRef(false)
-  const preloadFullArt = () => {
+  const preloadFullArt = useCallback(() => {
     if (preloadedRef.current || access !== 'open') return
     preloadedRef.current = true
     for (const src of [volume.art.spine, volume.art.cover, volume.art.coverTurned, FORE_EDGE]) {
       new Image().src = src
     }
-  }
+  }, [access, volume.art])
+
+  // En una pantalla táctil no hay puntero que se acerque: `onPointerDown` llega en el mismo
+  // instante del toque y no deja margen para 1,1 MB de renders. Así que el tomo que se puede
+  // coger los pide por su cuenta, pero SOLO con la pantalla ya cargada y el hilo libre: antes
+  // competirían con la escena y las miniaturas, que es lo que hay que ver primero.
+  useEffect(() => {
+    if (access !== 'open') return
+
+    let cancel = () => {}
+    const start = () => {
+      if (window.requestIdleCallback) {
+        const id = window.requestIdleCallback(preloadFullArt, { timeout: 3000 })
+        cancel = () => window.cancelIdleCallback(id)
+      } else {
+        const id = window.setTimeout(preloadFullArt, 600)
+        cancel = () => window.clearTimeout(id)
+      }
+    }
+
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+
+    return () => {
+      window.removeEventListener('load', start)
+      cancel()
+    }
+  }, [access, preloadFullArt])
 
   const { shape } = volume.art
   const volumeStyle: StyleWithVars = {
