@@ -399,15 +399,19 @@ function finalSentenceExamSpreads(sentenceIds: string[]): Spread[] {
       })
     }
 
-    // Con un número PAR de frases no queda hueco libre en la última pareja: los
-    // resultados piden su propia plana, sola a la derecha —solo UNA hoja lleva
-    // `examResults`, o `finalExam.ts` encontraría dos—. (Hoy las 15 frases del tomo
-    // dejan esto sin usar, pero un bloque futuro puede no ser impar.)
+    // Con un número PAR de frases no queda hueco libre en la última pareja, así que los
+    // resultados piden su propia plana —solo UNA hoja lleva `examResults`, o
+    // `finalExam.ts` encontraría dos—.
+    //
+    // Van a la IZQUIERDA, como cuando comparten plana con la última frase: sus botones
+    // se alinean hacia el lomo, y en la hoja derecha ese mismo borde es la esquina con la
+    // que page-flip arranca el giro — ver `ExamResults.scss`. La hoja que sobra queda a la
+    // derecha y va SIN título: con el del bloque parecía que quedaban frases por hacer.
     const resultsSpread: Spread | null =
       total % 2 === 0
         ? {
-            right: { title: `${title} · Resultados`, shows: 'examResults', examBlock: block },
-            left: { title },
+            right: {},
+            left: { title: `${title} · Resultados`, shows: 'examResults', examBlock: block },
           }
         : null
 
