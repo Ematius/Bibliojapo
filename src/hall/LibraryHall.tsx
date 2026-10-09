@@ -1,10 +1,11 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ASSETS } from '../entrance/libraryEntranceConfig'
 import { AisleSigns } from './AisleSigns'
 import { HallGuide } from './HallGuide'
 import { HallPanArrows } from './HallPanArrows'
 import { useAisleSweep } from './useAisleSweep'
+import { prefetchAisleCode } from './prefetchAisle'
 import { useScenePan } from '../shared/useScenePan'
 import { SiteNav } from '../shared/SiteNav'
 import './LibraryHall.scss'
@@ -20,6 +21,18 @@ export function LibraryHall() {
   // por los extremos y el centro es pared, así que en una pantalla estrecha el encuadre
   // centrado cae justo en el hueco y no se ve NI UNO.
   const { reach, panBy } = useScenePan(stageRef, { landing: 'left' })
+
+  // Del vestíbulo se sale a un pasillo, así que su código se adelanta en cuanto el hilo
+  // queda libre. Esperar al clic lo mete en serie detrás del barrido, que dura 1,05 s.
+  useEffect(() => {
+    if (!window.requestIdleCallback) {
+      const id = window.setTimeout(prefetchAisleCode, 1200)
+      return () => window.clearTimeout(id)
+    }
+
+    const id = window.requestIdleCallback(prefetchAisleCode, { timeout: 4000 })
+    return () => window.cancelIdleCallback(id)
+  }, [])
 
   return (
     <main className="library-hall">

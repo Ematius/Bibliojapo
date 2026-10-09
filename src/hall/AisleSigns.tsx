@@ -3,6 +3,7 @@ import { findAisle } from '../shared/aisles'
 import type { StyleWithVars } from '../shared/styleWithVars'
 import { AISLE_SIGNS, type AisleSign } from './aisleSignsConfig'
 import { useAisleSignsIntro } from './useAisleSignsIntro'
+import { prefetchAisleCode, prefetchAisleScene } from './prefetchAisle'
 import './AisleSigns.scss'
 
 interface AisleSignsProps {
@@ -37,6 +38,16 @@ export function AisleSigns({ onSelect }: AisleSignsProps) {
             className="aisle-signs__sign"
             style={signStyle}
             onClick={() => onSelect(sign)}
+            // La ilustración del pasillo y su código, pedidos al acercarse al cartel: el
+            // barrido que lleva allí dura 1,05 s y no da para 300 kB más el trozo de JS.
+            onPointerEnter={() => {
+              prefetchAisleCode()
+              prefetchAisleScene(sign.aisleId)
+            }}
+            onFocus={() => {
+              prefetchAisleCode()
+              prefetchAisleScene(sign.aisleId)
+            }}
             aria-label={`Entrar en el pasillo de ${aisle.label}`}
           >
             <img src={sign.asset} alt="" draggable="false" />
