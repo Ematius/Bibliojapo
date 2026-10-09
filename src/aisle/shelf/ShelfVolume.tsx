@@ -14,6 +14,7 @@ import { openBookLayout, type OpenBookLayout } from '../book/opening/openingConf
 import { useVolumePull, type VolumeStage } from './useVolumePull'
 import { nudgeVolume } from './volumeNudge'
 import { VolumeOpening } from '../book/opening/VolumeOpening'
+import { preloadOpeningFrames } from '../book/opening/preloadOpeningFrames'
 import { RotateNotice } from '../../shared/RotateNotice'
 import { BookExit } from '../book/opening/BookExit'
 import { SmallScreenNotice } from '../book/opening/SmallScreenNotice'
@@ -90,6 +91,12 @@ export function ShelfVolume({ volume, access }: ShelfVolumeProps) {
 
   // Si el tomo se desmonta a medio tirón, el tirón se para con él.
   useEffect(() => () => stopNudgeRef.current?.(), [])
+
+  // Los fotogramas de la apertura se piden al salir el tomo de la balda, no al abrirse:
+  // ahí dentro la timeline no espera a que lleguen. Ver `preloadOpeningFrames`.
+  useEffect(() => {
+    if (stage !== 'shelf') preloadOpeningFrames()
+  }, [stage])
 
   // Avisa fuera mientras el tomo no está en la balda: el libro abierto pinta por encima de la
   // barra de navegación, así que ella tiene que enterarse de que hay que apartarse.
