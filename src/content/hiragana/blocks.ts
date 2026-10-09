@@ -37,7 +37,6 @@ export const BLOCKS: Block[] = [
       'e',
       'e-2',
       'ee',
-      'o',
       'ooi',
       'ha',
       'hai',
@@ -59,11 +58,11 @@ export const BLOCKS: Block[] = [
     summary:
       'Cinco kana más, y las dos rayitas que cambian el sonido de los que ya se saben. Con ellos se escriben です y ます: de aquí en adelante una frase no solo nombra cosas, también dice algo de ellas.',
     lessons: [
-      { type: 'kana', kanaId: 'ma', wordIds: ['ima', 'mai', 'amai', 'mazui', 'mae', 'mae-2'] },
-      { type: 'kana', kanaId: 'su', wordIds: ['isu', 'osu', 'usui', 'sui', 'suu'] },
+      { type: 'kana', kanaId: 'ma', wordIds: ['ima', 'mai', 'mae', 'mae-2', 'amai', 'mazui'] },
+      { type: 'kana', kanaId: 'su', wordIds: ['isu', 'osu', 'sui', 'suu', 'usui'] },
       { type: 'kana', kanaId: 'te', wordIds: ['te'] },
       { type: 'kana', kanaId: 'se', wordIds: ['sei', 'semai'] },
-      { type: 'kana', kanaId: 'n', wordIds: ['en', 'sen', 'han', 'sensei', 'ban', 'ban-2', 'man', 'maiban'] },
+      { type: 'kana', kanaId: 'n', wordIds: ['en', 'sen', 'han', 'ban', 'ban-2', 'man', 'sensei', 'maiban'] },
       { type: 'grammar', grammarId: 'dakuten' },
       { type: 'grammar', grammarId: 'desu' },
       { type: 'grammar', grammarId: 'masu' },

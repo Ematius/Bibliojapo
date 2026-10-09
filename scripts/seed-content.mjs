@@ -188,9 +188,16 @@ for (const aisleId of AISLE_ORDER) {
     const block = blocksById.get(localId)
     block?.lessons.forEach((lesson) => (lesson.wordIds ?? []).forEach((id) => taught.add(id)))
 
-    // Las palabras que las frases del tomo usan sin que ninguna lección las haya
-    // presentado. El examen final las pide escribir enteras, así que el tomo las
-    // enseña antes — ver `sentenceWordSpreads` en `readerConfig.ts`.
+    // Todo lo que el tomo PROMETE y ninguna lección enseña. Son dos casos, y los dos
+    // acaban en la misma sección, detrás de las reglas — ver `sentenceWordSpreads`:
+    //
+    //   · lo que usan sus frases y no se dio nunca: el examen final lo pide escribir;
+    //   · lo que el bloque desbloquea y no cae en ninguna lección, que son las palabras
+    //     con DAKUTEN —おおぜい, では—: ぜ no es せ ni で es て, así que no coinciden con el
+    //     kana de su lección. Y van bien aquí, no allí: la plana del dakuten va detrás de
+    //     las lecciones, y hasta ella esas palabras no se pueden leer.
+    //
+    // Sin esto la portada promete palabras que no salen en ninguna página del tomo.
     const fromSentences = new Set()
     for (const id of block?.sentenceIds ?? []) {
       const sentence = sentencesById.get(id)
@@ -200,6 +207,9 @@ for (const aisleId of AISLE_ORDER) {
       for (const wordId of sentence.wordIds ?? []) {
         if (!taught.has(wordId)) fromSentences.add(wordId)
       }
+    }
+    for (const wordId of block?.wordIds ?? []) {
+      if (!taught.has(wordId)) fromSentences.add(wordId)
     }
     blocks.push({
       id: globalBlockId(aisleId, localId),

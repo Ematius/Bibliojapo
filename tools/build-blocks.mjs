@@ -164,7 +164,7 @@ for (const block of doc) {
   for (const id of RULES_BY_BLOCK[block.id] ?? []) lessons.push({ type: 'grammar', grammarId: id })
 
   const sentenceIds = block.sentences.map((s) => sentenceId(s.text, n))
-  rendered.push({ ...block, lessons, sentenceIds, wordIds: block.words.map((w) => w.id) })
+  rendered.push({ ...block, lessons, sentenceIds, wordIds: block.words.map((w) => w.id).filter((id) => !NOT_TAUGHT_ALONE.has(id)) })
 }
 
 const q = (s) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`
