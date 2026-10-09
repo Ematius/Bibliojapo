@@ -271,6 +271,53 @@ const MEDIA: Record<string, WordMedia> = {
       'Una niña con la cara arrugada de asco, apartando una ciruela encurtida que ' +
       'acaba de probar.',
   },
+  'sui': {
+    image: 'hiragana/b2/images/imagesSupport/sui-wednesday.webp',
+    imageAlt:
+      'Un calendario japonés de pared con la tercera columna de la semana señalada.',
+  },
+  'suu': {
+    image: 'hiragana/b2/images/imagesSupport/suu-smoke.webp',
+    imageAlt:
+      'Un hombre con kimono aspirando de una pipa kiseru, con el humo subiendo en ' +
+      'una voluta.',
+  },
+  // El sustantivo 前: el concepto de «antes». El sufijo 〜前 es `mae-2`, y van con
+  // dibujos distintos porque en el ejercicio solo se oyen — las dos suenan «mae».
+  'mae': {
+    image: 'hiragana/b2/images/imagesSupport/mae-before.webp',
+    imageAlt:
+      'Un aula de terakoya al amanecer, con los pupitres y los pinceles ya puestos ' +
+      'antes de que lleguen los alumnos.',
+  },
+  'mae-2': {
+    image: 'hiragana/b2/images/imagesSupport/mae-2-in-front.webp',
+    imageAlt: 'Un niño de pie justo delante de la entrada de una casa japonesa.',
+  },
+  // El sustantivo 晩, la noche. El contador 〜番 —turno, número— es `ban-2`.
+  'ban': {
+    image: 'hiragana/b2/images/imagesSupport/ban-night.webp',
+    imageAlt:
+      'Una aldea japonesa de noche bajo la luna llena, con los farolillos ' +
+      'encendidos en las casas.',
+  },
+  'ban-2': {
+    image: 'hiragana/b2/images/imagesSupport/ban-2-turn.webp',
+    imageAlt:
+      'Una mano sosteniendo un número de turno con el 3 en la sala de espera de ' +
+      'una clínica.',
+  },
+  'maiban': {
+    image: 'hiragana/b2/images/imagesSupport/maiban-every-night.webp',
+    imageAlt:
+      'Una madre leyendo un cuento a su hija ya acostada, con la lámpara de la ' +
+      'mesilla encendida.',
+  },
+  'man': {
+    image: 'hiragana/b2/images/imagesSupport/man-ten-thousand.webp',
+    imageAlt:
+      'Un comerciante mostrando con las dos manos un billete japonés de diez mil yenes.',
+  },
   // «no», no la casa: esa es `ie-2`. Y el dibujo lo dice con un gesto porque una
   // negación no es una cosa que se pueda poner delante del lector.
   'ie': {
