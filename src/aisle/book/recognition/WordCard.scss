@@ -12,15 +12,16 @@
   justify-content: center;
   gap: 2cqh;
 
-  // El apoyo visual del debut de la palabra. Más pequeño que en `WordPrompt`: ahí es el
-  // enunciado entero y aquí acompaña a la palabra escrita, que es lo que esta hoja enseña.
+  // El apoyo visual del debut de la palabra. Un punto por debajo de `WordPrompt` —ahí el
+  // dibujo es el enunciado entero—, pero del mismo orden: más pequeño se lee como un
+  // icono al lado de un rótulo, y la palabra escrita se come la hoja.
   //
   // Nada de `filter: drop-shadow`: la hoja va dentro del libro que page-flip repinta al
   // girar, y una sombra externa cuesta un repintado de toda la zona en cada frame.
   &__image {
     display: block;
-    max-width: 62cqw;
-    max-height: 30cqh;
+    max-width: 72cqw;
+    max-height: 44cqh;
     width: auto;
     height: auto;
     object-fit: contain;
