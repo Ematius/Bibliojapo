@@ -377,6 +377,7 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       blockId,
       flip,
       sentencesById,
+      attempt: examAttempt,
       retry: () => setExamAttempt((attempt) => attempt + 1),
       setTurnGuard: (isBlocked) => {
         turnBlockedRef.current = isBlocked

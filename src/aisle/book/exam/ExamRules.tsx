@@ -41,10 +41,18 @@ export function ExamRules() {
         <BookButton className="exam-rules__back" data-exam-back="true">
           Volver al temario
         </BookButton>
+
+        {/* Solo con el tomo ya sellado, donde ocupa el sitio que deja «Empezar».
+            Pide un intento nuevo por la misma puerta que «Reintentar»: el examen
+            nace en blanco y el sello ya ganado no entra en juego. */}
+        <BookButton className="exam-rules__retake" data-exam-retake="true" hidden>
+          Volver a hacerlo
+        </BookButton>
       </div>
 
       <p className="exam-rules__done" data-exam-done hidden>
-        Este tomo ya tiene su sello. Se puede seguir leyendo sin volver a examinarse.
+        Este tomo ya tiene su sello. Se puede seguir leyendo sin volver a examinarse, y
+        repetir el examen no lo pone en juego.
       </p>
     </div>
   )

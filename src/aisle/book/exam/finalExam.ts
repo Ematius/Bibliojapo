@@ -22,6 +22,10 @@ interface FinalExamOptions {
   blockId: string
   flip: PageFlip
   sentencesById: Map<string, Sentence>
+  // Qué intento se está montando: cero es abrir el tomo tal cual, y de uno en adelante
+  // un intento PEDIDO —«Reintentar» o «Volver a hacerlo»—. Cambia lo que se ve en las
+  // normas de un tomo ya sellado.
+  attempt: number
   // Sube `examAttempt` en `VolumeReader`, que vuelve a barajar el bloque 3 y remonta
   // el libro entero con las planas del examen en blanco. Ver `readerConfig.ts`.
   retry: () => void
@@ -51,7 +55,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   const reveal = root.querySelector<HTMLElement>('.exam-reveal')
   if (!rules || !reveal) return null
 
-  const { blockId, flip, sentencesById, retry } = options
+  const { blockId, flip, sentencesById, retry, attempt } = options
 
   // EL REGALO de la hoja de enfrente. Nace apagado y solo se enciende desde aquí: es el
   // premio por cerrar el tomo, así que quien decide si lo hay es el único que sabe la
@@ -82,6 +86,9 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   let mounted = true
   let locked = false
   let revealed = false
+  // Si el tomo traía el sello puesto ANTES de este montaje. Lo que decide que un repaso
+  // suspendido no pinte el sello en rojo: lo ganado no se pone en juego al repasar.
+  let sealed = false
 
   // El folio de la propia plana de normas: adonde se vuelve al reintentar. Se lee del
   // número YA impreso en la hoja —`ReaderPage.folio`—, no se recalcula aquí.
@@ -139,18 +146,25 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     return rows
   }
 
-  // La nota final y el sello. Verde si se aprueba, rojo si se suspende, y el rubrique
-  // diagonal de «Aprobado» solo con el verde — no tiene sentido aprobado a medias.
+  // La nota final y el sello. Verde si se aprueba HOY o si el tomo ya venía sellado
+  // —repasar no puede quitar lo ganado—, rojo solo cuando no hay sello de ninguna de las
+  // dos formas. El rubrique diagonal de «Aprobado» va con el verde: no tiene sentido
+  // aprobado a medias.
   const paintFinal = (scores: FinalExamScore, passed: boolean): void => {
     const finalEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-final]')
     const sealImg = reveal.querySelector<HTMLImageElement>('[data-exam-reveal-seal-img]')
     const stampEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-stamp]')
+    const keptEl = reveal.querySelector<HTMLElement>('[data-exam-reveal-kept]')
     const finalScore = ([1, 2, 3] as const).reduce((sum, block) => sum + scores[block], 0) / 3
+    const earned = passed || sealed
 
     if (finalEl) finalEl.textContent = `${finalScore.toFixed(1)} / 10`
-    if (sealImg) sealImg.src = passed ? '/images/green-seal.webp' : '/images/red-seal.webp'
-    if (passed) stampEl?.removeAttribute('hidden')
+    if (sealImg) sealImg.src = earned ? '/images/green-seal.webp' : '/images/red-seal.webp'
+    if (earned) stampEl?.removeAttribute('hidden')
     else stampEl?.setAttribute('hidden', '')
+    // El aviso solo cuando el verde NO sale de la nota de hoy, que es cuando chirría.
+    if (earned && !passed) keptEl?.removeAttribute('hidden')
+    else keptEl?.setAttribute('hidden', '')
   }
 
   // ¿YA ESTÁ SELLADO? Sin forzar a repetir un examen ya ganado — «repasar no vuelve a
@@ -161,9 +175,20 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
   void fetchSeals(blockId)
     .then((earned) => {
       if (!mounted || !earned.has(FINAL_SEAL)) return
+      sealed = true
+
+      // El regalo sigue siendo suyo aunque el examen se aprobara otro día: lo ganado está
+      // ganado, y la chuleta es justo lo que se vuelve a abrir para repasar.
+      unlockGift()
+
+      // Un intento PEDIDO deja las normas en paz —en blanco y con «Empezar»—: es lo que
+      // se acaba de pulsar. Sin esto, «Volver a hacerlo» remonta el libro y se topa otra
+      // vez con el aviso de sellado, sin forma de volver a examinarse.
+      if (attempt > 0) return
 
       rules.querySelector<HTMLElement>('[data-exam-start]')?.setAttribute('hidden', '')
       rules.querySelector<HTMLElement>('[data-exam-done]')?.removeAttribute('hidden')
+      rules.querySelector<HTMLElement>('[data-exam-retake]')?.removeAttribute('hidden')
 
       reveal.querySelector<HTMLElement>('[data-exam-reveal-show]')?.setAttribute('hidden', '')
       reveal.querySelector<HTMLElement>('[data-exam-reveal-body]')?.removeAttribute('hidden')
@@ -187,10 +212,6 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
       }
 
       reveal.querySelector<HTMLElement>('[data-exam-reveal-seal]')?.classList.add('exam-seal--earned')
-
-      // El regalo sigue siendo suyo aunque el examen se aprobara otro día: lo ganado está
-      // ganado, y la chuleta es justo lo que se vuelve a abrir para repasar.
-      unlockGift()
     })
     // Sin cortar el examen por esto: lo peor que pasa es no saltarse las normas de un
     // tomo ya sellado, y `fetchSeals` puede lanzar desde que traduce los fallos de
@@ -438,15 +459,20 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
 
   showButton?.addEventListener('click', onShowReveal)
 
-  // REINTENTAR: vuelve la marca de lectura a la plana de normas ANTES de pedir el
+  // EMPEZAR DE CERO: vuelve la marca de lectura a la plana de normas ANTES de pedir el
   // nuevo intento — `VolumeReader` remonta el libro entero al cambiar `examAttempt`,
   // y sin esto se abriría de nuevo sobre la propia revelación.
+  //
+  // Un botón en cada punta del examen, con el mismo gesto detrás: «Reintentar» tras
+  // suspender, y «Volver a hacerlo» en las normas de un tomo ya sellado.
   const retryButton = reveal.querySelector<HTMLButtonElement>('[data-exam-retry]')
+  const retakeButton = rules.querySelector<HTMLButtonElement>('[data-exam-retake]')
   const onRetry = () => {
     if (Number.isInteger(rulesFolio) && rulesFolio > 0) writeBookmark(blockId, rulesFolio)
     retry()
   }
   retryButton?.addEventListener('click', onRetry)
+  retakeButton?.addEventListener('click', onRetry)
 
   return () => {
     mounted = false
@@ -456,6 +482,7 @@ export function mountFinalExam(root: HTMLElement, options: FinalExamOptions): ((
     backButton?.removeEventListener('click', onBack)
     showButton?.removeEventListener('click', onShowReveal)
     retryButton?.removeEventListener('click', onRetry)
+    retakeButton?.removeEventListener('click', onRetry)
     sentenceTeardowns.forEach((teardown) => teardown?.())
     evaluateTeardowns.forEach((teardown) => teardown?.())
     resultsTeardowns.forEach((teardown) => teardown())

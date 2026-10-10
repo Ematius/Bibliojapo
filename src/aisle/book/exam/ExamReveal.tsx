@@ -63,6 +63,13 @@ export function ExamReveal({ characters }: ExamRevealProps) {
           </div>
         </div>
 
+        {/* Lo único que explica un sello verde con una nota por debajo del 5: el
+            examen se repasó y se suspendió, pero el tomo ya estaba sellado. Sin este
+            aviso, el sello de al lado parece un error. */}
+        <p className="exam-reveal__kept" data-exam-reveal-kept hidden>
+          Era un repaso: el sello de este tomo ya estaba ganado y sigue en su sitio.
+        </p>
+
         <BookButton className="exam-reveal__retry" data-exam-retry="true" hidden>
           Reintentar
         </BookButton>
