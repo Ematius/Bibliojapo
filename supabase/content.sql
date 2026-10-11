@@ -133,6 +133,8 @@ alter table public.words add column if not exists kanji text;
 --   くる → こない     こ, no き: la raíz de ～ない no es la de ～ます
 alter table public.words add column if not exists raiz_nai text;
 
+alter table public.words add column if not exists modo text;
+
 -- Nullables a propósito: la tabla ya tiene filas de antes del volcado nuevo, y un `not
 -- null` sin valor por defecto no podría añadirse sobre ellas. El espejo las rellena.
 
@@ -159,6 +161,15 @@ alter table public.words drop constraint if exists words_verbo_check;
 alter table public.words add constraint words_verbo_check check (
   (grupo_verbal is null and raiz_masu is null)
   or (grupo_verbal is not null and raiz_masu is not null)
+);
+
+-- Los mismos siete que `MODES` en `tools/build-vocabulary.mjs`: un modo nuevo se añade
+-- en los dos, o el volcado se cae al subirlo.
+alter table public.words drop constraint if exists words_modo_check;
+alter table public.words add constraint words_modo_check check (
+  modo is null or modo in (
+    'imagen', 'explicacion', 'afijo', 'sistema', 'situacion', 'escala', 'interjeccion'
+  )
 );
 
 create table if not exists public.grammar (

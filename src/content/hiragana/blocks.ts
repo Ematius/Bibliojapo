@@ -795,7 +795,7 @@ export const BLOCKS: Block[] = [
     title: 'Bloque 11 · によ',
     summary: '',
     lessons: [
-      { type: 'kana', kanaId: 'ni', wordIds: ['ni', 'ani', 'kuni', 'niku', 'nishi', 'nichi', 'nichi-2', 'niwa', 'nin', 'okuni', 'nanika', 'ninen', 'nimotsu', 'sugu-ni', 'ichinichi', 'onigiri', 'toriniku', 'nannichi', 'butaniku', 'mainichi', 'oniisan', 'konnichiwa', 'oide-ni-naru'] },
+      { type: 'kana', kanaId: 'ni', wordIds: ['ni', 'ani', 'kuni', 'niku', 'nishi', 'nichi', 'nichi-2', 'niwa', 'nin', 'okuni', 'nanika', 'nimotsu', 'sugu-ni', 'ichinichi', 'onigiri', 'toriniku', 'nannichi', 'butaniku', 'mainichi', 'oniisan', 'konnichiwa', 'oide-ni-naru'] },
       { type: 'kana', kanaId: 'yo', wordIds: ['yoku', 'yoku-2', 'yoko', 'yobu', 'yoru', 'oyogu', 'tsuyoi', 'youka', 'yowai', 'kayoubi', 'doyoubi', 'youfuku', 'kinyoubi', 'getsuyoubi', 'sayounara', 'suiyoubi', 'nichiyoubi', 'mokuyoubi', 'kaitouyoushi', 'mondaiyoushi', 'ohayou-gozaimasu'] },
     ],
     dakuten: [],
@@ -827,7 +827,6 @@ export const BLOCKS: Block[] = [
       'nichi',
       'nichi-2',
       'nichiyoubi',
-      'ninen',
       'nimotsu',
       'niwa',
       'nin',
@@ -1093,7 +1092,7 @@ export const BLOCKS: Block[] = [
       { type: 'kana', kanaId: 'pi', wordIds: ['enpitsu'] },
       { type: 'kana', kanaId: 'pu', wordIds: ['kippu'] },
       { type: 'kana', kanaId: 'pe', wordIds: [] },
-      { type: 'kana', kanaId: 'po', wordIds: ['roppon', 'sanpo-suru'] },
+      { type: 'kana', kanaId: 'po', wordIds: ['sanpo-suru'] },
     ],
     dakuten: [],
     wordIds: [
@@ -1124,7 +1123,6 @@ export const BLOCKS: Block[] = [
       'yokka',
       'yottsu',
       'rippa',
-      'roppon',
       'yukkuri-to',
     ],
     sentenceIds: [
@@ -1132,7 +1130,6 @@ export const BLOCKS: Block[] = [
       'enpitsudesu',
       'sanposhimasu',
       'rippadesu',
-      'roppon-arimasu',
       'yukkurito-arukimasu',
     ],
   },

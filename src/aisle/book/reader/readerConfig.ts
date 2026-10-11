@@ -152,7 +152,7 @@ export type ReadyItem =
 export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[]): Spread[] {
   // Sin una sola palabra con la que enseñarlo, la lección se queda en PRESENTAR el
   // carácter: su dibujo mnemotécnico y su pauta de escritura, que son las dos únicas planas
-  // que no necesitan vocabulario. Le pasa a ぺ, que no aparece en ninguna de las 768
+  // que no necesitan vocabulario. Le pasa a ぺ, que no aparece en ninguna de las 766
   // palabras del temario. Es poco, pero dejarlo fuera lo borraría del tomo, y el carné
   // contaría un kana que nadie ha visto.
   if (wordId === undefined) {

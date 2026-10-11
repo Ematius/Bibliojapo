@@ -1,5 +1,5 @@
 // Comprueba el tokenizador contra el CSV del documento: el rōmaji de los `units`
-// concatenado tiene que reproducir el campo `romaji` de cada fila. Si cuadran las 768,
+// concatenado tiene que reproducir el campo `romaji` de cada fila. Si cuadran las 766,
 // los units son correctos por construcción; las que no, salen aquí con su desglose.
 //
 //   node tools/check-romaji.mjs

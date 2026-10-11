@@ -30,7 +30,7 @@ function csvRows(markdown) {
     if (c.length < 9) continue
     rows.push({
       id: c[0], kana: c[1], kanji: c[2], romaji: c[3], meaning: c[4],
-      type: c[5], verbGroup: c[6], masuStem: c[7], block: c[8],
+      type: c[5], verbGroup: c[6], masuStem: c[7], block: c[8], mode: c[9],
     })
   }
   return rows
@@ -48,9 +48,20 @@ function writtenForm(kana) {
     .trim()
 }
 
+// Los mismos siete que `words_modo_check` en `content.sql`. Sin modo no se adivina: una
+// palabra sin él se enseñaría con dibujo, que es justo el error que la columna corrige.
+const MODES = ['imagen', 'explicacion', 'afijo', 'sistema', 'situacion', 'escala', 'interjeccion']
+
 const rows = csvRows(fs.readFileSync(DOC, 'utf8'))
 const words = []
 const failures = []
+
+const badModes = rows.filter((row) => !MODES.includes(row.mode))
+if (badModes.length) {
+  console.error(`${badModes.length} filas sin modo válido; no se escribe nada:`)
+  for (const row of badModes) console.error(`  ${row.id} ${row.kana} modo="${row.mode ?? ''}"`)
+  process.exit(1)
+}
 
 for (const row of rows) {
   const text = writtenForm(row.kana)
@@ -62,7 +73,7 @@ for (const row of rows) {
   const got = normalise(reading(units))
   if (got !== want) { failures.push({ ...row, text, got, want }); continue }
 
-  const word = { id: row.id, units, meaning: row.meaning, type: row.type }
+  const word = { id: row.id, units, meaning: row.meaning, type: row.type, mode: row.mode }
   // Solo cuando lo escrito no es la suma de los units, o sea cuando hay un signo que se
   // escribe y no se lee.
   const spelled = units.map((u) => u.kana).join('')
@@ -93,6 +104,7 @@ function render(word) {
   if (word.text) lines.push(`    text: ${quote(word.text)},`)
   lines.push(`    meaning: ${quote(word.meaning)},`)
   lines.push(`    type: ${quote(word.type)},`)
+  lines.push(`    mode: ${quote(word.mode)},`)
   if (word.kanji) lines.push(`    kanji: ${quote(word.kanji)},`)
   if (word.verbGroup) lines.push(`    verbGroup: ${quote(word.verbGroup)},`)
   if (word.masuStem) lines.push(`    masuStem: ${quote(word.masuStem)},`)

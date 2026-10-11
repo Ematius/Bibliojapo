@@ -1,4 +1,4 @@
-// Las frases del temario: 156, las del documento.
+// Las frases del temario: 155, las del documento.
 //
 // GENERADO — `node tools/build-sentences.mjs` lo reescribe desde el documento, que es
 // donde se corrige una frase o su traducción.
@@ -1971,22 +1971,6 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'す', romaji: 'su' },
     ],
     wordIds: ['rippa'],
-  },
-  {
-    id: 'roppon-arimasu',
-    text: 'ろっぽんあります。',
-    meaning: 'Hay seis.',
-    units: [
-      { kana: 'ろ', romaji: 'ro' },
-      { kana: 'っ', romaji: 'p' },
-      { kana: 'ぽ', romaji: 'po' },
-      { kana: 'ん', romaji: 'n' },
-      { kana: 'あ', romaji: 'a' },
-      { kana: 'り', romaji: 'ri' },
-      { kana: 'ま', romaji: 'ma' },
-      { kana: 'す', romaji: 'su' },
-    ],
-    wordIds: ['roppon', 'aru'],
   },
   {
     id: 'yukkurito-arukimasu',

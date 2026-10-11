@@ -31,6 +31,17 @@ export type WordType =
 // conjugaciones japonesas.
 export type VerbGroup = 'godan' | 'ichidan' | 'irregular'
 
+// Qué plana enseña la palabra. NO excluye el dibujo: un afijo puede tener su plana y
+// además su dibujo —～えん con una moneda—, y solo `imagen` lo exige para publicarse.
+export type WordMode =
+  | 'imagen'
+  | 'explicacion'
+  | 'afijo'
+  | 'sistema'
+  | 'situacion'
+  | 'escala'
+  | 'interjeccion'
+
 export interface Word {
   id: string
   // La palabra entera y su lectura salen de aquí: no se guardan aparte para que no
@@ -45,6 +56,8 @@ export interface Word {
   text?: string
   meaning: string
   type: WordType
+  // Opcional porque `volume()` todavía no lo sirve: en el lector llega vacío.
+  mode?: WordMode
   // Cómo se escribe en kanji, cuando se escribe. NO se pinta en el pasillo de hiragana:
   // a nivel N5 estas palabras se leen y escriben en kana, y el kanji se reencuentra en
   // su propio pasillo. Se guarda para que ese pasillo no tenga que recogerlo otra vez.

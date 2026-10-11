@@ -30,8 +30,8 @@ export const BLOCK_PLAN: readonly string[] = [
 // aprenden sobre el kana base que ya se sabe, en el mismo bloque que él.
 export const HIRAGANA_BASE_COUNT = 56
 
-// El vocabulario del N5 entero, del que la Fase 1 cubre 768.
-export const N5_WORD_COUNT = 846
+// El vocabulario del N5 entero, del que la Fase 1 cubre 766.
+export const N5_WORD_COUNT = 844
 
 export const KATAKANA_BASE_COUNT = 46
 export const N5_KANJI_COUNT = 100

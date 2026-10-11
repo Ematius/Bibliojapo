@@ -113,6 +113,27 @@ function missingPieces(block, kanaById, wordsById, grammarById) {
     if (!kana?.strokes?.length) kanaGaps.push('trazos')
     if (!kana?.image) kanaGaps.push('dibujo')
     if (!kana?.mnemonic.trim()) kanaGaps.push('mnemotecnia')
+    // `audio` lo pide «Ver y escuchar» y «Une el sonido» en TODAS las lecciones, incluso
+    // las que no tienen palabra —ver `kanaSpreads`—, y hasta ahora no se comprobaba: el
+    // botón se quedaba mudo sin que el informe avisara.
+    if (!kana?.audio) kanaGaps.push('audio')
+    // `outline` y `strokeViewBox` recortan el trazo en la ilustración mnemotécnica y en la
+    // pauta de escritura. Sin ellos el SVG no tiene `viewBox` ni `clipPath` y el trazo sale
+    // vacío o deforme, no ausente: no se veía porque nada lo comprobaba.
+    if (!kana?.outline) kanaGaps.push('silueta (outline)')
+    if (!kana?.strokeViewBox) kanaGaps.push('viewBox de los trazos')
+    // Las dos listas describen el mismo trazado, paso a paso: si no miden igual, el texto
+    // de «Orden de trazos» y las casillas de la pauta cuentan una historia distinta.
+    if (
+      kana?.strokes?.length &&
+      kana?.strokeOrder?.length &&
+      kana.strokes.length !== kana.strokeOrder.length
+    ) {
+      kanaGaps.push(
+        `trazos y «orden de trazos» no coinciden (${kana.strokes.length} vs ` +
+          `${kana.strokeOrder.length})`,
+      )
+    }
     if (kanaGaps.length) {
       faltas.push(`kana ${kana?.character ?? lesson.kanaId}: sin ${kanaGaps.join(', ')}`)
     }
@@ -123,14 +144,19 @@ function missingPieces(block, kanaById, wordsById, grammarById) {
     // todas despublicaría los tomos de golpe el día que cada lección pasó de dos palabras
     // a todas las que estrena su kana.
     //
-    // SIN palabras también cuenta como completa: ぺ no aparece en ninguna de las 768, y su
+    // SIN palabras también cuenta como completa: ぺ no aparece en ninguna de las 766, y su
     // lección se queda en el dibujo y la pauta —ver `kanaSpreads`—. Exigirlas dejaría a B17
     // sin publicar para siempre por un kana que no tiene con qué enseñarse.
-    const words = lesson.wordIds ?? []
+    //
+    // Solo cuentan las de modo `imagen`: las demás esperan a su plana, y exigirlas aquí
+    // obligaría a dibujar あまり para publicar B3, o ええ y うーん para B18.
+    const words = (lesson.wordIds ?? []).filter(
+      (id) => !wordsById.has(id) || wordsById.get(id).mode === 'imagen',
+    )
     if (words.length && words.every((id) => wordGaps(wordsById.get(id)).length)) {
       faltas.push(
         `kana ${kana?.character ?? lesson.kanaId}: ninguna de sus ${words.length} palabras ` +
-          'se puede enseñar todavía',
+          'con dibujo se puede enseñar todavía',
       )
     }
   }
@@ -138,13 +164,18 @@ function missingPieces(block, kanaById, wordsById, grammarById) {
   return faltas
 }
 
+// Los modos cuya plana ya existe en el lector. Uno entra aquí el día que se escriba la
+// suya; hasta entonces sus palabras no se publican, tengan dibujo o no.
+const MODES_WITH_SPREAD = new Set(['imagen'])
+
 // Lo que le falta a una palabra para poder enseñarse en una ficha. Lo usan el inventario
 // del tomo y el de las palabras de las frases, que piden lo mismo.
 function wordGaps(word) {
   if (!word) return ['entrada en vocabulary.ts']
   const gaps = []
   if (!word.audio) gaps.push('audio')
-  if (!word.image && !word.swatch) gaps.push('dibujo')
+  if (word.mode === 'imagen' && !word.image && !word.swatch) gaps.push('dibujo')
+  if (!MODES_WITH_SPREAD.has(word.mode)) gaps.push(`plana de ${word.mode}`)
   return gaps
 }
 
@@ -245,6 +276,9 @@ for (const aisleId of AISLE_ORDER) {
           ...fromSentences,
         ]),
       ]
+        // Las que esperan la plana de su modo salen contadas en una sola línea —ver
+        // `reportGaps`—: siendo casi doscientas, aquí taparían los avisos de verdad.
+        .filter((id) => !wordsById.has(id) || MODES_WITH_SPREAD.has(wordsById.get(id).mode))
         .map((id) => ({ id, gaps: wordGaps(wordsById.get(id)) }))
         .filter((entry) => entry.gaps.length)
         .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`)
@@ -299,6 +333,7 @@ for (const aisleId of AISLE_ORDER) {
       text: entry.text ?? null,
       meaning: entry.meaning,
       tipo: entry.type,
+      modo: entry.mode,
       kanji: entry.kanji ?? null,
       // Un verbo es UNA fila: します y しました se generan de la raíz, no se guardan.
       grupo_verbal: entry.verbGroup ?? null,
@@ -355,6 +390,17 @@ function reportGaps() {
   const verbose = process.argv.includes('--faltas')
   const lines = []
   const detail = (items) => items.map((g) => `      ${g}`).join('\n')
+
+  const awaiting = words.filter((word) => !MODES_WITH_SPREAD.has(word.modo))
+  if (awaiting.length) {
+    const byMode = Object.entries(Object.groupBy(awaiting, (word) => word.modo))
+      .map(([mode, list]) => [mode, list.length])
+      .sort((a, b) => b[1] - a[1])
+    lines.push(
+      `  ${awaiting.length} palabras pendientes de plana: ` +
+        byMode.map(([mode, count]) => `${count} ${mode}`).join(', '),
+    )
+  }
 
   for (const block of blockGaps) {
     if (block.blocking.length) {

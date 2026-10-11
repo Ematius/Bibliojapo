@@ -27,7 +27,7 @@ script vuelca a las tablas. El login con Google funciona, el dominio propio es
 hace desde la pantalla — ver «Lo legal».
 
 **El temario de hiragana está reconstruido y volcado** (02-10-2026): pasó de 13
-bloques y 210 palabras a **18 bloques, 768 palabras y 156 frases**, con su gramática
+bloques y 210 palabras a **18 bloques, 766 palabras y 155 frases**, con su gramática
 —G0 a G7— y sus formas conjugadas. `docs/FASE1_DEFINITIVO.md` es la fuente, y los
 `.ts` del temario se generan de ahí; ver «Qué hay que rellenar para un tomo nuevo».
 
@@ -790,7 +790,7 @@ Ahora el aspecto vive en `BookButton.scss` y cada hoja solo dice dónde va el su
 
 Qué se enseña, en qué orden, con qué vocabulario y qué frases vive en su propio
 documento, uno por fase: `docs/FASE1_DEFINITIVO.md` es el de hiragana —18 bloques,
-768 palabras, 156 frases— y los otros tres son de katakana, kanji y vocabulario.
+766 palabras, 155 frases— y los otros tres son de katakana, kanji y vocabulario.
 No se cargan solos, y NO se leen enteros: se pide la sección que haga falta, porque
 cada uno se lleva por delante media sesión de tokens.
 
@@ -940,7 +940,7 @@ una página vacía de una rota: un tomo que dice «todavía no» es mejor que un
 abre y no tiene nada.
 
 **Una lección sin palabras cuenta como completa.** ぺ no aparece en ninguna de las
-768 palabras del temario, y exigírselas habría dejado B17 sin publicar para siempre
+766 palabras del temario, y exigírselas habría dejado B17 sin publicar para siempre
 por un solo carácter. `kanaSpreads` le da las dos planas que no necesitan
 vocabulario —el dibujo mnemotécnico y la pauta de escritura— y queda fuera del
 repaso y de los exámenes, que es la mitad honesta: no hay palabra de la que

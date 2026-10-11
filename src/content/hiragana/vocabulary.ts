@@ -1,4 +1,4 @@
-// El vocabulario de la Fase 1: 768 palabras, las del documento del temario.
+// El vocabulario de la Fase 1: 766 palabras, las del documento del temario.
 //
 // GENERADO — no se edita a mano: `node tools/build-vocabulary.mjs` lo reescribe entero
 // desde `docs/FASE1_DEFINITIVO.md`, que es donde se corrige una palabra. Los units salen de ahí
@@ -15,18 +15,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }],
     meaning: 'ah, oh',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'aa',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'あ', romaji: 'a' }],
     meaning: 'ah, oh',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'au',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'う', romaji: 'u' }],
     meaning: 'encontrarse, ver',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '会う',
     verbGroup: 'godan',
     masuStem: 'あい',
@@ -36,6 +39,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'お', romaji: 'o' }],
     meaning: 'azul',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '青',
   },
   {
@@ -43,6 +47,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'お', romaji: 'o' }, { kana: 'い', romaji: 'i' }],
     meaning: 'azul',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '青い',
   },
   {
@@ -50,18 +55,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'い', romaji: 'i' }],
     meaning: 'bueno',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'iie',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'い', romaji: 'i' }, { kana: 'え', romaji: 'e' }],
     meaning: 'no',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'iu',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'う', romaji: 'u' }],
     meaning: 'decir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '言う',
     verbGroup: 'godan',
     masuStem: 'いい',
@@ -71,12 +79,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'え', romaji: 'e' }],
     meaning: 'no',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'ie-2',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'え', romaji: 'e' }],
     meaning: 'casa, hogar',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '家',
   },
   {
@@ -84,6 +94,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'え', romaji: 'e' }],
     meaning: 'encima, arriba',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '上',
   },
   {
@@ -91,12 +102,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }],
     meaning: 'eh, oh',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'e-2',
     units: [{ kana: 'え', romaji: 'e' }],
     meaning: 'dibujo, imagen',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '絵',
   },
   {
@@ -104,18 +117,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'え', romaji: 'e' }],
     meaning: 'sí',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'o',
     units: [{ kana: 'お', romaji: 'o' }],
     meaning: 'prefijo honorífico',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'ooi',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'お', romaji: 'o' }, { kana: 'い', romaji: 'i' }],
     meaning: 'muchos, mucho',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '多い',
   },
   {
@@ -123,6 +139,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }],
     meaning: 'diente',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '歯',
   },
   {
@@ -130,12 +147,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'い', romaji: 'i' }],
     meaning: 'sí',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'hai-2',
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'い', romaji: 'i' }],
     meaning: 'vasos, tazas',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～杯',
   },
   {
@@ -143,6 +162,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'は', romaji: 'ha' }],
     meaning: 'madre propia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '母',
   },
   {
@@ -150,6 +170,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'ま', romaji: 'ma' }, { kana: 'い', romaji: 'i' }],
     meaning: 'dulce',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '甘い',
   },
   {
@@ -157,12 +178,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'す', romaji: 'su' }],
     meaning: 'silla',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ima',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'ま', romaji: 'ma' }],
     meaning: 'ahora',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '今',
   },
   {
@@ -170,6 +193,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'す', romaji: 'su' }, { kana: 'い', romaji: 'i' }],
     meaning: 'fino, tenue',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '薄い',
   },
   {
@@ -177,6 +201,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'yen',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～円',
   },
   {
@@ -189,6 +214,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'mucha gente',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '大勢',
   },
   {
@@ -196,6 +222,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'す', romaji: 'su' }],
     meaning: 'empujar, pulsar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '押す',
     verbGroup: 'godan',
     masuStem: 'おし',
@@ -205,6 +232,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'い', romaji: 'i' }],
     meaning: 'miércoles (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '水',
   },
   {
@@ -212,6 +240,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'う', romaji: 'u' }],
     meaning: 'fumar, inhalar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '吸う',
     verbGroup: 'godan',
     masuStem: 'すい',
@@ -221,6 +250,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'せ', romaji: 'se' }, { kana: 'い', romaji: 'i' }],
     meaning: 'altura, estatura',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '背',
   },
   {
@@ -228,6 +258,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'せ', romaji: 'se' }, { kana: 'ま', romaji: 'ma' }, { kana: 'い', romaji: 'i' }],
     meaning: 'estrecho, pequeño',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '狭い',
   },
   {
@@ -235,6 +266,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'せ', romaji: 'se' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'mil',
     type: 'numero',
+    mode: 'imagen',
     kanji: '千',
   },
   {
@@ -247,6 +279,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'profesor, maestro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '先生',
   },
   {
@@ -254,6 +287,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'て', romaji: 'te' }],
     meaning: 'mano',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '手',
   },
   {
@@ -261,12 +295,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'は', romaji: 'wa' }],
     meaning: 'entonces, bien',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'han',
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'mitad, media',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '半',
   },
   {
@@ -274,6 +310,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ば', romaji: 'ba' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'noche, tarde',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '晩',
   },
   {
@@ -281,6 +318,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ば', romaji: 'ba' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'número, turno',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～番',
   },
   {
@@ -288,6 +326,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'い', romaji: 'i' }],
     meaning: 'objetos planos',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～枚',
   },
   {
@@ -300,6 +339,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada noche',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎晩',
   },
   {
@@ -307,6 +347,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'え', romaji: 'e' }],
     meaning: 'antes, delante',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '前',
   },
   {
@@ -314,6 +355,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'え', romaji: 'e' }],
     meaning: 'delante de, antes de',
     type: 'expresion',
+    mode: 'afijo',
     kanji: '～前',
   },
   {
@@ -321,12 +363,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'ず', romaji: 'zu' }, { kana: 'い', romaji: 'i' }],
     meaning: 'malo de sabor, desagradable',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'man',
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'diez mil',
     type: 'numero',
+    mode: 'imagen',
     kanji: '万',
   },
   {
@@ -334,6 +378,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'rojo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '赤',
   },
   {
@@ -341,6 +386,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'rojo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '赤い',
   },
   {
@@ -353,6 +399,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'luminoso, alegre',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '明るい',
   },
   {
@@ -360,6 +407,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'が', romaji: 'ga' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'subir',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'あがり',
   },
@@ -368,6 +416,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'pie, pierna',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '足',
   },
   {
@@ -375,12 +424,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'ま', romaji: 'ma' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'no mucho',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'aru',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'haber, existir',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'あり',
     naiStem: '',
@@ -390,6 +441,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'tener',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'あり',
     naiStem: '',
@@ -399,12 +451,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'か', romaji: 'ka' }, { kana: 'が', romaji: 'ga' }],
     meaning: 'cómo, qué tal',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'iru',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'estar, existir',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '居る',
     verbGroup: 'ichidan',
     masuStem: 'い',
@@ -414,6 +468,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'necesitar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '要る',
     verbGroup: 'godan',
     masuStem: 'いり',
@@ -423,6 +478,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'vender',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '売る',
     verbGroup: 'godan',
     masuStem: 'うり',
@@ -432,6 +488,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'い', romaji: 'i' }, { kana: 'が', romaji: 'ga' }],
     meaning: 'película',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '映画',
   },
   {
@@ -445,6 +502,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cine',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '映画館',
   },
   {
@@ -457,12 +515,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'delicioso',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'okashi',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'か', romaji: 'ka' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'dulces',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お菓子',
   },
   {
@@ -475,6 +535,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'enseñar, informar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '教える',
     verbGroup: 'ichidan',
     masuStem: 'おしえ',
@@ -484,6 +545,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'り', romaji: 'ri' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'bajarse',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '降りる',
     verbGroup: 'ichidan',
     masuStem: 'おり',
@@ -493,6 +555,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }],
     meaning: 'martes (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '火',
   },
   {
@@ -500,6 +563,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'piso, planta',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～階',
   },
   {
@@ -507,6 +571,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'veces',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～回',
   },
   {
@@ -514,6 +579,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'う', romaji: 'u' }],
     meaning: 'comprar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '買う',
     verbGroup: 'godan',
     masuStem: 'かい',
@@ -523,6 +589,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'え', romaji: 'e' }, { kana: 'す', romaji: 'su' }],
     meaning: 'devolver',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '返す',
     verbGroup: 'godan',
     masuStem: 'かえし',
@@ -532,6 +599,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'え', romaji: 'e' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'volver a casa',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '帰る',
     verbGroup: 'godan',
     masuStem: 'かえり',
@@ -541,6 +609,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'お', romaji: 'o' }],
     meaning: 'cara',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '顔',
   },
   {
@@ -548,6 +617,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'か', romaji: 'ka' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'costar, tardar',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'かかり',
   },
@@ -556,6 +626,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'か', romaji: 'ka' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'durante ... días',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～日間',
   },
   {
@@ -563,6 +634,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'す', romaji: 'su' }],
     meaning: 'prestar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '貸す',
     verbGroup: 'godan',
     masuStem: 'かし',
@@ -572,6 +644,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ぜ', romaji: 'ze' }],
     meaning: 'viento',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '風',
   },
   {
@@ -579,6 +652,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ぜ', romaji: 'ze' }],
     meaning: 'resfriado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '風邪',
   },
   {
@@ -586,6 +660,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'て', romaji: 'te' }, { kana: 'い', romaji: 'i' }],
     meaning: 'hogar, familia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '家庭',
   },
   {
@@ -593,12 +668,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ば', romaji: 'ba' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'bolso, cartera',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kariru',
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'り', romaji: 'ri' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'pedir prestado',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '借りる',
     verbGroup: 'ichidan',
     masuStem: 'かり',
@@ -608,6 +685,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'る', romaji: 'ru' }, { kana: 'い', romaji: 'i' }],
     meaning: 'ligero',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '軽い',
   },
   {
@@ -621,6 +699,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pensar, considerar',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'かんがえ',
   },
@@ -629,6 +708,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ん', romaji: 'n' }, { kana: 'じ', romaji: 'ji' }],
     meaning: 'kanji',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '漢字',
   },
   {
@@ -636,12 +716,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'が', romaji: 'ga' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'mostrar sensación',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'shi',
     units: [{ kana: 'し', romaji: 'shi' }],
     meaning: 'cuatro',
     type: 'numero',
+    mode: 'imagen',
     kanji: '四',
   },
   {
@@ -649,6 +731,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'お', romaji: 'o' }],
     meaning: 'sal',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '塩',
   },
   {
@@ -660,12 +743,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pero, sin embargo',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'shizuka',
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ず', romaji: 'zu' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'tranquilo, silencioso',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '静か',
   },
   {
@@ -673,6 +758,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ま', romaji: 'ma' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'cerrarse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '閉まる',
     verbGroup: 'godan',
     masuStem: 'しまり',
@@ -682,6 +768,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'saber, conocer',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '知る',
     verbGroup: 'godan',
     masuStem: 'しり',
@@ -691,6 +778,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }],
     meaning: 'hora en punto',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～時',
   },
   {
@@ -698,6 +786,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'か', romaji: 'ka' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'tiempo, hora',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '時間',
   },
   {
@@ -705,6 +794,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'か', romaji: 'ka' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'número de horas',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～時間',
   },
   {
@@ -712,6 +802,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'nacionalidad, persona de...',
     type: 'expresion',
+    mode: 'afijo',
     kanji: '～人',
   },
   {
@@ -719,6 +810,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'sushi',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'suzushii',
@@ -730,6 +822,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'fresco',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '涼しい',
   },
   {
@@ -737,6 +830,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'hacer',
     type: 'verbo-irregular',
+    mode: 'imagen',
     verbGroup: 'irregular',
     masuStem: 'し',
     naiStem: 'し',
@@ -746,6 +840,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'salir, aparecer',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '出る',
     verbGroup: 'ichidan',
     masuStem: 'で',
@@ -755,6 +850,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'い', romaji: 'i' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'entrar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '入る',
     verbGroup: 'godan',
     masuStem: 'はいり',
@@ -764,12 +860,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'palillos',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'hashi-2',
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'puente',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '橋',
   },
   {
@@ -777,6 +875,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'し', romaji: 'shi' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'correr',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '走る',
     verbGroup: 'godan',
     masuStem: 'はしり',
@@ -791,6 +890,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'empezar, comenzar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '始まる',
     verbGroup: 'godan',
     masuStem: 'はじまり',
@@ -800,6 +900,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'primavera',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '春',
   },
   {
@@ -807,6 +908,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'pegar, adherir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '貼る',
     verbGroup: 'godan',
     masuStem: 'はり',
@@ -816,6 +918,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'が', romaji: 'ga' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'girar, doblar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '曲る',
     verbGroup: 'godan',
     masuStem: 'まがり',
@@ -825,6 +928,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'る', romaji: 'ru' }, { kana: 'い', romaji: 'i' }],
     meaning: 'redondo, circular',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '丸い/円い',
   },
   {
@@ -832,6 +936,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'さ', romaji: 'sa' }],
     meaning: 'mañana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '朝',
   },
   {
@@ -845,6 +950,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'desayuno',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '朝御飯',
   },
   {
@@ -857,12 +963,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'ruidoso, molesto',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'eigo',
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'い', romaji: 'i' }, { kana: 'ご', romaji: 'go' }],
     meaning: 'inglés',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '英語',
   },
   {
@@ -876,6 +984,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'madre',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お母さん',
   },
   {
@@ -889,6 +998,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'abuelo, anciano',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ojisan',
@@ -900,6 +1010,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'tío, señor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '伯父さん/叔父さん',
   },
   {
@@ -907,12 +1018,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'な', romaji: 'na' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'estómago, barriga',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'onaji',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'な', romaji: 'na' }, { kana: 'じ', romaji: 'ji' }],
     meaning: 'mismo, igual',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '同じ',
   },
   {
@@ -926,6 +1039,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'abuela, anciana',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'obasan',
@@ -937,6 +1051,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'tía',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '伯母さん/叔母さん',
   },
   {
@@ -951,12 +1066,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'policía',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'owaru',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'わ', romaji: 'wa' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'terminar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '終る',
     verbGroup: 'godan',
     masuStem: 'おわり',
@@ -966,6 +1083,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'ん', romaji: 'n' }, { kana: 'な', romaji: 'na' }],
     meaning: 'mujer',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '女',
   },
   {
@@ -973,6 +1091,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'さ', romaji: 'sa' }],
     meaning: 'paraguas',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '傘',
   },
   {
@@ -980,6 +1099,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'な', romaji: 'na' }, { kana: 'い', romaji: 'i' }],
     meaning: 'mi esposa, esposa propia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '家内',
   },
   {
@@ -987,6 +1107,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'わ', romaji: 'wa' }],
     meaning: 'río',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '川/河',
   },
   {
@@ -999,12 +1120,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bonito, adorable',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'gawa',
     units: [{ kana: 'が', romaji: 'ga' }, { kana: 'わ', romaji: 'wa' }],
     meaning: 'lado',
     type: 'sustantivo',
+    mode: 'afijo',
     kanji: '側',
   },
   {
@@ -1012,6 +1135,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }],
     meaning: 'contador de objetos pequeños',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～個',
   },
   {
@@ -1024,6 +1148,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'parque',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '公園',
   },
   {
@@ -1037,6 +1162,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cruce, intersección',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '交差点',
   },
   {
@@ -1049,6 +1175,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'puesto de policía',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '交番',
   },
   {
@@ -1056,6 +1183,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'え', romaji: 'e' }],
     meaning: 'voz',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '声',
   },
   {
@@ -1063,12 +1191,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'aquí',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'komaru',
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'ま', romaji: 'ma' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'tener problemas, preocuparse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '困る',
     verbGroup: 'godan',
     masuStem: 'こまり',
@@ -1078,6 +1208,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'ん', romaji: 'n' }, { kana: 'な', romaji: 'na' }],
     meaning: 'así, de este tipo',
     type: 'adjetivo-na',
+    mode: 'sistema',
   },
   {
     id: 'konban',
@@ -1089,6 +1220,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'esta noche',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今晩',
   },
   {
@@ -1102,12 +1234,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'buenas noches (saludo)',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'go',
     units: [{ kana: 'ご', romaji: 'go' }],
     meaning: 'cinco',
     type: 'numero',
+    mode: 'imagen',
     kanji: '五',
   },
   {
@@ -1115,6 +1249,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ご', romaji: 'go' }],
     meaning: 'idioma, lengua',
     type: 'expresion',
+    mode: 'afijo',
     kanji: '～語',
   },
   {
@@ -1122,6 +1257,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ご', romaji: 'go' }, { kana: 'ご', romaji: 'go' }],
     meaning: 'tarde, p. m.',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '午後',
   },
   {
@@ -1129,6 +1265,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ご', romaji: 'go' }, { kana: 'ぜ', romaji: 'ze' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'mañana, a. m.',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '午前',
   },
   {
@@ -1136,6 +1273,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ご', romaji: 'go' }, { kana: 'は', romaji: 'ha' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'arroz cocido, comida',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '御飯',
   },
   {
@@ -1143,12 +1281,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'あ', romaji: 'a' }],
     meaning: 'bueno, venga',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'sai',
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'い', romaji: 'i' }],
     meaning: 'años de edad',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～歳',
   },
   {
@@ -1156,12 +1296,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'い', romaji: 'i' }, { kana: 'ご', romaji: 'go' }],
     meaning: 'final, último',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'sakana',
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'か', romaji: 'ka' }, { kana: 'な', romaji: 'na' }],
     meaning: 'pescado, pez',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '魚',
   },
   {
@@ -1169,6 +1311,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'す', romaji: 'su' }],
     meaning: 'levantar, abrir un paraguas',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '差す',
     verbGroup: 'godan',
     masuStem: 'さし',
@@ -1178,12 +1321,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'señor, señora',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'san-2',
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'tres',
     type: 'numero',
+    mode: 'imagen',
     kanji: '三',
   },
   {
@@ -1191,6 +1336,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'こ', romaji: 'ko' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'un poco',
     type: 'adverbio',
+    mode: 'escala',
     kanji: '少し',
   },
   {
@@ -1198,6 +1344,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'わ', romaji: 'wa' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'sentarse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '座る',
     verbGroup: 'godan',
     masuStem: 'すわり',
@@ -1207,6 +1354,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'ん', romaji: 'n' }, { kana: 'わ', romaji: 'wa' }],
     meaning: 'teléfono',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '電話',
   },
   {
@@ -1220,6 +1368,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'llamar por teléfono',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '電話する',
     verbGroup: 'irregular',
     masuStem: 'でんわし',
@@ -1238,6 +1387,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'número de teléfono',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '電話ばんごう',
   },
   {
@@ -1245,12 +1395,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'い', romaji: 'i' }],
     meaning: 'no haber, no tener',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'naka',
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'dentro, medio',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '中',
   },
   {
@@ -1258,6 +1410,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'が', romaji: 'ga' }, { kana: 'い', romaji: 'i' }],
     meaning: 'largo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '長い',
   },
   {
@@ -1265,12 +1418,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ぜ', romaji: 'ze' }],
     meaning: 'por qué',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'namae',
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ま', romaji: 'ma' }, { kana: 'え', romaji: 'e' }],
     meaning: 'nombre',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '名前',
   },
   {
@@ -1278,6 +1433,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'convertirse, llegar a ser',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'なり',
   },
@@ -1286,6 +1442,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'qué',
     type: 'interrogativo',
+    mode: 'explicacion',
     kanji: '何',
   },
   {
@@ -1293,6 +1450,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'qué tipo de, qué',
     type: 'interrogativo',
+    mode: 'afijo',
     kanji: '何～',
   },
   {
@@ -1300,6 +1458,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ん', romaji: 'n' }, { kana: 'じ', romaji: 'ji' }],
     meaning: 'qué hora',
     type: 'interrogativo',
+    mode: 'explicacion',
     kanji: '何時',
   },
   {
@@ -1307,6 +1466,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'caja',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '箱',
   },
   {
@@ -1314,6 +1474,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'な', romaji: 'na' }],
     meaning: 'flor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '花',
   },
   {
@@ -1321,6 +1482,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'な', romaji: 'na' }],
     meaning: 'nariz',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '鼻',
   },
   {
@@ -1328,6 +1490,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'な', romaji: 'na' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'conversación, historia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '話',
   },
   {
@@ -1335,6 +1498,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'な', romaji: 'na' }, { kana: 'す', romaji: 'su' }],
     meaning: 'hablar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '話す',
     verbGroup: 'godan',
     masuStem: 'はなし',
@@ -1349,6 +1513,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'número',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '番号',
   },
   {
@@ -1362,6 +1527,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cena',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '晩御飯',
   },
   {
@@ -1374,6 +1540,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada mañana',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎朝',
   },
   {
@@ -1381,12 +1548,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'り', romaji: 'ri' }, { kana: 'ん', romaji: 'n' }, { kana: 'ご', romaji: 'go' }],
     meaning: 'manzana',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'wakai',
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'joven',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '若い',
   },
   {
@@ -1394,6 +1563,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'か', romaji: 'ka' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'entender, comprender',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '分かる',
     verbGroup: 'godan',
     masuStem: 'わかり',
@@ -1403,6 +1573,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'る', romaji: 'ru' }, { kana: 'い', romaji: 'i' }],
     meaning: 'malo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '悪い',
   },
   {
@@ -1410,12 +1581,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'し', romaji: 'shi' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'mañana',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'asoko',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'そ', romaji: 'so' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'allí',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'atatakai',
@@ -1428,6 +1601,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cálido',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '暖かい',
   },
   {
@@ -1435,6 +1609,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'た', romaji: 'ta' }, { kana: 'ま', romaji: 'ma' }],
     meaning: 'cabeza',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '頭',
   },
   {
@@ -1442,12 +1617,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'な', romaji: 'na' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'tú, usted',
     type: 'pronombre',
+    mode: 'explicacion',
   },
   {
     id: 'ane',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'ね', romaji: 'ne' }],
     meaning: 'hermana mayor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '姉',
   },
   {
@@ -1461,6 +1638,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'ocupado',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '忙しい',
   },
   {
@@ -1468,6 +1646,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'た', romaji: 'ta' }, { kana: 'い', romaji: 'i' }],
     meaning: 'doloroso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '痛い',
   },
   {
@@ -1475,6 +1654,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'significado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '意味',
   },
   {
@@ -1482,6 +1662,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'canción',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '歌',
   },
   {
@@ -1489,6 +1670,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'た', romaji: 'ta' }, { kana: 'う', romaji: 'u' }],
     meaning: 'cantar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '歌う',
     verbGroup: 'godan',
     masuStem: 'うたい',
@@ -1498,6 +1680,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'mar',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '海',
   },
   {
@@ -1505,6 +1688,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'か', romaji: 'ka' }, { kana: 'ね', romaji: 'ne' }],
     meaning: 'dinero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お金',
   },
   {
@@ -1512,6 +1696,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'そ', romaji: 'so' }, { kana: 'い', romaji: 'i' }],
     meaning: 'tarde, lento',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '遅い',
   },
   {
@@ -1525,6 +1710,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermana mayor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お姉さん',
   },
   {
@@ -1540,12 +1726,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'por favor',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'omise',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'み', romaji: 'mi' }, { kana: 'せ', romaji: 'se' }],
     meaning: 'tienda (forma cortés)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お店',
   },
   {
@@ -1558,6 +1746,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'escaleras',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '階段',
   },
   {
@@ -1565,6 +1754,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'persona, manera',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '方',
   },
   {
@@ -1577,6 +1767,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'katakana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '片仮名',
   },
   {
@@ -1584,6 +1775,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'papel',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '紙',
   },
   {
@@ -1596,12 +1788,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'fácil, sencillo',
     type: 'adjetivo-na',
+    mode: 'imagen',
   },
   {
     id: 'kotae',
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'た', romaji: 'ta' }, { kana: 'え', romaji: 'e' }],
     meaning: 'respuesta',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kotaekata',
@@ -1614,6 +1808,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'forma de responder',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kotaeru',
@@ -1625,6 +1820,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'responder',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '答える',
     verbGroup: 'ichidan',
     masuStem: 'こたえ',
@@ -1634,6 +1830,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'debajo, abajo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '下',
   },
   {
@@ -1647,12 +1844,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'disculpe, lo siento',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'sou-sou-desu',
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'う', romaji: 'u' }],
     meaning: 'así, así es',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'soushite-soshite',
@@ -1664,6 +1863,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'y, y entonces',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'souji-suru',
@@ -1676,6 +1876,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'limpiar, limpieza',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '掃除',
     verbGroup: 'irregular',
     masuStem: 'そうじし',
@@ -1692,6 +1893,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'ah, ya veo',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'sou-desu-ne',
@@ -1704,18 +1906,21 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'sí, así es; veamos',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'soko',
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'ahí, ese lugar',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'soba',
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'ば', romaji: 'ba' }],
     meaning: 'cerca, al lado',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'taishikan',
@@ -1728,6 +1933,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'embajada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '大使館',
   },
   {
@@ -1740,12 +1946,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'normalmente, por lo general',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'takai',
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'alto',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '高い',
   },
   {
@@ -1753,6 +1961,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'caro',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '高い',
   },
   {
@@ -1765,6 +1974,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'ya estoy en casa',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'tadashii',
@@ -1776,24 +1986,28 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'correcto',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'tate',
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'て', romaji: 'te' }],
     meaning: 'longitud, altura',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'tabako',
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'ば', romaji: 'ba' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'tabaco, cigarrillos',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'tamago',
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'ま', romaji: 'ma' }, { kana: 'ご', romaji: 'go' }],
     meaning: 'huevo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '卵',
   },
   {
@@ -1801,6 +2015,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'い', romaji: 'i' }],
     meaning: 'contador de máquinas y vehículos',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～台',
   },
   {
@@ -1813,12 +2028,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'aproximadamente, en general',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'dasu',
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'す', romaji: 'su' }],
     meaning: 'sacar, enviar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '出す',
     verbGroup: 'godan',
     masuStem: 'だし',
@@ -1833,12 +2050,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'gradualmente, poco a poco',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'tegami',
     units: [{ kana: 'て', romaji: 'te' }, { kana: 'が', romaji: 'ga' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'carta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '手紙',
   },
   {
@@ -1846,6 +2065,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ね', romaji: 'ne' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'gato',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '猫',
   },
   {
@@ -1853,6 +2073,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ね', romaji: 'ne' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'dormir, acostarse',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '寝る',
     verbGroup: 'ichidan',
     masuStem: 'ね',
@@ -1862,6 +2083,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ね', romaji: 'ne' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'años',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～年',
   },
   {
@@ -1874,6 +2096,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada año',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎年',
   },
   {
@@ -1881,12 +2104,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'otra vez, además',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'mada',
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'だ', romaji: 'da' }],
     meaning: 'todavía, aún',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'mijikai',
@@ -1898,6 +2123,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'corto',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '短い',
   },
   {
@@ -1905,6 +2131,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'ず', romaji: 'zu' }],
     meaning: 'agua',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '水',
   },
   {
@@ -1912,6 +2139,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'せ', romaji: 'se' }],
     meaning: 'tienda',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '店',
   },
   {
@@ -1919,6 +2147,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'せ', romaji: 'se' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'mostrar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '見せる',
     verbGroup: 'ichidan',
     masuStem: 'みせ',
@@ -1933,6 +2162,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'todos, todo el mundo',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '皆さん',
   },
   {
@@ -1940,6 +2170,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'な', romaji: 'na' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'sur',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '南',
   },
   {
@@ -1947,6 +2178,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'oreja, oído',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '耳',
   },
   {
@@ -1954,6 +2186,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'ver, mirar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '見る',
     verbGroup: 'ichidan',
     masuStem: 'み',
@@ -1963,12 +2196,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'ん', romaji: 'n' }, { kana: 'な', romaji: 'na' }],
     meaning: 'todos, todo el mundo',
     type: 'pronombre',
+    mode: 'explicacion',
   },
   {
     id: 'watashi',
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'た', romaji: 'ta' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'yo',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '私',
   },
   {
@@ -1976,6 +2211,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'た', romaji: 'ta' }, { kana: 'す', romaji: 'su' }],
     meaning: 'entregar, pasar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '渡す',
     verbGroup: 'godan',
     masuStem: 'わたし',
@@ -1985,6 +2221,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'わ', romaji: 'wa' }, { kana: 'た', romaji: 'ta' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'cruzar, atravesar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '渡る',
     verbGroup: 'godan',
     masuStem: 'わたり',
@@ -2000,12 +2237,14 @@ export const VOCABULARY: Word[] = withMedia([
     text: 'では、また',
     meaning: 'hasta luego',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'aki',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'otoño',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '秋',
   },
   {
@@ -2013,6 +2252,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'abrirse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '開く',
     verbGroup: 'godan',
     masuStem: 'あき',
@@ -2028,6 +2268,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'nuevo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '新しい',
   },
   {
@@ -2035,6 +2276,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'ら', romaji: 'ra' }, { kana: 'う', romaji: 'u' }],
     meaning: 'lavar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '洗う',
     verbGroup: 'godan',
     masuStem: 'あらい',
@@ -2044,6 +2286,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'る', romaji: 'ru' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'caminar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '歩く',
     verbGroup: 'godan',
     masuStem: 'あるき',
@@ -2053,6 +2296,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'ir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '行く',
     verbGroup: 'godan',
     masuStem: 'いき',
@@ -2062,6 +2306,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'く', romaji: 'ku' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'cuánto',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'itadakimasu',
@@ -2075,12 +2320,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'expresión antes de comer',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'uwagi',
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'わ', romaji: 'wa' }, { kana: 'ぎ', romaji: 'gi' }],
     meaning: 'chaqueta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '上着',
   },
   {
@@ -2088,6 +2335,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'estación',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '駅',
   },
   {
@@ -2100,6 +2348,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'grande',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '大きい',
   },
   {
@@ -2112,6 +2361,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'grande',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '大きな',
   },
   {
@@ -2119,6 +2369,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'き', romaji: 'ki' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'levantarse',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '起きる',
     verbGroup: 'ichidan',
     masuStem: 'おき',
@@ -2128,6 +2379,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'poner, colocar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '置く',
     verbGroup: 'godan',
     masuStem: 'おき',
@@ -2142,6 +2394,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'esposa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '奥さん',
   },
   {
@@ -2149,6 +2402,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'く', romaji: 'ku' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'enviar',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'おくり',
   },
@@ -2157,6 +2411,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'さ', romaji: 'sa' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'plato',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お皿',
   },
   {
@@ -2164,6 +2419,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'そ', romaji: 'so' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'tarde',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'otearai',
@@ -2176,6 +2432,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'baño, aseo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お手洗い',
   },
   {
@@ -2188,6 +2445,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'música',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '音楽',
   },
   {
@@ -2195,12 +2453,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ぎ', romaji: 'gi' }],
     meaning: 'llave',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kaku',
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'escribir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '書く',
     verbGroup: 'godan',
     masuStem: 'かき',
@@ -2210,6 +2470,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ぞ', romaji: 'zo' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'familia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '家族',
   },
   {
@@ -2217,6 +2478,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ら', romaji: 'ra' }, { kana: 'い', romaji: 'i' }],
     meaning: 'picante',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '辛い',
   },
   {
@@ -2224,6 +2486,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ら', romaji: 'ra' }, { kana: 'だ', romaji: 'da' }],
     meaning: 'cuerpo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '体',
   },
   {
@@ -2236,6 +2499,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'país extranjero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '外国',
   },
   {
@@ -2250,6 +2514,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'extranjero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '外国人',
   },
   {
@@ -2262,6 +2527,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'estudiante',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '学生',
   },
   {
@@ -2269,6 +2535,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }],
     meaning: 'árbol, madera',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '木',
   },
   {
@@ -2276,6 +2543,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'え', romaji: 'e' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'apagarse, desaparecer',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '消える',
     verbGroup: 'ichidan',
     masuStem: 'きえ',
@@ -2285,6 +2553,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'oír, escuchar, preguntar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '聞く',
     verbGroup: 'godan',
     masuStem: 'きき',
@@ -2294,6 +2563,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'norte',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '北',
   },
   {
@@ -2306,6 +2576,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'sucio',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '汚い',
   },
   {
@@ -2313,6 +2584,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'ら', romaji: 'ra' }, { kana: 'い', romaji: 'i' }],
     meaning: 'desagrado, no gustar',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '嫌い',
   },
   {
@@ -2320,6 +2592,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'cortar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '切る',
     verbGroup: 'godan',
     masuStem: 'きり',
@@ -2329,6 +2602,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'vestirse, ponerse ropa',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '着る',
     verbGroup: 'ichidan',
     masuStem: 'き',
@@ -2338,6 +2612,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'viernes (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '金',
   },
   {
@@ -2350,6 +2625,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'banco',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '銀行',
   },
   {
@@ -2357,6 +2633,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }],
     meaning: 'nueve',
     type: 'numero',
+    mode: 'imagen',
     kanji: '九',
   },
   {
@@ -2364,6 +2641,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'す', romaji: 'su' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'medicina',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '薬',
   },
   {
@@ -2376,18 +2654,21 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'por favor, deme',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'kurai-gurai',
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ら', romaji: 'ra' }, { kana: 'い', romaji: 'i' }],
     meaning: 'aproximadamente',
     type: 'particula',
+    mode: 'afijo',
   },
   {
     id: 'kurai',
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ら', romaji: 'ra' }, { kana: 'い', romaji: 'i' }],
     meaning: 'oscuro',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '暗い',
   },
   {
@@ -2395,6 +2676,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'venir',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '来る',
     verbGroup: 'irregular',
     masuStem: 'き',
@@ -2405,6 +2687,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'る', romaji: 'ru' }, { kana: 'ま', romaji: 'ma' }],
     meaning: 'coche, vehículo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '車',
   },
   {
@@ -2412,6 +2695,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'antes, delante, futuro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '先',
   },
   {
@@ -2419,6 +2703,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'florecer',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '咲く',
     verbGroup: 'godan',
     masuStem: 'さき',
@@ -2434,6 +2719,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'año siguiente al próximo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'さ来年',
   },
   {
@@ -2441,6 +2727,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'gustar, favorito',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '好き',
   },
   {
@@ -2448,6 +2735,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'ぎ', romaji: 'gi' }],
     meaning: 'demasiado, más de',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'sukunai',
@@ -2459,6 +2747,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'poco, escaso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '少ない',
   },
   {
@@ -2471,6 +2760,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'colada, lavado de ropa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '洗濯',
   },
   {
@@ -2478,6 +2768,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'cielo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '空',
   },
   {
@@ -2490,6 +2781,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'mucho, muchos',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'daigaku',
@@ -2501,6 +2793,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'universidad',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '大学',
   },
   {
@@ -2513,6 +2806,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'gustar mucho, favorito',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '大好き',
   },
   {
@@ -2520,12 +2814,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'か', romaji: 'ka' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'por eso, por lo tanto',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'tenki',
     units: [{ kana: 'て', romaji: 'te' }, { kana: 'ん', romaji: 'n' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'tiempo, clima',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '天気',
   },
   {
@@ -2533,6 +2829,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'き', romaji: 'ki' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'poder, ser capaz',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'でき',
   },
@@ -2541,6 +2838,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'ん', romaji: 'n' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'electricidad, luz eléctrica',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '電気',
   },
   {
@@ -2548,12 +2846,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'が', romaji: 'ga' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'mientras',
     type: 'particula',
+    mode: 'afijo',
   },
   {
     id: 'naku',
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'hacer sonido, cantar un animal',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '鳴く',
     verbGroup: 'godan',
     masuStem: 'なき',
@@ -2563,6 +2863,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'く', romaji: 'ku' }, { kana: 'す', romaji: 'su' }],
     meaning: 'perder algo',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '無くす',
     verbGroup: 'godan',
     masuStem: 'なくし',
@@ -2572,6 +2873,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ら', romaji: 'ra' }, { kana: 'う', romaji: 'u' }],
     meaning: 'aprender',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '習う',
     verbGroup: 'godan',
     masuStem: 'ならい',
@@ -2586,6 +2888,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cenicero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '灰皿',
   },
   {
@@ -2593,6 +2896,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'が', romaji: 'ga' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'postal',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '葉書',
   },
   {
@@ -2600,6 +2904,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'ponerse pantalones o zapatos',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'はき',
   },
@@ -2613,6 +2918,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'trabajar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '働く',
     verbGroup: 'godan',
     masuStem: 'はたらき',
@@ -2622,6 +2928,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'が', romaji: 'ga' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'cepillar, pulir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '磨く',
     verbGroup: 'godan',
     masuStem: 'みがき',
@@ -2631,6 +2938,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'ぎ', romaji: 'gi' }],
     meaning: 'derecha',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '右',
   },
   {
@@ -2643,6 +2951,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'año próximo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '来年',
   },
   {
@@ -2655,6 +2964,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'yo, formal',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '私',
   },
   {
@@ -2662,12 +2972,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'ち', romaji: 'chi' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'allí, aquel lado',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'ato',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'と', romaji: 'to' }],
     meaning: 'después, detrás',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '後',
   },
   {
@@ -2686,12 +2998,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'muchas gracias',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'ichi',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'uno',
     type: 'numero',
+    mode: 'imagen',
     kanji: '一',
   },
   {
@@ -2699,6 +3013,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'ち', romaji: 'chi' }, { kana: 'ど', romaji: 'do' }],
     meaning: 'una vez',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '一度',
   },
   {
@@ -2711,6 +3026,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'primero, el más',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '一番',
   },
   {
@@ -2723,6 +3039,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'entrada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '入口',
   },
   {
@@ -2730,6 +3047,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'casa propia',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'otousan',
@@ -2742,6 +3060,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'padre',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お父さん',
   },
   {
@@ -2754,6 +3073,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermano menor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '弟',
   },
   {
@@ -2768,12 +3088,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermano menor de otra persona',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'otoko',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'と', romaji: 'to' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'hombre',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '男',
   },
   {
@@ -2786,6 +3108,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'anteayer',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ototoshi',
@@ -2797,12 +3120,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'año antepasado',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'otona',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'と', romaji: 'to' }, { kana: 'な', romaji: 'na' }],
     meaning: 'adulto',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '大人',
   },
   {
@@ -2810,6 +3135,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ど', romaji: 'do' }],
     meaning: 'esquina',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '角',
   },
   {
@@ -2817,6 +3143,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'boca',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '口',
   },
   {
@@ -2824,6 +3151,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'ち', romaji: 'chi' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'aquí, este lado, esta persona',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'kochira-koso',
@@ -2836,12 +3164,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'igualmente, el gusto es mío',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'kotoshi',
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'と', romaji: 'to' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'este año',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今年',
   },
   {
@@ -2849,6 +3179,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'と', romaji: 'to' }, { kana: 'ば', romaji: 'ba' }],
     meaning: 'palabra, idioma',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '言葉',
   },
   {
@@ -2866,12 +3197,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'gracias por la comida',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'satou',
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'と', romaji: 'to' }, { kana: 'う', romaji: 'u' }],
     meaning: 'azúcar',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '砂糖',
   },
   {
@@ -2879,6 +3212,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ご', romaji: 'go' }, { kana: 'と', romaji: 'to' }],
     meaning: 'trabajo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '仕事',
   },
   {
@@ -2886,6 +3220,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'siete',
     type: 'numero',
+    mode: 'imagen',
     kanji: '七',
   },
   {
@@ -2893,6 +3228,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'せ', romaji: 'se' }, { kana: 'い', romaji: 'i' }, { kana: 'と', romaji: 'to' }],
     meaning: 'alumno',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '生徒',
   },
   {
@@ -2900,12 +3236,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'ち', romaji: 'chi' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'ahí, ese lado',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'soto',
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'と', romaji: 'to' }],
     meaning: 'fuera, exterior',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '外',
   },
   {
@@ -2913,6 +3251,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'plural de personas',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'chiisai',
@@ -2924,6 +3263,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pequeño',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '小さい',
   },
   {
@@ -2936,6 +3276,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pequeño',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '小さな',
   },
   {
@@ -2943,6 +3284,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ち', romaji: 'chi' }, { kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }],
     meaning: 'cerca, próximo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '近い',
   },
   {
@@ -2950,6 +3292,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ち', romaji: 'chi' }, { kana: 'か', romaji: 'ka' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'cerca, en las proximidades',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '近く',
   },
   {
@@ -2957,6 +3300,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ち', romaji: 'chi' }, { kana: 'が', romaji: 'ga' }, { kana: 'う', romaji: 'u' }],
     meaning: 'ser diferente',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '違う',
     verbGroup: 'godan',
     masuStem: 'ちがい',
@@ -2966,6 +3310,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ち', romaji: 'chi' }, { kana: 'ず', romaji: 'zu' }],
     meaning: 'mapa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '地図',
   },
   {
@@ -2973,6 +3318,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ち', romaji: 'chi' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'padre propio',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '父',
   },
   {
@@ -2980,6 +3326,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'ぐ', romaji: 'gu' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'salida',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '出口',
   },
   {
@@ -2987,6 +3334,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }],
     meaning: 'puerta japonesa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '戸',
   },
   {
@@ -2994,6 +3342,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'お', romaji: 'o' }],
     meaning: 'diez',
     type: 'numero',
+    mode: 'imagen',
     kanji: '十',
   },
   {
@@ -3001,6 +3350,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'お', romaji: 'o' }, { kana: 'い', romaji: 'i' }],
     meaning: 'lejano, distante',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '遠い',
   },
   {
@@ -3008,6 +3358,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'お', romaji: 'o' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día diez, diez días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '十日',
   },
   {
@@ -3015,12 +3366,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'お', romaji: 'o' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'lejos',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'toki',
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'cuando, en el momento de',
     type: 'sustantivo',
+    mode: 'afijo',
     kanji: '～時',
   },
   {
@@ -3033,6 +3386,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'a veces',
     type: 'adverbio',
+    mode: 'escala',
     kanji: '時々',
   },
   {
@@ -3040,6 +3394,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'año, edad',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '年',
   },
   {
@@ -3047,6 +3402,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'な', romaji: 'na' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'al lado, vecino',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '隣',
   },
   {
@@ -3054,6 +3410,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'ま', romaji: 'ma' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'pararse, detenerse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '止まる',
     verbGroup: 'godan',
     masuStem: 'とまり',
@@ -3063,6 +3420,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'pájaro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '鳥',
   },
   {
@@ -3070,6 +3428,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'tomar, coger',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '取る',
     verbGroup: 'godan',
     masuStem: 'とり',
@@ -3079,6 +3438,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'hacer una foto',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '撮る',
     verbGroup: 'godan',
     masuStem: 'とり',
@@ -3088,12 +3448,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ど', romaji: 'do' }],
     meaning: 'sábado (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'do-2',
     units: [{ kana: 'ど', romaji: 'do' }],
     meaning: 'veces, ocasiones',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～度',
   },
   {
@@ -3101,6 +3463,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'う', romaji: 'u' }],
     meaning: 'cómo, de qué manera',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'dou-itashimashite',
@@ -3116,6 +3479,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'de nada',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'doushite',
@@ -3127,54 +3491,63 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'por qué',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'douzo',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'う', romaji: 'u' }, { kana: 'ぞ', romaji: 'zo' }],
     meaning: 'por favor, adelante',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'doko',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'dónde',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'dokoka',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'こ', romaji: 'ko' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'algún lugar, en algún sitio',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'dochira',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'ち', romaji: 'chi' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'cuál, qué dirección',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'donata',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'な', romaji: 'na' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'quién',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'donna',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'ん', romaji: 'n' }, { kana: 'な', romaji: 'na' }],
     meaning: 'qué tipo de',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'nado',
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ど', romaji: 'do' }],
     meaning: 'etcétera, entre otros',
     type: 'particula',
+    mode: 'afijo',
   },
   {
     id: 'hatachi',
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'た', romaji: 'ta' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'veinte años de edad',
     type: 'numero',
+    mode: 'imagen',
     kanji: '二十歳',
   },
   {
@@ -3182,6 +3555,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'ocho',
     type: 'numero',
+    mode: 'imagen',
     kanji: '八',
   },
   {
@@ -3189,6 +3563,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'pueblo, ciudad',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '町',
   },
   {
@@ -3196,6 +3571,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'ど', romaji: 'do' }],
     meaning: 'ventana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '窓',
   },
   {
@@ -3203,6 +3579,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'camino, calle',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '道',
   },
   {
@@ -3210,6 +3587,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'ど', romaji: 'do' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'verde',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '緑',
   },
   {
@@ -3217,6 +3595,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'け', romaji: 'ke' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'abrir',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '開ける',
     verbGroup: 'ichidan',
     masuStem: 'あけ',
@@ -3226,6 +3605,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'げ', romaji: 'ge' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'dar, elevar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '上げる',
     verbGroup: 'ichidan',
     masuStem: 'あげ',
@@ -3235,6 +3615,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'い', romaji: 'i' }],
     meaning: 'caliente',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '熱い',
   },
   {
@@ -3242,6 +3623,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'い', romaji: 'i' }],
     meaning: 'grueso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '厚い',
   },
   {
@@ -3249,6 +3631,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'い', romaji: 'i' }],
     meaning: 'caluroso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '暑い',
   },
   {
@@ -3256,12 +3639,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'く', romaji: 'ku' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'cuántos, qué edad',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'ike',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'け', romaji: 'ke' }],
     meaning: 'estanque',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '池',
   },
   {
@@ -3269,12 +3654,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'cuándo',
     type: 'interrogativo',
+    mode: 'explicacion',
   },
   {
     id: 'itsuka',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día cinco, cinco días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '五日',
   },
   {
@@ -3282,6 +3669,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'cinco cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '五つ',
   },
   {
@@ -3295,12 +3683,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cuídese, que le vaya bien',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'osake',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'さ', romaji: 'sa' }, { kana: 'け', romaji: 'ke' }],
     meaning: 'alcohol, sake',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お酒',
   },
   {
@@ -3308,6 +3698,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'け', romaji: 'ke' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'ponerse gafas',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'かけ',
   },
@@ -3316,6 +3707,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'け', romaji: 'ke' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'llamar por teléfono',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'かけ',
   },
@@ -3324,6 +3716,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'げ', romaji: 'ge' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'meses',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～か月',
   },
   {
@@ -3331,6 +3724,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'が', romaji: 'ga' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'mes del año',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～月',
   },
   {
@@ -3338,6 +3732,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'zapatos',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '靴',
   },
   {
@@ -3350,6 +3745,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'calcetines',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '靴下',
   },
   {
@@ -3362,6 +3758,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'policía',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '警官',
   },
   {
@@ -3369,6 +3766,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'け', romaji: 'ke' }, { kana: 'さ', romaji: 'sa' }],
     meaning: 'esta mañana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今朝',
   },
   {
@@ -3376,6 +3774,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'け', romaji: 'ke' }, { kana: 'す', romaji: 'su' }],
     meaning: 'borrar, apagar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '消す',
     verbGroup: 'godan',
     masuStem: 'けし',
@@ -3385,6 +3784,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'げ', romaji: 'ge' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'lunes (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '月',
   },
   {
@@ -3397,6 +3797,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'entrada, recibidor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '玄関',
   },
   {
@@ -3404,6 +3805,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'げ', romaji: 'ge' }, { kana: 'ん', romaji: 'n' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'sano, con energía',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '元気',
   },
   {
@@ -3416,6 +3818,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'este mes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今月',
   },
   {
@@ -3423,6 +3826,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'contador de libros',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～冊',
   },
   {
@@ -3430,6 +3834,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ず', romaji: 'zu' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'cada uno, de uno en uno',
     type: 'particula',
+    mode: 'afijo',
   },
   {
     id: 'sengetsu',
@@ -3441,6 +3846,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'mes pasado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '先月',
   },
   {
@@ -3453,6 +3859,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'importante',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '大切',
   },
   {
@@ -3460,6 +3867,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'estar de pie, levantarse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '立つ',
     verbGroup: 'godan',
     masuStem: 'たち',
@@ -3469,6 +3877,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'け', romaji: 'ke' }],
     meaning: 'solo, solamente',
     type: 'particula',
+    mode: 'afijo',
   },
   {
     id: 'chikatetsu',
@@ -3480,6 +3889,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'metro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '地下鉄',
   },
   {
@@ -3487,6 +3897,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }],
     meaning: 'contador general de objetos',
     type: 'contador',
+    mode: 'afijo',
   },
   {
     id: 'tsuitachi',
@@ -3498,6 +3909,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'día uno, primer día del mes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '一日',
   },
   {
@@ -3505,6 +3917,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'か', romaji: 'ka' }, { kana: 'う', romaji: 'u' }],
     meaning: 'usar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '使う',
     verbGroup: 'godan',
     masuStem: 'つかい',
@@ -3514,6 +3927,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'ぎ', romaji: 'gi' }],
     meaning: 'siguiente',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '次',
   },
   {
@@ -3521,6 +3935,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'llegar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '着く',
     verbGroup: 'godan',
     masuStem: 'つき',
@@ -3530,6 +3945,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'く', romaji: 'ku' }, { kana: 'え', romaji: 'e' }],
     meaning: 'escritorio, mesa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '机',
   },
   {
@@ -3543,12 +3959,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'forma de hacer, receta',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'tsukuru',
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'く', romaji: 'ku' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'hacer, crear',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '作る',
     verbGroup: 'godan',
     masuStem: 'つくり',
@@ -3558,6 +3976,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'け', romaji: 'ke' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'encender',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'つけ',
   },
@@ -3572,6 +3991,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'aburrido, insignificante',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'dekakeru',
@@ -3583,6 +4003,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'salir',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '出かける',
     verbGroup: 'ichidan',
     masuStem: 'でかけ',
@@ -3592,6 +4013,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'け', romaji: 'ke' }, { kana: 'い', romaji: 'i' }],
     meaning: 'reloj',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '時計',
   },
   {
@@ -3599,6 +4021,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'verano',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '夏',
   },
   {
@@ -3606,6 +4029,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'な', romaji: 'na' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'siete cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '七つ',
   },
   {
@@ -3613,6 +4037,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día veinte, veinte días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '二十日',
   },
   {
@@ -3625,6 +4050,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada mes',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎月',
   },
   {
@@ -3632,6 +4058,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ま', romaji: 'ma' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'esperar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '待つ',
     verbGroup: 'godan',
     masuStem: 'まち',
@@ -3646,6 +4073,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'mes próximo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '来月',
   },
   {
@@ -3653,6 +4081,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'そ', romaji: 'so' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'jugar, divertirse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '遊ぶ',
     verbGroup: 'godan',
     masuStem: 'あそび',
@@ -3662,6 +4091,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'び', romaji: 'bi' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'ducharse, bañarse',
     type: 'verbo-ru',
+    mode: 'imagen',
     verbGroup: 'ichidan',
     masuStem: 'あび',
   },
@@ -3675,6 +4105,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'peligroso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '危ない',
   },
   {
@@ -3682,6 +4113,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'ら', romaji: 'ra' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'elegir',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'えらび',
   },
@@ -3690,6 +4122,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'び', romaji: 'bi' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'florero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '花瓶',
   },
   {
@@ -3697,6 +4130,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'ぶ', romaji: 'bu' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'ponerse en cabeza',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'かぶり',
   },
@@ -3705,6 +4139,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'い', romaji: 'i' }, { kana: 'ふ', romaji: 'fu' }],
     meaning: 'cartera, monedero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '財布',
   },
   {
@@ -3717,6 +4152,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'redacción',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '作文',
   },
   {
@@ -3729,6 +4165,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'periódico',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '新聞',
   },
   {
@@ -3736,6 +4173,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'び', romaji: 'bi' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'diccionario',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '字引',
   },
   {
@@ -3743,6 +4181,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'ぶ', romaji: 'bu' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'uno mismo',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '自分',
   },
   {
@@ -3750,6 +4189,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぜ', romaji: 'ze' }, { kana: 'ん', romaji: 'n' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'todo, completamente',
     type: 'adverbio',
+    mode: 'escala',
     kanji: '全部',
   },
   {
@@ -3757,18 +4197,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'ぶ', romaji: 'bu' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'quizá, probablemente',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'toufu',
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'う', romaji: 'u' }, { kana: 'ふ', romaji: 'fu' }],
     meaning: 'tofu',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'tobu',
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'volar, saltar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '飛ぶ',
     verbGroup: 'godan',
     masuStem: 'とび',
@@ -3783,6 +4226,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'animal',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '動物',
   },
   {
@@ -3790,6 +4234,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'ら', romaji: 'ra' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'ponerse en fila',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '並ぶ',
     verbGroup: 'godan',
     masuStem: 'ならび',
@@ -3804,6 +4249,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'mitad',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '半分',
   },
   {
@@ -3811,6 +4257,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }],
     meaning: 'día',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '日',
   },
   {
@@ -3818,6 +4265,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'が', romaji: 'ga' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'este',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '東',
   },
   {
@@ -3825,6 +4273,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'animales pequeños',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～匹',
   },
   {
@@ -3832,6 +4281,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'tirar de, jalar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '引く',
     verbGroup: 'godan',
     masuStem: 'ひき',
@@ -3841,6 +4291,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'tocar un instrumento',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '弾く',
     verbGroup: 'godan',
     masuStem: 'ひき',
@@ -3850,6 +4301,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'く', romaji: 'ku' }, { kana: 'い', romaji: 'i' }],
     meaning: 'bajo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '低い',
   },
   {
@@ -3862,6 +4314,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'avión',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '飛行機',
   },
   {
@@ -3869,6 +4322,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'だ', romaji: 'da' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'izquierda',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '左',
   },
   {
@@ -3876,6 +4330,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'と', romaji: 'to' }],
     meaning: 'persona',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '人',
   },
   {
@@ -3883,6 +4338,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'と', romaji: 'to' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'una cosa',
     type: 'numero',
+    mode: 'imagen',
     kanji: '一つ',
   },
   {
@@ -3895,6 +4351,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'un mes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '一月',
   },
   {
@@ -3902,6 +4359,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'と', romaji: 'to' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'una persona',
     type: 'numero',
+    mode: 'imagen',
     kanji: '一人',
   },
   {
@@ -3909,6 +4367,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'ま', romaji: 'ma' }],
     meaning: 'tiempo libre',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '暇',
   },
   {
@@ -3921,6 +4380,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hiragana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '平仮名',
   },
   {
@@ -3928,6 +4388,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'mediodía',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '昼',
   },
   {
@@ -3941,6 +4402,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'almuerzo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '昼御飯',
   },
   {
@@ -3953,6 +4415,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'sobre',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '封筒',
   },
   {
@@ -3960,6 +4423,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'soplar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '吹く',
     verbGroup: 'godan',
     masuStem: 'ふき',
@@ -3969,6 +4433,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'ropa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '服',
   },
   {
@@ -3976,6 +4441,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'た', romaji: 'ta' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'dos cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '二つ',
   },
   {
@@ -3983,6 +4449,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'た', romaji: 'ta' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'dos personas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '二人',
   },
   {
@@ -3990,6 +4457,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día dos, dos días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '二日',
   },
   {
@@ -3997,6 +4465,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'と', romaji: 'to' }, { kana: 'い', romaji: 'i' }],
     meaning: 'grueso, gordo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '太い',
   },
   {
@@ -4004,6 +4473,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'llover, nevar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '降る',
     verbGroup: 'godan',
     masuStem: 'ふり',
@@ -4013,6 +4483,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'る', romaji: 'ru' }, { kana: 'い', romaji: 'i' }],
     meaning: 'viejo, antiguo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '古い',
   },
   {
@@ -4020,6 +4491,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'minutos',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～分',
   },
   {
@@ -4027,6 +4499,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぶ', romaji: 'bu' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'oración, frase',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '文',
   },
   {
@@ -4041,6 +4514,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pluma estilográfica',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '万年筆',
   },
   {
@@ -4048,12 +4522,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'れ', romaji: 're' }],
     meaning: 'eso, aquello',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'itsumo',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'つ', romaji: 'tsu' }, { kana: 'も', romaji: 'mo' }],
     meaning: 'siempre',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'imouto',
@@ -4065,6 +4541,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermana menor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '妹',
   },
   {
@@ -4079,12 +4556,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermana menor de otra persona',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ireru',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'れ', romaji: 're' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'meter, poner dentro',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '入れる',
     verbGroup: 'ichidan',
     masuStem: 'いれ',
@@ -4099,6 +4578,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'nacer',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '生まれる',
     verbGroup: 'ichidan',
     masuStem: 'うまれ',
@@ -4113,12 +4593,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'feliz, contento',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'omoi',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'も', romaji: 'mo' }, { kana: 'い', romaji: 'i' }],
     meaning: 'pesado',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '重い',
   },
   {
@@ -4126,12 +4608,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'れ', romaji: 're' }, { kana: 'い', romaji: 'i' }],
     meaning: 'bonito, limpio',
     type: 'adjetivo-na',
+    mode: 'imagen',
   },
   {
     id: 'kumori',
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'も', romaji: 'mo' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'tiempo nublado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '曇り',
   },
   {
@@ -4139,6 +4623,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'も', romaji: 'mo' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'nublarse',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '曇る',
     verbGroup: 'godan',
     masuStem: 'くもり',
@@ -4148,6 +4633,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'ど', romaji: 'do' }, { kana: 'も', romaji: 'mo' }],
     meaning: 'niño, niños',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '子供',
   },
   {
@@ -4155,6 +4641,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'れ', romaji: 're' }],
     meaning: 'esto',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'shitsumon',
@@ -4166,6 +4653,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pregunta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '質問',
   },
   {
@@ -4182,6 +4670,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'disculpe por la descortesía',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'shitsurei-shimasu',
@@ -4196,12 +4685,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'con permiso, disculpe',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'sore',
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'れ', romaji: 're' }],
     meaning: 'eso',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'sorekara',
@@ -4213,6 +4704,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'y después, después de eso',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'soredewa',
@@ -4224,12 +4716,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'entonces, en ese caso',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'dare',
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'れ', romaji: 're' }],
     meaning: 'quién',
     type: 'interrogativo',
+    mode: 'explicacion',
     kanji: '誰',
   },
   {
@@ -4237,6 +4731,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'だ', romaji: 'da' }, { kana: 'れ', romaji: 're' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'alguien',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '誰か',
   },
   {
@@ -4249,6 +4744,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cansarse',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '疲れる',
     verbGroup: 'ichidan',
     masuStem: 'つかれ',
@@ -4258,12 +4754,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'も', romaji: 'mo' }],
     meaning: 'pero, sin embargo',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'totemo',
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'て', romaji: 'te' }, { kana: 'も', romaji: 'mo' }],
     meaning: 'muy',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'tomodachi',
@@ -4275,6 +4773,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'amigo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '友達',
   },
   {
@@ -4282,6 +4781,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'う', romaji: 'u' }, { kana: 'も', romaji: 'mo' }],
     meaning: 'gracias, mucho',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'doumo-arigatou',
@@ -4297,18 +4797,21 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'muchas gracias',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'dore',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'れ', romaji: 're' }],
     meaning: 'cuál de varios',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'hare',
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'れ', romaji: 're' }],
     meaning: 'tiempo despejado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '晴れ',
   },
   {
@@ -4316,6 +4819,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'れ', romaji: 're' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'despejarse, hacer sol',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '晴れる',
     verbGroup: 'ichidan',
     masuStem: 'はれ',
@@ -4325,18 +4829,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'う', romaji: 'u' }],
     meaning: 'ya',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'mou-2',
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'う', romaji: 'u' }],
     meaning: 'otra vez, más',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'moku',
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'jueves (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '木',
   },
   {
@@ -4349,12 +4856,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hola, al teléfono',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'motsu',
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'tener, llevar, sostener',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '持つ',
     verbGroup: 'godan',
     masuStem: 'もち',
@@ -4364,6 +4873,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'ら', romaji: 'ra' }, { kana: 'う', romaji: 'u' }],
     meaning: 'recibir',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'もらい',
   },
@@ -4372,6 +4882,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'puerta, portón',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '門',
   },
   {
@@ -4384,6 +4895,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'problema, pregunta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '問題',
   },
   {
@@ -4398,18 +4910,21 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pregunta de ejemplo',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'rei',
     units: [{ kana: 'れ', romaji: 're' }, { kana: 'い', romaji: 'i' }],
     meaning: 'ejemplo',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'rei-2',
     units: [{ kana: 'れ', romaji: 're' }, { kana: 'い', romaji: 'i' }],
     meaning: 'cero',
     type: 'numero',
+    mode: 'imagen',
     kanji: '零',
   },
   {
@@ -4423,6 +4938,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'frigorífico',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '冷蔵庫',
   },
   {
@@ -4435,6 +4951,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'olvidar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '忘れる',
     verbGroup: 'ichidan',
     masuStem: 'わすれ',
@@ -4444,6 +4961,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'に', romaji: 'ni' }],
     meaning: 'hermano mayor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '兄',
   },
   {
@@ -4456,6 +4974,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'un día',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '一日',
   },
   {
@@ -4470,6 +4989,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'venir, ir o estar (honorífico)',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'おいでになり',
   },
@@ -4478,6 +4998,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'く', romaji: 'ku' }, { kana: 'に', romaji: 'ni' }],
     meaning: 'país (forma cortés)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お国',
   },
   {
@@ -4491,6 +5012,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermano mayor',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お兄さん',
   },
   {
@@ -4503,6 +5025,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bola de arroz',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ohayou-gozaimasu',
@@ -4519,12 +5042,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'buenos días',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'oyogu',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'よ', romaji: 'yo' }, { kana: 'ぐ', romaji: 'gu' }],
     meaning: 'nadar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '泳ぐ',
     verbGroup: 'godan',
     masuStem: 'およぎ',
@@ -4542,6 +5067,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hoja de respuestas',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kayoubi',
@@ -4553,6 +5079,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'martes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '火曜日',
   },
   {
@@ -4566,6 +5093,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'viernes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '金曜日',
   },
   {
@@ -4573,6 +5101,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'に', romaji: 'ni' }],
     meaning: 'país',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '国',
   },
   {
@@ -4586,6 +5115,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'lunes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '月曜日',
   },
   {
@@ -4599,6 +5129,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hola, buenas tardes',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'sayounara',
@@ -4611,6 +5142,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'adiós',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'suiyoubi',
@@ -4623,6 +5155,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'miércoles',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '水曜日',
   },
   {
@@ -4630,6 +5163,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'つ', romaji: 'tsu' }, { kana: 'よ', romaji: 'yo' }, { kana: 'い', romaji: 'i' }],
     meaning: 'fuerte',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '強い',
   },
   {
@@ -4642,6 +5176,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'carne de pollo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'とり肉',
   },
   {
@@ -4654,6 +5189,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'sábado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '土曜日',
   },
   {
@@ -4661,6 +5197,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'に', romaji: 'ni' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'algo',
     type: 'pronombre',
+    mode: 'explicacion',
     kanji: '何か',
   },
   {
@@ -4673,6 +5210,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'qué día del mes',
     type: 'interrogativo',
+    mode: 'explicacion',
     kanji: '何日',
   },
   {
@@ -4680,6 +5218,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }],
     meaning: 'dos',
     type: 'numero',
+    mode: 'imagen',
     kanji: '二',
   },
   {
@@ -4687,6 +5226,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'carne',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '肉',
   },
   {
@@ -4694,6 +5234,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'oeste',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '西',
   },
   {
@@ -4701,6 +5242,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'domingo (abreviatura)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '日',
   },
   {
@@ -4708,6 +5250,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'día del mes, días',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～日',
   },
   {
@@ -4721,20 +5264,15 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'domingo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '日曜日',
-  },
-  {
-    id: 'ninen',
-    units: [{ kana: 'に', romaji: 'ni' }, { kana: 'ね', romaji: 'ne' }, { kana: 'ん', romaji: 'n' }],
-    meaning: 'dos años',
-    type: 'sustantivo',
-    kanji: '二年',
   },
   {
     id: 'nimotsu',
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'も', romaji: 'mo' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'equipaje',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '荷物',
   },
   {
@@ -4742,6 +5280,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'わ', romaji: 'wa' }],
     meaning: 'jardín',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '庭',
   },
   {
@@ -4749,6 +5288,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'personas',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～人',
   },
   {
@@ -4761,6 +5301,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'carne de cerdo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '豚肉',
   },
   {
@@ -4773,6 +5314,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada día',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎日',
   },
   {
@@ -4786,6 +5328,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'jueves',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '木曜日',
   },
   {
@@ -4801,12 +5344,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hoja de preguntas',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'youka',
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'う', romaji: 'u' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día ocho, ocho días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '八日',
   },
   {
@@ -4819,6 +5364,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'ropa occidental',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '洋服',
   },
   {
@@ -4826,18 +5372,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'a menudo',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'yoku-2',
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'bien, hábilmente',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'yoko',
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'こ', romaji: 'ko' }],
     meaning: 'lado, lateral',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '横',
   },
   {
@@ -4845,6 +5394,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'llamar, invitar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '呼ぶ',
     verbGroup: 'godan',
     masuStem: 'よび',
@@ -4854,6 +5404,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'noche',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '夜',
   },
   {
@@ -4861,6 +5412,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'わ', romaji: 'wa' }, { kana: 'い', romaji: 'i' }],
     meaning: 'débil',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '弱い',
   },
   {
@@ -4868,30 +5420,35 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'ぐ', romaji: 'gu' }, { kana: 'に', romaji: 'ni' }],
     meaning: 'inmediatamente',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'ano',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'の', romaji: 'no' }],
     meaning: 'aquel, aquella',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'ano-2',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'の', romaji: 'no' }],
     meaning: 'eh..., este...',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'anou',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'の', romaji: 'no' }, { kana: 'う', romaji: 'u' }],
     meaning: 'disculpe..., este...',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'iro',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'color',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '色',
   },
   {
@@ -4904,12 +5461,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'varios, diversos',
     type: 'adjetivo-na',
+    mode: 'imagen',
   },
   {
     id: 'ushiro',
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'し', romaji: 'shi' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'detrás',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '後ろ',
   },
   {
@@ -4923,6 +5482,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'niño, chico',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '男の子',
   },
   {
@@ -4930,6 +5490,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'ふ', romaji: 'fu' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'baño',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お風呂',
   },
   {
@@ -4943,6 +5504,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'interesante, divertido',
     type: 'adjetivo-i',
+    mode: 'imagen',
   },
   {
     id: 'onnanoko',
@@ -4955,6 +5517,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'niña, chica',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '女の子',
   },
   {
@@ -4967,6 +5530,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'compras',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '買い物',
   },
   {
@@ -4974,6 +5538,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'い', romaji: 'i' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'amarillo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '黄色',
   },
   {
@@ -4986,6 +5551,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'amarillo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '黄色い',
   },
   {
@@ -4993,6 +5559,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'の', romaji: 'no' }, { kana: 'う', romaji: 'u' }],
     meaning: 'ayer',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '昨日',
   },
   {
@@ -5005,6 +5572,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'fruta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '果物',
   },
   {
@@ -5012,6 +5580,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'negro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '黒',
   },
   {
@@ -5019,6 +5588,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ろ', romaji: 'ro' }, { kana: 'い', romaji: 'i' }],
     meaning: 'negro',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '黒い',
   },
   {
@@ -5026,6 +5596,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'く', romaji: 'ku' }, { kana: 'ろ', romaji: 'ro' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'en negro',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'kokonoka',
@@ -5037,6 +5608,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'día nueve, nueve días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '九日',
   },
   {
@@ -5049,6 +5621,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'nueve cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '九つ',
   },
   {
@@ -5056,18 +5629,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'の', romaji: 'no' }],
     meaning: 'este, esta',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'koro-goro',
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'aproximadamente, hacia',
     type: 'expresion',
+    mode: 'afijo',
   },
   {
     id: 'shiro',
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'blanco',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '白',
   },
   {
@@ -5075,6 +5651,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ろ', romaji: 'ro' }, { kana: 'い', romaji: 'i' }],
     meaning: 'blanco',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '白い',
   },
   {
@@ -5082,6 +5659,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'せ', romaji: 'se' }, { kana: 'び', romaji: 'bi' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'traje',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '背広',
   },
   {
@@ -5089,6 +5667,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'の', romaji: 'no' }],
     meaning: 'ese, esa',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'tatemono',
@@ -5100,6 +5679,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'edificio',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '建物',
   },
   {
@@ -5112,6 +5692,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'divertido, agradable',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '楽しい',
   },
   {
@@ -5125,6 +5706,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cocina',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '台所',
   },
   {
@@ -5132,6 +5714,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'と', romaji: 'to' }, { kana: 'こ', romaji: 'ko' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'lugar',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '所',
   },
   {
@@ -5139,12 +5722,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'の', romaji: 'no' }],
     meaning: 'qué, cuál',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'nanoka',
     units: [{ kana: 'な', romaji: 'na' }, { kana: 'の', romaji: 'no' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día siete, siete días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '七日',
   },
   {
@@ -5157,6 +5742,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bebida',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '飲み物',
   },
   {
@@ -5164,6 +5750,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'の', romaji: 'no' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'subir, montar en',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '乗る',
     verbGroup: 'godan',
     masuStem: 'のり',
@@ -5173,6 +5760,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひ', romaji: 'hi' }, { kana: 'ろ', romaji: 'ro' }, { kana: 'い', romaji: 'i' }],
     meaning: 'amplio, espacioso',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '広い',
   },
   {
@@ -5180,6 +5768,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'baño',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'mochiron',
@@ -5191,12 +5780,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'por supuesto',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'mono',
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'の', romaji: 'no' }],
     meaning: 'cosa, objeto',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '物',
   },
   {
@@ -5209,12 +5800,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'encantado; cuento contigo',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'rouka',
     units: [{ kana: 'ろ', romaji: 'ro' }, { kana: 'う', romaji: 'u' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'pasillo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '廊下',
   },
   {
@@ -5222,6 +5815,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ろ', romaji: 'ro' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'seis',
     type: 'numero',
+    mode: 'imagen',
     kanji: '六',
   },
   {
@@ -5229,6 +5823,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'や', romaji: 'ya' }],
     meaning: 'desagradable, no',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '嫌',
   },
   {
@@ -5241,6 +5836,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'recordar, memorizar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '覚える',
     verbGroup: 'ichidan',
     masuStem: 'おぼえ',
@@ -5258,12 +5854,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'buenas noches',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'sushiya',
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'し', romaji: 'shi' }, { kana: 'や', romaji: 'ya' }],
     meaning: 'restaurante de sushi',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'natsuyasumi',
@@ -5276,6 +5874,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'vacaciones de verano',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '夏休み',
   },
   {
@@ -5288,12 +5887,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'animado, concurrido',
     type: 'adjetivo-na',
+    mode: 'imagen',
   },
   {
     id: 'nihon',
     units: [{ kana: 'に', romaji: 'ni' }, { kana: 'ほ', romaji: 'ho' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'Japón',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '日本',
   },
   {
@@ -5306,6 +5907,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'japonés (idioma)',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '日本語',
   },
   {
@@ -5313,6 +5915,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'の', romaji: 'no' }, { kana: 'ぼ', romaji: 'bo' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'subir, escalar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '登る',
     verbGroup: 'godan',
     masuStem: 'のぼり',
@@ -5322,6 +5925,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'や', romaji: 'ya' }, { kana: 'い', romaji: 'i' }],
     meaning: 'rápido',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '速い',
   },
   {
@@ -5329,6 +5933,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'や', romaji: 'ya' }, { kana: 'い', romaji: 'i' }],
     meaning: 'temprano',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '早い',
   },
   {
@@ -5336,12 +5941,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'う', romaji: 'u' }],
     meaning: 'manera, dirección',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'hoka',
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'otro, demás',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '外',
   },
   {
@@ -5349,6 +5956,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'し', romaji: 'shi' }, { kana: 'い', romaji: 'i' }],
     meaning: 'querer, desear',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '欲しい',
   },
   {
@@ -5356,6 +5964,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'そ', romaji: 'so' }, { kana: 'い', romaji: 'i' }],
     meaning: 'fino, delgado',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '細い',
   },
   {
@@ -5363,6 +5972,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'libro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '本',
   },
   {
@@ -5370,6 +5980,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'objetos largos y cilíndricos',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～本',
   },
   {
@@ -5382,6 +5993,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'estantería para libros',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '本棚',
   },
   {
@@ -5394,18 +6006,21 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'realmente, de verdad',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'honya',
     units: [{ kana: 'ほ', romaji: 'ho' }, { kana: 'ん', romaji: 'n' }, { kana: 'や', romaji: 'ya' }],
     meaning: 'librería',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'boushi',
     units: [{ kana: 'ぼ', romaji: 'bo' }, { kana: 'う', romaji: 'u' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'sombrero, gorra',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '帽子',
   },
   {
@@ -5413,12 +6028,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぼ', romaji: 'bo' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'yo (masculino informal)',
     type: 'pronombre',
+    mode: 'explicacion',
   },
   {
     id: 'ya',
     units: [{ kana: 'や', romaji: 'ya' }],
     meaning: 'tienda de, comerciante de',
     type: 'sustantivo',
+    mode: 'afijo',
     kanji: '屋',
   },
   {
@@ -5426,6 +6043,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'お', romaji: 'o' }, { kana: 'や', romaji: 'ya' }],
     meaning: 'verdulería, frutería',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '八百屋',
   },
   {
@@ -5433,6 +6051,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'さ', romaji: 'sa' }, { kana: 'い', romaji: 'i' }],
     meaning: 'verdura',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '野菜',
   },
   {
@@ -5445,6 +6064,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'fácil, sencillo',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '易しい',
   },
   {
@@ -5457,12 +6077,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'flecha',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'yasui',
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'す', romaji: 'su' }, { kana: 'い', romaji: 'i' }],
     meaning: 'barato',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '安い',
   },
   {
@@ -5470,6 +6092,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'す', romaji: 'su' }, { kana: 'み', romaji: 'mi' }],
     meaning: 'descanso, vacaciones',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '休み',
   },
   {
@@ -5477,6 +6100,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'ま', romaji: 'ma' }],
     meaning: 'montaña',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '山',
   },
   {
@@ -5484,6 +6108,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'hacer',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'やり',
   },
@@ -5492,6 +6117,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'め', romaji: 'me' }],
     meaning: 'lluvia',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '雨',
   },
   {
@@ -5499,6 +6125,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'め', romaji: 'me' }],
     meaning: 'caramelo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '飴',
   },
   {
@@ -5514,6 +6141,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hola, se puede',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'gomennasai',
@@ -5527,12 +6155,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'lo siento, perdón',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'samui',
     units: [{ kana: 'さ', romaji: 'sa' }, { kana: 'む', romaji: 'mu' }, { kana: 'い', romaji: 'i' }],
     meaning: 'frío',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '寒い',
   },
   {
@@ -5540,6 +6170,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'め', romaji: 'me' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'cerrar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '閉める',
     verbGroup: 'ichidan',
     masuStem: 'しめ',
@@ -5549,6 +6180,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'め', romaji: 'me' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'atar, apretar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '締める',
     verbGroup: 'ichidan',
     masuStem: 'しめ',
@@ -5558,6 +6190,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'す', romaji: 'su' }, { kana: 'む', romaji: 'mu' }],
     meaning: 'vivir, residir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '住む',
     verbGroup: 'godan',
     masuStem: 'すみ',
@@ -5567,6 +6200,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'の', romaji: 'no' }, { kana: 'む', romaji: 'mu' }],
     meaning: 'pedir, solicitar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '頼む',
     verbGroup: 'godan',
     masuStem: 'たのみ',
@@ -5581,6 +6215,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'trabajar para, servir',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '勤める',
     verbGroup: 'ichidan',
     masuStem: 'つとめ',
@@ -5595,6 +6230,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'frío al tacto',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '冷たい',
   },
   {
@@ -5602,6 +6238,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'の', romaji: 'no' }, { kana: 'む', romaji: 'mu' }],
     meaning: 'beber',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '飲む',
     verbGroup: 'godan',
     masuStem: 'のみ',
@@ -5611,6 +6248,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'じ', romaji: 'ji' }, { kana: 'め', romaji: 'me' }],
     meaning: 'principio, comienzo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '初め/始め',
   },
   {
@@ -5623,6 +6261,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'por primera vez',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '初めて',
   },
   {
@@ -5635,6 +6274,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'al principio, primero',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'hajimemashite',
@@ -5648,12 +6288,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'encantado de conocerle',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'muika',
     units: [{ kana: 'む', romaji: 'mu' }, { kana: 'い', romaji: 'i' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día seis, seis días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '六日',
   },
   {
@@ -5661,6 +6303,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'む', romaji: 'mu' }, { kana: 'こ', romaji: 'ko' }, { kana: 'う', romaji: 'u' }],
     meaning: 'allí enfrente, al otro lado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '向こう',
   },
   {
@@ -5674,6 +6317,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'difícil',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '難しい',
   },
   {
@@ -5681,6 +6325,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'む', romaji: 'mu' }, { kana: 'ら', romaji: 'ra' }],
     meaning: 'pueblo, aldea',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '村',
   },
   {
@@ -5688,6 +6333,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'め', romaji: 'me' }],
     meaning: 'ojo',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '目',
   },
   {
@@ -5695,6 +6341,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'め', romaji: 'me' }, { kana: 'が', romaji: 'ga' }, { kana: 'ね', romaji: 'ne' }],
     meaning: 'gafas',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '眼鏡',
   },
   {
@@ -5702,6 +6349,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'す', romaji: 'su' }, { kana: 'む', romaji: 'mu' }],
     meaning: 'descansar, faltar',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '休む',
     verbGroup: 'godan',
     masuStem: 'やすみ',
@@ -5711,6 +6359,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'む', romaji: 'mu' }],
     meaning: 'leer',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '読む',
     verbGroup: 'godan',
     masuStem: 'よみ',
@@ -5726,6 +6375,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'comida preparada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お弁当',
   },
   {
@@ -5738,6 +6388,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'muy, mucho',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'taihen-2',
@@ -5749,6 +6400,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'difícil, duro',
     type: 'adjetivo-na',
+    mode: 'explicacion',
   },
   {
     id: 'tabemono',
@@ -5760,6 +6412,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'comida, alimento',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '食べ物',
   },
   {
@@ -5767,6 +6420,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'た', romaji: 'ta' }, { kana: 'べ', romaji: 'be' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'comer',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '食べる',
     verbGroup: 'ichidan',
     masuStem: 'たべ',
@@ -5781,6 +6435,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'poner en fila, ordenar',
     type: 'verbo-ru',
+    mode: 'imagen',
     kanji: '並べる',
     verbGroup: 'ichidan',
     masuStem: 'ならべ',
@@ -5790,6 +6445,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ふ', romaji: 'fu' }, { kana: 'ゆ', romaji: 'yu' }],
     meaning: 'invierno',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '冬',
   },
   {
@@ -5797,6 +6453,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'へ', romaji: 'he' }, { kana: 'た', romaji: 'ta' }],
     meaning: 'poco hábil, malo en',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '下手',
   },
   {
@@ -5804,6 +6461,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'へ', romaji: 'he' }, { kana: 'や', romaji: 'ya' }],
     meaning: 'habitación',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '部屋',
   },
   {
@@ -5811,6 +6469,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'へ', romaji: 'he' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'zona, alrededores',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '辺',
   },
   {
@@ -5818,6 +6477,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'べ', romaji: 'be' }, { kana: 'ん', romaji: 'n' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'conveniente, práctico',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '便利',
   },
   {
@@ -5830,6 +6490,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'atardecer, tarde',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '夕方',
   },
   {
@@ -5842,6 +6503,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cena',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '夕飯',
   },
   {
@@ -5849,6 +6511,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ゆ', romaji: 'yu' }, { kana: 'う', romaji: 'u' }, { kana: 'べ', romaji: 'be' }],
     meaning: 'anoche',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '昨夜',
   },
   {
@@ -5861,6 +6524,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'famoso',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '有名',
   },
   {
@@ -5868,6 +6532,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ゆ', romaji: 'yu' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'nieve',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '雪',
   },
   {
@@ -5875,6 +6540,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'ぬ', romaji: 'nu' }],
     meaning: 'perro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '犬',
   },
   {
@@ -5882,6 +6548,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'し', romaji: 'shi' }, { kana: 'ぬ', romaji: 'nu' }],
     meaning: 'morir',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '死ぬ',
     verbGroup: 'godan',
     masuStem: 'しに',
@@ -5891,6 +6558,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぬ', romaji: 'nu' }, { kana: 'ぐ', romaji: 'gu' }],
     meaning: 'quitarse ropa',
     type: 'verbo-u',
+    mode: 'imagen',
     kanji: '脱ぐ',
     verbGroup: 'godan',
     masuStem: 'ぬぎ',
@@ -5900,6 +6568,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぬ', romaji: 'nu' }, { kana: 'る', romaji: 'ru' }],
     meaning: 'pintar, untar',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'ぬり',
   },
@@ -5908,6 +6577,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ぬ', romaji: 'nu' }, { kana: 'る', romaji: 'ru' }, { kana: 'い', romaji: 'i' }],
     meaning: 'tibio, templado',
     type: 'adjetivo-i',
+    mode: 'imagen',
     kanji: '温い',
   },
   {
@@ -5920,12 +6590,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pasado mañana',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'acchi',
     units: [{ kana: 'あ', romaji: 'a' }, { kana: 'っ', romaji: 'c' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'allí, aquel lado',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'ittekimasu',
@@ -5939,12 +6611,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'me voy, hasta luego',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'e-3',
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'っ', romaji: '' }],
     meaning: 'eh, qué',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'enpitsu',
@@ -5956,6 +6630,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'lápiz',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '鉛筆',
   },
   {
@@ -5968,6 +6643,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'escuela',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '学校',
   },
   {
@@ -5981,6 +6657,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cafetería',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '喫茶店',
   },
   {
@@ -5988,6 +6665,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'っ', romaji: 't' }, { kana: 'て', romaji: 'te' }],
     meaning: 'sello postal',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '切手',
   },
   {
@@ -5995,6 +6673,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'き', romaji: 'ki' }, { kana: 'っ', romaji: 'p' }, { kana: 'ぷ', romaji: 'pu' }],
     meaning: 'billete, entrada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '切符',
   },
   {
@@ -6007,6 +6686,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bien, suficiente',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '結構',
   },
   {
@@ -6021,6 +6701,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'casarse, matrimonio',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '結婚',
     verbGroup: 'irregular',
     masuStem: 'けっこんし',
@@ -6031,6 +6712,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'っ', romaji: 'c' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'aquí, este lado',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'sanpo-suru',
@@ -6043,6 +6725,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'pasear, paseo',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '散歩',
     verbGroup: 'irregular',
     masuStem: 'さんぽし',
@@ -6053,6 +6736,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ざ', romaji: 'za' }, { kana: 'っ', romaji: 's' }, { kana: 'し', romaji: 'shi' }],
     meaning: 'revista',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '雑誌',
   },
   {
@@ -6065,6 +6749,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'jabón',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '石鹸',
   },
   {
@@ -6072,12 +6757,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'そ', romaji: 'so' }, { kana: 'っ', romaji: 'c' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'ahí, ese lado',
     type: 'pronombre',
+    mode: 'sistema',
   },
   {
     id: 'docchi',
     units: [{ kana: 'ど', romaji: 'do' }, { kana: 'っ', romaji: 'c' }, { kana: 'ち', romaji: 'chi' }],
     meaning: 'cuál, qué dirección',
     type: 'interrogativo',
+    mode: 'sistema',
   },
   {
     id: 'massugu',
@@ -6089,12 +6776,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'recto, directamente',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'mikka',
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'っ', romaji: 'k' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día tres, tres días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '三日',
   },
   {
@@ -6102,6 +6791,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'み', romaji: 'mi' }, { kana: 'っ', romaji: 't' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'tres cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '三つ',
   },
   {
@@ -6109,6 +6799,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'む', romaji: 'mu' }, { kana: 'っ', romaji: 't' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'seis cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '六つ',
   },
   {
@@ -6122,6 +6813,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'llevar algo',
     type: 'verbo-u',
+    mode: 'imagen',
     verbGroup: 'godan',
     masuStem: 'もっていき',
   },
@@ -6130,12 +6822,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'も', romaji: 'mo' }, { kana: 'っ', romaji: 't' }, { kana: 'と', romaji: 'to' }],
     meaning: 'más',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'yattsu',
     units: [{ kana: 'や', romaji: 'ya' }, { kana: 'っ', romaji: 't' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'ocho cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '八つ',
   },
   {
@@ -6143,6 +6837,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'っ', romaji: 'k' }, { kana: 'か', romaji: 'ka' }],
     meaning: 'día cuatro, cuatro días',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '四日',
   },
   {
@@ -6150,6 +6845,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'よ', romaji: 'yo' }, { kana: 'っ', romaji: 't' }, { kana: 'つ', romaji: 'tsu' }],
     meaning: 'cuatro cosas',
     type: 'numero',
+    mode: 'imagen',
     kanji: '四つ',
   },
   {
@@ -6157,18 +6853,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'り', romaji: 'ri' }, { kana: 'っ', romaji: 'p' }, { kana: 'ぱ', romaji: 'pa' }],
     meaning: 'espléndido, excelente',
     type: 'adjetivo-na',
-  },
-  {
-    id: 'roppon',
-    units: [
-      { kana: 'ろ', romaji: 'ro' },
-      { kana: 'っ', romaji: 'p' },
-      { kana: 'ぽ', romaji: 'po' },
-      { kana: 'ん', romaji: 'n' },
-    ],
-    meaning: 'seis objetos largos',
-    type: 'contador',
-    kanji: '六本',
+    mode: 'imagen',
   },
   {
     id: 'yukkuri-to',
@@ -6181,12 +6866,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'despacio, tranquilamente',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'isha',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'しゃ', romaji: 'sha' }],
     meaning: 'médico',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '医者',
   },
   {
@@ -6194,6 +6881,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'っ', romaji: 's' }, { kana: 'しょ', romaji: 'sho' }],
     meaning: 'juntos',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '一緒',
   },
   {
@@ -6209,12 +6897,14 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bienvenido, qué desea',
     type: 'saludo',
+    mode: 'situacion',
   },
   {
     id: 'ocha',
     units: [{ kana: 'お', romaji: 'o' }, { kana: 'ちゃ', romaji: 'cha' }],
     meaning: 'té',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: 'お茶',
   },
   {
@@ -6222,6 +6912,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'か', romaji: 'ka' }, { kana: 'い', romaji: 'i' }, { kana: 'しゃ', romaji: 'sha' }],
     meaning: 'empresa',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '会社',
   },
   {
@@ -6229,6 +6920,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'きゅ', romaji: 'kyu' }, { kana: 'う', romaji: 'u' }],
     meaning: 'nueve',
     type: 'numero',
+    mode: 'imagen',
     kanji: '九',
   },
   {
@@ -6236,6 +6928,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'きょ', romaji: 'kyo' }, { kana: 'う', romaji: 'u' }],
     meaning: 'hoy',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今日',
   },
   {
@@ -6248,6 +6941,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'aula',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '教室',
   },
   {
@@ -6260,6 +6954,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hermanos, hermanos y hermanas',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '兄弟',
   },
   {
@@ -6267,12 +6962,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'きょ', romaji: 'kyo' }, { kana: 'う', romaji: 'u' }, { kana: 'と', romaji: 'to' }],
     meaning: 'Kioto',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'kyonen',
     units: [{ kana: 'きょ', romaji: 'kyo' }, { kana: 'ね', romaji: 'ne' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'año pasado',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '去年',
   },
   {
@@ -6285,6 +6982,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'carne de vacuno',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '牛肉',
   },
   {
@@ -6297,6 +6995,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'leche',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '牛乳',
   },
   {
@@ -6304,6 +7003,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'こ', romaji: 'ko' }, { kana: 'う', romaji: 'u' }, { kana: 'ちゃ', romaji: 'cha' }],
     meaning: 'té negro',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '紅茶',
   },
   {
@@ -6316,6 +7016,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'esta semana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '今週',
   },
   {
@@ -6328,6 +7029,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'marido de otra persona',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'shashin',
@@ -6338,6 +7040,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'fotografía',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '写真',
   },
   {
@@ -6345,6 +7048,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'しゅ', romaji: 'shu' }, { kana: 'う', romaji: 'u' }],
     meaning: 'semana',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '週',
   },
   {
@@ -6357,6 +7061,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'semanas',
     type: 'contador',
+    mode: 'afijo',
     kanji: '～週間',
   },
   {
@@ -6369,6 +7074,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'deberes',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '宿題',
   },
   {
@@ -6376,6 +7082,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'しょ', romaji: 'sho' }, { kana: 'う', romaji: 'u' }, { kana: 'ゆ', romaji: 'yu' }],
     meaning: 'salsa de soja',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'shokudou',
@@ -6387,6 +7094,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'comedor, cafetería',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '食堂',
   },
   {
@@ -6394,6 +7102,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じ', romaji: 'ji' }, { kana: 'しょ', romaji: 'sho' }],
     meaning: 'diccionario',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '辞書',
   },
   {
@@ -6406,6 +7115,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bicicleta',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '自転車',
   },
   {
@@ -6418,6 +7128,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'automóvil',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '自動車',
   },
   {
@@ -6425,12 +7136,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じゃ', romaji: 'ja' }],
     meaning: 'bueno, entonces',
     type: 'conjuncion',
+    mode: 'explicacion',
   },
   {
     id: 'juu',
     units: [{ kana: 'じゅ', romaji: 'ju' }, { kana: 'う', romaji: 'u' }],
     meaning: 'diez',
     type: 'numero',
+    mode: 'imagen',
     kanji: '十',
   },
   {
@@ -6438,6 +7151,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じゅ', romaji: 'ju' }, { kana: 'う', romaji: 'u' }],
     meaning: 'durante, a lo largo de',
     type: 'expresion',
+    mode: 'afijo',
     kanji: '～中',
   },
   {
@@ -6449,6 +7163,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'clase, lección',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '授業',
   },
   {
@@ -6456,6 +7171,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じょ', romaji: 'jo' }, { kana: 'う', romaji: 'u' }, { kana: 'ず', romaji: 'zu' }],
     meaning: 'hábil, bueno en',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '上手',
   },
   {
@@ -6468,6 +7184,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bien, hábilmente',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '上手に',
   },
   {
@@ -6475,6 +7192,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'じょ', romaji: 'jo' }, { kana: 'う', romaji: 'u' }, { kana: 'ぶ', romaji: 'bu' }],
     meaning: 'fuerte, resistente',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '丈夫',
   },
   {
@@ -6487,6 +7205,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'semana pasada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '先週',
   },
   {
@@ -6501,6 +7220,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hagámoslo así',
     type: 'expresion',
+    mode: 'explicacion',
   },
   {
     id: 'tanjoubi',
@@ -6513,6 +7233,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cumpleaños',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '誕生日',
   },
   {
@@ -6526,6 +7247,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'bien, seguro, sin problema',
     type: 'adjetivo-na',
+    mode: 'imagen',
     kanji: '大丈夫',
   },
   {
@@ -6533,6 +7255,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ちゃ', romaji: 'cha' }, { kana: 'い', romaji: 'i' }, { kana: 'ろ', romaji: 'ro' }],
     meaning: 'marrón',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '茶色',
   },
   {
@@ -6540,12 +7263,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ちゃ', romaji: 'cha' }, { kana: 'わ', romaji: 'wa' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'cuenco para arroz',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'chuu',
     units: [{ kana: 'ちゅ', romaji: 'chu' }, { kana: 'う', romaji: 'u' }],
     meaning: 'durante, en medio de',
     type: 'expresion',
+    mode: 'afijo',
     kanji: '～中',
   },
   {
@@ -6553,18 +7278,21 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ちょ', romaji: 'cho' }, { kana: 'う', romaji: 'u' }, { kana: 'ど', romaji: 'do' }],
     meaning: 'exactamente, justo',
     type: 'adverbio',
+    mode: 'explicacion',
   },
   {
     id: 'chotto',
     units: [{ kana: 'ちょ', romaji: 'cho' }, { kana: 'っ', romaji: 't' }, { kana: 'と', romaji: 'to' }],
     meaning: 'un poco',
     type: 'adverbio',
+    mode: 'escala',
   },
   {
     id: 'densha',
     units: [{ kana: 'で', romaji: 'de' }, { kana: 'ん', romaji: 'n' }, { kana: 'しゃ', romaji: 'sha' }],
     meaning: 'tren eléctrico',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '電車',
   },
   {
@@ -6577,6 +7305,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'Tokio',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'toshokan',
@@ -6588,6 +7317,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'biblioteca',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '図書館',
   },
   {
@@ -6595,6 +7325,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'ひゃ', romaji: 'hya' }, { kana: 'く', romaji: 'ku' }],
     meaning: 'cien',
     type: 'numero',
+    mode: 'imagen',
     kanji: '百',
   },
   {
@@ -6607,6 +7338,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'hospital',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '病院',
   },
   {
@@ -6614,6 +7346,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'びょ', romaji: 'byo' }, { kana: 'う', romaji: 'u' }, { kana: 'き', romaji: 'ki' }],
     meaning: 'enfermedad',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '病気',
   },
   {
@@ -6626,6 +7359,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'frase, texto',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '文章',
   },
   {
@@ -6640,6 +7374,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'estudiar, estudio',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '勉強',
     verbGroup: 'irregular',
     masuStem: 'べんきょうし',
@@ -6655,6 +7390,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'cada semana',
     type: 'adverbio',
+    mode: 'explicacion',
     kanji: '毎週',
   },
   {
@@ -6669,6 +7405,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'oficina de correos',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '郵便局',
   },
   {
@@ -6681,6 +7418,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'semana próxima',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '来週',
   },
   {
@@ -6695,6 +7433,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'estudiante extranjero',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '留学生',
   },
   {
@@ -6707,6 +7446,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'padres',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '両親',
   },
   {
@@ -6714,6 +7454,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'りょ', romaji: 'ryo' }, { kana: 'う', romaji: 'u' }, { kana: 'り', romaji: 'ri' }],
     meaning: 'cocina, comida preparada',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '料理',
   },
   {
@@ -6721,6 +7462,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'りょ', romaji: 'ryo' }, { kana: 'こ', romaji: 'ko' }, { kana: 'う', romaji: 'u' }],
     meaning: 'viaje',
     type: 'sustantivo',
+    mode: 'imagen',
     kanji: '旅行',
   },
   {
@@ -6735,6 +7477,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'agencia de viajes',
     type: 'sustantivo',
+    mode: 'imagen',
   },
   {
     id: 'ryokou-suru',
@@ -6747,6 +7490,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'viajar',
     type: 'verbo-irregular',
+    mode: 'imagen',
     verbGroup: 'irregular',
     masuStem: 'りょこうし',
     naiStem: 'りょこうし',
@@ -6763,6 +7507,7 @@ export const VOCABULARY: Word[] = withMedia([
     ],
     meaning: 'practicar, práctica',
     type: 'verbo-irregular',
+    mode: 'imagen',
     kanji: '練習',
     verbGroup: 'irregular',
     masuStem: 'れんしゅうし',
@@ -6773,12 +7518,14 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'う', romaji: 'u' }, { kana: 'ー', romaji: 'u' }, { kana: 'ん', romaji: 'n' }],
     meaning: 'mmm, veamos',
     type: 'expresion',
+    mode: 'interjeccion',
   },
   {
     id: 'ee-2',
     units: [{ kana: 'え', romaji: 'e' }, { kana: 'ー', romaji: 'e' }],
     meaning: 'mmm, veamos',
     type: 'expresion',
+    mode: 'interjeccion',
   },
 ])
 
