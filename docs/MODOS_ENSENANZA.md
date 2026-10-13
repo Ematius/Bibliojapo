@@ -562,7 +562,8 @@ entre las interjecciones por compartir forma con え «eh».
 
 - [x] **Sacar ろっぽん y にねん de `words`**: no son palabras, son 六 + ～ほん
       y 二 + ～ねん. Pasan a `ejemplos` de su afijo cuando exista la columna
-- [ ] Rellenar `ejemplos` de los 45 afijos (tabla §4)
+- [ ] Rellenar `ejemplos` de los 44 afijos (tabla §4). El documento trae escritos
+      unos 22; los demás se escriben a mano cuando toque
 - [ ] Rellenar `familia`/`familia_pos` de los 25 de こそあど (tabla §3)
 - [ ] Rellenar `pareja_id` de los saludos (tabla §5)
 - [ ] Marcar あまり y まだ como «exige negativo» en su ficha
@@ -575,3 +576,21 @@ entre las interjecciones por compartir forma con え «eh».
 - [ ] Los 18 bloques, su orden y su vocabulario
 - [ ] Las conjugaciones y las 12 formas
 - [ ] B1 y su media
+
+### En qué orden
+
+El mínimo está hecho: la columna, su check y el ajuste de publicación. Lo que
+queda va por tramos, y **lo primero es contenido, no código** — las grabaciones
+que faltan en B1 y el arte de B2.
+
+1. **`sistema` (こそあど) y `afijo` (contadores)**, cuando haya tres o cuatro
+   bloques más. Son las dos que de verdad cambian el aprendizaje, y las dos
+   necesitan lo mismo: `modo` en `volume()` y el reparto por modo en el lector.
+   Se monta una vez, con la primera. **Antes `sistema`**, porque sus datos salen
+   completos del §3 y los `ejemplos` de los afijos están a medias.
+2. **Las otras tres planas** —`explicacion`, `situacion`, `escala`—, al acabar
+   el hiragana. No arrastran nada.
+
+Con la primera plana entran los ejercicios y los exámenes, que hoy escogen las
+palabras por su dibujo. No antes: hasta que haya una plana en pantalla no se
+puede ver si funciona.

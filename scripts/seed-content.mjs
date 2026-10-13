@@ -279,16 +279,25 @@ for (const aisleId of AISLE_ORDER) {
         // Las que esperan la plana de su modo salen contadas en una sola línea —ver
         // `reportGaps`—: siendo casi doscientas, aquí taparían los avisos de verdad.
         .filter((id) => !wordsById.has(id) || MODES_WITH_SPREAD.has(wordsById.get(id).mode))
-        .map((id) => ({ id, gaps: wordGaps(wordsById.get(id)) }))
+        // `kind` y `gaps` aparte del texto porque el informe los agrupa cuando el tomo
+        // está sin publicar: con la frase ya montada habría que volver a partirla.
+        .map((id) => ({
+          kind: 'palabra',
+          label: wordLabel(id, wordsById),
+          gaps: wordGaps(wordsById.get(id)),
+        }))
         .filter((entry) => entry.gaps.length)
-        .map((entry) => `${wordLabel(entry.id, wordsById)}: sin ${entry.gaps.join(', ')}`)
         // El tercer bloque del examen final da la frase SOLO en audio: sin grabación,
         // su botón sale apagado y la frase hay que componerla sin una sola pista.
         .concat(
           (block?.sentenceIds ?? [])
             .map((id) => sentencesById.get(id))
             .filter((sentence) => sentence && sentence.units.length && !sentence.audio)
-            .map((sentence) => `frase ${sentence.text}: sin audio`),
+            .map((sentence) => ({
+              kind: 'frase',
+              label: `frase ${sentence.text}`,
+              gaps: ['audio'],
+            })),
         ),
     })
 
@@ -390,6 +399,13 @@ function reportGaps() {
   const verbose = process.argv.includes('--faltas')
   const lines = []
   const detail = (items) => items.map((g) => `      ${g}`).join('\n')
+  const entryLine = (entry) => `${entry.label}: sin ${entry.gaps.join(', ')}`
+  // Lo mismo contado: «43 palabras sin audio, dibujo · 15 frases sin audio». Separadas
+  // por · y no por coma, que ya separa las piezas que le faltan a cada una.
+  const countByGap = (entries) =>
+    Object.entries(Object.groupBy(entries, (e) => `${e.kind}s sin ${e.gaps.join(', ')}`))
+      .map(([label, list]) => `${list.length} ${label}`)
+      .join(' · ')
 
   const awaiting = words.filter((word) => !MODES_WITH_SPREAD.has(word.modo))
   if (awaiting.length) {
@@ -411,12 +427,16 @@ function reportGaps() {
       )
     }
 
-    // Las de las frases van siempre enteras, publicado el tomo o no: son pocas y son
-    // justo las que se olvidan, porque no cuelgan de ninguna lección que las reclame.
+    // Enteras solo en los tomos PUBLICADOS: son los que alguien está leyendo ahora, y
+    // ahí cada palabra que falta es una ficha que no sale. En los que no se publican son
+    // setecientas líneas que entierran el resto del informe — y lo que nadie lee no
+    // avisa de nada: las seis frases de B1 sin audio llevaban ahí desde siempre.
     if (block.pending.length) {
+      const headline = `  ${block.id} — promete y aún no puede enseñar`
       lines.push(
-        `  ${block.id} — palabras que promete y aún no puede enseñar ` +
-          `(${block.pending.length}):\n${detail(block.pending)}`,
+        verbose || !block.blocking.length
+          ? `${headline} (${block.pending.length}):\n${detail(block.pending.map(entryLine))}`
+          : `${headline}: ${countByGap(block.pending)}`,
       )
     }
   }
