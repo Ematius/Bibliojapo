@@ -33,9 +33,12 @@ bloques y 210 palabras a **18 bloques, 766 palabras y 155 frases**, con su gram�
 
 **Lo que queda de esta fase**: el ARTE de los tomos, uno a uno y ya en la red. El
 texto está escrito y comprobado entero; lo que falta de cada bloque son las fichas
-de sus kana, sus ilustraciones y sus audios. Hoy solo B1 los tiene, y por eso es el
-único publicado. La tubería está entera —tablas, funciones, volcado y bucket—, así
-que un tomo nuevo es dibujo y grabación, no código.
+de sus kana, sus ilustraciones y sus audios. Hoy los tienen B1 y B2, y por eso son
+los dos únicos publicados. La tubería está entera —tablas, funciones, volcado y
+bucket—, así que un tomo nuevo es dibujo y grabación, no código.
+
+**Cuál va por dónde no se escribe aquí**, que es como esta frase se quedó vieja:
+se pregunta al volcado — ver «Qué le falta a un tomo se le PREGUNTA al volcado».
 
 **Las dos formas de entrar acaban en UNA cuenta**, comprobado el 26-09-2026: quien se
 registró con correo y después pulsa «Continuar con Google» con ese mismo correo
@@ -932,7 +935,8 @@ y por cada lección de kana hacen falta las tres cosas:
 
 - la ficha del kana en `kana.ts` —mnemotecnia, trazos, ilustración, audio—;
 - el audio de cada palabra con la que se enseña;
-- la representación de esa palabra: `swatch` si es un color, `image` si no.
+- la representación de esa palabra, **solo si su `modo` es `imagen`**: `swatch` si
+  es un color, `image` si no. Ver «No toda palabra se enseña con un dibujo».
 
 Si se publicara por tener entrada, con el temario entero escrito de golpe se
 abrirían dieciocho tomos y diecisiete saldrían en blanco. Y quien lee no distingue
@@ -945,6 +949,57 @@ por un solo carácter. `kanaSpreads` le da las dos planas que no necesitan
 vocabulario —el dibujo mnemotécnico y la pauta de escritura— y queda fuera del
 repaso y de los exámenes, que es la mitad honesta: no hay palabra de la que
 examinar.
+
+### No toda palabra se enseña con un dibujo
+
+Cada palabra lleva un `modo` que dice CON QUÉ se enseña, y es columna de
+`FASE1_DEFINITIVO.md` —fila a fila, por id—, de `Word` y de la tabla. Son siete:
+`imagen`, `explicacion`, `afijo`, `sistema`, `situacion`, `escala` e
+`interjeccion`. De las 766 palabras, **581 son `imagen` y 185 no**. El reparto
+entero, con sus listas y las planas que cada modo pedirá, está en
+`docs/MODOS_ENSENANZA.md`; aquí solo están las reglas que salen de él.
+
+- **Solo las de `modo: imagen` necesitan dibujo.** では no es un objeto, それ solo
+  significa algo frente a これ y ～まい no existe suelto: forzarles una ilustración
+  enseña mal el idioma, así que **nunca se pide arte para una palabra que no sea
+  `imagen`**. Es el error que más fácil se repite, porque en `vocabulary.ts` las
+  766 se ven iguales.
+- **`modo` e `image` no son excluyentes.** El modo decide qué plana la enseña; el
+  dibujo es opcional en cualquier modo y obligatorio solo en `imagen`. Las diez
+  de B1 y B2 que ya tienen ilustración se quedan con ella: ～えん con una moneda
+  es útil. No se borra arte ya producido.
+- **El audio lo piden TODAS, también las 185.** En `interjeccion` es el contenido
+  entero y no un complemento: あ y ああ se traducen igual —«ah, oh»—, y sin oírlas
+  no hay forma de distinguirlas.
+- **Una palabra cuyo modo no tenga plana todavía no se publica**, tenga dibujo o
+  no. Hoy la única plana escrita es la de `imagen`, así que las 185 esperan; el
+  lector las descarta igual que descartaba las que no tenían arte. La lista de
+  modos con plana es `MODES_WITH_SPREAD`, en `scripts/seed-content.mjs`.
+
+### Qué le falta a un tomo se le PREGUNTA al volcado
+
+```bash
+npm run seed:content -- --dry-run --faltas
+```
+
+**Nunca se cuenta a mano cruzando `content/`.** Son 766 palabras y 155 frases con
+su media en otro archivo, y a mano salen listas que piden arte que no hace falta
+—las 185— o que olvidan audios que sí. El informe lo saca `missingPieces`, el
+mismo criterio con el que se publica un tomo, así que no pueden contradecirse.
+
+- **`--dry-run` no es opcional cuando solo se quiere mirar.** Sin él, el comando
+  VUELCA EN PRODUCCIÓN: el informe se imprime en los dos casos, y es fácil leerlo
+  sin darse cuenta de que además se ha escrito. Necesita `.env.local`, que tiene
+  la `service_role`.
+- **`--faltas` da el detalle pieza a pieza**; sin él, los tomos sin publicar salen
+  contados en una línea. Los publicados van enteros siempre: son los que alguien
+  está leyendo ahora, y ahí cada palabra que falta es una ficha que no sale.
+- **El detalle ya viene filtrado por modo**: lo que lista pidiendo `dibujo` es
+  exactamente lo que hay que ilustrar. Las 185 no salen por su nombre, solo
+  agrupadas en «palabras pendientes de plana».
+- **Y de ahí sale su único punto ciego:** los audios de esas 185 no aparecen
+  listados. Hacen falta igual, pero no antes que su plana — y el día que se monte
+  una, sus audios asomarán de golpe.
 
 ### Una lección puede ser un KANA o una REGLA
 
@@ -985,10 +1040,14 @@ recorrido y delante alfabéticamente.
    GENERADO en la cabecera y **no se tocan a mano**: lo que se escriba en ellos se
    pierde en el siguiente build. Los comprobadores —`check-romaji`,
    `check-sentences`, `check-blocks`— dicen qué no cuadra antes de escribir nada.
+   Una fila sin `modo`, o con uno que no sea de los siete, PARA el generador sin
+   escribir: adivinarlo la enseñaría con un dibujo, que es lo que el modo corrige.
 2. `content/hiragana/kana.ts` → la ficha de cada kana nuevo. Los trazos y la
    silueta salen de `tools/kana-tracer.html`, que se actualiza a un kana cada vez.
-3. `content/hiragana/vocabulary.ts` → sus palabras, con `audio` y con `swatch` o
-   `image`. Su media va a `content-media/hiragana/<bloque>/`, no a `public/`: ahí solo
+3. `content/hiragana/vocabularyMedia.ts` → el `audio` de TODAS sus palabras, y el
+   `swatch` o la `image` de las de `modo: imagen` y solo de esas — ver «No toda
+   palabra se enseña con un dibujo». Va aquí y no en `vocabulary.ts`, que se
+   genera. Su media a `content-media/hiragana/<bloque>/`, no a `public/`: ahí solo
    se queda el del bloque 1.
 4. `npm run seed:content` → hasta que no se vuelca, el tomo no existe para la app.
    Es el paso que se olvida, porque en `content/` ya se ve escrito y completo.
