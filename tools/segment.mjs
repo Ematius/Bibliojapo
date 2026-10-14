@@ -81,18 +81,24 @@ export function formsOf(word) {
 }
 
 // Devuelve los trozos de la frase, o null si no se deja segmentar con lo que hay.
-export function segment(text, words) {
+//
+// `prefer` son los ids que el temario declara cuando dos palabras se escriben igual.
+// Sin ellos aquí no hay nada que decidir: いえ es la casa y también «no», y los dos
+// candidatos miden lo mismo.
+export function segment(text, words, prefer = []) {
   const candidates = []
   for (const word of words) for (const form of formsOf(word)) candidates.push(form)
   for (const p of Object.keys(PARTICLES)) candidates.push({ text: p, particle: true })
   for (const p of PLAIN_PARTICLES) candidates.push({ text: p, particle: true })
   for (const p of PUNCTUATION) candidates.push({ text: p, punctuation: true })
 
-  // El más largo primero: sin eso, おおい se partiría en おお + い. Y a igual longitud, la
-  // partícula antes que la palabra: は es también «diente», y en かさはありません el
-  // segmentador la tomaba por la palabra y la leía «ha» en vez de «wa». Cuando una frase
-  // use de verdad la palabra, `ambiguities` la saca para mirarla.
-  candidates.sort((a, b) => b.text.length - a.text.length || (b.particle ? 1 : 0) - (a.particle ? 1 : 0))
+  // El más largo primero: sin eso, おおい se partiría en おお + い. A igual longitud manda
+  // lo que el temario declare, y si no declara nada, la partícula antes que la palabra: は
+  // es también «diente», y en かさはありません el segmentador la tomaba por la palabra y la
+  // leía «ha» en vez de «wa».
+  const declared = new Set(prefer)
+  const priority = (c) => (declared.has(c.wordId) ? 2 : c.particle ? 1 : 0)
+  candidates.sort((a, b) => b.text.length - a.text.length || priority(b) - priority(a))
 
   const seen = new Set()
   const walk = (at) => {
@@ -115,6 +121,23 @@ export function segment(text, words) {
 export function ambiguities(pieces, words) {
   const spelled = new Set(words.map((w) => w.text))
   return pieces.filter((p) => p.particle && spelled.has(p.text)).map((p) => p.text)
+}
+
+// Las piezas que podrían ser otra palabra escrita igual y a las que nadie ha dicho cuál
+// es. El segmentador tiene que elegir una, y elige la primera del documento: así las dos
+// frases de la casa acabaron apuntando a いえ «no», y nadie se enteró en dos años.
+//
+// Se mide contra TODO el vocabulario, no solo el disponible en el bloque: la segunda
+// acepción puede llegar más tarde y el id ya quedaría escrito.
+export function homographs(pieces, words, declared = []) {
+  const textOf = new Map(words.map((w) => [w.id, w.text]))
+  const howMany = new Map()
+  for (const w of words) howMany.set(w.text, (howMany.get(w.text) ?? 0) + 1)
+
+  const chosen = new Set(declared)
+  return pieces
+    .filter((p) => p.wordId && !chosen.has(p.wordId) && howMany.get(textOf.get(p.wordId)) > 1)
+    .map((p) => p.wordId)
 }
 
 // Los units de la frase entera, con las partículas leídas como tales.
