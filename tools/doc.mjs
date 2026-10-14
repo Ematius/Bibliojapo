@@ -70,6 +70,12 @@ export function readDocument(path = DOC) {
         meaning: c[2],
         // El guión largo significa «ninguna».
         particles: c[3] === '—' ? [] : c[3].split('·').map((p) => p.trim()).filter(Boolean),
+        // Quinta columna, opcional: qué acepción usa la frase cuando dos palabras se
+        // escriben igual. Sin declararla el segmentador elige la primera del documento,
+        // y いえです acabó apuntando a いえ «no» en vez de a la casa.
+        senses: !c[4] || c[4] === '—'
+          ? []
+          : c[4].split('·').map((w) => w.trim()).filter(Boolean),
       })
     } else if (c.length >= 9) {
       const word = {

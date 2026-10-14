@@ -8,7 +8,7 @@
 // nada: será que le falta una palabra.
 import fs from 'fs'
 import { readDocument, allWords } from './doc.mjs'
-import { segment, sentenceUnits } from './segment.mjs'
+import { segment, sentenceUnits, homographs } from './segment.mjs'
 import { reading, normalise } from './romaji.mjs'
 
 const OUT = 'src/content/hiragana/sentences.ts'
@@ -34,14 +34,21 @@ const words = allWords(blocks)
 
 const sentences = []
 const failures = []
+const undeclared = []
 const seen = new Map()
 
 for (const block of blocks) {
   const available = words.filter((w) => w.blockNumber <= block.number)
 
   for (const s of block.sentences) {
-    const pieces = segment(s.text, available)
+    const pieces = segment(s.text, available, s.senses)
     if (!pieces) { failures.push({ ...s, block: block.id, why: 'no se deja segmentar' }); continue }
+
+    // Qué palabra eligió el segmentador sin que nadie se lo dijera, habiendo otra que
+    // se escribe igual. Se mide contra el vocabulario ENTERO: la otra acepción puede
+    // llegar en un bloque posterior y el id ya quedaría escrito aquí.
+    const blind = homographs(pieces, words, s.senses)
+    if (blind.length) undeclared.push({ block: block.id, text: s.text, meaning: s.meaning, ids: blind })
 
     const units = sentenceUnits(pieces)
     const got = normalise(reading(units))
@@ -117,3 +124,14 @@ export const SENTENCES_BY_ID = new Map(SENTENCES.map((sentence) => [sentence.id,
 fs.writeFileSync(OUT, file)
 console.log(`${sentences.length} frases escritas en ${OUT}`)
 console.log(`con regla de gramática: ${sentences.filter((s) => s.grammarId).length}`)
+
+// Avisa DESPUÉS de escribir, y escribe igual: una frase sin declarar no está rota, solo
+// elegida a ciegas, y dejar el temario sin ella sería peor que dejarla mal. Pero sale con
+// error, porque un aviso que no rompe nada es un aviso que nadie lee.
+if (undeclared.length) {
+  console.error(`
+${undeclared.length} frases usan una palabra escrita igual que otra, sin decir cuál:`)
+  for (const u of undeclared) console.error(`  ${u.block} ${u.text} «${u.meaning}» → ${u.ids.join(', ')}`)
+  console.error('Se declara en la quinta columna del documento, «acepcion».')
+  process.exitCode = 1
+}
