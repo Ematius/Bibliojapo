@@ -147,6 +147,14 @@ independiente**, y no lo es: es 六 + ～ほん. Ha salido de `words`, y con ell
 にねん (二 + ～ねん), que era el mismo caso. Se enseñan como ejemplos de su
 afijo. La frase ろっぽんあります。 se borró: B17 se queda con cinco.
 
+**La tercera que salió, por otro motivo:** いえ «no». No es un afijo mal
+troceado sino いえ 家 duplicada: el documento la traía como entrada aparte, el
+segmentador elegía siempre la primera de dos palabras escritas igual, y por eso
+las frases «Es una casa» y «La casa es tranquila» apuntaban a la negación. No
+está en ninguna lista del N5, ninguna frase la usaba y nada la justificaba. Con
+ella el pool queda en **765**, y いえ 家 (`ie-2`) e いいえ «no» (`iie`) se quedan
+enteras, cada una con su dibujo y su audio.
+
 いちにち, いちど, なんじ y なんにち **se quedan como palabras**: están
 lexicalizadas. いちにち es «un día entero», no «1 día», y なんじ y なんにち son
 interrogativos fijos que todos los manuales enseñan como unidad.
@@ -562,6 +570,8 @@ entre las interjecciones por compartir forma con え «eh».
 
 - [x] **Sacar ろっぽん y にねん de `words`**: no son palabras, son 六 + ～ほん
       y 二 + ～ねん. Pasan a `ejemplos` de su afijo cuando exista la columna
+- [x] **Sacar いえ «no» de `words`**: era いえ 家 duplicada, y el segmentador se
+      quedaba siempre con la primera. Pool 766 → 765
 - [ ] Rellenar `ejemplos` de los 44 afijos (tabla §4). El documento trae escritos
       unos 22; los demás se escriben a mano cuando toque
 - [ ] Rellenar `familia`/`familia_pos` de los 25 de こそあど (tabla §3)

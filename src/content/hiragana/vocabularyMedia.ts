@@ -340,15 +340,6 @@ const MEDIA: Record<string, WordMedia> = {
       'Dos amigas que se ponen en marcha juntas, una señalando el camino, al salir ' +
       'de una tienda.',
   },
-  // «no», no la casa: esa es `ie-2`. Y el dibujo lo dice con un gesto porque una
-  // negación no es una cosa que se pueda poner delante del lector.
-  'ie': {
-    audio: 'hiragana/b2/audio/word/ie.wav',
-    image: 'hiragana/b2/images/imagesSupport/ie-no.webp',
-    imageAlt:
-      'Una niña negando con la cabeza y las manos cruzadas delante del pecho, el ' +
-      'gesto japonés de decir que no.',
-  },
 }
 
 // Se la pega a las palabras generadas. Una palabra sin media se queda como está: el

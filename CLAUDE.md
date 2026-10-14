@@ -27,7 +27,7 @@ script vuelca a las tablas. El login con Google funciona, el dominio propio es
 hace desde la pantalla — ver «Lo legal».
 
 **El temario de hiragana está reconstruido y volcado** (02-10-2026): pasó de 13
-bloques y 210 palabras a **18 bloques, 766 palabras y 155 frases**, con su gramática
+bloques y 210 palabras a **18 bloques, 765 palabras y 155 frases**, con su gramática
 —G0 a G7— y sus formas conjugadas. `docs/FASE1_DEFINITIVO.md` es la fuente, y los
 `.ts` del temario se generan de ahí; ver «Qué hay que rellenar para un tomo nuevo».
 
@@ -793,7 +793,7 @@ Ahora el aspecto vive en `BookButton.scss` y cada hoja solo dice dónde va el su
 
 Qué se enseña, en qué orden, con qué vocabulario y qué frases vive en su propio
 documento, uno por fase: `docs/FASE1_DEFINITIVO.md` es el de hiragana —18 bloques,
-766 palabras, 155 frases— y los otros tres son de katakana, kanji y vocabulario.
+765 palabras, 155 frases— y los otros tres son de katakana, kanji y vocabulario.
 No se cargan solos, y NO se leen enteros: se pide la sección que haga falta, porque
 cada uno se lleva por delante media sesión de tokens.
 
@@ -944,7 +944,7 @@ una página vacía de una rota: un tomo que dice «todavía no» es mejor que un
 abre y no tiene nada.
 
 **Una lección sin palabras cuenta como completa.** ぺ no aparece en ninguna de las
-766 palabras del temario, y exigírselas habría dejado B17 sin publicar para siempre
+765 palabras del temario, y exigírselas habría dejado B17 sin publicar para siempre
 por un solo carácter. `kanaSpreads` le da las dos planas que no necesitan
 vocabulario —el dibujo mnemotécnico y la pauta de escritura— y queda fuera del
 repaso y de los exámenes, que es la mitad honesta: no hay palabra de la que
@@ -955,7 +955,7 @@ examinar.
 Cada palabra lleva un `modo` que dice CON QUÉ se enseña, y es columna de
 `FASE1_DEFINITIVO.md` —fila a fila, por id—, de `Word` y de la tabla. Son siete:
 `imagen`, `explicacion`, `afijo`, `sistema`, `situacion`, `escala` e
-`interjeccion`. De las 766 palabras, **581 son `imagen` y 185 no**. El reparto
+`interjeccion`. De las 765 palabras, **581 son `imagen` y 184 no**. El reparto
 entero, con sus listas y las planas que cada modo pedirá, está en
 `docs/MODOS_ENSENANZA.md`; aquí solo están las reglas que salen de él.
 
@@ -963,7 +963,7 @@ entero, con sus listas y las planas que cada modo pedirá, está en
   significa algo frente a これ y ～まい no existe suelto: forzarles una ilustración
   enseña mal el idioma, así que **nunca se pide arte para una palabra que no sea
   `imagen`**. Es el error que más fácil se repite, porque en `vocabulary.ts` las
-  766 se ven iguales.
+  765 se ven iguales.
 - **`modo` e `image` no son excluyentes.** El modo decide qué plana la enseña; el
   dibujo es opcional en cualquier modo y obligatorio solo en `imagen`. Las diez
   de B1 y B2 que ya tienen ilustración se quedan con ella: ～えん con una moneda
@@ -982,7 +982,7 @@ entero, con sus listas y las planas que cada modo pedirá, está en
 npm run seed:content -- --dry-run --faltas
 ```
 
-**Nunca se cuenta a mano cruzando `content/`.** Son 766 palabras y 155 frases con
+**Nunca se cuenta a mano cruzando `content/`.** Son 765 palabras y 155 frases con
 su media en otro archivo, y a mano salen listas que piden arte que no hace falta
 —las 185— o que olvidan audios que sí. El informe lo saca `missingPieces`, el
 mismo criterio con el que se publica un tomo, así que no pueden contradecirse.

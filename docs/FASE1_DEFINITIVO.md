@@ -1,9 +1,9 @@
 # OtakuN5 — Fase 1: Hiragana
-## Documento definitivo · pool 766 · 18 bloques
+## Documento definitivo · pool 765 · 18 bloques
 
-> **Verificado por script.** 766 filas, 766 ids únicos, 155 frases sin un solo
+> **Verificado por script.** 765 filas, 765 ids únicos, 155 frases sin un solo
 > kana fuera de su bloque, 126 verbos con raíz derivada por regla y ninguno sin
-> ella. Cobertura 766/766, sin residuo.
+> ella. Cobertura 765/765, sin residuo.
 >
 > **Sustituye a TODO documento anterior de la Fase 1**, incluida la versión
 > «pool 763», que contenía cinco errores corregidos aquí (ver §0.1).
@@ -33,13 +33,19 @@ Fase 1*.
 
 | | Antes | Ahora |
 |---|---|---|
-| Pool Fase 1 | 210 | **766** (90,8 % del N5) |
+| Pool Fase 1 | 210 | **765** (90,6 % del N5) |
 | Bloques | 13 | **18** |
-| B1 | 13 palabras | **20** (no pierde ninguna) |
+| B1 | 13 palabras | **19** (no pierde ninguna) |
 | Conjugación disponible | B7 | **B2** |
 | です disponible | B10 | **B2** |
 | Dakuten | bloque propio | **inline, con su kana base** |
 | Handakuten | mezclado | **B17, los 5 juntos con っ** |
+
+> **Del pool de 768 salen tres, y por eso son 765.** ろっぽん y にねん no son
+> palabras sino 六 + ～ほん y 二 + ～ねん, y se enseñan como ejemplo de su afijo. いえ «no»
+> no estaba en ninguna lista del N5, ninguna frase la usaba y nada la justificaba: era
+> いえ 家 duplicada por el segmentador, que al haber dos palabras escritas igual se
+> quedaba siempre con la primera. Ver `docs/MODOS_ENSENANZA.md`.
 
 > **REGLA ABSOLUTA DE FASE 1: nunca se muestra un kanji.** La columna `kanji`
 > existe en los datos porque la Fase 3 la necesita, pero la interfaz de Fase 1
@@ -54,10 +60,10 @@ Fase 1*.
 | Bloques | 18 |
 | Lecciones de kana | **56** (46 base + っ ー ゃ ゅ ょ + 5 handakuten) |
 | Dakuten | 20, **inline, no son lección** |
-| Palabras | **766** |
+| Palabras | **765** |
 | Verbos | **126** (85 godan · 32 ichidan · 9 irregulares) |
 | Frases objetivo | **155** |
-| Cobertura | **90,8 % del vocabulario N5** (766 / 844) |
+| Cobertura | **90,6 % del vocabulario N5** (765 / 844) |
 
 **Denominadores para la app:** `N5_WORD_COUNT = 844` · `HIRAGANA_BASE_COUNT = 56`.
 Los porcentajes se calculan sobre **filas del CSV**, que es lo que cuenta la app.
@@ -396,7 +402,7 @@ dakuten que estrene él mismo.
 
 **Kana nuevos:** あ い う え お は  
 **Gramática:** は como partícula de tema (se lee *wa*)  
-**Vocabulario:** +20 · acumulado 20 (2.4 % del N5)
+**Vocabulario:** +19 · acumulado 19 (2.3 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -408,7 +414,6 @@ aoi|あおい|青い|aoi|azul|adjetivo-i|||b1|imagen
 ii-yoi|いい/よい||ii/yoi|bueno|adjetivo-i|||b1|imagen
 iie|いいえ||iie|no|expresion|||b1|explicacion
 iu|いう|言う|iu|decir|verbo-u|godan|いい|b1|imagen
-ie|いえ||ie|no|expresion|||b1|explicacion
 ie-2|いえ|家|ie|casa, hogar|sustantivo|||b1|imagen
 ue|うえ|上|ue|encima, arriba|sustantivo|||b1|imagen
 e|え||e|eh, oh|expresion|||b1|interjeccion
@@ -439,7 +444,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** ま す て せ ん  
 **Dakuten que traen:** で ぜ ず ば  
 **Gramática:** **G0 el dakuten** (て→で, は→ば) · **G1 です** · **G2 ます / ません**  
-**Vocabulario:** +24 · acumulado 44 (5.2 % del N5)
+**Vocabulario:** +24 · acumulado 43 (5.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -494,7 +499,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** り し る か  
 **Dakuten que traen:** じ が  
 **Gramática:** Se completa la conjugación godan en -る y -す (あります, します) · **ではありません**  
-**Vocabulario:** +60 · acumulado 104 (12.3 % del N5)
+**Vocabulario:** +60 · acumulado 103 (12.2 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -586,7 +591,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** こ な さ わ  
 **Dakuten que traen:** ご ざ  
 **Gramática:** —  
-**Vocabulario:** +67 · acumulado 171 (20.3 % del N5)
+**Vocabulario:** +67 · acumulado 170 (20.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -678,7 +683,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** た み そ ね  
 **Dakuten que traen:** だ ぞ  
 **Gramática:** **G3 pasado: ました / ませんでした / でした**  
-**Vocabulario:** +67 · acumulado 238 (28.2 % del N5)
+**Vocabulario:** +67 · acumulado 237 (28.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -772,7 +777,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** く き ら  
 **Dakuten que traen:** ぐ ぎ  
 **Gramática:** **G4 ～たい (querer)**  
-**Vocabulario:** +72 · acumulado 310 (36.7 % del N5)
+**Vocabulario:** +72 · acumulado 309 (36.6 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -869,7 +874,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** と ち  
 **Dakuten que traen:** ど ぢ  
 **Gramática:** —  
-**Vocabulario:** +68 · acumulado 378 (44.8 % del N5)
+**Vocabulario:** +68 · acumulado 377 (44.7 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -963,7 +968,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** つ け  
 **Dakuten que traen:** づ げ  
 **Gramática:** —  
-**Vocabulario:** +50 · acumulado 428 (50.7 % del N5)
+**Vocabulario:** +50 · acumulado 427 (50.6 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1038,7 +1043,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** ふ ひ  
 **Dakuten que traen:** ぶ び  
 **Gramática:** —  
-**Vocabulario:** +46 · acumulado 474 (56.2 % del N5)
+**Vocabulario:** +46 · acumulado 473 (56.0 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1109,7 +1114,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** れ も  
 **Gramática:** の (posesión)  
-**Vocabulario:** +43 · acumulado 517 (61.3 % del N5)
+**Vocabulario:** +43 · acumulado 516 (61.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1178,7 +1183,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** に よ  
 **Gramática:** に (existencia, destino)  
-**Vocabulario:** +43 · acumulado 560 (66.4 % del N5)
+**Vocabulario:** +43 · acumulado 559 (66.2 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1245,7 +1250,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** ろ の  
 **Gramática:** —  
-**Vocabulario:** +41 · acumulado 601 (71.2 % del N5)
+**Vocabulario:** +41 · acumulado 600 (71.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1311,7 +1316,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** や ほ  
 **Dakuten que traen:** ぼ  
 **Gramática:** **G5 ～ない (negativo llano)**  
-**Vocabulario:** +31 · acumulado 632 (74.9 % del N5)
+**Vocabulario:** +31 · acumulado 631 (74.8 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1365,7 +1370,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** め む  
 **Gramática:** —  
-**Vocabulario:** +24 · acumulado 656 (77.7 % del N5)
+**Vocabulario:** +24 · acumulado 655 (77.6 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1413,7 +1418,7 @@ frase|romaji|espanol|particula|acepcion
 **Kana nuevos:** へ ゆ  
 **Dakuten que traen:** べ  
 **Gramática:** へ (dirección)  
-**Vocabulario:** +16 · acumulado 672 (79.6 % del N5)
+**Vocabulario:** +16 · acumulado 671 (79.5 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1455,7 +1460,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** ぬ を  
 **Gramática:** **G6 を (objeto directo)**  
-**Vocabulario:** +5 · acumulado 677 (80.2 % del N5)
+**Vocabulario:** +5 · acumulado 676 (80.1 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1481,9 +1486,9 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** っ ぱ ぴ ぷ ぺ ぽ  
 **Gramática:** El handakuten ° (っ + ぱぴぷぺぽ)  
-**Vocabulario:** +28 · acumulado 705 (83.5 % del N5)
+**Vocabulario:** +28 · acumulado 704 (83.4 % del N5)
 
-> **ぺ no tiene ninguna palabra en las 766, y es correcto.** No hay ninguna en el
+> **ぺ no tiene ninguna palabra en las 765, y es correcto.** No hay ninguna en el
 > N5 escrita en hiragana que lo lleve, así que no se puede enseñar con vocabulario
 > sin inventar una palabra fuera del examen. Se aprende por completitud del
 > silabario, y su ejemplo real llega en la Fase 2 con ページ y ペン, que sí son N5
@@ -1540,7 +1545,7 @@ frase|romaji|espanol|particula|acepcion
 
 **Kana nuevos:** ー ゃ ゅ ょ  
 **Gramática:** **G7 ～ましょう** · yōon · ー  
-**Vocabulario:** +61 · acumulado 766 (90.8 % del N5)
+**Vocabulario:** +61 · acumulado 765 (90.6 % del N5)
 
 ```csv
 id|kana|kanji|romaji|espanol|tipo|grupo_verbal|raiz_masu|bloque|modo
@@ -1626,24 +1631,24 @@ frase|romaji|espanol|particula|acepcion
 
 | # | Kana | Dakuten | Nuevas | Acum. | % N5 |
 |---|---|---|---|---|---|
-| B1 | あ い う え お は | — | 20 | 20 | 2.4 % |
-| B2 | ま す て せ ん | で ぜ ず ば | 24 | 44 | 5.2 % |
-| B3 | り し る か | じ が | 60 | 104 | 12.3 % |
-| B4 | こ な さ わ | ご ざ | 67 | 171 | 20.3 % |
-| B5 | た み そ ね | だ ぞ | 67 | 238 | 28.2 % |
-| B6 | く き ら | ぐ ぎ | 72 | 310 | 36.7 % |
-| B7 | と ち | ど ぢ | 68 | 378 | 44.8 % |
-| B8 | つ け | づ げ | 50 | 428 | 50.7 % |
-| B9 | ふ ひ | ぶ び | 46 | 474 | 56.2 % |
-| B10 | れ も | — | 43 | 517 | 61.3 % |
-| B11 | に よ | — | 43 | 560 | 66.4 % |
-| B12 | ろ の | — | 41 | 601 | 71.2 % |
-| B13 | や ほ | ぼ | 31 | 632 | 74.9 % |
-| B14 | め む | — | 24 | 656 | 77.7 % |
-| B15 | へ ゆ | べ | 16 | 672 | 79.6 % |
-| B16 | ぬ を | — | 5 | 677 | 80.2 % |
-| B17 | っ ぱ ぴ ぷ ぺ ぽ | — | 28 | 705 | 83.5 % |
-| B18 | ー ゃ ゅ ょ | — | 61 | 766 | 90.8 % |
+| B1 | あ い う え お は | — | 19 | 19 | 2.3 % |
+| B2 | ま す て せ ん | で ぜ ず ば | 24 | 43 | 5.1 % |
+| B3 | り し る か | じ が | 60 | 103 | 12.2 % |
+| B4 | こ な さ わ | ご ざ | 67 | 170 | 20.1 % |
+| B5 | た み そ ね | だ ぞ | 67 | 237 | 28.1 % |
+| B6 | く き ら | ぐ ぎ | 72 | 309 | 36.6 % |
+| B7 | と ち | ど ぢ | 68 | 377 | 44.7 % |
+| B8 | つ け | づ げ | 50 | 427 | 50.6 % |
+| B9 | ふ ひ | ぶ び | 46 | 473 | 56.0 % |
+| B10 | れ も | — | 43 | 516 | 61.1 % |
+| B11 | に よ | — | 43 | 559 | 66.2 % |
+| B12 | ろ の | — | 41 | 600 | 71.1 % |
+| B13 | や ほ | ぼ | 31 | 631 | 74.8 % |
+| B14 | め む | — | 24 | 655 | 77.6 % |
+| B15 | へ ゆ | べ | 16 | 671 | 79.5 % |
+| B16 | ぬ を | — | 5 | 676 | 80.1 % |
+| B17 | っ ぱ ぴ ぷ ぺ ぽ | — | 28 | 704 | 83.4 % |
+| B18 | ー ゃ ゅ ょ | — | 61 | 765 | 90.6 % |
 Esta tabla se genera desde el CSV: **las cifras cuadran fila a fila**.
 La curva es **deliberadamente irregular**: el pico de B3–B7 es estructural —
 con 25 kana conocidos, cada carácter nuevo abre muchísimas combinaciones.

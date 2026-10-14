@@ -1,4 +1,4 @@
-// El vocabulario de la Fase 1: 766 palabras, las del documento del temario.
+// El vocabulario de la Fase 1: 765 palabras, las del documento del temario.
 //
 // GENERADO — no se edita a mano: `node tools/build-vocabulary.mjs` lo reescribe entero
 // desde `docs/FASE1_DEFINITIVO.md`, que es donde se corrige una palabra. Los units salen de ahí
@@ -73,13 +73,6 @@ export const VOCABULARY: Word[] = withMedia([
     kanji: '言う',
     verbGroup: 'godan',
     masuStem: 'いい',
-  },
-  {
-    id: 'ie',
-    units: [{ kana: 'い', romaji: 'i' }, { kana: 'え', romaji: 'e' }],
-    meaning: 'no',
-    type: 'expresion',
-    mode: 'explicacion',
   },
   {
     id: 'ie-2',
