@@ -128,7 +128,7 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'で', romaji: 'de' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['ie'],
+    wordIds: ['ie-2'],
   },
   {
     id: 'hahadesu',
@@ -410,7 +410,7 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'で', romaji: 'de' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['ie', 'shizuka'],
+    wordIds: ['ie-2', 'shizuka'],
     grammarId: 'topic-wa',
   },
   {
@@ -932,7 +932,7 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'で', romaji: 'de' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['atsui'],
+    wordIds: ['atsui-3'],
   },
   {
     id: 'kakemasu',
@@ -1775,7 +1775,7 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'で', romaji: 'de' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['taihen'],
+    wordIds: ['taihen-2'],
   },
   {
     id: 'heya-e-ikimasu',
@@ -2070,7 +2070,7 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'ま', romaji: 'ma' },
       { kana: 'す', romaji: 'su' },
     ],
-    wordIds: ['shashin', 'toru'],
+    wordIds: ['shashin', 'toru-2'],
     grammarId: 'particle-o',
   },
   {
