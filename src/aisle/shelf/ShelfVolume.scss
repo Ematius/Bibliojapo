@@ -89,6 +89,15 @@
   &__face--spine {
     left: 0;
     width: 100%;
+
+    // Los herrajes de arriba y abajo sobresalen del cuerpo del lomo, y son ELLOS los que
+    // marcan el ancho del render: el cuerpo ornamentado se queda hasta un 6,7 % corto. Sin
+    // este ensanchado la tapa nace donde acaba la imagen y no donde acaba el dibujo, y por
+    // esa franja se ve la estantería. Los herrajes asoman un poco de la arista, que es lo
+    // que hacen en un libro encuadernado.
+    img {
+      transform: scaleX(1.072);
+    }
   }
 
   // Las dos tapas cuelgan de las aristas del lomo. Su ancho sale de las dos proporciones, así
