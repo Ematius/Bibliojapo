@@ -63,8 +63,8 @@ function volumeArt(
 // Un solo juego de medidas para los dieciocho, las mayores de las medidas en píxeles sobre
 // los recortes: grosor y alto del lomo, ancho y alto de la tapa girada, y dónde acaban sus
 // hojas. Bajar cualquiera de las tres estrecha o achata TODOS los tomos a la vez.
-const SPINE_SIZE: [number, number] = [497, 2172]
-const TURNED_SIZE: [number, number] = [957, 1536]
+const SPINE_SIZE: [number, number] = [470, 2172]
+const TURNED_SIZE: [number, number] = [950, 1536]
 const COVER_LEFT = 136
 
 export const VOLUME_ART: readonly VolumeArt[] = [
