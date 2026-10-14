@@ -5,10 +5,11 @@
 //
 // La proporción del tomo se toma de la GIRADA, no de la plana: la plana es 2:3 exacto y
 // la tapa del render girado es un 12 % más estrecha, y al relevarse al final del giro cada
-// una con la suya daba un salto de ancho. La plana se estira hasta la girada. Por eso cada
-// tomo apunta dónde acaban sus hojas: es lo que separa la tapa del resto del render.
+// una con la suya daba un salto de ancho. La plana se estira hasta la girada. De ahí que haga
+// falta saber dónde acaban las hojas: es lo que separa la tapa del resto del render.
 //
-// SI SE CAMBIA UN RENDER hay que volver a recortarlo y volver a medir sus números.
+// Los dieciocho comparten UN juego de medidas, no uno medido tomo a tomo: así ninguno se ve
+// más estrecho ni más bajo que su vecino en la balda.
 
 const DIR = '/images/hallways/books/volumes'
 
@@ -59,23 +60,30 @@ function volumeArt(
   }
 }
 
+// Un solo juego de medidas para los dieciocho, las mayores de las medidas en píxeles sobre
+// los recortes: grosor y alto del lomo, ancho y alto de la tapa girada, y dónde acaban sus
+// hojas. Bajar cualquiera de las tres estrecha o achata TODOS los tomos a la vez.
+const SPINE_SIZE: [number, number] = [497, 2172]
+const TURNED_SIZE: [number, number] = [957, 1536]
+const COVER_LEFT = 136
+
 export const VOLUME_ART: readonly VolumeArt[] = [
-  volumeArt(1, [341, 2136], [921, 1436], 80),
-  volumeArt(2, [371, 2141], [897, 1456], 83),
-  volumeArt(3, [345, 2158], [882, 1459], 82),
-  volumeArt(4, [392, 2172], [945, 1386], 78),
-  volumeArt(5, [373, 2149], [885, 1458], 77),
-  volumeArt(6, [401, 2159], [905, 1409], 75),
-  volumeArt(7, [403, 2159], [923, 1419], 87),
-  volumeArt(8, [393, 2172], [837, 1353], 74),
-  volumeArt(9, [436, 2172], [812, 1329], 72),
-  volumeArt(10, [385, 2172], [843, 1364], 76),
-  volumeArt(11, [400, 2172], [827, 1349], 74),
-  volumeArt(12, [415, 2151], [804, 1313], 69),
-  volumeArt(13, [408, 2142], [925, 1451], 112),
-  volumeArt(14, [401, 2172], [916, 1469], 124),
-  volumeArt(15, [412, 2172], [957, 1502], 136),
-  volumeArt(16, [382, 2116], [956, 1536], 129),
-  volumeArt(17, [403, 2155], [925, 1467], 123),
-  volumeArt(18, [407, 2172], [929, 1480], 126),
+  volumeArt(1, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(2, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(3, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(4, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(5, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(6, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(7, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(8, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(9, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(10, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(11, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(12, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(13, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(14, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(15, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(16, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(17, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
+  volumeArt(18, SPINE_SIZE, TURNED_SIZE, COVER_LEFT),
 ]
