@@ -100,30 +100,7 @@ Si una rama entera sin empezar —katakana, kanji— **aparece apagada o no apar
 Apagada dice «esto llegará», que es bueno; pero tres ramas apagadas y una viva
 hacen que la viva parezca pequeña.
 
----
-
-## 5. La caja — los juegos
-
-Manga, al desbloquear un tomo se regala unas paginas de mangas para practicar la lectura
-
-### Reglas
-
-- **Un juego no enseña nada nuevo:** juega solo con kana ya estudiados, la misma
-  regla que los distractores de `parts/pickCards.ts`.
-- **Un juego no da acceso:** ni sellos ni insignias. Deja marcas personales y nada
-  más. Si un juego abriera el tomo siguiente, el catálogo se regala.
-- **Un juego se desbloquea con los tomos**, y en el abanico salen solo los suyos.
-
-### Sin decidir
-
-**Cuáles son los juegos.** Hay ideas, ninguna elegida: memorama de parejas kana ↔
-lectura; la linterna, que ilumina un kana en un lomo a oscuras y se apaga; oído
-fino, componer con fichas una palabra que suena; la polilla, que se come letras de
-una frase; ordenar la balda; sesenta segundos de kana.
-
----
-
-## 6. Esto es grande, y va por partes
+## 5. Esto es grande, y va por partes
 
 El escritorio completo es media aplicación más: tres aperturas, un árbol, un
 abanico y un escenario por juego. Se hace **poco a poco y sin prisa**, y este es el
