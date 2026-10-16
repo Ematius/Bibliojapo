@@ -140,7 +140,17 @@ export function homographs(pieces, words, declared = []) {
     .map((p) => p.wordId)
 }
 
-// Los units de la frase entera, con las partículas leídas como tales.
+// El desglose de cada sufijo, por su texto. Sale de `conjugations.ts` y no de releer sus
+// kana: la は de ではありません se lee «wa», y eso solo lo sabe la tabla.
+const SUFFIX_UNITS = new Map(
+  CONJUGATIONS.map((form) => [form.suffixUnits.map((unit) => unit.kana).join(''), form.suffixUnits]),
+)
+
+// Los units de la frase entera. La lectura de cada pieza sale de DONDE ESTÁ DECLARADA:
+// una partícula de `PARTICLES`, un sufijo de su `suffixUnits`, y una palabra de
+// `tokenizeWord`, que es quien guarda sus excepciones. Deducirla otra vez a partir del
+// texto es tener dos ideas de cómo se lee lo mismo, y la は ya ha vuelto por tres rutas
+// distintas por eso.
 export function sentenceUnits(pieces) {
   const units = []
   for (const piece of pieces) {
@@ -149,6 +159,18 @@ export function sentenceUnits(pieces) {
       units.push({ kana: piece.text, romaji: PARTICLES[piece.text] })
       continue
     }
+
+    const suffix = piece.form ? SUFFIX_UNITS.get(piece.form) : undefined
+    if (suffix) {
+      // La raíz SÍ se tokeniza, y es seguro: no es una palabra —あい es la raíz de あう—,
+      // y las lecturas excepcionales son de palabra entera, como では、また.
+      const stem = piece.text.slice(0, piece.text.length - piece.form.length)
+      if (stem) units.push(...tokenizeWord(stem))
+      // Copiados: los de la tabla no salen de ella, que los lee todo el proyecto.
+      units.push(...suffix.map((unit) => ({ kana: unit.kana, romaji: unit.romaji })))
+      continue
+    }
+
     // `tokenizeWord` y no `tokenize`: una PALABRA puede llevar dentro una は que se lee
     // «wa» —では、また—, y esas excepciones son por palabra entera.
     units.push(...tokenizeWord(piece.text))

@@ -12,10 +12,15 @@ const blocks = readDocument()
 const words = allWords(blocks)
 const sentences = blocks.flatMap((b) => b.sentences.map((s) => ({ ...s, block: b.number })))
 
-// では、また se leía «dehamata» porque `sentenceUnits` tokenizaba pieza a pieza en vez de
-// por palabra entera: la は de DENTRO de una palabra también puede sonar «wa», y eso solo
-// se sabe de la palabra completa. Es el mismo fallo que ya se arregló en el vocabulario,
-// reaparecido por otra ruta — fijo aquí para que no vuelva por una tercera.
+// La は ha vuelto por TRES rutas distintas, y siempre por la misma razón: alguien deduce
+// cómo se lee a partir del texto en vez de leerlo donde está declarado. Primero el
+// vocabulario, luego `sentenceUnits` tokenizando pieza a pieza —では、また se leía
+// «dehamata»—, y la tercera dentro de un SUFIJO: ではありません salía «dehaarimasen», así
+// que el generador rechazaba toda frase con la cópula negativa y no se pudo escribir
+// ninguna en los dieciocho tomos.
+//
+// Los cuatro casos cubren las cuatro procedencias de una lectura. Si alguien vuelve a
+// deducirla, aquí se ve.
 function checkHa() {
   const cases = [
     // Dentro de la palabra, y suena «wa».
@@ -24,6 +29,12 @@ function checkHa() {
     { pieces: [{ text: 'はし' }], want: 'hashi' },
     // Suelta entre dos palabras: partícula, y suena «wa».
     { pieces: [{ text: 'かさ' }, { text: 'は', particle: true }, { text: 'あります' }], want: 'kasawaarimasu' },
+    // Dentro de un sufijo de la tabla, y suena «wa». La raíz es la palabra, el sufijo lo
+    // compone `conjugations.ts`.
+    {
+      pieces: [{ text: 'いえではありません', wordId: 'ie-2', form: 'ではありません' }],
+      want: 'iedewaarimasen',
+    },
   ]
 
   const bad = cases.filter((c) => reading(sentenceUnits(c.pieces)) !== c.want)
@@ -31,7 +42,7 @@ function checkHa() {
     const got = reading(sentenceUnits(c.pieces))
     console.log(`  は FALLA ${c.pieces.map((p) => p.text).join('')}: esperado ${c.want}, sale ${got}`)
   }
-  console.log(bad.length ? `は: ${bad.length} fallos` : 'は: las tres lecturas de prueba cuadran (de dentro, de palabra y de partícula)')
+  console.log(bad.length ? `は: ${bad.length} fallos` : 'は: las cuatro lecturas de prueba cuadran (de dentro, de palabra, de partícula y de sufijo)')
 }
 
 console.log(`palabras: ${words.length} · frases: ${sentences.length}`)
