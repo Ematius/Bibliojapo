@@ -975,6 +975,7 @@ export const BLOCKS: Block[] = [
       'oboemasu',
       'hondesu',
       'honya-ni-ikimasu',
+      'inai',
     ],
   },
   {

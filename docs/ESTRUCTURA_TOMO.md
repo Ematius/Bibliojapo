@@ -132,10 +132,10 @@ Ni las lecciones ni las secciones de regla sellan: su mini examen no da ni quita
 
 Medido por script sobre `content/` y contra las tablas, que coinciden.
 
-**Cerrados el 16-10-2026**, con seis frases nuevas —el temario pasa de 155 a 161—: la
+**Cerrados el 16-10-2026**, con siete frases nuevas —el temario pasa de 155 a 162—: la
 partícula de tema ya tiene frase en el b1 (el tomo 1 está publicado y la declaraba desde
-el primer día sin enseñarla), la cópula negativa en el b3, el pasado en el b5 con tres, y
-la posesión en el b12, a donde se movió su regla.
+el primer día sin enseñarla), la cópula negativa en el b3, el pasado en el b5 con tres,
+el negativo llano en el b13, y la posesión en el b12, a donde se movió su regla.
 
 Y con ellos se cerró la razón de fondo de que la cópula negativa no tuviera ni una en
 dieciocho tomos: `sentenceUnits` releía el texto de una pieza conjugada y la は del sufijo
@@ -144,7 +144,6 @@ pieza se lee donde está declarada.
 
 | Qué | Causa |
 |---|---|
-| **`nai` (b13) sigue sin frase que lo practique** | su frase está escrita y verificada —pasa el segmentador limpia— pero quedó fuera de la tanda del 16-10. Entra en la siguiente, y hasta entonces el b13 presenta la regla sin practicarla |
 | **`tai` (b6) sigue sin frase que lo practique** | el segmentador no apila la cópula sobre una forma conjugada: en `たいです` lee el adjetivo `いたい` en vez de la raíz más el sufijo, con cualquier verbo. Y `たい` a secas es registro llano en un tomo que lleva desde el b2 en cortés, así que no se mete una frase llana para tapar el hueco. **Segundo arreglo del aparato pendiente:** que `segment()` pueda apilar `copula-pres-af` sobre una forma. Lo van a necesitar `たいです`, `たくないです` y todo lo que venga |
 | **La misma frase practicada dos veces** en toda sección de dakuten | la pertenencia se adivina por subcadenas, y el dakuten de la cópula vive dentro de ella |
 | **El volcado y el lector no usan el mismo criterio** para decidir si una palabra se puede enseñar: el volcado mira su modo, el lector solo mira que tenga audio y dibujo | dos verdades sobre el mismo dato, en dos archivos |

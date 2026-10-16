@@ -1,4 +1,4 @@
-// Las frases del temario: 161, las del documento.
+// Las frases del temario: 162, las del documento.
 //
 // GENERADO — `node tools/build-sentences.mjs` lo reescribe desde el documento, que es
 // donde se corrige una frase o su traducción.
@@ -1687,6 +1687,13 @@ export const SENTENCES: Sentence[] = withAudio([
     ],
     wordIds: ['honya', 'iku-yuku'],
     grammarId: 'particle-ni',
+  },
+  {
+    id: 'inai',
+    text: 'いない。',
+    meaning: 'No está.',
+    units: [{ kana: 'い', romaji: 'i' }, { kana: 'な', romaji: 'na' }, { kana: 'い', romaji: 'i' }],
+    wordIds: ['iru'],
   },
   {
     id: 'nomimasu',
