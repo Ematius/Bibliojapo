@@ -451,6 +451,56 @@ function reportGaps() {
   if (!verbose) console.log('\n  (el detalle de los tomos sin publicar, con --faltas)')
 }
 
+// El media del bloque 2 en adelante: se produce en `content-media/<pasillo>/<bloque>/`
+// y sube al bucket con esa misma ruta de clave. El del bloque 1 NO está aquí —se queda
+// en `public/`, que es gratis de servir y es el tomo que abre todo el mundo— y por eso
+// sus rutas llevan barra delante. Ver `api/media.ts`.
+const MEDIA_DIR = 'content-media'
+
+// Lo que el bucket acepta sin discutir en una clave. Es más estricto que Storage a
+// propósito: un espacio o un paréntesis pasan, pero convierten la URL del media en algo
+// que hay que escapar a mano en cada sitio que la use.
+const SAFE_KEY = /^[A-Za-z0-9/._-]+$/
+const unsafeIn = (key) => [...new Set([...key].filter((c) => !/[A-Za-z0-9/._-]/.test(c)))]
+
+async function collectMedia() {
+  if (!existsSync(MEDIA_DIR)) return []
+
+  const entries = await readdir(MEDIA_DIR, { recursive: true, withFileTypes: true })
+  return entries
+    .filter((entry) => entry.isFile() && entry.name !== '.gitkeep')
+    .map((entry) => {
+      const file = join(entry.parentPath, entry.name)
+      return {
+        file,
+        name: entry.name,
+        // La clave del bucket va SIEMPRE con barras: en Windows `relative` devuelve
+        // separadores de Windows, y con ellos el bucket guardaría UN archivo con todo
+        // el camino en el nombre, en vez de las carpetas del pasillo y el bloque.
+        key: relative(MEDIA_DIR, file).split(sep).join('/'),
+      }
+    })
+}
+
+// Las claves se comprueban TODAS y antes de escribir nada, ni tabla ni archivo. Una
+// exportación cruda de un sintetizador de voz —059_<kanji>（ノーマル）_.wav— tiró el volcado
+// con las tablas ya dentro y el media a medias: o entra todo o no entra nada. Y la lista
+// entera de una vez, que detrás de la primera suele haber más.
+function checkMediaKeys(items) {
+  const bad = items.filter(({ key }) => !SAFE_KEY.test(key))
+  if (!bad.length) return
+
+  const lines = bad.map(({ key }) => `  ${key}\n     sobra: ${unsafeIn(key).join(' ')}`)
+  throw new Error(
+    `${bad.length} archivo(s) de content-media/ con un nombre que el bucket no acepta.\n` +
+      'Solo letras y dígitos ASCII, barra, punto, guion y guion bajo. Renómbralos:\n' +
+      lines.join('\n'),
+  )
+}
+
+const media = await collectMedia()
+checkMediaKeys(media)
+
 // `--dry-run` lee el temario, dice qué subiría y no toca la base. El volcado escribe en
 // PRODUCCIÓN, así que conviene poder comprobar un cambio de este script sin estrenarlo
 // contra el contenido de verdad.
@@ -471,6 +521,7 @@ if (process.argv.includes('--dry-run')) {
   reportGaps()
   process.exit(0)
 }
+
 
 // Los bloques van primero: las lecciones cuelgan de ellos por clave ajena.
 check('aisles', await supabase.from('aisles').upsert(aisles))
@@ -532,11 +583,6 @@ for (const block of blocks) {
   )
 }
 
-// El media del bloque 2 en adelante: se produce en `content-media/<pasillo>/<bloque>/`
-// y sube al bucket con esa misma ruta de clave. El del bloque 1 NO está aquí —se queda
-// en `public/`, que es gratis de servir y es el tomo que abre todo el mundo— y por eso
-// sus rutas llevan barra delante. Ver `api/media.ts`.
-const MEDIA_DIR = 'content-media'
 const MEDIA_BUCKET = 'content-media'
 
 const MIME = {
@@ -551,22 +597,10 @@ const MIME = {
   m4a: 'audio/mp4',
 }
 
-async function uploadMedia() {
-  if (!existsSync(MEDIA_DIR)) return 0
-
-  const entries = await readdir(MEDIA_DIR, { recursive: true, withFileTypes: true })
+async function uploadMedia(items) {
   let uploaded = 0
-
-  for (const entry of entries) {
-    if (!entry.isFile() || entry.name === '.gitkeep') continue
-
-    const file = join(entry.parentPath, entry.name)
-    // La clave del bucket va SIEMPRE con barras: en Windows `relative` devuelve
-    // separadores de Windows, y con ellos el bucket guardaría UN archivo con todo
-    // el camino en el nombre, en vez de las carpetas del pasillo y el bloque.
-    const key = relative(MEDIA_DIR, file).split(sep).join('/')
-
-    const extension = entry.name.split('.').pop()?.toLowerCase() ?? ''
+  for (const { file, name, key } of items) {
+    const extension = name.split('.').pop()?.toLowerCase() ?? ''
     const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(key, await readFile(file), {
       upsert: true,
       contentType: MIME[extension] ?? 'application/octet-stream',
@@ -582,7 +616,7 @@ async function uploadMedia() {
 // Sube y reemplaza, pero NO borra lo que sobre, al revés que las tablas: la carpeta se
 // vacía a medida que el media pasa al bucket, así que un espejo lo borraría entero.
 // Quitar algo del bucket se hace a mano, que es raro y conviene que sea a conciencia.
-const uploaded = await uploadMedia()
+const uploaded = await uploadMedia(media)
 
 console.log(
   `Volcado: ${blocks.length} bloques, ${lessons.length} lecciones, ${kana.length} kana, ` +
