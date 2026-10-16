@@ -1,4 +1,4 @@
-// Las frases del temario: 155, las del documento.
+// Las frases del temario: 161, las del documento.
 //
 // GENERADO — `node tools/build-sentences.mjs` lo reescribe desde el documento, que es
 // donde se corrige una frase o su traducción.
@@ -54,6 +54,20 @@ export const SENTENCES: Sentence[] = withAudio([
     meaning: 'Está bien.',
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'い', romaji: 'i' }],
     wordIds: ['ii-yoi'],
+  },
+  {
+    id: 'ie-wa-ii',
+    text: 'いえはいい。',
+    meaning: 'La casa es buena.',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['ie-2', 'ii-yoi'],
+    grammarId: 'topic-wa',
   },
   {
     id: 'aimasu',
@@ -414,6 +428,23 @@ export const SENTENCES: Sentence[] = withAudio([
     grammarId: 'topic-wa',
   },
   {
+    id: 'iedewaarimasen',
+    text: 'いえではありません。',
+    meaning: 'No es una casa.',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'で', romaji: 'de' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'り', romaji: 'ri' },
+      { kana: 'ま', romaji: 'ma' },
+      { kana: 'せ', romaji: 'se' },
+      { kana: 'ん', romaji: 'n' },
+    ],
+    wordIds: ['ie-2'],
+  },
+  {
     id: 'onajidesu',
     text: 'おなじです。',
     meaning: 'Es lo mismo.',
@@ -670,6 +701,48 @@ export const SENTENCES: Sentence[] = withAudio([
     ],
     wordIds: ['anata', 'sensei'],
     grammarId: 'topic-wa',
+  },
+  {
+    id: 'arimashita',
+    text: 'ありました。',
+    meaning: 'Había.',
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'り', romaji: 'ri' },
+      { kana: 'ま', romaji: 'ma' },
+      { kana: 'し', romaji: 'shi' },
+      { kana: 'た', romaji: 'ta' },
+    ],
+    wordIds: ['aru'],
+  },
+  {
+    id: 'arimasendeshita',
+    text: 'ありませんでした。',
+    meaning: 'No había.',
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'り', romaji: 'ri' },
+      { kana: 'ま', romaji: 'ma' },
+      { kana: 'せ', romaji: 'se' },
+      { kana: 'ん', romaji: 'n' },
+      { kana: 'で', romaji: 'de' },
+      { kana: 'し', romaji: 'shi' },
+      { kana: 'た', romaji: 'ta' },
+    ],
+    wordIds: ['aru'],
+  },
+  {
+    id: 'iedeshita',
+    text: 'いえでした。',
+    meaning: 'Era una casa.',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'で', romaji: 'de' },
+      { kana: 'し', romaji: 'shi' },
+      { kana: 'た', romaji: 'ta' },
+    ],
+    wordIds: ['ie-2'],
   },
   {
     id: 'ikimasu',
@@ -1502,6 +1575,22 @@ export const SENTENCES: Sentence[] = withAudio([
     ],
     wordIds: ['kudamono', 'oishii'],
     grammarId: 'topic-wa',
+  },
+  {
+    id: 'haha-no-iedesu',
+    text: 'ははのいえです。',
+    meaning: 'Es la casa de mi madre.',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'の', romaji: 'no' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'で', romaji: 'de' },
+      { kana: 'す', romaji: 'su' },
+    ],
+    wordIds: ['haha', 'ie-2'],
+    grammarId: 'particle-no',
   },
   {
     id: 'hoshiidesu',

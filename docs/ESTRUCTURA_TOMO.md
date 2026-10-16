@@ -65,6 +65,21 @@ Es la misma política que ya se aplica a los homógrafos sin declarar y a las fo
 llegan antes de su `bloque_min`. Un hueco que no grita es el hueco que se descubre dos
 años tarde.
 
+### Una regla de un kana no se declara antes de que su kana se enseñe
+
+**Una regla cuyo carácter es un kana se declara en el bloque que enseña ese kana, o en
+uno posterior — nunca antes. El generador lo comprueba y falla.**
+
+La posesión estuvo declarada en el b10 y su partícula no se escribe hasta el b12: dos
+tomos en los que el temario prometía una regla imposible de poner en una frase. Nadie lo
+vio porque la regla no estaba anclada a ninguna lección y la comprobación no existía.
+
+Mover la regla es una línea; adelantar el kana arrastraría las 56 lecciones, los
+acumulados y las restricciones de deuda de fila. Así que **se mueve la regla, nunca el
+kana.** Comprobadas las cinco reglas de partícula que el temario declara, solo la
+posesión estaba desfasada; el tema (b1), la existencia (b11), la dirección (b15) y el
+objeto directo (b16) cuadran.
+
 ### La frontera: ortografía es la sección 3 y las lecciones; gramática es la 4
 
 **Ortografía son las marcas que transforman caracteres** —el dakuten, el handakuten, el
@@ -117,11 +132,20 @@ Ni las lecciones ni las secciones de regla sellan: su mini examen no da ni quita
 
 Medido por script sobre `content/` y contra las tablas, que coinciden.
 
+**Cerrados el 16-10-2026**, con seis frases nuevas —el temario pasa de 155 a 161—: la
+partícula de tema ya tiene frase en el b1 (el tomo 1 está publicado y la declaraba desde
+el primer día sin enseñarla), la cópula negativa en el b3, el pasado en el b5 con tres, y
+la posesión en el b12, a donde se movió su regla.
+
+Y con ellos se cerró la razón de fondo de que la cópula negativa no tuviera ni una en
+dieciocho tomos: `sentenceUnits` releía el texto de una pieza conjugada y la は del sufijo
+salía «ha», así que el generador rechazaba la frase y no se podía escribir. Ahora cada
+pieza se lee donde está declarada.
+
 | Qué | Causa |
 |---|---|
-| **Cuatro secciones de regla sin una sola frase** — `copula-neg` (b3), `pasado` (b5), `tai` (b6), `nai` (b13) | la forma no está escrita en NINGUNA de las 155 frases del pasillo; no es que esté en otro bloque. Las cuatro se pueden escribir con los kana de su tomo, así que no se mueve ninguna regla: faltan frases |
-| **`topic-wa` declarada en b1 y sin anclar**, y su plana sale en b3, b4, b5, b7, b9, b10 y b12 pero no en el tomo 1 | la regla llega por las frases que la declaran, y ninguna de las seis de b1 lo hace. El comentario de `VolumeReader` que dice que ese camino conserva esa plana en el tomo 1 está desfasado |
-| **`particle-no` declarada en b10 y sin anclar** | su partícula aparece en 8 frases del pasillo y ninguna está en b10 |
+| **`nai` (b13) sigue sin frase que lo practique** | su frase está escrita y verificada —pasa el segmentador limpia— pero quedó fuera de la tanda del 16-10. Entra en la siguiente, y hasta entonces el b13 presenta la regla sin practicarla |
+| **`tai` (b6) sigue sin frase que lo practique** | el segmentador no apila la cópula sobre una forma conjugada: en `たいです` lee el adjetivo `いたい` en vez de la raíz más el sufijo, con cualquier verbo. Y `たい` a secas es registro llano en un tomo que lleva desde el b2 en cortés, así que no se mete una frase llana para tapar el hueco. **Segundo arreglo del aparato pendiente:** que `segment()` pueda apilar `copula-pres-af` sobre una forma. Lo van a necesitar `たいです`, `たくないです` y todo lo que venga |
 | **La misma frase practicada dos veces** en toda sección de dakuten | la pertenencia se adivina por subcadenas, y el dakuten de la cópula vive dentro de ella |
 | **El volcado y el lector no usan el mismo criterio** para decidir si una palabra se puede enseñar: el volcado mira su modo, el lector solo mira que tenga audio y dibujo | dos verdades sobre el mismo dato, en dos archivos |
 | **Palabras con dakuten pedidas antes de explicarlo** | hoy viven en la lección de su kana, y la sección 3 va detrás. La tabla de arriba ya lo resuelve |

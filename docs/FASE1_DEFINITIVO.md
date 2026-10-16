@@ -1,7 +1,7 @@
 # OtakuN5 — Fase 1: Hiragana
 ## Documento definitivo · pool 765 · 18 bloques
 
-> **Verificado por script.** 765 filas, 765 ids únicos, 155 frases sin un solo
+> **Verificado por script.** 765 filas, 765 ids únicos, 161 frases sin un solo
 > kana fuera de su bloque, 126 verbos con raíz derivada por regla y ninguno sin
 > ella. Cobertura 765/765, sin residuo.
 >
@@ -62,7 +62,7 @@ Fase 1*.
 | Dakuten | 20, **inline, no son lección** |
 | Palabras | **765** |
 | Verbos | **126** (85 godan · 32 ichidan · 9 irregulares) |
-| Frases objetivo | **155** |
+| Frases objetivo | **161** |
 | Cobertura | **90,6 % del vocabulario N5** (765 / 844) |
 
 **Denominadores para la app:** `N5_WORD_COUNT = 844` · `HIRAGANA_BASE_COUNT = 56`.
@@ -437,6 +437,7 @@ frase|romaji|espanol|particula|acepcion
 あおい。|aoi.|Es azul.|—|—
 おおい。|ooi.|Hay muchos.|—|—
 いい。|ii.|Está bien.|—|—
+いえはいい。|ie wa ii.|La casa es buena.|は|—
 ```
 
 ### B2 · ますてせん
@@ -584,6 +585,7 @@ frase|romaji|espanol|particula|acepcion
 おしえます。|oshiemasu.|Lo enseño.|—|—
 おります。|orimasu.|Me bajo.|—|—
 いえはしずかです。|ie wa shizuka desu.|La casa es tranquila.|は|ie-2
+いえではありません。|ie dewa arimasen.|No es una casa.|—|—
 ```
 
 ### B4 · こなさわ
@@ -770,6 +772,9 @@ frase|romaji|espanol|particula|acepcion
 あなたです。|anata desu.|Eres tú.|—|—
 では、また。|dewa, mata.|Hasta luego.|—|—
 あなたはせんせいですか。|anata wa sensei desu ka.|¿Eres profesor?|は · か|—
+ありました。|arimashita.|Había.|—|aru
+ありませんでした。|arimasen deshita.|No había.|—|aru
+いえでした。|ie deshita.|Era una casa.|—|—
 ```
 
 ### B6 · くきら
@@ -1113,7 +1118,7 @@ frase|romaji|espanol|particula|acepcion
 ### B10 · れも
 
 **Kana nuevos:** れ も  
-**Gramática:** の (posesión)  
+**Gramática:** —  
 **Vocabulario:** +43 · acumulado 516 (61.1 % del N5)
 
 ```csv
@@ -1249,7 +1254,7 @@ frase|romaji|espanol|particula|acepcion
 ### B12 · ろの
 
 **Kana nuevos:** ろ の  
-**Gramática:** —  
+**Gramática:** の (posesión)  
 **Vocabulario:** +41 · acumulado 600 (71.1 % del N5)
 
 ```csv
@@ -1309,6 +1314,7 @@ frase|romaji|espanol|particula|acepcion
 おふろにはいります。|ofuro ni hairimasu.|Me meto en el baño.|に|—
 くだものです。|kudamono desu.|Es fruta.|—|—
 くだものはおいしいです。|kudamono wa oishii desu.|La fruta está deliciosa.|は|—
+ははのいえです。|haha no ie desu.|Es la casa de mi madre.|の|—
 ```
 
 ### B13 · やほ

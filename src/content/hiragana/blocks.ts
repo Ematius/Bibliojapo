@@ -49,6 +49,7 @@ export const BLOCKS: Block[] = [
       'aoi',
       'ooi',
       'ii',
+      'ie-wa-ii',
     ],
   },
   {
@@ -201,6 +202,7 @@ export const BLOCKS: Block[] = [
       'oshiemasu',
       'orimasu',
       'ie-wa-shizukadesu',
+      'iedewaarimasen',
     ],
   },
   {
@@ -388,6 +390,9 @@ export const BLOCKS: Block[] = [
       'anatadesu',
       'dewamata',
       'anata-wa-senseidesu-ka',
+      'arimashita',
+      'arimasendeshita',
+      'iedeshita',
     ],
   },
   {
@@ -915,6 +920,7 @@ export const BLOCKS: Block[] = [
       'ofuro-ni-hairimasu',
       'kudamonodesu',
       'kudamono-wa-oishiidesu',
+      'haha-no-iedesu',
     ],
   },
   {
