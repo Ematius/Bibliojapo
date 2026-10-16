@@ -32,3 +32,6 @@ Thumbs.db
 
 # Claude Code — notas personales locales
 CLAUDE.local.md
+
+# Material de autoría derivado de content/ — se regenera con tools/sentence-material.mjs
+docs/material-frases/

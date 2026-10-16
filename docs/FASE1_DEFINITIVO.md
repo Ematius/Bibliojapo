@@ -1485,7 +1485,7 @@ frase|romaji|espanol|particula|acepcion
 ### B17 · っぱぴぷぺぽ
 
 **Kana nuevos:** っ ぱ ぴ ぷ ぺ ぽ  
-**Gramática:** El handakuten ° (っ + ぱぴぷぺぽ)  
+**Gramática:** —  
 **Vocabulario:** +28 · acumulado 704 (83.4 % del N5)
 
 > **ぺ no tiene ninguna palabra en las 765, y es correcto.** No hay ninguna en el
@@ -1544,7 +1544,7 @@ frase|romaji|espanol|particula|acepcion
 ### B18 · ーゃゅょ
 
 **Kana nuevos:** ー ゃ ゅ ょ  
-**Gramática:** **G7 ～ましょう** · yōon · ー  
+**Gramática:** **G7 ～ましょう**  
 **Vocabulario:** +61 · acumulado 765 (90.6 % del N5)
 
 ```csv
