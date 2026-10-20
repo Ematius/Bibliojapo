@@ -1,4 +1,4 @@
-// Las frases del temario: 162, las del documento.
+// Las frases del temario: 167, las del documento.
 //
 // GENERADO — `node tools/build-sentences.mjs` lo reescribe desde el documento, que es
 // donde se corrige una frase o su traducción.
@@ -67,6 +67,78 @@ export const SENTENCES: Sentence[] = withAudio([
       { kana: 'い', romaji: 'i' },
     ],
     wordIds: ['ie-2', 'ii-yoi'],
+    grammarId: 'topic-wa',
+  },
+  {
+    id: 'ao-wa-ii',
+    text: 'あおはいい。',
+    meaning: 'El azul es bueno.',
+    units: [
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['ao', 'ii-yoi'],
+    grammarId: 'topic-wa',
+  },
+  {
+    id: 'e-wa-aoi',
+    text: 'えはあおい。',
+    meaning: 'El dibujo es azul.',
+    units: [
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['e-2', 'aoi'],
+    grammarId: 'topic-wa',
+  },
+  {
+    id: 'ie-wa-aoi',
+    text: 'いえはあおい。',
+    meaning: 'La casa es azul.',
+    units: [
+      { kana: 'い', romaji: 'i' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['ie-2', 'aoi'],
+    grammarId: 'topic-wa',
+  },
+  {
+    id: 'ue-wa-aoi',
+    text: 'うえはあおい。',
+    meaning: 'Arriba es azul.',
+    units: [
+      { kana: 'う', romaji: 'u' },
+      { kana: 'え', romaji: 'e' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'あ', romaji: 'a' },
+      { kana: 'お', romaji: 'o' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['ue', 'aoi'],
+    grammarId: 'topic-wa',
+  },
+  {
+    id: 'haha-wa-ii',
+    text: 'はははいい。',
+    meaning: 'Mi madre es buena.',
+    units: [
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'ha' },
+      { kana: 'は', romaji: 'wa' },
+      { kana: 'い', romaji: 'i' },
+      { kana: 'い', romaji: 'i' },
+    ],
+    wordIds: ['haha', 'ii-yoi'],
     grammarId: 'topic-wa',
   },
   {

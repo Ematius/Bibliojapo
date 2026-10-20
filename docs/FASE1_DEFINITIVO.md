@@ -1,7 +1,7 @@
 # OtakuN5 — Fase 1: Hiragana
 ## Documento definitivo · pool 765 · 18 bloques
 
-> **Verificado por script.** 765 filas, 765 ids únicos, 162 frases sin un solo
+> **Verificado por script.** 765 filas, 765 ids únicos, 167 frases sin un solo
 > kana fuera de su bloque, 126 verbos con raíz derivada por regla y ninguno sin
 > ella. Cobertura 765/765, sin residuo.
 >
@@ -62,7 +62,7 @@ Fase 1*.
 | Dakuten | 20, **inline, no son lección** |
 | Palabras | **765** |
 | Verbos | **126** (85 godan · 32 ichidan · 9 irregulares) |
-| Frases objetivo | **162** |
+| Frases objetivo | **167** |
 | Cobertura | **90,6 % del vocabulario N5** (765 / 844) |
 
 **Denominadores para la app:** `N5_WORD_COUNT = 844` · `HIRAGANA_BASE_COUNT = 56`.
@@ -438,6 +438,11 @@ frase|romaji|espanol|particula|acepcion
 おおい。|ooi.|Hay muchos.|—|—
 いい。|ii.|Está bien.|—|—
 いえはいい。|ie wa ii.|La casa es buena.|は|—
+あおはいい。|ao wa ii.|El azul es bueno.|は|—
+えはあおい。|e wa aoi.|El dibujo es azul.|は|e-2
+いえはあおい。|ie wa aoi.|La casa es azul.|は|—
+うえはあおい。|ue wa aoi.|Arriba es azul.|は|—
+はははいい。|haha wa ii.|Mi madre es buena.|は|—
 ```
 
 ### B2 · ますてせん

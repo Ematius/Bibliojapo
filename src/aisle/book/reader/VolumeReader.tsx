@@ -122,8 +122,8 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       }
 
       // El primero, el de en medio y el último, y no los tres primeros: repartidos así
-      // entran temas de todo el tomo, y el último suele ser el que más enseña —en 「ははいい」
-      // el mismo carácter sale dos veces y solo uno es la partícula—.
+      // entran temas de todo el tomo, y el último suele ser el que más enseña —en 「はははいい」
+      // el mismo carácter sale tres veces y solo el de en medio es la partícula—.
       const topics = [...byTopic.values()]
       return topics.length <= 3
         ? topics

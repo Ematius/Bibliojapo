@@ -50,6 +50,11 @@ export const BLOCKS: Block[] = [
       'ooi',
       'ii',
       'ie-wa-ii',
+      'ao-wa-ii',
+      'e-wa-aoi',
+      'ie-wa-aoi',
+      'ue-wa-aoi',
+      'haha-wa-ii',
     ],
   },
   {
