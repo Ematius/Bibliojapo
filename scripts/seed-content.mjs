@@ -486,6 +486,8 @@ async function collectMedia() {
 // exportación cruda de un sintetizador de voz —059_<kanji>（ノーマル）_.wav— tiró el volcado
 // con las tablas ya dentro y el media a medias: o entra todo o no entra nada. Y la lista
 // entera de una vez, que detrás de la primera suele haber más.
+// Esto impide SUBIR una clave mala; no limpia las que ya estén arriba. Un archivo
+// renombrado deja su versión vieja en el bucket, y de ahí solo se quita a mano.
 function checkMediaKeys(items) {
   const bad = items.filter(({ key }) => !SAFE_KEY.test(key))
   if (!bad.length) return
