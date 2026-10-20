@@ -160,23 +160,19 @@ const MEDIA: Record<string, WordMedia> = {
     image: 'hiragana/b3/images/imagesSupport/oishii-delicious.webp',
     imageAlt: 'Un cuenco de ramen humeante con chashu, huevo marinado y nori.',
   },
-  // LOS DOS はし VAN CRUZADOS, y está bien: el temario intercambió sus ids. Antes
-  // `hashi` era el puente y `hashi-2` los palillos; ahora es al revés, y la media sigue
-  // a la PALABRA, no al id. Por eso los nombres de archivo no coinciden con su clave.
-  //
-  // No es un fallo que haya que «arreglar» emparejándolos por nombre: eso pondría el
-  // puente en los palillos. Si algún día molesta, se renombran los cuatro archivos —en
-  // `public/` y en el bucket— y se cambian estas rutas a la vez.
+  // La media sigue a la PALABRA, no al id: `hashi` son los palillos y `hashi-2` el
+  // puente, y el temario intercambió esos dos ids en su día. Los DIBUJOS ya están
+  // renombrados y su nombre coincide con su clave; los AUDIOS siguen con el id viejo y
+  // por eso van cruzados. Emparejarlos por nombre de archivo pondría el puente en los
+  // palillos.
   'hashi': {
-    // Los palillos, que antes eran `hashi-2`.
     audio: 'hiragana/b3/audio/word/hashi-2.wav',
-    image: 'hiragana/b3/images/imagesSupport/hashi-2-chopsticks.webp',
+    image: 'hiragana/b3/images/imagesSupport/hashi-chopsticks.webp',
     imageAlt: 'Una mano sujetando unos palillos, cogiendo una pieza de sushi de nigiri.',
   },
   'hashi-2': {
-    // El puente, que antes era `hashi`.
     audio: 'hiragana/b3/audio/word/hashi.wav',
-    image: 'hiragana/b3/images/imagesSupport/hashi-bridge.webp',
+    image: 'hiragana/b3/images/imagesSupport/hashi-2-bridge.webp',
     imageAlt: 'Un puente rojo curvado sobre un estanque, entre cerezos en flor.',
   },
   'ima': {
