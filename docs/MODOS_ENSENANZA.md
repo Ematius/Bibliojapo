@@ -470,12 +470,12 @@ kana|romaji|espanol|tipo|modo
 ### modo: explicacion (65)
 
 はい e いいえ salieron de aquí el 23-10-2026: un dibujo de alguien asintiendo enseña
-はい, así que eran `imagen` mal clasificadas. いえ se queda — es la negación informal,
-y lo que la distingue de いいえ no se dibuja.
+はい, así que eran `imagen` mal clasificadas. Con ellas se fue いえ «no» (`ie`), que
+ya no está en el temario — se quitó con la corrección del segmentador que cuenta la
+sección 5, y su fila se había quedado aquí.
 
 ```csv
 kana|romaji|espanol|tipo|modo
-いえ|ie|no|expresion|explicacion
 おそく|osoku|tarde|adverbio|explicacion
 そう/そうです|sou/sou desu|así, así es|expresion|explicacion
 とおく|tooku|lejos|adverbio|explicacion
