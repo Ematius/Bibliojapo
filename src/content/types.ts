@@ -32,7 +32,7 @@ export type WordType =
 export type VerbGroup = 'godan' | 'ichidan' | 'irregular'
 
 // Qué plana enseña la palabra. NO excluye el dibujo: un afijo puede tener su plana y
-// además su dibujo —～えん con una moneda—, y solo `imagen` lo exige para publicarse.
+// además su dibujo, y solo `imagen` lo exige para publicarse.
 export type WordMode =
   | 'imagen'
   | 'explicacion'
@@ -41,6 +41,15 @@ export type WordMode =
   | 'situacion'
   | 'escala'
   | 'interjeccion'
+
+// EL CRITERIO: el modo decide qué plana enseña la palabra. El dibujo es un ingrediente
+// de esa plana, nunca el disparador — una palabra entra en el tomo cuando su modo tiene
+// plana escrita, no cuando alguien le dibujó algo.
+//
+// Un modo entra aquí el día que se escriba la suya. Lo leen el lector y el volcado, y
+// ESCRITO DOS VECES se desincroniza: ya pasó, y el tomo 2 publicó durante un mes un
+// contador enseñado con un dibujo.
+export const MODES_WITH_SPREAD: readonly WordMode[] = ['imagen']
 
 export interface Word {
   id: string
@@ -56,7 +65,9 @@ export interface Word {
   text?: string
   meaning: string
   type: WordType
-  // Opcional porque `volume()` todavía no lo sirve: en el lector llega vacío.
+  // Opcional porque la columna es nullable, pero el lector lo necesita: una palabra sin
+  // modo no tiene plana que la enseñe y se queda fuera del tomo. Si `volume()` dejara de
+  // servirlo, los tomos saldrían VACÍOS en vez de dar error.
   mode?: WordMode
   // Cómo se escribe en kanji, cuando se escribe. NO se pinta en el pasillo de hiragana:
   // a nivel N5 estas palabras se leen y escriben en kana, y el kanji se reencuentra en

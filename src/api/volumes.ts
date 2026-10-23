@@ -1,6 +1,7 @@
 import { AISLE_CONTENT } from '../content/aisleContent'
 import { readSeals } from '../shared/seals'
 import { getSession } from './account'
+import { ApiError } from './apiError'
 import { BLOCK_CHAIN, type ChainedBlock } from './blockChain'
 import { FINAL_SEAL, type CurrentVolume, type VolumeContent } from './contract'
 import { mediaUrls } from './media'
@@ -87,7 +88,26 @@ export async function fetchVolumeAccess(): Promise<Map<string, VolumeAccess>> {
 export async function fetchVolume(blockId: string): Promise<VolumeContent> {
   const { data, error, status } = await supabase.rpc('volume', { requested_block: blockId })
   if (error) throwPostgrestError(error, status)
-  return resolveVolumeMedia(data as VolumeContent)
+  return resolveVolumeMedia(withCheckedModes(data as VolumeContent))
+}
+
+// `mode` es lo que decide qué palabra entra en el tomo, y `volume()` se actualiza a
+// mano en el panel. Sin él, el lector descartaría TODAS y el tomo se abriría vacío:
+// indistinguible de uno que todavía no tiene contenido, y sin un solo error en la
+// consola. Se rompe a la vista a propósito.
+function withCheckedModes(content: VolumeContent): VolumeContent {
+  const modeless = content.words.filter((word) => !word.mode)
+  if (modeless.length) {
+    console.error(
+      `volume() ha devuelto ${modeless.length} palabras sin modo: ${modeless
+        .map((word) => word.id)
+        .join(', ')}. ¿Falta relanzar supabase/content.sql en el panel?`,
+    )
+    // `unexpected` y no `server`: reintentar no arregla un contrato roto, y su pantalla
+    // es la única que no ofrece el botón —lleva a contarlo, que es como nos enteramos—.
+    throw new ApiError('unexpected')
+  }
+  return content
 }
 
 // El bloque 1 llega con rutas del despliegue, listas para pintarse; del bloque 2 en

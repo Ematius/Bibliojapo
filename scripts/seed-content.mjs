@@ -67,6 +67,10 @@ const { LESSON_SOURCE } = await vite.ssrLoadModule('/src/content/lessonSource.ts
 // `types.ts` y no dentro de `hiragana/`.
 const { CONJUGATIONS, KANA_ROWS } = await vite.ssrLoadModule('/src/content/conjugations.ts')
 
+// La misma lista que mira el lector para decidir qué palabra entra en el tomo. Copiada
+// aquí, este informe contaría como pendiente justo lo que el libro ya enseña.
+const { MODES_WITH_SPREAD: SPREAD_MODES } = await vite.ssrLoadModule('/src/content/types.ts')
+
 // El puesto sale del orden de la lista, que es el orden en que se enseñan: escrito aparte
 // se quedaría desfasado en cuanto alguien meta una forma por el medio.
 const conjugations = CONJUGATIONS.map((form, position) => ({
@@ -166,7 +170,7 @@ function missingPieces(block, kanaById, wordsById, grammarById) {
 
 // Los modos cuya plana ya existe en el lector. Uno entra aquí el día que se escriba la
 // suya; hasta entonces sus palabras no se publican, tengan dibujo o no.
-const MODES_WITH_SPREAD = new Set(['imagen'])
+const MODES_WITH_SPREAD = new Set(SPREAD_MODES)
 
 // Lo que le falta a una palabra para poder enseñarse en una ficha. Lo usan el inventario
 // del tomo y el de las palabras de las frases, que piden lo mismo.

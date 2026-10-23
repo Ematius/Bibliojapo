@@ -1,11 +1,11 @@
 # OtakuN5 — Fase 1: Modos de enseñanza
 
-## Ampliación del documento maestro · las 185 palabras que no se pueden ilustrar
+## Ampliación del documento maestro · las 182 palabras que no se pueden ilustrar
 
 > **Qué problema resuelve.** El modelo actual asume que toda palabra se enseña
-> con un dibujo. Eso funciona para 581 de las 766, pero las otras **185 no
+> con un dibujo. Eso funciona para 583 de las 765, pero las otras **182 no
 > tienen imagen posible**: では no es un objeto, それ solo significa algo frente
-> a これ, y ～まい no existe suelto. Forzar un dibujo en esos 185 casos enseña
+> a これ, y ～まい no existe suelto. Forzar un dibujo en esos 182 casos enseña
 > mal el idioma en una cuarta parte del curso.
 >
 > Esta ampliación **no cambia los 18 bloques**. Añade una columna a `words` y
@@ -21,14 +21,14 @@
 
 | Modo | Palabras | Qué muestra la plana |
 |---|---|---|
-| `imagen` | **581** | Dibujo + palabra. Lo actual, sin cambios |
-| `explicacion` | **68** | Función + cuándo se usa + ejemplo |
+| `imagen` | **583** | Dibujo + palabra. Lo actual, sin cambios |
+| `explicacion` | **65** | Función + cuándo se usa + ejemplo |
 | `afijo` | **44** | Ejemplo montado con lo que lo precede |
 | `sistema` | **25** | Tabla completa こそあど |
 | `situacion` | **23** | Cuándo, a quién, qué se responde |
 | `escala` | **15** | Posición relativa a sus vecinas |
 | `interjeccion` | **10** | Audio + situación (sin texto posible) |
-| | **766** | |
+| | **765** | |
 
 `modo` NO es lo mismo que `tipo`. `tipo` dice qué es gramaticalmente; `modo`
 dice cómo se enseña. Dos pronombres pueden tener modos distintos: ここ es
@@ -285,7 +285,7 @@ categoría donde el audio no es un complemento sino el contenido.
 
 ---
 
-## 8. Explicación — las 68 restantes
+## 8. Explicación — las 65 restantes
 
 Subfamilias para que la plana pueda contrastar en vez de definir:
 
@@ -467,13 +467,15 @@ kana|romaji|espanol|tipo|modo
 えー|ee|mmm, veamos|expresion|interjeccion
 ```
 
-### modo: explicacion (68)
+### modo: explicacion (65)
+
+はい e いいえ salieron de aquí el 23-10-2026: un dibujo de alguien asintiendo enseña
+はい, así que eran `imagen` mal clasificadas. いえ se queda — es la negación informal,
+y lo que la distingue de いいえ no se dibuja.
 
 ```csv
 kana|romaji|espanol|tipo|modo
-いいえ|iie|no|expresion|explicacion
 いえ|ie|no|expresion|explicacion
-はい|hai|sí|expresion|explicacion
 おそく|osoku|tarde|adverbio|explicacion
 そう/そうです|sou/sou desu|así, así es|expresion|explicacion
 とおく|tooku|lejos|adverbio|explicacion
@@ -541,7 +543,7 @@ kana|romaji|espanol|tipo|modo
 よく|yoku|bien, hábilmente|adverbio|explicacion
 ```
 
-Las 581 restantes son `modo: imagen` y no se listan: son todas las que no
+Las 583 restantes son `modo: imagen` y no se listan: son todas las que no
 aparecen arriba. Entre ellas está え «dibujo» (絵), que antes figuraba por error
 entre las interjecciones por compartir forma con え «eh».
 

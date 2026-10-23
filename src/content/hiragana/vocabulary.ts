@@ -62,7 +62,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'い', romaji: 'i' }, { kana: 'い', romaji: 'i' }, { kana: 'え', romaji: 'e' }],
     meaning: 'no',
     type: 'expresion',
-    mode: 'explicacion',
+    mode: 'imagen',
   },
   {
     id: 'iu',
@@ -140,7 +140,7 @@ export const VOCABULARY: Word[] = withMedia([
     units: [{ kana: 'は', romaji: 'ha' }, { kana: 'い', romaji: 'i' }],
     meaning: 'sí',
     type: 'expresion',
-    mode: 'explicacion',
+    mode: 'imagen',
   },
   {
     id: 'hai-2',

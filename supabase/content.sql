@@ -483,6 +483,9 @@ begin
         'text', w.text,
         'meaning', w.meaning,
         'type', w.tipo,
+        -- El lector decide con él si la palabra tiene plana que la enseñe. Sin servirlo,
+        -- ninguna palabra entra en el tomo y el libro sale vacío sin dar error.
+        'mode', w.modo,
         'kanji', w.kanji,
         'verbGroup', w.grupo_verbal,
         'masuStem', w.raiz_masu,

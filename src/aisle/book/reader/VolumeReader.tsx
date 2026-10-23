@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PageFlip } from 'page-flip'
 import type { VolumeContent } from '../../../api/volumes'
+import { MODES_WITH_SPREAD } from '../../../content/types'
 import { readBookmark, writeBookmark } from '../../../shared/bookmark'
 import { READER, buildVolumePages, type ReadyItem } from './readerConfig'
 
@@ -164,9 +165,12 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
       return rule?.explanation.trim() ? rule : undefined
     }
 
-    // Las palabras que ya tienen con qué enseñarse: dibujo o color, y sonido. Una ficha
-    // sin ellos saldría en blanco, así que la palabra espera y aparece sola el día que
-    // tenga su arte.
+    // Las palabras que ya tienen con qué enseñarse: la plana de su modo —ver
+    // `MODES_WITH_SPREAD`—, y los ingredientes que esa plana pide. La de `imagen` pide
+    // dibujo o color, y sonido; una ficha sin ellos saldría en blanco.
+    //
+    // Mismo criterio que `missingPieces` en el volcado, que lo lee de la misma lista: lo
+    // que aquí no entra es exactamente lo que allí se cuenta como pendiente.
     //
     // Filtrar aquí escondería un olvido —lo que falta no da error, simplemente no sale—,
     // y por eso no se hacía. Lo que lo hace seguro es que `npm run seed:content` lista al
@@ -174,7 +178,9 @@ export function VolumeReader({ content, pageWidth, pageHeight }: VolumeReaderPro
     const teachable = (ids: string[]) =>
       ids.filter((id) => {
         const word = wordsById.get(id)
-        return Boolean(word?.audio) && Boolean(word?.image || word?.swatch)
+        if (!word?.mode || !MODES_WITH_SPREAD.includes(word.mode)) return false
+        if (!word.audio) return false
+        return word.mode !== 'imagen' || Boolean(word.image || word.swatch)
       })
 
     // Lo que el tomo enseña, EN EL ORDEN DEL TEMARIO. La plana de una regla cae donde su

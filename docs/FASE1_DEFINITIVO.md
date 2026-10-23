@@ -412,7 +412,7 @@ au|あう|会う|au|encontrarse, ver|verbo-u|godan|あい|b1|imagen
 ao|あお|青|ao|azul|sustantivo|||b1|imagen
 aoi|あおい|青い|aoi|azul|adjetivo-i|||b1|imagen
 ii-yoi|いい/よい||ii/yoi|bueno|adjetivo-i|||b1|imagen
-iie|いいえ||iie|no|expresion|||b1|explicacion
+iie|いいえ||iie|no|expresion|||b1|imagen
 iu|いう|言う|iu|decir|verbo-u|godan|いい|b1|imagen
 ie-2|いえ|家|ie|casa, hogar|sustantivo|||b1|imagen
 ue|うえ|上|ue|encima, arriba|sustantivo|||b1|imagen
@@ -422,7 +422,7 @@ ee|ええ||ee|sí|expresion|||b1|interjeccion
 o|お～||o|prefijo honorífico|expresion|||b1|afijo
 ooi|おおい|多い|ooi|muchos, mucho|adjetivo-i|||b1|imagen
 ha|は|歯|ha|diente|sustantivo|||b1|imagen
-hai|はい||hai|sí|expresion|||b1|explicacion
+hai|はい||hai|sí|expresion|||b1|imagen
 hai-2|～はい|～杯|hai|vasos, tazas|contador|||b1|afijo
 haha|はは|母|haha|madre propia|sustantivo|||b1|imagen
 ```

@@ -177,17 +177,9 @@ const MEDIA: Record<string, WordMedia> = {
   },
   'ima': {
     audio: 'hiragana/b2/audio/word/ima.wav',
-    image: 'hiragana/b2/images/imagesSupport/ima-now.webp',
-    imageAlt:
-      'Un niño sonriente señalando con el dedo su propio reloj de pulsera, con ' +
-      'unas rayas de énfasis junto a la muñeca.',
   },
   'mai': {
     audio: 'hiragana/b2/audio/word/mai.wav',
-    image: 'hiragana/b2/images/imagesSupport/mai-flat.webp',
-    imageAlt:
-      'Un abanico de hojas de papel y tarjetas de colores junto a una pila de ' +
-      'platos blancos, todos lisos y planos.',
   },
   'isu': {
     audio: 'hiragana/b2/audio/word/isu.wav',
@@ -222,10 +214,6 @@ const MEDIA: Record<string, WordMedia> = {
   },
   'en': {
     audio: 'hiragana/b2/audio/word/en.wav',
-    image: 'hiragana/b2/images/imagesSupport/en-yen.webp',
-    imageAlt:
-      'Varios billetes japoneses de distinto valor en abanico, con monedas ' +
-      'delante y un símbolo de yen grande al lado.',
   },
   'han': {
     audio: 'hiragana/b2/audio/word/han.wav',
@@ -291,8 +279,6 @@ const MEDIA: Record<string, WordMedia> = {
   },
   'mae-2': {
     audio: 'hiragana/b2/audio/word/mae-2.wav',
-    image: 'hiragana/b2/images/imagesSupport/mae-2-in-front.webp',
-    imageAlt: 'Un niño de pie justo delante de la entrada de una casa japonesa.',
   },
   // El sustantivo 晩, la noche. El contador 〜番 —turno, número— es `ban-2`.
   'ban': {
@@ -304,17 +290,9 @@ const MEDIA: Record<string, WordMedia> = {
   },
   'ban-2': {
     audio: 'hiragana/b2/audio/word/ban-2.wav',
-    image: 'hiragana/b2/images/imagesSupport/ban-2-turn.webp',
-    imageAlt:
-      'Una mano sosteniendo un número de turno con el 3 en la sala de espera de ' +
-      'una clínica.',
   },
   'maiban': {
     audio: 'hiragana/b2/audio/word/maiban.wav',
-    image: 'hiragana/b2/images/imagesSupport/maiban-every-night.webp',
-    imageAlt:
-      'Una madre leyendo un cuento a su hija ya acostada, con la lámpara de la ' +
-      'mesilla encendida.',
   },
   'man': {
     audio: 'hiragana/b2/audio/word/man.wav',
@@ -331,10 +309,6 @@ const MEDIA: Record<string, WordMedia> = {
   },
   'dewa': {
     audio: 'hiragana/b2/audio/word/dewa.wav',
-    image: 'hiragana/b2/images/imagesSupport/dewa-then.webp',
-    imageAlt:
-      'Dos amigas que se ponen en marcha juntas, una señalando el camino, al salir ' +
-      'de una tienda.',
   },
 }
 
