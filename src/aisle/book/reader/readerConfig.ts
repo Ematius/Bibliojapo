@@ -129,6 +129,9 @@ export interface ReadyRule {
   // Con qué se encabeza su plana. «Ortografía» habla de un carácter y sus dos lecturas;
   // です no es un carácter, y bajo ese encabezado el alumno buscaría uno.
   heading: string
+  // Si habla de un carácter —el dakuten, は de partícula—. Solo esas se adelantan al
+  // principio del tomo: ver `spellingPreviewSpreads`.
+  spelling: boolean
   // Las frases del tomo que USAN la regla, para leerlas y escribirlas aquí. Sin esto, la
   // primera vez que se ve あおいです es en el examen final, pidiéndola de memoria.
   practiceIds?: string[]
@@ -227,43 +230,62 @@ export function kanaSpreads(kanaId: string, [wordId, ...otherWordIds]: string[])
   ]
 
   // La lección se cierra en dos tiempos: el repaso, con la ayuda de siempre, y el examen,
-  // sin ninguna.
-  return [...taught, reviewSpread(taught), examSpread(kanaId, wordId)]
+  // sin ninguna. Los dos recorren TODAS sus palabras — ver las dos funciones.
+  const lessonWordIds = [wordId, ...otherWordIds]
+
+  return [...taught, ...reviewSpreads(taught, lessonWordIds), ...examSpreads(kanaId, lessonWordIds)]
 }
 
-// El repaso: una de las propias planas de la lección, sorteada. Un repaso que sale igual
-// todas las veces se memoriza como plana en vez de practicarse como kana. Se sortea UNA
-// vez por apertura —`VolumeReader` lo guarda con `useMemo`—.
+// El repaso: UNA PLANA POR PALABRA de la lección, y cada una con una de las propias planas
+// de la lección, sorteada. Un repaso que sale igual todas las veces se memoriza como plana
+// en vez de practicarse como kana; se sortea UNA vez por apertura —`VolumeReader` lo guarda
+// con `useMemo`—.
+//
+// Las planas se reparten en ronda y no se sortean una a una: así tres palabras salen con
+// tres ejercicios DISTINTOS en vez de arriesgarse a tres «Escucha» seguidos.
 //
 // Va la plana ENTERA y no dos hojas sueltas: el enunciado vive en una hoja y la respuesta
 // en la de enfrente, así que partirla dejaría preguntas sin enunciado.
-function reviewSpread(taught: Spread[]): Spread {
-  const pool = taught.filter(
-    (spread) => !NOT_REVIEWABLE.includes(spread.right.shows as PageContent),
-  )
-  const picked = shuffle(pool)[0] ?? taught[0]
+function reviewSpreads(taught: Spread[], wordIds: string[]): Spread[] {
+  const pool = taught.filter(reviewable)
+  if (pool.length === 0) return []
 
-  const label = (side: Spread['right']) => (side.title ? `Repaso: ${side.title}` : 'Repaso')
+  const order = shuffle(pool)
 
-  return {
-    right: { ...picked.right, title: label(picked.right) },
-    left: { ...picked.left, title: label(picked.left) },
-  }
+  return wordIds.map((wordId, index) => {
+    const picked = order[index % order.length]
+    const label = (side: Spread['right']) => (side.title ? `Repaso: ${side.title}` : 'Repaso')
+
+    return {
+      right: { ...picked.right, wordId, title: label(picked.right) },
+      left: { ...picked.left, wordId, title: label(picked.left) },
+    }
+  })
 }
 
-// El examen de la lección: tres pruebas ya vistas y ninguna instrucción. Las dos hojas se
-// bastan solas, que es lo que las distingue del resto del tomo —en un examen la hoja de
-// enfrente es otra pregunta, no una ayuda—.
+// Una plana vale para repasar si comprueba algo Y habla de una palabra: la pauta de
+// escritura es del carácter suelto, así que repasarla no diría nada de la palabra que le
+// toca a esa plana. Ver `NOT_REVIEWABLE`.
+function reviewable(spread: Spread): boolean {
+  if (NOT_REVIEWABLE.includes(spread.right.shows as PageContent)) return false
+  return spread.right.wordId !== undefined || spread.left.wordId !== undefined
+}
+
+// El examen de la lección: una plana POR CADA palabra que ha enseñado, con tres pruebas ya
+// vistas y ninguna instrucción. Las dos hojas se bastan solas, que es lo que las distingue
+// del resto del tomo —en un examen la hoja de enfrente es otra pregunta, no una ayuda—.
 //
-// Vuelve a la PRIMERA palabra de la lección: las planas de antes van con la segunda, y
-// examinar de lo que se acaba de hacer sería preguntar por lo que aún se tiene en la mano.
+// Entran todas y no solo la primera: con una, de las tres palabras de ま el tomo solo
+// preguntaba まえ, y まずい se enseñaba sin volver a pedirse nunca.
 //
-// Aquí NO se sella: el sello es uno solo y está al final del tomo.
-function examSpread(kanaId: string, wordId: string): Spread {
-  return {
+// Aquí NO se sella: el sello es uno solo y está al final del tomo. Cuántas pruebas tiene un
+// examen no se escribe en ningún sitio —`examSeal.ts` las cuenta por `data-exam`—, así que
+// añadir planas con el mismo `exam` no descuadra nada.
+function examSpreads(kanaId: string, wordIds: string[]): Spread[] {
+  return wordIds.map((wordId) => ({
     right: { kanaId, wordId, title: 'Examen', shows: 'examKana', exam: kanaId },
     left: { kanaId, wordId, title: 'Examen', shows: 'examWord', exam: kanaId },
-  }
+  }))
 }
 
 // La plana de una regla: a la derecha la regla, a la izquierda la misma regla dentro de
@@ -329,6 +351,23 @@ function introSpread(): Spread {
   }
 }
 
+// La copia adelantada de las reglas de ORTOGRAFÍA, detrás de la portada. Un kana con
+// dakuten sale dentro de una palabra de la primera lección —まずい, en la página 17 del tomo
+// 2— y su regla está anclada cien páginas más adelante, así que se leía un carácter que
+// nadie había explicado. Se repite A PROPÓSITO: verla dos veces es mejor que no verla hasta
+// después de haberla necesitado.
+//
+// Solo la plana de la regla, nunca sus frases de práctica: esas piden escribir frases del
+// tomo con tarjetas, y aquí todavía no se ha enseñado ni un kana.
+//
+// Las de GRAMÁTICA no entran: です y ～ます no son un carácter que pueda aparecer de
+// sorpresa dentro de una palabra, y hasta su plana no hay ninguna frase que las use.
+function spellingPreviewSpreads(items: ReadyItem[]): Spread[] {
+  return items.flatMap((item) =>
+    item.kind === 'rule' && item.spelling ? [grammarSpread(item)] : [],
+  )
+}
+
 // La regla se enseña CUANDO HACE FALTA y no en un apartado aparte: detrás de la lección del
 // kana del que habla, que es cuando el carácter acaba de aprenderse y todavía no ha aparecido
 // como partícula en ninguna frase. Por eso no van todas juntas ni al principio ni al final.
@@ -343,6 +382,7 @@ export function buildVolumePages(
 
   const spreads = [
     introSpread(),
+    ...spellingPreviewSpreads(items),
     ...items.flatMap((item) =>
       item.kind === 'kana' ? kanaSpreads(item.kanaId, item.wordIds) : grammarSpreads(item),
     ),
@@ -494,20 +534,25 @@ function completeReviewSpreads(all: ReadyLesson[]): Spread[] {
   const lessons = all.filter((lesson) => lesson.wordIds.length > 0)
   if (lessons.length === 0) return []
 
-  const reviews = lessons.map<Spread>((lesson) => ({
-    right: {
-      kanaId: lesson.kanaId,
-      wordId: lesson.wordIds[0],
-      title: 'Repaso completo',
-      shows: 'examKana',
-    },
-    left: {
-      kanaId: lesson.kanaId,
-      wordId: lesson.wordIds[0],
-      title: 'Repaso completo',
-      shows: 'examWord',
-    },
-  }))
+  // Una plana por cada palabra de cada lección, no solo por la primera: con una sola, un
+  // tomo de cinco kana cerraba con cinco planas y las otras doce palabras no volvían a
+  // salir hasta el repaso de vocabulario.
+  const reviews = lessons.flatMap((lesson) =>
+    lesson.wordIds.map<Spread>((wordId) => ({
+      right: {
+        kanaId: lesson.kanaId,
+        wordId,
+        title: 'Repaso completo',
+        shows: 'examKana',
+      },
+      left: {
+        kanaId: lesson.kanaId,
+        wordId,
+        title: 'Repaso completo',
+        shows: 'examWord',
+      },
+    })),
+  )
 
   return [noticeSpread(), ...reviews]
 }
