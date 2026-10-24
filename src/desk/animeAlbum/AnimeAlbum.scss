@@ -30,7 +30,10 @@
   // El papel se desvanece en la franja del lomo para que se vea el centro del libro pintado
   // en vez de una unión recta, que se lee postiza. Pasa lo mismo en los tomos, donde la hoja
   // se difumina en su borde. La franja tiene que caer en el margen de papel que deja
-  // `contain` entre las viñetas y el lomo: si se ensancha, se come dibujo.
+  // `contain` entre las viñetas y el lomo: si se ensancha, se come dibujo. Y estrecha
+  // también por otra razón: la hoja que gira pasa por encima de la franja y se
+  // transparenta con ella, así que lo que aquí se ensanche se ve como un hueco en mitad
+  // del pase de página.
   //
   // El negro de aquí NO es un color: en una máscara marca lo que se ve entero.
   &__mount {
@@ -38,10 +41,10 @@
     mask-image: linear-gradient(
       to right,
       #000 0%,
-      #000 44%,
-      transparent 49%,
-      transparent 51%,
-      #000 56%,
+      #000 47.5%,
+      transparent 49.6%,
+      transparent 50.4%,
+      #000 52.5%,
       #000 100%
     );
   }
