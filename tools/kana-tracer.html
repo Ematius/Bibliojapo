@@ -294,12 +294,12 @@
     <div class="panel">
       <div class="block">
         <h2>Plantilla del contorno</h2>
-        <p class="plate" id="plateLabel">Zen Kaku Gothic New · る · lienzo 619 × 767</p>
+        <p class="plate" id="plateLabel">Zen Kaku Gothic New · か · lienzo 863 × 774</p>
         <p class="hint">La silueta la pone la fuente del proyecto — la misma con la que se traza en el libro—, para que los puntos encajen con el recorte que usará el lector.</p>
       </div>
 
       <div class="block">
-        <h2 id="strokesHeading">Trazos de る</h2>
+        <h2 id="strokesHeading">Trazos de か</h2>
         <div class="strokes" id="strokeList"></div>
         <div class="row" style="margin-top: 0.75rem">
           <button id="undo">Deshacer punto</button>
@@ -350,14 +350,14 @@
 // El kana de turno. Se va uno por uno: cuando este quede trazado, esta misma
 // herramienta se actualiza al siguiente —ver docs/estructura-aprendizaje.md
 // para el orden—, en vez de tener varios sueltos en la misma plantilla.
-const KANA = { id: 'n', character: 'ん' };
+const KANA = { id: 'ka', character: 'か' };
 
 // El contorno, sacado de la fuente con `node tools/kana-extract.mjs <kana>`: la
 // silueta de Zen Kaku Gothic New en el lienzo propio del glifo, que es el suyo y
 // no el cuadrado del em. Pegarlo a mano se hizo una vez y salió mal —el `d` no
 // coincidía con su lienzo declarado y la silueta se salía del recorte—: sale del
 // script.
-const GLYPH = {"W":797,"H":796,"d":"M62,796L0,769Q12,743 35,695Q58,647 89,585Q119,523 153,454Q187,384 221,315Q255,245 286,183Q317,121 342,73Q367,25 381,0L444,29Q428,53 403,97Q378,141 348,198Q318,254 286,318Q254,382 222,447Q255,416 292,398Q329,380 368,380Q433,380 458,418Q483,455 483,525Q483,541 482,569Q480,596 480,613Q480,671 496,692Q511,713 554,713Q613,713 662,661Q711,608 744,517Q755,529 771,543Q787,556 797,564Q747,669 687,723Q627,777 547,777Q478,777 449,743Q419,708 419,628Q419,620 420,603Q420,585 421,566Q422,547 422,535Q422,486 407,463Q391,440 353,440Q311,440 271,463Q231,485 200,520Q168,555 151,593Q119,662 97,713Q74,763 62,796Z"};
+const GLYPH = {"W":863,"H":774,"d":"M52,774Q49,771 38,764Q27,756 16,749Q5,742 0,741Q41,696 82,628Q123,559 160,476Q197,393 226,307Q169,314 116,322Q62,330 30,337Q30,332 27,319Q23,306 20,293Q16,279 14,275Q52,272 116,265Q179,257 244,250Q264,182 277,119Q290,55 293,0L356,10Q352,62 340,122Q328,181 309,244Q335,242 359,241Q382,239 399,239Q449,239 481,262Q513,285 521,345Q529,404 506,515Q481,638 444,697Q407,756 333,756Q305,756 280,750Q254,743 228,725Q230,711 231,692Q232,673 230,661Q277,695 327,695Q358,695 379,677Q399,658 415,616Q430,574 446,502Q461,433 463,392Q464,350 455,329Q445,308 428,302Q410,295 389,295Q370,295 345,297Q320,298 291,300Q261,393 221,484Q181,575 138,651Q94,726 52,774ZM814,504Q797,476 769,442Q740,408 708,375Q675,341 643,313Q611,285 586,269L631,227Q658,245 692,274Q725,303 758,337Q791,370 819,403Q847,435 863,459Z"};
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const STROKE_VARS = ['--s1', '--s2', '--s3'];
