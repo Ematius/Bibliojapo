@@ -399,8 +399,54 @@ await vite.close()
 // Con `--faltas` se ve el detalle de los tomos sin publicar, que son 16 y llenan la
 // pantalla; sin él salen contados, y entero el de los publicados, que es el que importa:
 // esos tomos ya se están leyendo.
+// Dos trampas que el informe de faltas NO ve, porque mira si el CAMPO está escrito y
+// nunca lo que hay al otro lado de la ruta:
+//
+//   · una ruta a un archivo que no existe cuenta como pieza hecha y se vuelca igual. En
+//     el lector es una imagen rota o un botón mudo, y eso no da error en ningún sitio.
+//   · dos `imageAlt` idénticos son un copiar y pegar, o dos dibujos confundidos — que es
+//     como los dos はし estuvieron cruzados meses sin que nada avisara. El alt es lo
+//     único que dice qué hay dibujado dentro de un archivo.
+//
+// Avisan y no paran el volcado, al revés que `checkMediaKeys`: una clave mala rompe la
+// subida entera, mientras que esto estropea una ficha y deja el resto del tomo legible.
+function reportMediaWarnings() {
+  // Con barra delante el archivo vive en `public/`; sin ella, en `content-media/`.
+  const onDisk = (route) => (route.startsWith('/') ? join('public', route) : join(MEDIA_DIR, route))
+  const broken = []
+  const check = (route, who) => {
+    if (route && !existsSync(onDisk(route))) broken.push(`${who} → ${route}`)
+  }
+
+  for (const word of words) {
+    check(word.audio, `audio de ${word.id}`)
+    check(word.image, `dibujo de ${word.id}`)
+  }
+  for (const sentence of sentences) check(sentence.audio, `frase ${sentence.id}`)
+  for (const entry of kana) {
+    check(entry.audio, `audio del kana ${entry.character ?? entry.id}`)
+    check(entry.image, `dibujo del kana ${entry.character ?? entry.id}`)
+  }
+
+  // Dos palabras que comparten el MISMO dibujo comparten alt con razón —`ao` y `aoi`
+  // usan el mismo—, así que se busca el alt repetido entre dibujos DISTINTOS.
+  const described = words.filter((word) => word.image_alt && word.image)
+  const repeated = Object.entries(Object.groupBy(described, (word) => word.image_alt)).filter(
+    ([, list]) => new Set(list.map((word) => word.image)).size > 1,
+  )
+
+  if (!broken.length && !repeated.length) return
+
+  console.log('\nAvisos del media:')
+  broken.forEach((line) => console.log(`  ruta sin archivo: ${line}`))
+  repeated.forEach(([alt, list]) =>
+    console.log(`  mismo alt en ${list.map((word) => word.id).join(', ')}: «${alt}»`),
+  )
+}
+
 function reportGaps() {
   const verbose = process.argv.includes('--faltas')
+  reportMediaWarnings()
   const lines = []
   const detail = (items) => items.map((g) => `      ${g}`).join('\n')
   const entryLine = (entry) => `${entry.label}: sin ${entry.gaps.join(', ')}`
