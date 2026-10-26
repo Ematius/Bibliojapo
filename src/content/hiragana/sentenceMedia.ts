@@ -32,6 +32,21 @@ const AUDIO: Record<string, string> = {
   'senseidesu': 'hiragana/b2/audio/sentence/senseidesu.wav',
   'uedesu': 'hiragana/b2/audio/sentence/uedesu.wav',
   'usuidesu': 'hiragana/b2/audio/sentence/usuidesu.wav',
+  'arimasu': 'hiragana/b3/audio/sentence/arimasu.wav',
+  'arimasen': 'hiragana/b3/audio/sentence/arimasen.wav',
+  'imasu': 'hiragana/b3/audio/sentence/imasu.wav',
+  'imasen': 'hiragana/b3/audio/sentence/imasen.wav',
+  'shimasu': 'hiragana/b3/audio/sentence/shimasu.wav',
+  'shimasen': 'hiragana/b3/audio/sentence/shimasen.wav',
+  'kaimasu': 'hiragana/b3/audio/sentence/kaimasu.wav',
+  'akaidesu': 'hiragana/b3/audio/sentence/akaidesu.wav',
+  'oishiidesu': 'hiragana/b3/audio/sentence/oishiidesu.wav',
+  'eigadesu': 'hiragana/b3/audio/sentence/eigadesu.wav',
+  'ashidesu': 'hiragana/b3/audio/sentence/ashidesu.wav',
+  'urimasu': 'hiragana/b3/audio/sentence/urimasu.wav',
+  'oshiemasu': 'hiragana/b3/audio/sentence/oshiemasu.wav',
+  'orimasu': 'hiragana/b3/audio/sentence/orimasu.wav',
+  'ie-wa-shizukadesu': 'hiragana/b3/audio/sentence/ie-wa-shizukadesu.wav',
 }
 
 const WORD_BY_ID = new Map(VOCABULARY.map((word) => [word.id, word]))
