@@ -12,6 +12,19 @@ import * as fontkit from 'fontkit'
 // kana ya trazados dejarían de encajar con los nuevos.
 const FONT = 'tools/fonts/ZenKakuGothicNew-Regular.ttf'
 
+// Las tipografías de TEXTO componen algunos kana de una pieza aunque se escriban en dos
+// trazos: り sale unido en Zen Kaku Gothic New y también en Shippori Mincho, porque así
+// se compone, no porque así se escriba. Con esa silueta de fondo el segundo trazo parece
+// nacer del primero, y la lección enseña una letra que nadie traza así.
+//
+// Esos van con una tipografía ESCOLAR, que los separa. La lista es de excepciones a
+// mano: lo comprobado hasta ahora es que か, せ y ま salen bien con la de texto aunque
+// también lleven trazos pegados, así que no basta con contar contornos — se mira el kana
+// y se decide. Y como cambiar de fuente mueve la caja del glifo, meter un kana aquí
+// obliga a volver a trazarlo entero.
+const SCHOOL_FONT = 'tools/fonts/KleeOne-Regular.ttf'
+const SCHOOL = new Set(['り'])
+
 // El lienzo es la caja del GLIFO, no el cuadrado del em: cada kana tiene el suyo, y de
 // ahí que `strokeViewBox` se escriba por kana en vez de ser uno común.
 function extract(font, character) {
@@ -43,9 +56,14 @@ if (!characters.length) {
   process.exit(1)
 }
 
-const font = fontkit.openSync(FONT)
+const fonts = new Map()
+const fontFor = (character) => {
+  const path = SCHOOL.has(character) ? SCHOOL_FONT : FONT
+  if (!fonts.has(path)) fonts.set(path, fontkit.openSync(path))
+  return fonts.get(path)
+}
 for (const character of characters) {
-  const glyph = extract(font, character)
+  const glyph = extract(fontFor(character), character)
   console.log(`\n${character}`)
   console.log(`  GLYPH   ${JSON.stringify(glyph)}`)
   console.log(`  viewBox '0 0 ${glyph.W} ${glyph.H}'`)
