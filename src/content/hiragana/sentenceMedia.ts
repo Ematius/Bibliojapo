@@ -47,6 +47,7 @@ const AUDIO: Record<string, string> = {
   'oshiemasu': 'hiragana/b3/audio/sentence/oshiemasu.wav',
   'orimasu': 'hiragana/b3/audio/sentence/orimasu.wav',
   'ie-wa-shizukadesu': 'hiragana/b3/audio/sentence/ie-wa-shizukadesu.wav',
+  'iedewaarimasen': 'hiragana/b3/audio/sentence/iedewaarimasen.wav',
 }
 
 const WORD_BY_ID = new Map(VOCABULARY.map((word) => [word.id, word]))

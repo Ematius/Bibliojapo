@@ -450,17 +450,36 @@ export const HIRAGANA: Kana[] = [
     id: 'ka',
     character: 'か',
     romaji: 'ka',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
+    audio: 'hiragana/b3/audio/ka.wav',
+    mnemonic:
+      'En tu primer viaje a Japón haces una excursión en **CA**noa por el río. ' +
+      'Te despistas y, ¡**CA**ramba!, el río se acaba y **CA**es por la ' +
+      '**CA**scada. La **CA**noa se inclina en diagonal y tú sales disparado ' +
+      'varios metros por los aires. Esto es el hiragana **KA**.',
+    strokeOrder: [
+      'El borde del acantilado: un trazo corto hacia la derecha que enseguida ' +
+        'baja curvándose, y se recoge hacia dentro al final.',
+      'El tronco: una diagonal larga que cruza el primero de arriba abajo, ' +
+        'inclinada hacia la izquierda.',
+      'La **CA**scada: un trazo corto y suelto, arriba a la derecha, que cae en ' +
+        'diagonal sin tocar a los otros dos.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b3/images/hiragana-ka.webp',
+    imageAlt:
+      'Una meseta de roca cortada sobre un valle con niebla, atravesada en ' +
+      'diagonal por un tronco seco, con el río cayendo por el borde en una ' +
+      'cascada que se enrosca al llegar abajo.',
 
-    outline: '',
+    outline:
+      'M52,774Q49,771 38,764Q27,756 16,749Q5,742 0,741Q41,696 82,628Q123,559 160,476Q197,393 226,307Q169,314 116,322Q62,330 30,337Q30,332 27,319Q23,306 20,293Q16,279 14,275Q52,272 116,265Q179,257 244,250Q264,182 277,119Q290,55 293,0L356,10Q352,62 340,122Q328,181 309,244Q335,242 359,241Q382,239 399,239Q449,239 481,262Q513,285 521,345Q529,404 506,515Q481,638 444,697Q407,756 333,756Q305,756 280,750Q254,743 228,725Q230,711 231,692Q232,673 230,661Q277,695 327,695Q358,695 379,677Q399,658 415,616Q430,574 446,502Q461,433 463,392Q464,350 455,329Q445,308 428,302Q410,295 389,295Q370,295 345,297Q320,298 291,300Q261,393 221,484Q181,575 138,651Q94,726 52,774ZM814,504Q797,476 769,442Q740,408 708,375Q675,341 643,313Q611,285 586,269L631,227Q658,245 692,274Q725,303 758,337Q791,370 819,403Q847,435 863,459Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M22,303L268,273L471,279L494,391L464,575L400,699L307,726L231,699',
+      'M321,6L309,160L241,346L194,484L112,635L25,752',
+      'M614,246L840,479',
+    ],
+    strokeViewBox: '0 0 863 774',
   },
   {
     id: 'ki',
@@ -756,17 +775,34 @@ export const HIRAGANA: Kana[] = [
     id: 'ri',
     character: 'り',
     romaji: 'ri',
-    audio: '',
-    mnemonic: '',
-    strokeOrder: [],
+    audio: 'hiragana/b3/audio/ri.wav',
+    mnemonic:
+      'En un vuelo llegando a Japón, miras por la ventanilla y ves **RÍ**os ' +
+      'cruzando los arrozales. Casi siempre van en pareja: un **RI**achuelo y ' +
+      'un **RÍ**o. Te recuerdan al hiragana **RI**.',
+    strokeOrder: [
+      'El **RI**achuelo: un trazo corto que baja casi recto por la izquierda y ' +
+        'al final gira hacia arriba a la derecha, como un gancho.',
+      'El **RÍ**o: a la derecha y sin tocar al anterior, un trazo largo que baja ' +
+        'y se va curvando hacia la izquierda hasta morir abajo.',
+    ],
 
-    image: '',
-    imageAlt: '',
+    image: 'hiragana/b3/images/hiragana-ri.webp',
+    imageAlt:
+      'Vista desde la ventanilla de un avión de un mosaico de arrozales verdes ' +
+      'cruzado por dos ríos azules: uno corto a la izquierda que acaba en ' +
+      'gancho y otro largo y curvo a la derecha.',
 
-    outline: '',
+    // La silueta sale de la tipografía ESCOLAR y no de la del cuerpo de texto, que
+    // compone り de una pieza — ver `SCHOOL` en `tools/kana-extract.mjs`.
+    outline:
+      'M286,6L286,8Q286,18 294,24Q301,30 302,41Q309,104 312,159Q314,214 314,264Q314,307 313,348Q311,389 307,430Q303,480 283,529Q263,577 234,620Q204,662 170,695Q135,728 101,747Q82,758 82,769Q82,777 94,777Q111,777 142,761Q172,745 207,715Q242,685 275,643Q307,601 330,549Q353,497 358,437Q362,391 364,353Q365,315 365,280Q365,224 362,168Q358,111 352,34Q352,16 336,8Q320,0 299,0Q288,0 286,6ZM64,481L115,331Q116,328 117,326Q117,323 117,321Q117,307 105,307Q96,307 91,316Q85,329 75,352Q64,374 50,398Q48,384 47,366Q46,347 46,326Q46,286 49,240Q52,194 58,148Q63,101 69,62Q70,58 71,55Q71,51 71,48Q71,33 53,26Q35,19 25,19Q15,19 13,25Q13,26 13,27Q12,27 12,28Q12,34 16,41Q19,48 19,54L19,55Q16,81 12,125Q7,169 4,221Q0,273 0,324Q0,381 7,427Q14,473 33,491Q39,497 45,497Q58,497 64,481Z',
 
-    strokes: [],
-    strokeViewBox: '',
+    strokes: [
+      'M42,26L16,284L22,463L53,484L103,329',
+      'M301,5L334,26L333,85L341,219L332,469L298,571L232,667L161,728L88,770',
+    ],
+    strokeViewBox: '0 0 365 777',
   },
   {
     id: 'n',
